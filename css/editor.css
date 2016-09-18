@@ -1,0 +1,27 @@
+.sidebar { position: absolute; top: 0; bottom: 0; left: 0; width: 300px; background: #162228; }
+
+.header { height: 50px; background: #333; }
+.header .title { color: #eee; font-weight: bold; line-height: 40px; padding: 5px 20px; }
+
+.list { margin: 0; }
+.list li { position: relative; }
+.list li .item { position: relative; display: block; padding: 10px; text-decoration: none; color: #aaa; cursor: pointer; }
+.list li .item .item_title { display: block; font-size: 14px; }
+.list li .item .item_date { display: block; color: #999; font-size: 11px; }
+.list li .item .item_content { display: block; font-size: 12px; overflow:hidden; text-overflow: ellipsis; line-height:18px; height:36px; display:-webkit-box; -webkit-line-clamp: 2; -webkit-box-orient:vertical; }
+.list li .item:hover, .list li .item.selected { background: #263238; color: #ccc; }
+.list li .btn_add { display: block; color: #aaa; cursor: pointer; font-size: 12px; text-align: center; padding: 10px; text-decoration: none; }
+.list li .btn_add:hover { background: #263238; color: #ccc; }
+.list li .btn_del { position: absolute; right: 3px; top: 3px; color: #ccc; cursor: pointer; border: 0; background: transparent; display: none; }
+.list li:hover .btn_del { display: block; }
+
+.editor { position: absolute; left: 300px; right: 0; top:0; bottom: 0; }
+.editor .empty,
+.editor .ReactCodeMirror { position: absolute; top: 50px; bottom: 0; left: 0; right: 0; background:#162228; }
+.editor .CodeMirror { height: 100%; padding:0 10px }
+.editor .empty p { margin-top:30%; text-align:center; color:#aaa }
+.editor .statusbar { position: absolute; top: 0; height: 50px; left: 0; right: 0; background:#333; }
+.editor .statusbar .message { position: absolute; height: 30px; line-height: 30px; right: 20px; bottom: 10px; margin-bottom: 0; font-size:11px; color:#666 }
+.editor .statusbar .btn_wrap { position: absolute; left: 10px; bottom: 10px; }
+.editor .statusbar .btn_wrap .btn { height: 30px; padding: 0 10px; background:#666; border:0; color:#ccc }
+.editor .statusbar .btn_wrap .btn:disabled { background:#444; color:#666 }

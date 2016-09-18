@@ -1,0 +1,66 @@
+/*
+ Name:       atom-material Author:     Joo (http://joostory.net)
+ Original material color scheme by Mattia Astorino (https://github.com/equinusocio/material-theme)
+
+*/
+.cm-s-atom-material { /*background-color: #263238;*/ background-color: #263238; color: #e9eded; }
+
+.cm-s-atom-material .CodeMirror-gutters { background: #263238; color: #537f7e; border: none; }
+
+.cm-s-atom-material .CodeMirror-guttermarker, .cm-s-atom-material .CodeMirror-guttermarker-subtle, .cm-s-atom-material .CodeMirror-linenumber { color: #537f7e; }
+
+.cm-s-atom-material .CodeMirror-cursor { border-left: 1px solid #f8f8f0; }
+
+.cm-s-atom-material div.CodeMirror-selected { background: rgba(255, 255, 255, 0.15); }
+
+.cm-s-atom-material.CodeMirror-focused div.CodeMirror-selected { background: rgba(255, 255, 255, 0.1); }
+
+.cm-s-atom-material .CodeMirror-line::selection, .cm-s-atom-material .CodeMirror-line > span::selection, .cm-s-atom-material .CodeMirror-line > span > span::selection { background: rgba(255, 255, 255, 0.1); }
+
+.cm-s-atom-material .CodeMirror-line::-moz-selection, .cm-s-atom-material .CodeMirror-line > span::-moz-selection, .cm-s-atom-material .CodeMirror-line > span > span::-moz-selection { background: rgba(255, 255, 255, 0.1); }
+
+.cm-s-atom-material .CodeMirror-activeline-background { background: transparent; }
+
+.cm-s-atom-material .cm-keyword { color: #c792ea; }
+
+.cm-s-atom-material .cm-operator { color: #e9eded; }
+
+.cm-s-atom-material .cm-header { color: #82b1ff; }
+
+.cm-s-atom-material .cm-variable-2 { color: #80CBC4; }
+
+.cm-s-atom-material .cm-variable-3 { color: #82B1FF; }
+
+.cm-s-atom-material .cm-builtin { color: #DECB6B; }
+
+.cm-s-atom-material .cm-atom { color: #F77669; }
+
+.cm-s-atom-material .cm-number { color: #F77669; }
+
+.cm-s-atom-material .cm-def { color: #e9eded; }
+
+.cm-s-atom-material .cm-error { color: white; background-color: #EC5F67; }
+
+.cm-s-atom-material .cm-string { color: #C3E88D; }
+
+.cm-s-atom-material .cm-string-2 { color: #80CBC4; }
+
+.cm-s-atom-material .cm-comment { color: #546E7A; }
+
+.cm-s-atom-material .cm-variable { color: #82B1FF; }
+
+.cm-s-atom-material .cm-tag { color: #80CBC4; }
+
+.cm-s-atom-material .cm-meta { color: #80CBC4; }
+
+.cm-s-atom-material .cm-attribute { color: #FFCB6B; }
+
+.cm-s-atom-material .cm-property { color: #80CBAE; }
+
+.cm-s-atom-material .cm-qualifier { color: #DECB6B; }
+
+.cm-s-atom-material .cm-variable-3 { color: #DECB6B; }
+
+.cm-s-atom-material .cm-tag { color: #ff5370; }
+
+.cm-s-atom-material .CodeMirror-matchingbracket { text-decoration: underline; color: white !important; }
