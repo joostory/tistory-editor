@@ -4,11 +4,19 @@ import createLogger from 'redux-logger'
 import rootReducer from '../reducers'
 
 export default function configureStore(preloadedState) {
-  const store = createStore(
-    rootReducer,
-    compose(
-      applyMiddleware(thunk, createLogger())
+  if (process.env.NODE_ENV !== 'production') {
+    return createStore(
+      rootReducer,
+      compose(
+        applyMiddleware(thunk, createLogger())
+      )
     )
-  )
-  return store
+  } else {
+    return createStore(
+      rootReducer,
+      compose(
+        applyMiddleware(thunk)
+      )
+    )
+  }
 }
