@@ -20,6 +20,7 @@ class LocalPostList extends Component {
 	handleAdd() {
 		const { posts, onAdd } = this.props
 		var id = posts.length > 0? posts[posts.length - 1].id + 1 : 1
+		const handleSelect = this.handleSelect
 		Database.getInstance().newPost(id, post => onAdd(post))
 		this.setState({ selectedId: id })
 	}

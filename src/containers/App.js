@@ -19,20 +19,29 @@ class App extends Component {
 		const { dispatch, posts } = this.props
 		let filterdPosts = posts.filter((item, index) => item.id == id)
 		if (filterdPosts.length > 0) {
-			this.setState({
-				currentPost:filterdPosts[0]
-			})
+			this.setCurrentPost(filterdPosts[0])
 		}
 	}
 
 	handleAdd(post) {
 		const { dispatch } = this.props
 		dispatch(receiveLocalPost(post))
+		this.setCurrentPost(post)
 	}
 
 	handleRemove(id) {
 		const { dispatch } = this.props
+		const { currentPost } = this.state
 		dispatch(removeLocalPost(id))
+		if (currentPost.id == id) {
+			this.setCurrentPost({})
+		}
+	}
+
+	setCurrentPost(post) {
+		this.setState({
+			currentPost: post
+		})
 	}
 
 	handleUpdate(post) {

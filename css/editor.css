@@ -24,4 +24,5 @@
 .editor .statusbar .message { position: absolute; height: 30px; line-height: 30px; right: 20px; bottom: 10px; margin-bottom: 0; font-size:11px; color:#666 }
 .editor .statusbar .btn_wrap { position: absolute; left: 10px; bottom: 10px; }
 .editor .statusbar .btn_wrap .btn { height: 30px; padding: 0 10px; background:#666; border:0; color:#ccc }
+.editor .statusbar .btn_wrap .btn:hover { background:#777 }
 .editor .statusbar .btn_wrap .btn:disabled { background:#444; color:#666 }
