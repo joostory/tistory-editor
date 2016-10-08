@@ -16,15 +16,17 @@ class Database {
 		if (this.db) {
 			action(this.db)
 		} else {
+			var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+			var self = this
 			var request = indexedDB.open("LocalPosts")
 			request.onerror = (e) => { console.log("ERROR!", e) }
 			request.onsuccess = (e) => {
-				this.db = request.result
-				action(this.db)
+				self.db = request.result
+				action(self.db)
 			}
 			request.onupgradeneeded = (e) => {
 				var db = e.target.result
-				var objectStore = db.createObjectStore("posts", { keyPath: "id" })
+				var objectStore = self.db.createObjectStore("posts", { keyPath: "id" })
 				objectStore.createIndex("date", "date", { unique: false })
 			}
 		}
