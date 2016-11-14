@@ -3,6 +3,10 @@ import Codemirror from 'react-codemirror'
 import 'codemirror/mode/javascript/javascript'
 import 'codemirror/mode/xml/xml'
 import 'codemirror/mode/markdown/markdown'
+import 'codemirror/addon/dialog/dialog'
+import 'codemirror/addon/search/search'
+import 'codemirror/addon/search/searchcursor'
+import 'codemirror/addon/search/jump-to-line'
 import dateformat from 'dateformat'
 
 import Database from '../database'
@@ -78,7 +82,7 @@ class Editor extends Component {
 		let editor = <div className="empty"><p>post를 선택해 주세요.</p></div>
 		if (post.id) {
 			var options = {
-				lineNumbers: false,
+				lineNumbers: true,
 				lineWrapping: true,
 				mode: 'markdown',
 				theme:'atom-material'

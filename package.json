@@ -2,10 +2,11 @@
   "name": "tistory-editor",
   "version": "1.0.0",
   "description": "Editor for tistory",
-  "main": "main.js",
+  "main": "src/main/main.js",
   "scripts": {
     "build": "NODE_ENV=production webpack",
-    "start": "electron .",
+    "watch": "NODE_ENV=production webpack --watch",
+    "app": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -36,6 +37,8 @@
   "dependencies": {
     "classnames": "^2.2.5",
     "dateformat": "^1.0.12",
+    "electron-json-storage": "^2.0.3",
+    "electron-oauth2": "^2.3.1",
     "react": "^15.3.0",
     "react-codemirror": "^0.2.6",
     "react-dom": "^15.3.0",

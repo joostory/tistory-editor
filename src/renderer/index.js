@@ -7,7 +7,9 @@ import { fetchLocalPosts } from './actions'
 
 import '../css/base.css'
 import '../css/editor.css'
+import '../css/codemirror.min.css'
 import '../css/codemirror-material-theme.css'
+import '../../node_modules/codemirror/addon/dialog/dialog.css'
 
 const store = configureStore()
 
