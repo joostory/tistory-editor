@@ -1,5 +1,6 @@
 import * as types from '../constants/ActionTypes'
 import { combineReducers } from 'redux'
+import auth from './auth'
 
 const initialState = {
 	posts: []
@@ -31,5 +32,6 @@ function posts(state = initialState.posts, action) {
 
 
 export default combineReducers({
-	posts
+	posts,
+	auth
 })

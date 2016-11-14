@@ -3,7 +3,7 @@ import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import App from './containers/App'
 import configureStore from './store/configureStore'
-import { fetchLocalPosts } from './actions'
+import { fetchAuth } from './actions'
 
 import '../css/base.css'
 import '../css/editor.css'
@@ -13,7 +13,7 @@ import '../../node_modules/codemirror/addon/dialog/dialog.css'
 
 const store = configureStore()
 
-store.dispatch(fetchLocalPosts());
+store.dispatch(fetchAuth());
 
 render (
 	<Provider store={store}>

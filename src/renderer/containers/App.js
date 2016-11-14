@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import classnames from 'classnames'
 import { connect } from 'react-redux'
 
-import { receiveLocalPost, removeLocalPost, updateLocalPost } from '../actions'
+import { receiveLocalPost, removeLocalPost, updateLocalPost, requestAuth } from '../actions'
 
 import Sidebar from '../components/Sidebar'
 import Editor from '../components/Editor'
@@ -49,28 +49,45 @@ class App extends Component {
 		dispatch(updateLocalPost(post))
 	}
 
+	handleAuth() {
+		const { dispatch } = this.props
+		dispatch(requestAuth())
+	}
+
 	render() {
-		const { posts } = this.props
+		const { auth, posts } = this.props
 		const { currentPost } = this.state
 
-		return(
-			<div>
-				<Sidebar posts={posts}
-					onSelect={this.handleSelect.bind(this)}
-					onAdd={this.handleAdd.bind(this)}
-					onRemove={this.handleRemove.bind(this)} />
-				<Editor post={currentPost} onSave={this.handleUpdate.bind(this)} />
-			</div>
-		)
+		if (auth.access_token) {
+			return(
+				<div>
+					<Sidebar posts={posts}
+						onSelect={this.handleSelect.bind(this)}
+						onAdd={this.handleAdd.bind(this)}
+						onRemove={this.handleRemove.bind(this)} />
+					<Editor post={currentPost} onSave={this.handleUpdate.bind(this)} />
+				</div>
+			)
+		} else {
+			return(
+				<div>
+					<button className="btn_auth" onClick={this.handleAuth.bind(this)}>티스토리 인증</button>
+				</div>
+			)
+		}
+
+
 	}
 }
 
 App.propTypes = {
+	auth: PropTypes.object.isRequired,
 	posts: PropTypes.array.isRequired
 }
 
 function mapStateToProps(state) {
   return {
+		auth: state.auth,
 		posts: state.posts
   }
 }
