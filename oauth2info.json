@@ -1,0 +1,7 @@
+{
+	"clientId": "CLIENT_ID",
+	"clientSecret": "CLIENT_SECRET",
+	"authorizationUrl": "https://www.tistory.com/oauth/authorize",
+	"tokenUrl": "https://www.tistory.com/oauth/access_token",
+	"redirectUri": "http://localhost"
+}
