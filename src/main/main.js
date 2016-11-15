@@ -3,11 +3,11 @@ const oauth2 = require('electron-oauth2');
 const {app, BrowserWindow, Tray, ipcMain} = require('electron')
 const path = require('path')
 const url = require('url')
+const fs = require('fs')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
-let auth
 
 let initWindow = () => {
   storage.get('config', (error, data) => {
@@ -45,18 +45,8 @@ let createWindow = (config) => {
 }
 
 let getAccessToken = (callback) => {
-  const options = {
-    scope: 'SCOPE',
-    accessType: 'ACCESS_TYPE'
-  };
-
-  const myApiOauth = oauth2({
-      clientId: '36e1d04a9ea41b74190fa78b1aabf82d',
-      clientSecret: '36e1d04a9ea41b74190fa78b1aabf82d67a406c47824f9919267611c622d7e33ffc5698a',
-      authorizationUrl: 'https://www.tistory.com/oauth/authorize/',
-      tokenUrl: 'https://www.tistory.com/oauth/access_token/',
-      useBasicAuthorizationHeader: false
-  }, {
+  oauth2info = JSON.parse(fs.readFileSync(path.join(__dirname, "../../oauth2info.json"), 'utf8'))
+  const tistoryOAuth = oauth2(oauth2info, {
     alwaysOnTop: true,
     autoHideMenuBar: true,
     webPreferences: {
@@ -64,27 +54,24 @@ let getAccessToken = (callback) => {
     }
   })
 
-  myApiOauth.getAccessToken(options)
+  tistoryOAuth.getAccessToken()
     .then(token => callback(token))
-    .catch(() => {
-      callback();
-    })
+    .catch(() => callback())
 }
 
 ipcMain.on("fetch-auth", (e, arg) => {
-  storage.get("auth", (error, data) => {
+  storage.get("auth", (error, auth) => {
     if (error) throw error
 
-    if (data && data.access_token) {
-      auth = data
+    if (auth && auth.access_token) {
       e.sender.send('receive-auth', auth)
     }
   })
 })
 
 ipcMain.on("request-auth", (e, arg) => {
-  getAccessToken(token => {
-    storage.set("auth", token)
+  getAccessToken(auth => {
+    storage.set("auth", auth)
     e.sender.send('receive-auth', auth)
   })
 })
