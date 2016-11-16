@@ -18,23 +18,23 @@ export function removeLocalPost(id) {
 	return { type: types.REMOVE_LOCAL_POST, id }
 }
 
-function receiveAuth(auth) {
-	return { type: types.RECEIVE_AUTH, auth }
+function receiveInfo(info) {
+	return { type: types.RECEIVE_INFO, info }
 }
 
-export function fetchAuth() {
+export function fetchInfo() {
 	return dispatch => {
-		ipcRenderer.on("receive-auth", (e, auth) => {
-			dispatch(receiveAuth(auth))
+		ipcRenderer.on("receive-info", (e, info) => {
+			dispatch(receiveInfo(info))
 		})
-		ipcRenderer.send("fetch-auth")
+		ipcRenderer.send("fetch-info")
 	}
 }
 
 export function requestAuth() {
 	return dispatch => {
-		ipcRenderer.on("receive-auth", (e, auth) => {
-			dispatch(receiveAuth(auth))
+		ipcRenderer.on("receive-info", (e, info) => {
+			dispatch(receiveInfo(info))
 		})
 		ipcRenderer.send("request-auth")
 	}

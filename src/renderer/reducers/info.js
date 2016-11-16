@@ -3,10 +3,10 @@ import { combineReducers } from 'redux'
 
 const initialState = {}
 
-export default function auth(state = initialState, action) {
+export default (state = initialState, action) => {
 	switch (action.type) {
-		case types.RECEIVE_AUTH:
-			return action.auth
+		case types.RECEIVE_INFO:
+			return action.info
 		default:
 			return state
 	}
