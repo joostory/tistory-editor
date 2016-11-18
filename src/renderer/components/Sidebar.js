@@ -1,16 +1,25 @@
 import React, { Component, PropTypes } from 'react'
 
 import Header from '../components/Header'
-import LocalPostList from './LocalPostList'
+import PostList from './PostList'
 
 class Sidebar extends Component {
+
+	constructor(props, context) {
+		super(props, context)
+		this.state = {
+			posts: []
+		}
+	}
+
 	render() {
-		const { posts, onSelect, onAdd, onRemove } = this.props;
+		const { onSelect, onAdd, onRemove } = this.props
+		const { posts } = this.state
 
 		return (
 			<div className="sidebar">
 				<Header />
-				<LocalPostList posts={posts}
+				<PostList posts={posts}
 				 	onSelect={onSelect}
 					onAdd={onAdd}
 					onRemove={onRemove} />
@@ -20,7 +29,6 @@ class Sidebar extends Component {
 }
 
 Sidebar.PropTypes = {
-	posts: PropTypes.array.isRequired,
 	onSelect: PropTypes.func,
 	onAdd: PropTypes.func,
 	onRemove: PropTypes.func

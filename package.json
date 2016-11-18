@@ -55,6 +55,13 @@
     "redux-thunk": "^2.1.0"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "globals": {
+      "document": true,
+      "window": true,
+      "navigator": {
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36"
+      }
+    }
   }
 }

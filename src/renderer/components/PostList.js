@@ -3,7 +3,7 @@ import classnames from 'classnames'
 import dateformat from 'dateformat'
 import Database from '../database'
 
-class LocalPostList extends Component {
+class PostList extends Component {
 	constructor(props, context) {
 		super(props, context)
 		this.state = {
@@ -66,11 +66,11 @@ class LocalPostList extends Component {
 	}
 }
 
-LocalPostList.propTypes = {
+PostList.propTypes = {
 	posts: PropTypes.array.isRequired,
 	onSelect: PropTypes.func,
 	onAdd: PropTypes.func,
 	onRemove: PropTypes.func
 }
 
-export default LocalPostList
+export default PostList

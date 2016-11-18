@@ -29,7 +29,7 @@ class App extends Component {
 		const { currentBlog } = this.state
 
 		if (info && info.id && currentBlog) {
-			return <Blog info={info} current={currentBlog} />
+			return <Blog info={info} currentBlog={currentBlog} onSelect={this.handleSelectBlog.bind(this)} />
 
 		} else if (info && info.id) {
 			return <Index info={info} onSelect={this.handleSelectBlog.bind(this)} />
