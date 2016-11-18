@@ -30,7 +30,7 @@ test('Index component', () => {
 	}
 
 	const component = renderer.create(
-		<Index info={info} />
+		<Index info={info} onSelect={() => {}} />
 	)
 
 	let tree = component.toJSON()
