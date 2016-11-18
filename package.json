@@ -33,7 +33,6 @@
     "css-loader": "^0.26.0",
     "electron": "^1.4.6",
     "fbjs": "^0.8.6",
-    "invariant": "^2.2.2",
     "jest": "^17.0.3",
     "object-assign": "^4.1.0",
     "react-test-renderer": "^15.4.0",
