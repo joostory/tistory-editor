@@ -5,7 +5,7 @@
   "main": "src/main/main.js",
   "scripts": {
     "build": "NODE_ENV=production webpack",
-    "watch": "NODE_ENV=production webpack --watch",
+    "watch": "NODE_ENV=development webpack --watch",
     "app": "electron .",
     "test": "jest"
   },

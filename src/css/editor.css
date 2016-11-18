@@ -1,20 +1,36 @@
 .container { position:absolute; left:0; right:0; top:0; bottom:0 }
+.btn { background:transparent; border:1px solid #ccc }
+.btn:hover { background:#eee }
+
+/* tistory */
+.tistory { color:#f1631b; }
+.btn_tistory { background:#f1631b; color:#fff; border:0; }
+.btn_tistory:hover { background: #eb531f}
+
+/* ready */
+.ready { position:absolute; top: 50%; left: 50%; margin-right: -50%; transform: translate(-50%, -50%); text-align:center }
+.btn_connect { width:300px; height:80px; font-size:16px }
 
 /* index */
-.profile { text-align:center; margin-top:50px }
-.profile .profile_image { display:block; margin:0 auto; width:50px; height:50px; background:#eee }
+.profile { text-align:center; margin:50px auto 20px }
+.profile .profile_image { display:block; margin:0 auto 10px; width:50px; height:50px; background:transparent }
 .profile .profile_item { display:block }
+.profile .btn_disconnect { margin-top:10px; width:200px; height:40px; font-size:14px }
 
 .blog_list { width:400px; margin:50px auto 30px }
-.blog_list .blog_item { padding:10px 10px 10px 70px; min-height:50px; position:relative; margin-bottom:10px }
-.blog_list .blog_item:hover { background:#f1f1f1; box-shadow:#999 0px 1px 10px; cursor:pointer }
-.blog_list .blog_item .blog_image { position:absolute; left:10px; top:10px; width:50px; height:50px; background:#eee }
+.blog_list .blog_item { padding:10px 10px 10px 70px; min-height:50px; position:relative; margin-bottom:10px; border-radius:5px }
+.blog_list .blog_item:hover { box-shadow:#ccc 0px 1px 5px; cursor:pointer }
+.blog_list .blog_item .blog_image { position:absolute; left:10px; top:10px; width:50px; height:50px; background:transparent }
+.blog_list .blog_item .blog_image img { width:50px; height:50px; border-radius:25px }
 .blog_list .blog_item .blog_title { display:block; font-weight:bold; font-size:1.1em }
 .blog_list .blog_item .blog_descroption { display:block; font-size:0.8em; color:#999 }
 .blog_list .blog_item .blog_url { display:block; font-size:0.8em; color:#aaa }
 
-.btn_auth { width:300px; height:80px; position:absolute; left:50%; top:50%; margin:-40px 0 0 -150px }
+.svg_profile { width:50px; height:50px }
+.svg_profile circle { stroke:#ccc; fill:#f4f4f4; stroke-width:0; cx:25px; cy:25px; r:23px }
+.svg_profile text { transform: translate(25px, 32px); text-anchor:middle; font-size:20px; stroke:#ccc; fill:#ccc; text-transform: uppercase; }
 
+/* editor */
 .sidebar { position: absolute; top: 0; bottom: 0; left: 0; width: 300px; background: #162228; }
 
 .header { height: 50px; background: #333; }

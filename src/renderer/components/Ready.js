@@ -4,18 +4,18 @@ import { requestAuth } from '../actions'
 
 class Ready extends Component {
 
-	handleAuth() {
-		const { dispatch } = this.props
-		dispatch(requestAuth())
-	}
-
 	render() {
+		const { fetchlock } = this.props
 		return (
-			<div>
-				<button className="btn_auth" onClick={this.handleAuth.bind(this)}>티스토리 인증</button>
+			<div className='container'>
+				<div className='ready'>
+					<h1>Editor for <span className="tistory">Tistory</span></h1>
+					<button className="btn btn_connect btn_tistory" onClick={requestAuth}>티스토리 인증</button>
+				</div>
 			</div>
 		)
 	}
 }
 
-export default connect((dispatch) => { dispatch: dispatch })(Ready)
+
+export default Ready

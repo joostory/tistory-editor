@@ -18,24 +18,30 @@ export function removeLocalPost(id) {
 	return { type: types.REMOVE_LOCAL_POST, id }
 }
 
-function receiveInfo(info) {
+const receiveFetchlock = (fetchlock) => {
+	return { type: types.RECEIVE_FETCH_LOCK, fetchlock: fetchlock }
+}
+
+const lockFetch = () => {
+	return receiveFetchlock(true)
+}
+
+const unlockFetch = () => {
+	return receiveFetchlock(false)
+}
+
+export const receiveInfo = (info) => {
 	return { type: types.RECEIVE_INFO, info }
 }
 
-export function fetchInfo() {
-	return dispatch => {
-		ipcRenderer.on("receive-info", (e, info) => {
-			dispatch(receiveInfo(info))
-		})
-		ipcRenderer.send("fetch-info")
-	}
+export const fetchInfo = () => {
+	ipcRenderer.send("fetch-info")
 }
 
-export function requestAuth() {
-	return dispatch => {
-		ipcRenderer.on("receive-info", (e, info) => {
-			dispatch(receiveInfo(info))
-		})
-		ipcRenderer.send("request-auth")
-	}
+export const requestAuth = () => {
+	ipcRenderer.send("request-auth")
+}
+
+export const disconnectAuth = () => {
+	ipcRenderer.send("disconnect-auth")
 }

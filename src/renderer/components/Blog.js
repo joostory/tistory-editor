@@ -12,4 +12,4 @@ class Blog extends Component {
 	}
 }
 
-export default connect((dispatch) => { dispatch: dispatch })(Blog)
+export default Blog

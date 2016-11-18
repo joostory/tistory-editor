@@ -15,12 +15,8 @@ const getAccessToken = (callback) => {
     }
   })
 
-  tistoryOAuth.getAccessToken()
+  return tistoryOAuth.getAccessToken()
     .then(token => callback(token))
-    .catch((err) => {
-      console.log(err)
-      callback()
-    })
 }
 
 const fetchBlogInfo = (auth) => {

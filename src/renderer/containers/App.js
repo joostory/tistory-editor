@@ -18,15 +18,21 @@ class App extends Component {
 		}
 	}
 
+	handleSelectBlog(blog) {
+		this.setState({
+			currentBlog: blog
+		})
+	}
+
 	render() {
 		const { info } = this.props
 		const { currentBlog } = this.state
 
-		if (currentBlog) {
+		if (info && info.id && currentBlog) {
 			return <Blog info={info} current={currentBlog} />
 
 		} else if (info && info.id) {
-			return <Index info={info} />
+			return <Index info={info} onSelect={this.handleSelectBlog.bind(this)} />
 
 		} else {
 			return <Ready />
@@ -38,13 +44,14 @@ App.propTypes = {
 	info: PropTypes.object.isRequired
 }
 
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
-		info: state.info
+		info: state.info,
+		fetchlock: state.fetchlock
   }
 }
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
     dispatch: dispatch
   }
