@@ -19,6 +19,7 @@ class App extends Component {
 	}
 
 	handleSelectBlog(blog) {
+		console.log("App.selectBlog", blog)
 		this.setState({
 			currentBlog: blog
 		})
@@ -27,6 +28,8 @@ class App extends Component {
 	render() {
 		const { info } = this.props
 		const { currentBlog } = this.state
+
+		console.log("App.render", info, currentBlog)
 
 		if (info && info.id && currentBlog) {
 			return <Blog info={info} currentBlog={currentBlog} onSelect={this.handleSelectBlog.bind(this)} />

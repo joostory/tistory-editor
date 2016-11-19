@@ -8,7 +8,7 @@ class Index extends Component {
 	}
 
 	render() {
-		const { info } = this.props
+		const { info, onSelect } = this.props
 
 		return (
 			<div className="container">
@@ -27,7 +27,7 @@ class Index extends Component {
 
 				<div className="blog_list">
 				{info.blogs.map(blog =>
-					<div key={blog.url} className="blog_item" onClick={this.handleSelect.bind(this)}>
+					<div key={blog.url} className="blog_item" onClick={() => onSelect(blog)}>
 						<span className="blog_image">
 							{blog.profileImageUrl && <img src={blog.profileImageUrl} />}
 							{!blog.profileImageUrl &&

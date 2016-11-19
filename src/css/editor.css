@@ -30,10 +30,21 @@
 .svg_profile circle { stroke:#ccc; fill:#f4f4f4; stroke-width:0; cx:25px; cy:25px; r:23px }
 .svg_profile text { transform: translate(25px, 32px); text-anchor:middle; font-size:20px; stroke:#ccc; fill:#ccc; text-transform: uppercase; }
 
-/* editor */
+/* sidebar */
 .sidebar { position: absolute; top: 0; bottom: 0; left: 0; width: 300px; background: #162228; }
 
+/* header */
 .header { height: 50px; background: #333; }
+.header .btn_back { position:absolute; left:5px; top:10px; width:30px; height:30px; border:0; padding:0 }
+.header .btn_back:hover { background:transparent }
+.header .btn_back:hover svg g { stroke:#ccc }
+.header .current_blog { overflow:hidden; height:30px; position:absolute; left:40px; right:10px; top:10px; padding-left:40px}
+.header .current_blog .blog_image { width:30px; height:30px; position:absolute; left:0; top:0 }
+.header .current_blog .blog_image img { width:30px; height:30px; border-radius:15px }
+.header .current_blog .blog_image .svg_profile { width:30px; height:30px; }
+.header .current_blog .blog_image .svg_profile circle { cx:15px; cy:15px; r:14px }
+.header .current_blog .blog_image .svg_profile text { transform: translate(15px, 18px); font-size:14px; }
+.header .current_blog .blog_title { line-height: 30px; font-size:16px; color:#ccc; font-weight:bold }
 .header .title { color: #eee; font-weight: bold; line-height: 40px; padding: 5px 20px; }
 
 .list { margin: 0; }

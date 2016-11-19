@@ -13,25 +13,26 @@ class Sidebar extends Component {
 	}
 
 	render() {
-		const { onSelect, onAdd, onRemove } = this.props
+		const { info, currentBlog, onSelectBlog, onSelectPost } = this.props
 		const { posts } = this.state
 
 		return (
 			<div className="sidebar">
-				<Header />
+				<Header info={info} currentBlog={currentBlog}
+					onSelect={onSelectBlog} />
+
 				<PostList posts={posts}
-				 	onSelect={onSelect}
-					onAdd={onAdd}
-					onRemove={onRemove} />
+					onSelect={onSelectPost} />
 			</div>
 		)
 	}
 }
 
 Sidebar.PropTypes = {
-	onSelect: PropTypes.func,
-	onAdd: PropTypes.func,
-	onRemove: PropTypes.func
+	info: PropTypes.object.isRequired,
+	currentBlog: PropTypes.object.isRequired,
+	onSelectBlog: PropTypes.func.isRequired,
+	onSelectPost: PropTypes.func.isRequired
 }
 
 export default Sidebar

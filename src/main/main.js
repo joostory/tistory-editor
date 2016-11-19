@@ -42,6 +42,8 @@ const createWindow = (config) => {
     protocol: 'file:',
     slashes: true
   }))
+
+  mainWindow.webContents.openDevTools()
 }
 
 app.on('ready', () => {
