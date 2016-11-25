@@ -30,12 +30,20 @@ const unlockFetch = () => {
 	return receiveFetchlock(false)
 }
 
-export const receiveInfo = (info) => {
-	return { type: types.RECEIVE_INFO, info }
+export const receiveUser = (user) => {
+	return { type: types.RECEIVE_USER, user }
 }
 
-export const fetchInfo = () => {
-	ipcRenderer.send("fetch-info")
+export const receiveBlogs = (blogs) => {
+	return { type: types.RECEIVE_BLOGS, blogs }
+}
+
+export const fetchUser = () => {
+	ipcRenderer.send("fetch-user")
+}
+
+export const fetchBlogs = () => {
+	ipcRenderer.send("fetch-blogs")
 }
 
 export const requestAuth = () => {

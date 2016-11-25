@@ -26,16 +26,16 @@ class App extends Component {
 	}
 
 	render() {
-		const { info } = this.props
+		const { user, blogs } = this.props
 		const { currentBlog } = this.state
 
-		console.log("App.render", info, currentBlog)
+		console.log("App.render", user, blogs, currentBlog)
 
-		if (info && info.id && currentBlog) {
-			return <Blog info={info} currentBlog={currentBlog} onSelect={this.handleSelectBlog.bind(this)} />
+		if (user && user.name && currentBlog) {
+			return <Blog user={user} currentBlog={currentBlog} onSelect={this.handleSelectBlog.bind(this)} />
 
-		} else if (info && info.id) {
-			return <Index info={info} onSelect={this.handleSelectBlog.bind(this)} />
+		} else if (user && user.name) {
+			return <Index user={user} blogs={blogs} onSelect={this.handleSelectBlog.bind(this)} />
 
 		} else {
 			return <Ready />
@@ -44,12 +44,14 @@ class App extends Component {
 }
 
 App.propTypes = {
-	info: PropTypes.object.isRequired
+	user: PropTypes.object.isRequired,
+	blogs: PropTypes.array.isRequired
 }
 
 const mapStateToProps = (state) => {
   return {
-		info: state.info,
+		user: state.user,
+		blogs: state.blogs,
 		fetchlock: state.fetchlock
   }
 }

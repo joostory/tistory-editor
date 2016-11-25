@@ -3,37 +3,54 @@ const {ipcMain} = require('electron')
 const tistory = require('./tistory-api')
 
 const init = () => {
-	const fetchInfoErrorHandler = (evt, err) => {
-		console.error(err)
-		evt.sender.send('receive-info', {})
+	const fetchUser = (evt, auth) => {
+		tistory.fetchUser(auth).then(res => {
+			if (!res.tistory || res.tistory.status != 200) {
+				throw "Error:" + res.tistory.status
+			}
+			evt.sender.send('receive-user', res.tistory.item)
+		}).catch(err => {
+			evt.sender.send('receive-user', {})
+		})
 	}
 
-	const fetchInfo = (evt, auth) => {
+	const fetchBlogs = (evt, auth) => {
 		tistory.fetchBlogInfo(auth).then(res => {
 			if (!res.tistory || res.tistory.status != 200) {
 				throw "Error:" + res.tistory.status
 			}
 
-			evt.sender.send('receive-info', {
-				id: res.tistory.id,
-				blogs: res.tistory.item
-			})
+			evt.sender.send('receive-blogs', res.tistory.item.blogs)
 		}).catch(err => {
-			fetchInfoErrorHandler(evt, err)
+			evt.sender.send('receive-blogs', [])
 		})
 	}
 
-	ipcMain.on("fetch-info", (evt) => {
-		console.log("fetch-info")
+	ipcMain.on("fetch-user", (evt) => {
+		console.log("fetch-user")
 	  storage.get("auth", (error, auth) => {
 	    if (error) throw error
 
 			if (!auth || !auth.access_token) {
-				fetchInfoErrorHandler(evt, "no auth")
+				evt.sender.send('receive-user', {})
 				return
 			}
 
-			fetchInfo(evt, auth)
+			fetchUser(evt, auth)
+	  })
+	})
+
+	ipcMain.on("fetch-blogs", (evt) => {
+		console.log("fetch-blogs")
+	  storage.get("auth", (error, auth) => {
+	    if (error) throw error
+
+			if (!auth || !auth.access_token) {
+				evt.sender.send('receive-user', {})
+				return
+			}
+
+			fetchBlogs(evt, auth)
 	  })
 	})
 

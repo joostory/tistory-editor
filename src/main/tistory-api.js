@@ -27,8 +27,17 @@ const fetchBlogInfo = (auth) => {
   .then(res => res.json())
 }
 
+const fetchUser = (auth) => {
+  return fetch("https://www.tistory.com/apis/user/?" + querystring.stringify({
+    access_token: auth.access_token,
+    output: "json"
+  }))
+  .then(res => res.json())
+}
+
 
 module.exports = {
 	getAccessToken: getAccessToken,
-	fetchBlogInfo: fetchBlogInfo
+	fetchBlogInfo: fetchBlogInfo,
+  fetchUser: fetchUser
 }

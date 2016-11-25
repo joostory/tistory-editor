@@ -3,30 +3,37 @@ import { disconnectAuth } from '../actions'
 
 class Index extends Component {
 
+	constructor(props, context) {
+		super(props, context)
+	}
+
 	handleSelect(blog) {
 		this.props.onSelect(blog)
 	}
 
 	render() {
-		const { info, onSelect } = this.props
+		const { user, blogs, onSelect } = this.props
 
 		return (
 			<div className="container">
 				<div className="profile">
 					<span className="profile_image">
-						<svg className="svg_profile">
-							<circle />
-							<text>{info.id.slice(0, 1)}</text>
-						</svg>
+						{user.image && <img src={user.image} />}
+						{!user.image &&
+							<svg className="svg_profile">
+								<circle />
+								<text>{user.name.slice(0, 1)}</text>
+							</svg>
+						}
 					</span>
-					<span className="profile_item">{info.blogs[0].nickname}</span>
-					<span className="profile_item">({info.id})</span>
+					<span className="profile_item">{user.name}</span>
+					<span className="profile_item">({user.loginId})</span>
 
 					<button className="btn btn_tistory btn_disconnect" onClick={disconnectAuth}>연결해제</button>
 				</div>
 
 				<div className="blog_list">
-				{info.blogs.map(blog =>
+				{blogs.map(blog =>
 					<div key={blog.url} className="blog_item" onClick={() => onSelect(blog)}>
 						<span className="blog_image">
 							{blog.profileImageUrl && <img src={blog.profileImageUrl} />}
@@ -49,7 +56,8 @@ class Index extends Component {
 }
 
 Index.propTypes = {
-	info: PropTypes.object.isRequired,
+	user: PropTypes.object.isRequired,
+	blogs: PropTypes.array.isRequired,
 	onSelect: PropTypes.func.isRequired
 }
 

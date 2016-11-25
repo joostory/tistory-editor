@@ -7,15 +7,15 @@ class Header extends Component {
 	}
 
 	render() {
-		const { info, currentBlog, onSelect } = this.props
+		const { user, currentBlog, onSelect } = this.props
 
 		return (
 			<header className="header">
 				<button className="btn btn_back" onClick={() => onSelect(null)}>
 					<svg width="20" height="30">
-						<g strokeWidth="5" stroke="#666">
-							<line x1="17" y1="3" x2="3" y2="16" />
-							<line x1="3" y1="14" x2="17" y2="27" />
+						<g strokeWidth="3" stroke="#666">
+							<line x1="15" y1="5" x2="5" y2="16" />
+							<line x1="5" y1="14" x2="15" y2="25" />
 						</g>
 					</svg>
 				</button>
@@ -37,7 +37,7 @@ class Header extends Component {
 }
 
 Header.propTypes = {
-	info: PropTypes.object.isRequired,
+	user: PropTypes.object.isRequired,
 	currentBlog: PropTypes.object.isRequired,
 	onSelect: PropTypes.func.isRequired
 }

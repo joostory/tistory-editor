@@ -24,12 +24,12 @@ class Blog extends Component {
 	}
 
 	render() {
-		const { info, currentBlog } = this.props
+		const { user, currentBlog } = this.props
 		const { currentPost } = this.state
 
 		return (
 			<div className="container">
-				<Sidebar info={info} currentBlog={currentBlog}
+				<Sidebar user={user} currentBlog={currentBlog}
 					onSelectBlog={this.handleSelectBlog.bind(this)}
 					onSelectPost={this.handleSelectPost.bind(this)} />
 				<Content post={{}} onSave={() => {}} />
@@ -39,7 +39,7 @@ class Blog extends Component {
 }
 
 Blog.propTypes = {
-	info: PropTypes.object.isRequired,
+	user: PropTypes.object.isRequired,
 	currentBlog: PropTypes.object.isRequired,
 	onSelect: PropTypes.func.isRequired
 }

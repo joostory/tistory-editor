@@ -14,6 +14,7 @@
 /* index */
 .profile { text-align:center; margin:50px auto 20px }
 .profile .profile_image { display:block; margin:0 auto 10px; width:50px; height:50px; background:transparent }
+.profile .profile_image img { width:50px; height:50px; border-radius:25px }
 .profile .profile_item { display:block }
 .profile .btn_disconnect { margin-top:10px; width:200px; height:40px; font-size:14px }
 
