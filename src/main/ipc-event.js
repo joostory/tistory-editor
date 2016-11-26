@@ -4,6 +4,7 @@ const tistory = require('./tistory-api')
 
 const init = () => {
 	const fetchUser = (evt, auth) => {
+		console.log("fetchUser", auth)
 		tistory.fetchUser(auth).then(res => {
 			if (!res.tistory || res.tistory.status != 200) {
 				throw "Error:" + res.tistory.status
@@ -15,6 +16,7 @@ const init = () => {
 	}
 
 	const fetchBlogs = (evt, auth) => {
+		console.log("fetchBlogs", auth)
 		tistory.fetchBlogInfo(auth).then(res => {
 			if (!res.tistory || res.tistory.status != 200) {
 				throw "Error:" + res.tistory.status
@@ -58,16 +60,15 @@ const init = () => {
 		console.log("request-auth")
 	  tistory.getAccessToken(auth => {
 	    storage.set("auth", auth)
-	    fetchInfo(evt, auth)
-	  }).catch(err => {
-			fetchInfoErrorHandler(evt, err)
+	    fetchUser(evt, auth)
+			fetchBlogs(evt, auth)
 		})
 	})
 
 	ipcMain.on("disconnect-auth", (evt, arg) => {
 		console.log("disconnect-auth")
     storage.set("auth", {})
-    evt.sender.send('receive-info', {})
+    evt.sender.send('receive-user', {})
 	})
 }
 
