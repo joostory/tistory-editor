@@ -6,11 +6,9 @@ const init = () => {
 	const fetchUser = (evt, auth) => {
 		console.log("fetchUser", auth)
 		tistory.fetchUser(auth).then(res => {
-			if (!res.tistory || res.tistory.status != 200) {
-				throw "Error:" + res.tistory.status
-			}
 			evt.sender.send('receive-user', res.tistory.item)
 		}).catch(err => {
+			console.error(err)
 			evt.sender.send('receive-user', {})
 		})
 	}
@@ -18,13 +16,20 @@ const init = () => {
 	const fetchBlogs = (evt, auth) => {
 		console.log("fetchBlogs", auth)
 		tistory.fetchBlogInfo(auth).then(res => {
-			if (!res.tistory || res.tistory.status != 200) {
-				throw "Error:" + res.tistory.status
-			}
-
 			evt.sender.send('receive-blogs', res.tistory.item.blogs)
 		}).catch(err => {
+			console.error(err)
 			evt.sender.send('receive-blogs', [])
+		})
+	}
+
+	const fetchPosts = (evt, auth, blogName) => {
+		console.log("fetchPosts", auth)
+		tistory.fetchPosts(auth, blogName).then(res => {
+			evt.sender.send('receive-posts', res.tistory.item.posts)
+		}).catch(err => {
+			console.error(err)
+			evt.sender.send('receive-posts', [])
 		})
 	}
 
@@ -54,6 +59,20 @@ const init = () => {
 
 			fetchBlogs(evt, auth)
 	  })
+	})
+
+	ipcMain.on("fetch-posts", (evt, blogName) => {
+		console.log("fetch-posts")
+		storage.get("auth", (error, auth) => {
+			if (error) throw error
+
+			if (!auth || !auth.access_token) {
+				evt.sender.send('receive-user', {})
+				return
+			}
+
+			fetchPosts(evt, auth, blogName)
+		})
 	})
 
 	ipcMain.on("request-auth", (evt, arg) => {

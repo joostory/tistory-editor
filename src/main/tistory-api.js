@@ -24,6 +24,7 @@ const fetchBlogInfo = (auth) => {
     access_token: auth.access_token,
     output: "json"
   }))
+  .then(errorHandler)
   .then(res => res.json())
 }
 
@@ -32,12 +33,32 @@ const fetchUser = (auth) => {
     access_token: auth.access_token,
     output: "json"
   }))
+  .then(errorHandler)
   .then(res => res.json())
+}
+
+const fetchPosts = (auth, blogName) => {
+  return fetch("https://www.tistory.com/apis/post/list?" + querystring.stringify({
+    access_token: auth.access_token,
+    output: "json",
+    blogName: blogName
+  }))
+  .then(errorHandler)
+  .then(res => res.json())
+}
+
+const errorHandler = (res) => {
+  if (!res.ok) {
+    throw "Error:" + res.tistory.status
+  }
+
+  return res
 }
 
 
 module.exports = {
 	getAccessToken: getAccessToken,
 	fetchBlogInfo: fetchBlogInfo,
-  fetchUser: fetchUser
+  fetchUser: fetchUser,
+  fetchPosts: fetchPosts
 }

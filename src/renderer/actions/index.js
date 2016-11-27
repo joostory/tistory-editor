@@ -1,6 +1,6 @@
 import * as types from '../constants/ActionTypes'
 import Database from '../database'
-import {ipcRenderer} from 'electron'
+import { ipcRenderer } from 'electron'
 
 export function updateLocalPost(post) {
 	return { type: types.UPDATE_LOCAL_POST, post }
@@ -36,6 +36,10 @@ export const receiveUser = (user) => {
 
 export const receiveBlogs = (blogs) => {
 	return { type: types.RECEIVE_BLOGS, blogs }
+}
+
+export const receivePosts = (posts) => {
+	return { type: types.RECEIVE_POSTS, posts }
 }
 
 export const fetchUser = () => {

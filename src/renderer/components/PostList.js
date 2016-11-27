@@ -37,10 +37,10 @@ class PostList extends Component {
 	}
 
 	render() {
-		const { posts } = this.props
+		const { posts, currentPost } = this.props
 		const { selectedId } = this.state
 
-		let list = posts.map((item, i) => {
+		let list = posts? posts.map((item, i) => {
 			let className = classnames({
 				"item": true,
 				"selected": item.id == selectedId
@@ -48,14 +48,14 @@ class PostList extends Component {
 			return (
 				<li key={item.id}>
 					<a className={className} onClick={e => this.handleSelect(item.id)}>
-						<span className="item_date">{dateformat(item.date, 'yyyy/mm/dd HH:MM')}</span>
-						<span className="item_content">{item.content.substring(0,100)}</span>
+						<span className="item_date">{item.date}</span>
+						<span className="item_content">{item.title}</span>
 					</a>
 
 					<button className="btn_del" onClick={e => this.handleDelete(e, item.id)}>x</button>
 				</li>
 			)
-		})
+		}) : []
 
 		return (
 			<ul className="list">
@@ -68,9 +68,8 @@ class PostList extends Component {
 
 PostList.propTypes = {
 	posts: PropTypes.array.isRequired,
-	onSelect: PropTypes.func,
-	onAdd: PropTypes.func,
-	onRemove: PropTypes.func
+	currentPost: PropTypes.object.isRequired,
+	onSelect: PropTypes.func
 }
 
 export default PostList
