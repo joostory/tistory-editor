@@ -33,6 +33,16 @@ const init = () => {
 		})
 	}
 
+	const fetchContent = (evt, auth, blogName, postId) => {
+		console.log("fetchContent", auth)
+		tistory.fetchContent(auth, blogName, postId).then(res => {
+			evt.sender.send('receive-content', res.tistory.item)
+		}).catch(err => {
+			console.error(err)
+			evt.sender.send('receive-content', {})
+		})
+	}
+
 	ipcMain.on("fetch-user", (evt) => {
 		console.log("fetch-user")
 	  storage.get("auth", (error, auth) => {
@@ -72,6 +82,20 @@ const init = () => {
 			}
 
 			fetchPosts(evt, auth, blogName)
+		})
+	})
+
+	ipcMain.on("fetch-content", (evt, blogName, postId) => {
+		console.log("fetch-content", blogName, postId)
+		storage.get("auth", (error, auth) => {
+			if (error) throw error
+
+			if (!auth || !auth.access_token) {
+				evt.sender.send('receive-content', {})
+				return
+			}
+
+			fetchContent(evt, auth, blogName, postId)
 		})
 	})
 

@@ -53,7 +53,7 @@ class Blog extends Component {
 				<Sidebar user={user} currentBlog={currentBlog} posts={posts} currentPost={currentPost}
 					onSelectBlog={this.handleSelectBlog.bind(this)}
 					onSelectPost={this.handleSelectPost.bind(this)} />
-				<Content post={currentPost} onSave={() => {}} />
+				<Content currentBlog={currentBlog} post={currentPost} onSave={() => {}} />
 			</div>
 		)
 	}

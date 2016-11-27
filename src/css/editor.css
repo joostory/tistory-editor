@@ -48,7 +48,7 @@
 .header .current_blog .blog_title { line-height: 30px; font-size:16px; color:#ccc; font-weight:bold }
 .header .title { color: #eee; font-weight: bold; line-height: 40px; padding: 5px 20px; }
 
-.list { margin: 0; }
+.list { margin: 0; padding:0; list-style:none; position:absolute; left:0; width:300px; top:50px; bottom:0; overflow:auto }
 .list li { position: relative; }
 .list li .item { position: relative; display: block; padding: 10px; text-decoration: none; color: #aaa; cursor: pointer; }
 .list li .item .item_title { display: block; font-size: 14px; }
@@ -59,6 +59,8 @@
 .list li .btn_add:hover { background: #263238; color: #ccc; }
 .list li .btn_del { position: absolute; right: 3px; top: 3px; color: #ccc; cursor: pointer; border: 0; background: transparent; display: none; }
 .list li:hover .btn_del { display: block; }
+
+.content { position: absolute; top: 50px; bottom: 0; left: 0; right: 0; background:#162228; overflow:auto }
 
 .editor { position: absolute; left: 300px; right: 0; top:0; bottom: 0; }
 .editor .empty,

@@ -47,8 +47,20 @@ const fetchPosts = (auth, blogName) => {
   .then(res => res.json())
 }
 
+const fetchContent = (auth, blogName, postId) => {
+  return fetch("https://www.tistory.com/apis/post/read?" + querystring.stringify({
+    access_token: auth.access_token,
+    output: "json",
+    blogName: blogName,
+    postId: postId
+  }))
+  .then(errorHandler)
+  .then(res => res.json())
+}
+
 const errorHandler = (res) => {
   if (!res.ok) {
+    console.error(res)
     throw "Error:" + res.tistory.status
   }
 
@@ -60,5 +72,6 @@ module.exports = {
 	getAccessToken: getAccessToken,
 	fetchBlogInfo: fetchBlogInfo,
   fetchUser: fetchUser,
-  fetchPosts: fetchPosts
+  fetchPosts: fetchPosts,
+  fetchContent: fetchContent
 }
