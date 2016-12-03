@@ -2,43 +2,66 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { ipcRenderer } from 'electron'
 
+import * as ContentMode from '../constants/ContentMode'
+import ContentViewer from './ContentViewer'
+import Editor from './Editor'
+
 class Content extends Component {
 
 	constructor(props, context) {
 		super(props, context)
 
 		this.state = {
-			content: "",
-			tags: []
+			mode: ContentMode.VIEWER,
+			post: props.post
 		}
 		ipcRenderer.on("receive-content", (e, post) => {
 			this.setState({
-				content: post.content,
-				tags: post.tags
+				mode: ContentMode.VIEWER,
+				post: post
 			})
 		})
 	}
 
 	componentWillReceiveProps(nextProps) {
 		const { currentBlog, post } = nextProps
+		const currentPost = this.state.post
 		if (currentBlog.name && post.id) {
-			ipcRenderer.send("fetch-content", currentBlog.name, post.id)
+			if (!currentPost || !currentPost.id || currentPost.id != post.id) {
+				ipcRenderer.send("fetch-content", currentBlog.name, post.id)
+			}
 		}
 	}
 
+	handleModify() {
+		this.setState({
+			mode: ContentMode.MARKDOWN
+		})
+	}
+
+	handleView() {
+		this.setState({
+			mode: ContentMode.VIEWER
+		})
+	}
+
 	render() {
-		const { post } = this.props
-		const { content } = this.state
+		const { mode, post } = this.state
 
-		return (
-			<div className='editor'>
-				<div className="statusbar">
-					<span className="message">{post.title}</span>
-				</div>
+		if (!post.id) {
+			return (
+				<div className="content_wrap">Select post</div>
+			)
+		}
 
-				<div className="content" dangerouslySetInnerHTML={{__html: content}} />
-			</div>
-		)
+		switch (mode) {
+			case ContentMode.MARKDOWN:
+				return <Editor post={post} onSave={() => {console.log("handleSave")}} onCancel={this.handleView.bind(this)} />
+			case ContentMode.WYSIWYG:
+			case ContentMode.VIEWER:
+			default:
+				return <ContentViewer post={post} onModify={this.handleModify.bind(this)} />
+		}
 	}
 }
 

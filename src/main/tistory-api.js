@@ -15,7 +15,7 @@ const getAccessToken = (callback) => {
     }
   })
 
-  return tistoryOAuth.getAccessToken()
+  return tistoryOAuth.getAccessToken({})
     .then(token => callback(token))
 }
 

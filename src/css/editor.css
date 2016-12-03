@@ -60,9 +60,14 @@
 .list li .btn_del { position: absolute; right: 3px; top: 3px; color: #ccc; cursor: pointer; border: 0; background: transparent; display: none; }
 .list li:hover .btn_del { display: block; }
 
-.content { position: absolute; top: 50px; bottom: 0; left: 0; right: 0; background:#162228; overflow:auto }
+.content_wrap { position: absolute; left: 300px; right: 0; top:0; bottom: 0; overflow:auto }
 
-.editor { position: absolute; left: 300px; right: 0; top:0; bottom: 0; }
+.viewer { padding: 20px }
+.viewer_header { margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid #eee }
+.viewer_header .viewer_title {  }
+.viewer_header .viewer_info {  }
+.viewer_content { margin:40px 0 }
+
 .editor .empty,
 .editor .ReactCodeMirror { position: absolute; top: 50px; bottom: 0; left: 0; right: 0; background:#162228; }
 .editor .CodeMirror { height: 100%; padding:0 10px }

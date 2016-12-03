@@ -32,11 +32,9 @@ class Editor extends Component {
 	componentWillReceiveProps(nextProps) {
 		const { post } = this.state
 
-		if (nextProps.post.id != post.id) {
-			this.setState({
-				post: nextProps.post
-			})
-		}
+		this.setState({
+			post: nextProps.post
+		})
 	}
 
 	handleChange(value) {
@@ -77,7 +75,8 @@ class Editor extends Component {
 	}
 
 	render() {
-		const { post } = this.state;
+		const { onCancel } = this.props
+		const { post } = this.state
 
 		let editor = <div className="empty"><p>post를 선택해 주세요.</p></div>
 		if (post.id) {
@@ -93,24 +92,27 @@ class Editor extends Component {
 		let allowAction = post.id != null
 		let message = post.id != null? "마지막 수정일: " + dateformat(post.date, 'yyyy/mm/dd HH:MM') : ""
 		return (
-			<div className="editor">
-				<div className="statusbar">
-					<p className="message">{message}</p>
-					<div className="btn_wrap">
-						<button className="btn btn_save" disabled={!allowAction} onClick={this.handleSave.bind(this)}>저장</button>
+			<div className="content_wrap">
+				<div className="editor">
+					<div className="statusbar">
+						<p className="message">{message}</p>
+						<div className="btn_wrap">
+							<button className="btn btn_save" disabled={!allowAction} onClick={this.handleSave.bind(this)}>저장</button>
+							<button className="btn btn_cancel" disabled={!allowAction} onClick={onCancel}>취소</button>
+						</div>
 					</div>
+
+					{editor}
 				</div>
-
-				{editor}
-
 			</div>
 		)
 	}
 }
 
 Editor.propTypes = {
-	post: PropTypes.object,
-	onSave: PropTypes.func
+	post: PropTypes.object.isRequired,
+	onSave: PropTypes.func.isRequired,
+	onCancel: PropTypes.func.isRequired
 }
 
 export default Editor

@@ -102,9 +102,12 @@ const init = () => {
 	ipcMain.on("request-auth", (evt, arg) => {
 		console.log("request-auth")
 	  tistory.getAccessToken(auth => {
+			console.log("getToken", auth)
 	    storage.set("auth", auth)
 	    fetchUser(evt, auth)
 			fetchBlogs(evt, auth)
+		}).catch(e => {
+			console.log(e)
 		})
 	})
 
