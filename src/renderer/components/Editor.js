@@ -8,6 +8,7 @@ import 'codemirror/addon/search/search'
 import 'codemirror/addon/search/searchcursor'
 import 'codemirror/addon/search/jump-to-line'
 import dateformat from 'dateformat'
+import toMarkdown from 'to-markdown'
 
 import Database from '../database'
 
@@ -15,7 +16,8 @@ class Editor extends Component {
 	constructor(props, context) {
 		super(props, context)
 		this.state = {
-			post: props.post
+			post: props.post,
+			content: toMarkdown(props.post.content)
 		}
 
 		this.handleKeyDown = this.handleKeyDown.bind(this)
@@ -32,19 +34,18 @@ class Editor extends Component {
 	componentWillReceiveProps(nextProps) {
 		const { post } = this.state
 
-		this.setState({
-			post: nextProps.post
-		})
+		if (post.id != nextProps.post.id) {
+
+			this.setState({
+				post: nextProps.post,
+				content: toMarkdown(nextProps.post.content)
+			})
+		}
 	}
 
 	handleChange(value) {
-		const { onSave } = this.props
-		const { post } = this.state
-
 		this.setState({
-			post: Object.assign({}, post, {
-				content: value
-			})
+			content: value
 		})
 	}
 
@@ -76,7 +77,7 @@ class Editor extends Component {
 
 	render() {
 		const { onCancel } = this.props
-		const { post } = this.state
+		const { post, content } = this.state
 
 		let editor = <div className="empty"><p>post를 선택해 주세요.</p></div>
 		if (post.id) {
@@ -86,7 +87,7 @@ class Editor extends Component {
 				mode: 'markdown',
 				theme:'atom-material'
 	    }
-			editor = <Codemirror value={post.content} onChange={this.handleChange.bind(this)} options={options} />
+			editor = <Codemirror value={content} onChange={this.handleChange.bind(this)} options={options} />
 		}
 
 		let allowAction = post.id != null
