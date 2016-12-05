@@ -2,7 +2,7 @@ const storage = require('electron-json-storage')
 const {ipcMain} = require('electron')
 const tistory = require('./tistory-api')
 
-const init = () => {
+module.exports.init = () => {
 	const fetchUser = (evt, auth) => {
 		console.log("fetchUser", auth)
 		tistory.fetchUser(auth).then(res => {
@@ -20,26 +20,6 @@ const init = () => {
 		}).catch(err => {
 			console.error(err)
 			evt.sender.send('receive-blogs', [])
-		})
-	}
-
-	const fetchPosts = (evt, auth, blogName) => {
-		console.log("fetchPosts", auth)
-		tistory.fetchPosts(auth, blogName).then(res => {
-			evt.sender.send('receive-posts', res.tistory.item.posts)
-		}).catch(err => {
-			console.error(err)
-			evt.sender.send('receive-posts', [])
-		})
-	}
-
-	const fetchContent = (evt, auth, blogName, postId) => {
-		console.log("fetchContent", auth)
-		tistory.fetchContent(auth, blogName, postId).then(res => {
-			evt.sender.send('receive-content', res.tistory.item)
-		}).catch(err => {
-			console.error(err)
-			evt.sender.send('receive-content', {})
 		})
 	}
 
@@ -77,11 +57,43 @@ const init = () => {
 			if (error) throw error
 
 			if (!auth || !auth.access_token) {
-				evt.sender.send('receive-user', {})
+				evt.sender.send('receive-posts', [])
 				return
 			}
 
-			fetchPosts(evt, auth, blogName)
+			tistory.fetchPosts(auth, blogName).then(res => {
+				evt.sender.send('receive-posts', res.tistory.item.posts)
+			}).catch(err => {
+				console.error(err)
+				evt.sender.send('receive-posts', [])
+			})
+		})
+	})
+
+	ipcMain.on("fetch-categories", (evt, blogName) => {
+		console.log("fetch-categories")
+		storage.get("auth", (error, auth) => {
+			if (error) throw error
+
+			if (!auth || !auth.access_token) {
+				evt.sender.send('receive-categories', [])
+				return
+			}
+
+			tistory.fetchCategories(auth, blogName).then(res => {
+				let categories = res.tistory.item.categories.map(category => {
+					return {
+						'id': category.id,
+						'parent': category.parent,
+						'label': category.label
+					}
+				})
+
+				evt.sender.send('receive-categories', categories)
+			}).catch(err => {
+				console.error(err)
+				evt.sender.send('receive-categories', [])
+			})
 		})
 	})
 
@@ -95,7 +107,12 @@ const init = () => {
 				return
 			}
 
-			fetchContent(evt, auth, blogName, postId)
+			tistory.fetchContent(auth, blogName, postId).then(res => {
+				evt.sender.send('receive-content', res.tistory.item)
+			}).catch(err => {
+				console.error(err)
+				evt.sender.send('receive-content', {})
+			})
 		})
 	})
 
@@ -116,8 +133,4 @@ const init = () => {
     storage.set("auth", {})
     evt.sender.send('receive-user', {})
 	})
-}
-
-module.exports = {
-	init: init
 }

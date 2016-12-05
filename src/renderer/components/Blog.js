@@ -11,12 +11,20 @@ class Blog extends Component {
 		super(props, context)
 		this.state = {
 			posts: [],
-			currentPost: {}
+			currentPost: {},
+			categories: []
 		}
 
 		ipcRenderer.on("receive-posts", (e, posts) => {
 			console.log(posts)
 			this.addPosts(posts)
+		})
+
+		ipcRenderer.on("receive-categories", (e, categories) => {
+			console.log(categories)
+			this.setState({
+				categories: categories
+			})
 		})
 	}
 
@@ -32,6 +40,7 @@ class Blog extends Component {
 	componentDidMount() {
 		const { currentBlog } = this.props
 		ipcRenderer.send("fetch-posts", currentBlog.name)
+		ipcRenderer.send("fetch-categories", currentBlog.name)
 	}
 
 	handleSelectBlog(blog) {
@@ -46,14 +55,14 @@ class Blog extends Component {
 
 	render() {
 		const { user, currentBlog } = this.props
-		const { posts, currentPost } = this.state
+		const { posts, currentPost, categories } = this.state
 
 		return (
 			<div className="container">
-				<Sidebar user={user} currentBlog={currentBlog} posts={posts} currentPost={currentPost}
+				<Sidebar user={user} currentBlog={currentBlog} posts={posts} categories={categories} currentPost={currentPost}
 					onSelectBlog={this.handleSelectBlog.bind(this)}
 					onSelectPost={this.handleSelectPost.bind(this)} />
-				<Content currentBlog={currentBlog} post={currentPost} onSave={() => {}} />
+				<Content currentBlog={currentBlog} post={currentPost} categories={categories} onSave={() => {}} />
 			</div>
 		)
 	}

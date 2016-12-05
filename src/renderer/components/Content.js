@@ -46,6 +46,7 @@ class Content extends Component {
 	}
 
 	render() {
+		const { categories } = this.props
 		const { mode, post } = this.state
 
 		if (!post.id) {
@@ -56,11 +57,11 @@ class Content extends Component {
 
 		switch (mode) {
 			case ContentMode.MARKDOWN:
-				return <Editor post={post} onSave={() => {console.log("handleSave")}} onCancel={this.handleView.bind(this)} />
+				return <Editor post={post} categories={categories} onSave={() => {console.log("handleSave")}} onCancel={this.handleView.bind(this)} />
 			case ContentMode.WYSIWYG:
 			case ContentMode.VIEWER:
 			default:
-				return <ContentViewer post={post} onModify={this.handleModify.bind(this)} />
+				return <ContentViewer post={post} categories={categories} onModify={this.handleModify.bind(this)} />
 		}
 	}
 }
@@ -68,6 +69,7 @@ class Content extends Component {
 Content.propTypes = {
 	currentBlog: PropTypes.object.isRequired,
 	post: PropTypes.object.isRequired,
+	categories: PropTypes.array.isRequired,
 	onSave: PropTypes.func.isRequired
 }
 

@@ -10,14 +10,14 @@ class Sidebar extends Component {
 	}
 
 	render() {
-		const { user, currentBlog, posts, currentPost, onSelectBlog, onSelectPost } = this.props
+		const { user, currentBlog, posts, categories, currentPost, onSelectBlog, onSelectPost } = this.props
 
 		return (
 			<div className="sidebar">
 				<Header user={user} currentBlog={currentBlog}
 					onSelect={onSelectBlog} />
 
-				<PostList posts={posts} currentPost={currentPost}
+				<PostList categories={categories} posts={posts} currentPost={currentPost}
 					onSelect={onSelectPost} />
 			</div>
 		)
@@ -27,6 +27,7 @@ class Sidebar extends Component {
 Sidebar.PropTypes = {
 	user: PropTypes.object.isRequired,
 	posts: PropTypes.array.isRequired,
+	categories: PropTypes.array.isRequired,
 	currentBlog: PropTypes.object.isRequired,
 	currentPost: PropTypes.object.isRequired,
 	onSelectBlog: PropTypes.func.isRequired,

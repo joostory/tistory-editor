@@ -18,7 +18,7 @@ class PostList extends Component {
 	}
 
 	render() {
-		const { posts, currentPost } = this.props
+		const { categories, posts, currentPost } = this.props
 		const { selectedId } = this.state
 
 		let list = posts? posts.map((item, i) => {
@@ -27,12 +27,22 @@ class PostList extends Component {
 				"selected": item.id == selectedId
 			})
 			let visibility = new Visibility(item.visibility)
+			let category = categories.find(category => item.categoryId == category.id)
 			return (
 				<li key={item.id}>
 					<a className={className} onClick={e => this.handleSelect(item)}>
-						<span className="item_date">{item.date}</span>
-						<span className="item_content">{item.title}</span>
-						<span>{visibility.name}</span>
+						<span className="item_info">
+							<span className="item_date">{item.date}</span>
+							<span className="item_visibility">{visibility.name}</span>
+						</span>
+
+						<span className="item_title">{item.title}</span>
+
+						<span className="item_info">
+							{category &&
+								<span>{category.label}</span>
+							}
+						</span>
 					</a>
 				</li>
 			)
@@ -47,6 +57,7 @@ class PostList extends Component {
 }
 
 PostList.propTypes = {
+	categories: PropTypes.array.isRequired,
 	posts: PropTypes.array.isRequired,
 	currentPost: PropTypes.object.isRequired,
 	onSelect: PropTypes.func

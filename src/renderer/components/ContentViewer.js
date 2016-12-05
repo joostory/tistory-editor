@@ -4,12 +4,17 @@ import { ipcRenderer } from 'electron'
 
 class ContentViewer extends Component {
   render() {
-    const { post, onModify } = this.props
+    const { post, categories, onModify } = this.props
+
+    let category = categories.find(category => post.categoryId == category.id)
 
     return (
       <div className='content_wrap'>
         <div className='viewer'>
           <div className='viewer_header'>
+            {category &&
+              <span className='viewer_category'>{category.label}</span>
+            }
     				<h1 className='viewer_title'>{post.title}</h1>
             <div className='viewer_info'>
               <span>{post.date}</span>
@@ -25,6 +30,7 @@ class ContentViewer extends Component {
 
 ContentViewer.propTypes = {
   post: PropTypes.object.isRequired,
+  categories: PropTypes.array.isRequired,
   onModify: PropTypes.func.isRequired
 }
 

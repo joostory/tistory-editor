@@ -5,7 +5,7 @@ const fetch = require('node-fetch')
 const querystring = require('querystring')
 const ipc = require('./ipc-event')
 
-const getAccessToken = (callback) => {
+module.exports.getAccessToken = (callback) => {
   oauth2info = JSON.parse(fs.readFileSync(path.join(__dirname, "../../oauth2info.json"), 'utf8'))
   const tistoryOAuth = oauth2(oauth2info, {
     alwaysOnTop: true,
@@ -19,7 +19,7 @@ const getAccessToken = (callback) => {
     .then(token => callback(token))
 }
 
-const fetchBlogInfo = (auth) => {
+module.exports.fetchBlogInfo = (auth) => {
   return fetch("https://www.tistory.com/apis/blog/info?" + querystring.stringify({
     access_token: auth.access_token,
     output: "json"
@@ -28,7 +28,7 @@ const fetchBlogInfo = (auth) => {
   .then(res => res.json())
 }
 
-const fetchUser = (auth) => {
+module.exports.fetchUser = (auth) => {
   return fetch("https://www.tistory.com/apis/user/?" + querystring.stringify({
     access_token: auth.access_token,
     output: "json"
@@ -37,7 +37,7 @@ const fetchUser = (auth) => {
   .then(res => res.json())
 }
 
-const fetchPosts = (auth, blogName) => {
+module.exports.fetchPosts = (auth, blogName) => {
   return fetch("https://www.tistory.com/apis/post/list?" + querystring.stringify({
     access_token: auth.access_token,
     output: "json",
@@ -47,12 +47,22 @@ const fetchPosts = (auth, blogName) => {
   .then(res => res.json())
 }
 
-const fetchContent = (auth, blogName, postId) => {
+module.exports.fetchContent = (auth, blogName, postId) => {
   return fetch("https://www.tistory.com/apis/post/read?" + querystring.stringify({
     access_token: auth.access_token,
     output: "json",
     blogName: blogName,
     postId: postId
+  }))
+  .then(errorHandler)
+  .then(res => res.json())
+}
+
+module.exports.fetchCategories = (auth, blogName) => {
+  return fetch("https://www.tistory.com/apis/category/list?" + querystring.stringify({
+    access_token: auth.access_token,
+    output: "json",
+    blogName: blogName
   }))
   .then(errorHandler)
   .then(res => res.json())
@@ -65,13 +75,4 @@ const errorHandler = (res) => {
   }
 
   return res
-}
-
-
-module.exports = {
-	getAccessToken: getAccessToken,
-	fetchBlogInfo: fetchBlogInfo,
-  fetchUser: fetchUser,
-  fetchPosts: fetchPosts,
-  fetchContent: fetchContent
 }

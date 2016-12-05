@@ -43,6 +43,16 @@ class Editor extends Component {
 		}
 	}
 
+	handleTitleChange(e) {
+		const { post } = this.state
+		post.title = value
+		this.setState({
+			post: Object.assign({}, post, {
+				title: e.target.value
+			})
+		})
+	}
+
 	handleChange(value) {
 		this.setState({
 			content: value
@@ -82,21 +92,22 @@ class Editor extends Component {
 		let editor = <div className="empty"><p>post를 선택해 주세요.</p></div>
 		if (post.id) {
 			var options = {
-				lineNumbers: true,
+				lineNumbers: false,
 				lineWrapping: true,
 				mode: 'markdown',
-				theme:'atom-material'
+				theme:'default'
 	    }
 			editor = <Codemirror value={content} onChange={this.handleChange.bind(this)} options={options} />
 		}
 
 		let allowAction = post.id != null
-		let message = post.id != null? "마지막 수정일: " + dateformat(post.date, 'yyyy/mm/dd HH:MM') : ""
 		return (
 			<div className="content_wrap">
 				<div className="editor">
 					<div className="statusbar">
-						<p className="message">{message}</p>
+						<span className="title">
+							<input type="text" value={post.title} onChange={this.handleTitleChange.bind(this)} />
+						</span>
 						<div className="btn_wrap">
 							<button className="btn btn_save" disabled={!allowAction} onClick={this.handleSave.bind(this)}>저장</button>
 							<button className="btn btn_cancel" disabled={!allowAction} onClick={onCancel}>취소</button>
@@ -112,6 +123,7 @@ class Editor extends Component {
 
 Editor.propTypes = {
 	post: PropTypes.object.isRequired,
+	categories: PropTypes.array.isRequired,
 	onSave: PropTypes.func.isRequired,
 	onCancel: PropTypes.func.isRequired
 }
