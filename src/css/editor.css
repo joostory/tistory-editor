@@ -81,6 +81,10 @@ input, button, a { outline:none }
 .editor .statusbar .title { position:absolute; left:15px; font-size:24px; bottom:10px }
 .editor .statusbar .title input { width:500px; font-size:24px; border:0; background:transparent }
 .editor .statusbar .btn_wrap { position: absolute; right: 10px; bottom: 10px; }
-.editor .statusbar .btn_wrap .btn { height: 30px; padding: 0 10px; background:#666; border:0; color:#ccc }
+.editor .statusbar .btn_wrap .btn { height: 30px; padding: 0 15px; background:#666; border:0; color:#ccc }
 .editor .statusbar .btn_wrap .btn:hover { background:#777 }
 .editor .statusbar .btn_wrap .btn:disabled { background:#444; color:#666 }
+.editor .statusbar .btn_wrap .btn.active { background:#777 }
+.editor .statusbar .btn_wrap .btn_info { margin-right:5px; border-radius:15px }
+.editor .info_box { position:absolute; top:70px; left:50%; width:500px; height:300px; margin-left:-250px; background:#fff; box-shadow: #333 0 1px 10px; border-radius:5px; z-index:10 }
+.editor .cover { position:absolute; top:50px; bottom:0; left:0; right:0; background:#333; opacity:0.7; z-index:9 }

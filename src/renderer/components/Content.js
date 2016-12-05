@@ -15,12 +15,21 @@ class Content extends Component {
 			mode: ContentMode.VIEWER,
 			post: props.post
 		}
+	}
+
+	componentWillMount() {
+		console.log("add listener")
 		ipcRenderer.on("receive-content", (e, post) => {
 			this.setState({
 				mode: ContentMode.VIEWER,
 				post: post
 			})
 		})
+	}
+
+	componentWillUnmount() {
+		console.log("remove listener")
+		ipcRenderer.removeAllListeners(["receive-content"])
 	}
 
 	componentWillReceiveProps(nextProps) {

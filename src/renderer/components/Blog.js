@@ -14,13 +14,15 @@ class Blog extends Component {
 			currentPost: {},
 			categories: []
 		}
+	}
 
-		ipcRenderer.on("receive-posts", (e, posts) => {
+	componentWillMount() {
+		console.log("add listener")
+		ipcRenderer.once("receive-posts", (e, posts) => {
 			console.log(posts)
 			this.addPosts(posts)
-		})
 
-		ipcRenderer.on("receive-categories", (e, categories) => {
+		}).once("receive-categories", (e, categories) => {
 			console.log(categories)
 			this.setState({
 				categories: categories

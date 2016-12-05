@@ -7,6 +7,7 @@ import 'codemirror/addon/dialog/dialog'
 import 'codemirror/addon/search/search'
 import 'codemirror/addon/search/searchcursor'
 import 'codemirror/addon/search/jump-to-line'
+import classnames from 'classnames'
 import dateformat from 'dateformat'
 import toMarkdown from 'to-markdown'
 
@@ -17,7 +18,8 @@ class Editor extends Component {
 		super(props, context)
 		this.state = {
 			post: props.post,
-			content: toMarkdown(props.post.content)
+			content: toMarkdown(props.post.content),
+			showInfoBox: false
 		}
 
 		this.handleKeyDown = this.handleKeyDown.bind(this)
@@ -35,7 +37,6 @@ class Editor extends Component {
 		const { post } = this.state
 
 		if (post.id != nextProps.post.id) {
-
 			this.setState({
 				post: nextProps.post,
 				content: toMarkdown(nextProps.post.content)
@@ -45,11 +46,12 @@ class Editor extends Component {
 
 	handleTitleChange(e) {
 		const { post } = this.state
-		post.title = value
+		let newPost = Object.assign({}, post, {
+			title: e.target.value
+		})
+
 		this.setState({
-			post: Object.assign({}, post, {
-				title: e.target.value
-			})
+			post: newPost
 		})
 	}
 
@@ -85,22 +87,24 @@ class Editor extends Component {
 		}
 	}
 
+	toggleInfoBox() {
+		const { showInfoBox } = this.state
+		this.setState({
+			showInfoBox: !showInfoBox
+		})
+	}
+
 	render() {
 		const { onCancel } = this.props
-		const { post, content } = this.state
+		const { post, content, showInfoBox } = this.state
 
-		let editor = <div className="empty"><p>post를 선택해 주세요.</p></div>
-		if (post.id) {
-			var options = {
-				lineNumbers: false,
-				lineWrapping: true,
-				mode: 'markdown',
-				theme:'default'
-	    }
-			editor = <Codemirror value={content} onChange={this.handleChange.bind(this)} options={options} />
-		}
+		var options = {
+			lineNumbers: false,
+			lineWrapping: true,
+			mode: 'markdown',
+			theme:'default'
+    }
 
-		let allowAction = post.id != null
 		return (
 			<div className="content_wrap">
 				<div className="editor">
@@ -109,12 +113,34 @@ class Editor extends Component {
 							<input type="text" value={post.title} onChange={this.handleTitleChange.bind(this)} />
 						</span>
 						<div className="btn_wrap">
-							<button className="btn btn_save" disabled={!allowAction} onClick={this.handleSave.bind(this)}>저장</button>
-							<button className="btn btn_cancel" disabled={!allowAction} onClick={onCancel}>취소</button>
+							<button className={classnames({
+								"btn": true,
+								"btn_info": true,
+								"active": showInfoBox
+							})} onClick={this.toggleInfoBox.bind(this)}>i</button>
+							<button className="btn btn_save" onClick={this.handleSave.bind(this)}>저장</button>
+							<button className="btn btn_cancel" onClick={onCancel}>취소</button>
 						</div>
 					</div>
 
-					{editor}
+					{showInfoBox &&
+						<div className="info_box">
+							<label><input type="radio" name="visibility" value="0" selected={post.visibility == 0} /> 저장</label>
+							<label><input type="radio" name="visibility" value="3" selected={post.visibility != 0} /> 발행</label>
+							<span>
+								{post.tags.tag &&
+									post.tags.tag.toString()
+								}
+							</span>
+						</div>
+					}
+
+					{showInfoBox &&
+						<div className="cover" onClick={this.toggleInfoBox.bind(this)} />
+					}
+
+					<Codemirror value={content} onChange={this.handleChange.bind(this)} options={options} />
+
 				</div>
 			</div>
 		)
