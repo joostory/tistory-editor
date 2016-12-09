@@ -11,38 +11,70 @@ class Blog extends Component {
 		super(props, context)
 		this.state = {
 			posts: [],
+			nextPostPage: 1,
 			currentPost: {},
-			categories: []
+			categories: [],
+			fetchPostLock: false,
+			fetchCategoryLock: false
 		}
+
+		this.receivePostsListener = this.receivePostsListener.bind(this)
+		this.receiveCategoriesListener = this.receiveCategoriesListener.bind(this)
+	}
+
+	receivePostsListener(e, posts) {
+		console.log("post", posts)
+		if (posts && posts.length > 0) {
+			this.addPosts(posts)
+		}
+	}
+
+	receiveCategoriesListener(e, categories) {
+		console.log("category", categories)
+		this.setState({
+			categories: categories,
+			fetchCategoryLock: false
+		})
 	}
 
 	componentWillMount() {
 		console.log("add listener")
-		ipcRenderer.once("receive-posts", (e, posts) => {
-			console.log(posts)
-			this.addPosts(posts)
+		ipcRenderer.on("receive-posts", this.receivePostsListener)
+		ipcRenderer.on("receive-categories", this.receiveCategoriesListener)
+	}
 
-		}).once("receive-categories", (e, categories) => {
-			console.log(categories)
-			this.setState({
-				categories: categories
-			})
-		})
+	componentWillUnmount() {
+		console.log("remove listener")
+		ipcRenderer.removeListener("receive-posts", this.receivePostsListener)
+		ipcRenderer.removeListener("receive-categories", this.receiveCategoriesListener)
 	}
 
 	addPosts(receivedPosts) {
-		const { posts } = this.state
+		const { posts, nextPostPage } = this.state
 		let newPosts = posts.slice()
 		newPosts.push(...receivedPosts)
 		this.setState({
-			posts: newPosts
+			posts: newPosts,
+			nextPostPage: nextPostPage + 1,
+			fetchPostLock: false
 		})
 	}
 
 	componentDidMount() {
 		const { currentBlog } = this.props
-		ipcRenderer.send("fetch-posts", currentBlog.name)
-		ipcRenderer.send("fetch-categories", currentBlog.name)
+		const { nextPostPage, fetchPostLock, fetchCategoryLock } = this.state
+		if (!fetchPostLock) {
+			ipcRenderer.send("fetch-posts", currentBlog.name, nextPostPage)
+			this.setState({
+				fetchPostLock: true
+			})
+		}
+		if (!fetchCategoryLock) {
+			ipcRenderer.send("fetch-categories", currentBlog.name)
+			this.setState({
+				fetchCategoryLock: true
+			})
+		}
 	}
 
 	handleSelectBlog(blog) {
@@ -55,6 +87,17 @@ class Blog extends Component {
 		})
 	}
 
+	handleRequestNextpage() {
+		const { currentBlog } = this.props
+		const { nextPostPage, fetchPostLock } = this.state
+		if (!fetchPostLock) {
+			ipcRenderer.send("fetch-posts", currentBlog.name, nextPostPage)
+			this.setState({
+				fetchPostLock: true
+			})
+		}
+	}
+
 	render() {
 		const { user, currentBlog } = this.props
 		const { posts, currentPost, categories } = this.state
@@ -62,6 +105,7 @@ class Blog extends Component {
 		return (
 			<div className="container">
 				<Sidebar user={user} currentBlog={currentBlog} posts={posts} categories={categories} currentPost={currentPost}
+					onRequestNextPage={this.handleRequestNextpage.bind(this)}
 					onSelectBlog={this.handleSelectBlog.bind(this)}
 					onSelectPost={this.handleSelectPost.bind(this)} />
 				<Content currentBlog={currentBlog} post={currentPost} categories={categories} onSave={() => {}} />

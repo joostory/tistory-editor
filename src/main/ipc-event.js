@@ -51,7 +51,7 @@ module.exports.init = () => {
 	  })
 	})
 
-	ipcMain.on("fetch-posts", (evt, blogName) => {
+	ipcMain.on("fetch-posts", (evt, blogName, page) => {
 		console.log("fetch-posts")
 		storage.get("auth", (error, auth) => {
 			if (error) throw error
@@ -61,7 +61,7 @@ module.exports.init = () => {
 				return
 			}
 
-			tistory.fetchPosts(auth, blogName).then(res => {
+			tistory.fetchPosts(auth, blogName, page).then(res => {
 				evt.sender.send('receive-posts', res.tistory.item.posts)
 			}).catch(err => {
 				console.error(err)

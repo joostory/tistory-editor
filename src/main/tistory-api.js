@@ -37,11 +37,13 @@ module.exports.fetchUser = (auth) => {
   .then(res => res.json())
 }
 
-module.exports.fetchPosts = (auth, blogName) => {
+module.exports.fetchPosts = (auth, blogName, page) => {
   return fetch("https://www.tistory.com/apis/post/list?" + querystring.stringify({
     access_token: auth.access_token,
     output: "json",
-    blogName: blogName
+    blogName: blogName,
+    count: 30,
+    page: page? page : 1
   }))
   .then(errorHandler)
   .then(res => res.json())
