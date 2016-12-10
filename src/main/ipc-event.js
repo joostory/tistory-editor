@@ -116,6 +116,44 @@ module.exports.init = () => {
 		})
 	})
 
+	ipcMain.on("save-content", (evt, blogName, post) => {
+		console.log("save-content")
+		storage.get("auth", (error, auth) => {
+			if (error) throw error
+
+			if (!auth || !auth.access_token) {
+				evt.sender.send('finish-save-content', {})
+				return
+			}
+
+			tistory.saveContent(auth, blogName, post).then(res => {
+				evt.sender.send('finish-save-content', {})
+			}).catch(err => {
+				console.error(err)
+				evt.sender.send('finish-save-content', {})
+			})
+		})
+	})
+
+	ipcMain.on("add-content", (evt, blogName, post) => {
+		console.log("add-content")
+		storage.get("auth", (error, auth) => {
+			if (error) throw error
+
+			if (!auth || !auth.access_token) {
+				evt.sender.send('receive-added-content', {})
+				return
+			}
+
+			tistory.addContent(auth, blogName, post).then(res => {
+				evt.sender.send('receive-added-content', res.tistory.item)
+			}).catch(err => {
+				console.error(err)
+				evt.sender.send('receive-added-content', {})
+			})
+		})
+	})
+
 	ipcMain.on("request-auth", (evt, arg) => {
 		console.log("request-auth")
 	  tistory.getAccessToken(auth => {

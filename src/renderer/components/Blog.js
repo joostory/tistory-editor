@@ -98,6 +98,17 @@ class Blog extends Component {
 		}
 	}
 
+	handleSave(post) {
+		const { posts } = this.state
+		let newPosts = posts.slice()
+		let saveIndex = newPosts.findIndex(p => p.id == post.id)
+		newPosts[saveIndex] = post
+
+		this.setState({
+			posts: newPosts
+		})
+	}
+
 	render() {
 		const { user, currentBlog } = this.props
 		const { posts, currentPost, categories } = this.state
@@ -108,7 +119,7 @@ class Blog extends Component {
 					onRequestNextPage={this.handleRequestNextpage.bind(this)}
 					onSelectBlog={this.handleSelectBlog.bind(this)}
 					onSelectPost={this.handleSelectPost.bind(this)} />
-				<Content currentBlog={currentBlog} post={currentPost} categories={categories} onSave={() => {}} />
+				<Content currentBlog={currentBlog} post={currentPost} categories={categories} onSave={this.handleSave.bind(this)} />
 			</div>
 		)
 	}

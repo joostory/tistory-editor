@@ -48,6 +48,7 @@
     "dateformat": "^1.0.12",
     "electron-json-storage": "^2.0.3",
     "electron-oauth2": "^2.3.1",
+    "form-data": "^2.1.2",
     "marked": "^0.3.6",
     "node-fetch": "^1.6.3",
     "querystring": "^0.2.0",

@@ -10,14 +10,15 @@ import 'codemirror/addon/search/jump-to-line'
 import classnames from 'classnames'
 import dateformat from 'dateformat'
 import toMarkdown from 'to-markdown'
-
-import Database from '../database'
+import marked from 'marked'
+import { ipcRenderer } from 'electron'
 
 class Editor extends Component {
 	constructor(props, context) {
 		super(props, context)
 		this.state = {
 			post: props.post,
+			title: props.post.title,
 			content: toMarkdown(props.post.content),
 			showInfoBox: false
 		}
@@ -39,19 +40,16 @@ class Editor extends Component {
 		if (post.id != nextProps.post.id) {
 			this.setState({
 				post: nextProps.post,
+				title: nextProps.title,
 				content: toMarkdown(nextProps.post.content)
 			})
 		}
 	}
 
 	handleTitleChange(e) {
-		const { post } = this.state
-		let newPost = Object.assign({}, post, {
-			title: e.target.value
-		})
-
+		const { title } = this.state
 		this.setState({
-			post: newPost
+			title: e.target.value
 		})
 	}
 
@@ -62,20 +60,20 @@ class Editor extends Component {
 	}
 
 	handleSave() {
-		const { onSave } = this.props
-		const { post } = this.state
+		const { currentBlog, onSave } = this.props
+		const { post, title, content } = this.state
 
 		if (!post.id) {
 			return
 		}
 
-		post.date = new Date()
-		Database.getInstance().updatePost(post, () => {
-			onSave(post)
-			this.setState({
-				post: post
-			})
+		let savePost = Object.assign({}, post, {
+			title: title,
+			content: marked(content)
 		})
+
+		ipcRenderer.send("save-content", currentBlog.name, savePost)
+		onSave(savePost)
 	}
 
 	handleKeyDown(e) {
@@ -96,7 +94,7 @@ class Editor extends Component {
 
 	render() {
 		const { onCancel } = this.props
-		const { post, content, showInfoBox } = this.state
+		const { post, title, content, showInfoBox } = this.state
 
 		var options = {
 			lineNumbers: false,
@@ -110,7 +108,7 @@ class Editor extends Component {
 				<div className="editor">
 					<div className="statusbar">
 						<span className="title">
-							<input type="text" value={post.title} onChange={this.handleTitleChange.bind(this)} />
+							<input type="text" value={title} onChange={this.handleTitleChange.bind(this)} />
 						</span>
 						<div className="btn_wrap">
 							<button className={classnames({
@@ -148,6 +146,7 @@ class Editor extends Component {
 }
 
 Editor.propTypes = {
+	currentBlog: PropTypes.object.isRequired,
 	post: PropTypes.object.isRequired,
 	categories: PropTypes.array.isRequired,
 	onSave: PropTypes.func.isRequired,
