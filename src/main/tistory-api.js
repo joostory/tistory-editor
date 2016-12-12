@@ -106,7 +106,7 @@ module.exports.saveContent = (auth, blogName, post) => {
   .then(res => res.json())
 }
 
-module.exports.addContent = (auth, blogName) => {
+module.exports.addContent = (auth, blogName, post) => {
   let formdata = new FormData();
   formdata.append("access_token", auth.access_token)
   formdata.append("output", "json")

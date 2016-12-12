@@ -136,7 +136,7 @@ module.exports.init = () => {
 	})
 
 	ipcMain.on("add-content", (evt, blogName, post) => {
-		console.log("add-content")
+		console.log("add-content", post)
 		storage.get("auth", (error, auth) => {
 			if (error) throw error
 
