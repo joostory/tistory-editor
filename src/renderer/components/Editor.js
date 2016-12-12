@@ -16,13 +16,13 @@ import { ipcRenderer } from 'electron'
 class Editor extends Component {
 	constructor(props, context) {
 		super(props, context)
+
 		this.state = {
-			post: props.post,
-			title: props.post.title,
-			content: toMarkdown(props.post.content),
+			post: props.post? props.post: {},
+			title: props.post? props.post.title: "",
+			content: props.post? toMarkdown(props.post.content): "",
 			showInfoBox: false
 		}
-
 		this.handleKeyDown = this.handleKeyDown.bind(this)
 	}
 
@@ -63,17 +63,17 @@ class Editor extends Component {
 		const { currentBlog, onSave } = this.props
 		const { post, title, content } = this.state
 
-		if (!post.id) {
-			return
-		}
-
 		let savePost = Object.assign({}, post, {
 			title: title,
 			content: marked(content)
 		})
 
-		ipcRenderer.send("save-content", currentBlog.name, savePost)
-		onSave(savePost)
+		if (post.id) {
+			ipcRenderer.send("save-content", currentBlog.name, savePost)
+			onSave(savePost)
+		} else {
+			ipcRenderer.send("add-content", currentBlog.name, savePost)
+		}
 	}
 
 	handleKeyDown(e) {
@@ -147,7 +147,7 @@ class Editor extends Component {
 
 Editor.propTypes = {
 	currentBlog: PropTypes.object.isRequired,
-	post: PropTypes.object.isRequired,
+	post: PropTypes.object,
 	categories: PropTypes.array.isRequired,
 	onSave: PropTypes.func.isRequired,
 	onCancel: PropTypes.func.isRequired

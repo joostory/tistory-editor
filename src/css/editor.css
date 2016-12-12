@@ -38,10 +38,12 @@ input, button, a { outline:none }
 
 /* header */
 .header { height: 50px; background: #ddd; }
-.header .btn_back { position:absolute; left:5px; top:10px; width:30px; height:30px; border:0; padding:0 }
-.header .btn_back:hover { background:transparent }
-.header .btn_back:hover svg g { stroke:#333 }
-.header .current_blog { overflow:hidden; height:30px; position:absolute; left:40px; right:10px; top:10px; padding-left:40px}
+.header .btn { position:absolute; top:10px; width:30px; height:30px; border:0; padding:0 }
+.header .btn:hover { background:transparent }
+.header .btn:hover svg g { stroke:#333 }
+.header .btn_back { left:5px }
+.header .btn_add { right:5px }
+.header .current_blog { overflow:hidden; height:30px; position:absolute; left:40px; right:40px; top:10px; padding-left:40px}
 .header .current_blog .blog_image { width:30px; height:30px; position:absolute; left:0; top:0 }
 .header .current_blog .blog_image img { width:30px; height:30px; border-radius:15px }
 .header .current_blog .blog_image .svg_profile { width:30px; height:30px; }

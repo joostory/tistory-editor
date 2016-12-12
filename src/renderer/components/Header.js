@@ -7,7 +7,7 @@ class Header extends Component {
 	}
 
 	render() {
-		const { user, currentBlog, onSelect } = this.props
+		const { user, currentBlog, onSelect, onRequestAddPost } = this.props
 
 		return (
 			<header className="header">
@@ -31,6 +31,14 @@ class Header extends Component {
 					</span>
 					<span className="blog_title">{currentBlog.title}</span>
 				</div>
+				<button className="btn btn_add" onClick={onRequestAddPost}>
+					<svg width="30" height="30">
+						<g strokeWidth="3" stroke="#999">
+							<line x1="5" y1="15" x2="25" y2="15" />
+							<line x1="15" y1="5" x2="15" y2="25" />
+						</g>
+					</svg>
+				</button>
 			</header>
 		)
 	}
@@ -39,7 +47,8 @@ class Header extends Component {
 Header.propTypes = {
 	user: PropTypes.object.isRequired,
 	currentBlog: PropTypes.object.isRequired,
-	onSelect: PropTypes.func.isRequired
+	onSelect: PropTypes.func.isRequired,
+	onRequestAddPost: PropTypes.func.isRequired
 }
 
 export default Header

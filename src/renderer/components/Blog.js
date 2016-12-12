@@ -4,6 +4,8 @@ import { ipcRenderer } from 'electron'
 
 import Sidebar from './Sidebar'
 import Content from './Content'
+import Editor from './Editor'
+import * as ContentMode from '../constants/ContentMode'
 
 class Blog extends Component {
 
@@ -15,7 +17,8 @@ class Blog extends Component {
 			currentPost: {},
 			categories: [],
 			fetchPostLock: false,
-			fetchCategoryLock: false
+			fetchCategoryLock: false,
+			mode: ContentMode.VIEWER
 		}
 
 		this.receivePostsListener = this.receivePostsListener.bind(this)
@@ -98,6 +101,22 @@ class Blog extends Component {
 		}
 	}
 
+	handleRequestAddPost() {
+		console.log("handleRequestAddPost");
+		this.setState({
+			mode: ContentMode.MARKDOWN
+		})
+
+	}
+	handleCancelAddPost() {
+		this.setState({
+			mode: ContentMode.VIEWER
+		})
+	}
+	handleAddPost(post) {
+		// TODO add post
+	}
+
 	handleSave(post) {
 		const { posts } = this.state
 		let newPosts = posts.slice()
@@ -111,15 +130,24 @@ class Blog extends Component {
 
 	render() {
 		const { user, currentBlog } = this.props
-		const { posts, currentPost, categories } = this.state
+		const { mode, posts, currentPost, categories } = this.state
+
+		let content;
+		if (mode == ContentMode.MARKDOWN) {
+			content = <Editor currentBlog={currentBlog} categories={categories} onSave={this.handleAddPost.bind(this)} onCancel={this.handleCancelAddPost.bind(this)} />
+		} else {
+			content = <Content currentBlog={currentBlog} post={currentPost} categories={categories} onSave={this.handleSave.bind(this)} />
+		}
 
 		return (
 			<div className="container">
 				<Sidebar user={user} currentBlog={currentBlog} posts={posts} categories={categories} currentPost={currentPost}
 					onRequestNextPage={this.handleRequestNextpage.bind(this)}
+					onRequestAddPost={this.handleRequestAddPost.bind(this)}
 					onSelectBlog={this.handleSelectBlog.bind(this)}
 					onSelectPost={this.handleSelectPost.bind(this)} />
-				<Content currentBlog={currentBlog} post={currentPost} categories={categories} onSave={this.handleSave.bind(this)} />
+
+				{content}
 			</div>
 		)
 	}
