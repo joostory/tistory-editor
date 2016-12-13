@@ -114,7 +114,13 @@ class Blog extends Component {
 		})
 	}
 	handleAddPost(post) {
-		// TODO add post
+		const { posts } = this.state
+		let newPosts = posts.slice()
+		newPosts.unshift(post)
+
+		this.setState({
+			posts: newPosts
+		})
 	}
 
 	handleSave(post) {

@@ -24,14 +24,21 @@ class Editor extends Component {
 			showInfoBox: false
 		}
 		this.handleKeyDown = this.handleKeyDown.bind(this)
+		this.handleFinishSaveContent = this.handleFinishSaveContent.bind(this)
 	}
 
 	componentWillMount() {
 		document.body.addEventListener("keydown", this.handleKeyDown, false)
+
+		ipcRenderer.on("finish-add-content", this.handleFinishSaveContent)
+		ipcRenderer.on("finish-save-content", this.handleFinishSaveContent)
 	}
 
 	componentWillUnmount() {
 		document.body.removeEventListener("keydown", this.handleKeyDown, false)
+
+		ipcRenderer.removeListener("finish-add-content", this.handleFinishSaveContent)
+		ipcRenderer.removeListener("finish-save-content", this.handleFinishSaveContent)
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -60,7 +67,7 @@ class Editor extends Component {
 	}
 
 	handleSave() {
-		const { currentBlog, onSave } = this.props
+		const { onSave } = this.props
 		const { post, title, content } = this.state
 
 		let savePost = Object.assign({}, post, {
@@ -74,6 +81,24 @@ class Editor extends Component {
 		} else {
 			ipcRenderer.send("add-content", currentBlog.name, savePost)
 		}
+	}
+
+	handleFinishSaveContent(postId) {
+		const { onSave } = this.props
+		const { post, title, content } = this.state
+
+		if (!postId) {
+			// handle Error
+			return
+		}
+
+		let savePost = Object.assign({}, post, {
+			id: postId,
+			title: title,
+			content: marked(content)
+		})
+
+		onSave(savePost)
 	}
 
 	handleKeyDown(e) {

@@ -122,15 +122,15 @@ module.exports.init = () => {
 			if (error) throw error
 
 			if (!auth || !auth.access_token) {
-				evt.sender.send('finish-save-content', {})
+				evt.sender.send('finish-save-content')
 				return
 			}
 
 			tistory.saveContent(auth, blogName, post).then(res => {
-				evt.sender.send('finish-save-content', {})
+				evt.sender.send('finish-save-content', res.tistory.postId)
 			}).catch(err => {
 				console.error(err)
-				evt.sender.send('finish-save-content', {})
+				evt.sender.send('finish-save-content')
 			})
 		})
 	})
@@ -141,15 +141,15 @@ module.exports.init = () => {
 			if (error) throw error
 
 			if (!auth || !auth.access_token) {
-				evt.sender.send('receive-added-content', {})
+				evt.sender.send('finish-add-content')
 				return
 			}
 
 			tistory.addContent(auth, blogName, post).then(res => {
-				evt.sender.send('receive-added-content', res.tistory.item)
+				evt.sender.send('finish-add-content', res.tistory.postId)
 			}).catch(err => {
 				console.error(err)
-				evt.sender.send('receive-added-content', {})
+				evt.sender.send('finish-add-content')
 			})
 		})
 	})
