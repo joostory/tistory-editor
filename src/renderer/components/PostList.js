@@ -6,15 +6,14 @@ class PostList extends Component {
 	constructor(props, context) {
 		super(props, context)
 		this.state = {
-			selectedId: 0,
 			nextPage: 1
 		}
 	}
 
 	handleSelect(item) {
 		const { onSelect } = this.props
+		console.log("handleSelct", item)
 		onSelect(item)
-		this.setState({ selectedId: item.id })
 	}
 
 	handleScroll(e) {
@@ -28,7 +27,6 @@ class PostList extends Component {
 
 	render() {
 		const { categories, posts, currentPost } = this.props
-		const { selectedId } = this.state
 
 		return (
 			<ul className="list" onScroll={this.handleScroll.bind(this)}>
@@ -36,7 +34,7 @@ class PostList extends Component {
 					<PostListItem key={i}
 						post={item}
 						category={categories.find(category => item.categoryId == category.id)}
-						selected={item.id == selectedId}
+						selected={item.id == currentPost.id}
 						onSelect={this.handleSelect.bind(this)} />
 				)}
 			</ul>

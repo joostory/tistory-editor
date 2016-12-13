@@ -127,6 +127,7 @@ module.exports.init = () => {
 			}
 
 			tistory.saveContent(auth, blogName, post).then(res => {
+				console.log(res)
 				evt.sender.send('finish-save-content', res.tistory.postId)
 			}).catch(err => {
 				console.error(err)
@@ -146,6 +147,7 @@ module.exports.init = () => {
 			}
 
 			tistory.addContent(auth, blogName, post).then(res => {
+				console.log(res)
 				evt.sender.send('finish-add-content', res.tistory.postId)
 			}).catch(err => {
 				console.error(err)

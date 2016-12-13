@@ -119,7 +119,9 @@ class Blog extends Component {
 		newPosts.unshift(post)
 
 		this.setState({
-			posts: newPosts
+			posts: newPosts,
+			currentPost: post,
+			mode: ContentMode.VIEWER
 		})
 	}
 

@@ -44,6 +44,8 @@ class Editor extends Component {
 	componentWillReceiveProps(nextProps) {
 		const { post } = this.state
 
+		console.log(nextProps);
+
 		if (post.id != nextProps.post.id) {
 			this.setState({
 				post: nextProps.post,
@@ -67,7 +69,7 @@ class Editor extends Component {
 	}
 
 	handleSave() {
-		const { onSave } = this.props
+		const { currentBlog, onSave } = this.props
 		const { post, title, content } = this.state
 
 		let savePost = Object.assign({}, post, {
@@ -77,13 +79,12 @@ class Editor extends Component {
 
 		if (post.id) {
 			ipcRenderer.send("save-content", currentBlog.name, savePost)
-			onSave(savePost)
 		} else {
 			ipcRenderer.send("add-content", currentBlog.name, savePost)
 		}
 	}
 
-	handleFinishSaveContent(postId) {
+	handleFinishSaveContent(e, postId) {
 		const { onSave } = this.props
 		const { post, title, content } = this.state
 
@@ -94,6 +95,7 @@ class Editor extends Component {
 
 		let savePost = Object.assign({}, post, {
 			id: postId,
+			date: (new Date()).toString(),
 			title: title,
 			content: marked(content)
 		})
