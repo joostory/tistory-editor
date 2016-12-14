@@ -13,6 +13,7 @@ import classnames from 'classnames'
 import dateformat from 'dateformat'
 import toMarkdown from 'to-markdown'
 import marked from 'marked'
+import Dropzone from 'react-dropzone'
 import { ipcRenderer } from 'electron'
 
 class Editor extends Component {
@@ -124,6 +125,14 @@ class Editor extends Component {
 		}
 	}
 
+	handleDropFile(files) {
+		const { currentBlog } = this.props
+		files.map(file => {
+			console.log(file.path)
+			ipcRenderer.send("add-file", currentBlog.name, file.path)
+		})
+	}
+
 	toggleInfoBox() {
 		const { showInfoBox } = this.state
 		this.setState({
@@ -176,7 +185,9 @@ class Editor extends Component {
 						<div className="cover" onClick={this.toggleInfoBox.bind(this)} />
 					}
 
-					<Codemirror ref="editor" value={content} onChange={this.handleChange.bind(this)} options={options} />
+					<Dropzone disableClick={true} accept="image/*" onDrop={this.handleDropFile.bind(this)}>
+						<Codemirror ref="editor" value={content} onChange={this.handleChange.bind(this)} options={options} />
+					</Dropzone>
 
 				</div>
 			</div>
