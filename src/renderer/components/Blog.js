@@ -86,7 +86,8 @@ class Blog extends Component {
 
 	handleSelectPost(post) {
 		this.setState({
-			currentPost: post
+			currentPost: post,
+			mode: ContentMode.VIEWER
 		})
 	}
 
@@ -108,11 +109,13 @@ class Blog extends Component {
 		})
 
 	}
+
 	handleCancelAddPost() {
 		this.setState({
 			mode: ContentMode.VIEWER
 		})
 	}
+
 	handleAddPost(post) {
 		const { posts } = this.state
 		let newPosts = posts.slice()

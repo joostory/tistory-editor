@@ -130,3 +130,18 @@ module.exports.addContent = (auth, blogName, post) => {
   .then(errorHandler)
   .then(res => res.json())
 }
+
+module.exports.uploadFile = (auth, blogName, filepath) => {
+  let formdata = new FormData();
+  formdata.append("access_token", auth.access_token)
+  formdata.append("output", "json")
+  formdata.append("blogName", blogName)
+  formdata.append("uploadedfile", fs.createReadStream(filepath))
+
+  return fetch("https://www.tistory.com/apis/post/attach", {
+    method: 'post',
+    body: formdata
+  })
+  .then(errorHandler)
+  .then(res => res.json())
+}

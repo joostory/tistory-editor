@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import Codemirror from 'react-codemirror'
+import 'codemirror/lib/codemirror.css'
+import 'codemirror/addon/dialog/dialog.css'
 import 'codemirror/mode/javascript/javascript'
 import 'codemirror/mode/xml/xml'
 import 'codemirror/mode/markdown/markdown'
@@ -25,6 +27,7 @@ class Editor extends Component {
 		}
 		this.handleKeyDown = this.handleKeyDown.bind(this)
 		this.handleFinishSaveContent = this.handleFinishSaveContent.bind(this)
+		this.handleFinishUploadFile = this.handleFinishUploadFile.bind(this)
 	}
 
 	componentWillMount() {
@@ -32,6 +35,7 @@ class Editor extends Component {
 
 		ipcRenderer.on("finish-add-content", this.handleFinishSaveContent)
 		ipcRenderer.on("finish-save-content", this.handleFinishSaveContent)
+		ipcRenderer.on("finish-add-file", this.handleFinishUploadFile)
 	}
 
 	componentWillUnmount() {
@@ -103,6 +107,14 @@ class Editor extends Component {
 		onSave(savePost)
 	}
 
+	handleFinishUploadFile(e, fileUrl) {
+		const { editor } = this.refs
+		console.log("finishUploadFile", fileUrl)
+		let codemirrorEditor = editor.getCodeMirror()
+		let CodeMirror = editor.getCodeMirrorInstance()
+		codemirrorEditor.replaceRange("![](" + fileUrl + ")", CodeMirror.Pos(codemirrorEditor.lastLine()))
+	}
+
 	handleKeyDown(e) {
 		if (e.metaKey || e.altKey) {
 			if (e.keyCode == 83) {
@@ -164,7 +176,7 @@ class Editor extends Component {
 						<div className="cover" onClick={this.toggleInfoBox.bind(this)} />
 					}
 
-					<Codemirror value={content} onChange={this.handleChange.bind(this)} options={options} />
+					<Codemirror ref="editor" value={content} onChange={this.handleChange.bind(this)} options={options} />
 
 				</div>
 			</div>
