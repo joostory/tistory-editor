@@ -54,22 +54,57 @@ class Editor extends Component {
 		if (post.id != nextProps.post.id) {
 			this.setState({
 				post: nextProps.post,
-				title: nextProps.title,
+				title: nextProps.post.title,
 				content: toMarkdown(nextProps.post.content)
 			})
 		}
 	}
 
-	handleTitleChange(e) {
-		const { title } = this.state
+	handleChangeTitle(e) {
+		console.log("change title", e.target.value)
 		this.setState({
 			title: e.target.value
 		})
 	}
 
-	handleChange(value) {
+	handleChangeContent(value) {
 		this.setState({
 			content: value
+		})
+	}
+
+	handleChangeVisibility(e) {
+		console.log("change visibility", e.target.value)
+		const { post } = this.state
+		let newPost = Object.assign({}, post, {
+			visibility: e.target.value
+		})
+		this.setState({
+			post: newPost
+		})
+	}
+
+	handleChangeTags(e) {
+		console.log("change tag", e.target.value)
+		const { post } = this.state
+		let newPost = Object.assign({}, post, {
+			tags: {
+				tag : e.target.value
+			}
+		})
+		this.setState({
+			post: newPost
+		})
+	}
+
+	handleChangeCategory(e) {
+		console.log("change category", e.target.value)
+		const { post } = this.state
+		let newPost = Object.assign({}, post, {
+			categoryId: e.target.value
+		})
+		this.setState({
+			post: newPost
 		})
 	}
 
@@ -81,6 +116,8 @@ class Editor extends Component {
 			title: title,
 			content: marked(content)
 		})
+
+		console.log("save", savePost)
 
 		if (post.id) {
 			ipcRenderer.send("save-content", currentBlog.name, savePost)
@@ -95,6 +132,7 @@ class Editor extends Component {
 
 		if (!postId) {
 			// handle Error
+			alert("오류가 발생했습니다.")
 			return
 		}
 
@@ -111,9 +149,9 @@ class Editor extends Component {
 	handleFinishUploadFile(e, fileUrl) {
 		const { editor } = this.refs
 		console.log("finishUploadFile", fileUrl)
-		let codemirrorEditor = editor.getCodeMirror()
+		let cm = editor.getCodeMirror()
 		let CodeMirror = editor.getCodeMirrorInstance()
-		codemirrorEditor.replaceRange("![](" + fileUrl + ")", CodeMirror.Pos(codemirrorEditor.lastLine()))
+		cm.replaceRange("![](" + fileUrl + ")", CodeMirror.Pos(cm.getCursor().line))
 	}
 
 	handleKeyDown(e) {
@@ -141,22 +179,37 @@ class Editor extends Component {
 	}
 
 	render() {
-		const { onCancel } = this.props
+		const { onCancel, categories } = this.props
 		const { post, title, content, showInfoBox } = this.state
 
-		var options = {
+		let options = {
 			lineNumbers: false,
 			lineWrapping: true,
 			mode: 'markdown',
 			theme:'default'
     }
 
+		let tags = ""
+		if (post.tags && post.tags.tag) {
+			tags = post.tags.tag.toString();
+		}
+
+		let visibility = "0"
+		if (post.visibility && post.visibility != "0") {
+			visibility = post.visibility
+		}
+
+		let category = "0"
+		if (post.categoryId) {
+			category = post.categoryId
+		}
+
 		return (
 			<div className="content_wrap">
 				<div className="editor">
 					<div className="statusbar">
 						<span className="title">
-							<input type="text" value={title} onChange={this.handleTitleChange.bind(this)} />
+							<input type="text" value={title} onChange={this.handleChangeTitle.bind(this)} />
 						</span>
 						<div className="btn_wrap">
 							<button className={classnames({
@@ -171,13 +224,19 @@ class Editor extends Component {
 
 					{showInfoBox &&
 						<div className="info_box">
-							<label><input type="radio" name="visibility" value="0" selected={post.visibility == 0} /> 저장</label>
-							<label><input type="radio" name="visibility" value="3" selected={post.visibility != 0} /> 발행</label>
+							<label><input type="radio" name="visibility" value="0" checked={visibility == "0"} onChange={this.handleChangeVisibility.bind(this)} /> 저장</label>
+							<label><input type="radio" name="visibility" value="3" checked={visibility != "0"} onChange={this.handleChangeVisibility.bind(this)} /> 발행</label>
 							<span>
-								{post.tags.tag &&
-									post.tags.tag.toString()
-								}
+								<input type="text" name="tags" value={tags} onChange={this.handleChangeTags.bind(this)} />
 							</span>
+							<select value={category} onChange={this.handleChangeCategory.bind(this)}>
+								<option value="0">분류없음</option>
+								{categories.map((item, i) =>
+									<option key={i} value={item.id}>
+										{item.label}
+									</option>
+								)}
+							</select>
 						</div>
 					}
 
@@ -186,7 +245,7 @@ class Editor extends Component {
 					}
 
 					<Dropzone disableClick={true} accept="image/*" onDrop={this.handleDropFile.bind(this)}>
-						<Codemirror ref="editor" value={content} onChange={this.handleChange.bind(this)} options={options} />
+						<Codemirror ref="editor" value={content} onChange={this.handleChangeContent.bind(this)} options={options} />
 					</Dropzone>
 
 				</div>
