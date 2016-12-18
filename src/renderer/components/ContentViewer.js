@@ -1,12 +1,17 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { ipcRenderer } from 'electron'
+import Chip from 'material-ui/Chip'
 
 class ContentViewer extends Component {
   render() {
     const { post, categories, onModify } = this.props
 
     let category = categories.find(category => post.categoryId == category.id)
+    let tags = []
+    if (post.tags && post.tags.tag) {
+      tags = tags.concat(post.tags.tag)
+    }
 
     return (
       <div className='content_wrap'>
@@ -21,7 +26,13 @@ class ContentViewer extends Component {
               <button onClick={onModify}>수정</button>
             </div>
           </div>
+
           <div className="viewer_content" dangerouslySetInnerHTML={{__html: post.content}} />
+
+          <div style={{display:'flex', flexWrap:'wrap'}}>
+            {tags.map((item, i) => <Chip key={i} style={{marginRight:'4px'}}>{item}</Chip>)}
+          </div>
+
         </div>
 			</div>
     )

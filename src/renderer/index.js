@@ -9,6 +9,7 @@ import App from './containers/App'
 import configureStore from './store/configureStore'
 import { fetchUser, fetchBlogs, receiveUser, receiveBlogs } from './actions'
 
+import 'material-design-lite/material.css'
 import '../css/editor.css'
 
 injectTapEventPlugin()

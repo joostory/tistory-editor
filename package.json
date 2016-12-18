@@ -50,6 +50,7 @@
     "electron-oauth2": "^2.3.1",
     "form-data": "^2.1.2",
     "marked": "^0.3.6",
+    "material-design-lite": "^1.2.1",
     "material-ui": "^0.16.5",
     "node-fetch": "^1.6.3",
     "querystring": "^0.2.0",
