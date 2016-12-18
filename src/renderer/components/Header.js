@@ -1,4 +1,9 @@
 import React, { Component, PropTypes } from 'react'
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar'
+import Avatar from 'material-ui/Avatar'
+import IconButton from 'material-ui/IconButton'
+import NavigationBack from 'material-ui/svg-icons/navigation/arrow-back'
+import ContentCreate from 'material-ui/svg-icons/content/create'
 
 class Header extends Component {
 
@@ -10,36 +15,20 @@ class Header extends Component {
 		const { user, currentBlog, onSelect, onRequestAddPost } = this.props
 
 		return (
-			<header className="header">
-				<button className="btn btn_back" onClick={() => onSelect(null)}>
-					<svg width="20" height="30">
-						<g strokeWidth="3" stroke="#999">
-							<line x1="15" y1="5" x2="5" y2="16" />
-							<line x1="5" y1="14" x2="15" y2="25" />
-						</g>
-					</svg>
-				</button>
-				<div className="current_blog">
-					<span className="blog_image">
-						{currentBlog.profileImageUrl && <img src={currentBlog.profileImageUrl} />}
-						{!currentBlog.profileImageUrl &&
-							<svg className="svg_profile">
-								<circle />
-								<text>{currentBlog.title.slice(0,1)}</text>
-							</svg>
-						}
-					</span>
-					<span className="blog_title">{currentBlog.title}</span>
-				</div>
-				<button className="btn btn_add" onClick={onRequestAddPost}>
-					<svg width="30" height="30">
-						<g strokeWidth="3" stroke="#999">
-							<line x1="5" y1="15" x2="25" y2="15" />
-							<line x1="15" y1="5" x2="15" y2="25" />
-						</g>
-					</svg>
-				</button>
-			</header>
+			<Toolbar>
+				<ToolbarGroup firstChild={true}>
+					<IconButton onClick={() => onSelect(null)}><NavigationBack /></IconButton>
+
+					{currentBlog.profileImageUrl && <Avatar src={currentBlog.profileImageUrl} size={30} />}
+					{!currentBlog.profileImageUrl && <Avatar size={30}>{currentBlog.title.slice(0,1)}</Avatar>}
+
+					<ToolbarTitle text={currentBlog.title} style={{marginLeft:'5px'}} />
+
+				</ToolbarGroup>
+				<ToolbarGroup lastChild={true}>
+					<IconButton onClick={onRequestAddPost}><ContentCreate /></IconButton>
+				</ToolbarGroup>
+			</Toolbar>
 		)
 	}
 }

@@ -2,6 +2,7 @@ import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { ipcRenderer } from 'electron'
+import injectTapEventPlugin from 'react-tap-event-plugin'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import App from './containers/App'
@@ -10,6 +11,7 @@ import { fetchUser, fetchBlogs, receiveUser, receiveBlogs } from './actions'
 
 import '../css/editor.css'
 
+injectTapEventPlugin()
 const store = configureStore()
 fetchUser()
 fetchBlogs()
