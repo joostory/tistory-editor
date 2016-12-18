@@ -72,6 +72,7 @@ input, button, a { outline:none }
 .viewer_header .viewer_category { font-size:12px; color:#f1631b }
 .viewer_header .viewer_title { font-size:32px; margin: 16px 0; word-wrap: break-word }
 .viewer_header .viewer_info {  }
+.viewer_header .viewer_btn { position:absolute; right:20px; top:20px }
 .viewer_content { margin:20px 0 40px; word-wrap: break-word }
 .viewer_content h1 { font-size:32px; margin:16px 0 }
 .viewer_content h2 { font-size:24px; margin:12px 0 }

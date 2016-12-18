@@ -22,7 +22,7 @@ import MenuItem from 'material-ui/MenuItem'
 import TextField from 'material-ui/TextField'
 import FlatButton from 'material-ui/FlatButton'
 import IconButton from 'material-ui/IconButton'
-import ContentSave from 'material-ui/svg-icons/content/save'
+import ActionDone from 'material-ui/svg-icons/action/done'
 import ContentClear from 'material-ui/svg-icons/content/clear'
 
 class Editor extends Component {
@@ -254,7 +254,7 @@ class Editor extends Component {
 							<TextField hintText="Title" type="text" value={title} fullWidth={true} onChange={this.handleChangeTitle.bind(this)} />
 						</ToolbarGroup>
 						<ToolbarGroup lastChild={true}>
-							<IconButton onClick={this.handlePublishDialogOpen.bind(this)}><ContentSave /></IconButton>
+							<IconButton onClick={this.handlePublishDialogOpen.bind(this)}><ActionDone /></IconButton>
 							<IconButton onClick={onCancel}><ContentClear /></IconButton>
 						</ToolbarGroup>
 					</Toolbar>

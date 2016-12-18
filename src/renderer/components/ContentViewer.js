@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { ipcRenderer } from 'electron'
 import Chip from 'material-ui/Chip'
+import RaisedButton from 'material-ui/RaisedButton'
 
 class ContentViewer extends Component {
   render() {
@@ -23,7 +24,9 @@ class ContentViewer extends Component {
     				<h1 className='viewer_title'>{post.title}</h1>
             <div className='viewer_info'>
               <span>{post.date}</span>
-              <button onClick={onModify}>수정</button>
+            </div>
+            <div className='viewer_btn'>
+              <RaisedButton onClick={onModify}>수정</RaisedButton>
             </div>
           </div>
 
