@@ -31,7 +31,7 @@ class PostList extends Component {
 		const { categories, posts, currentPost } = this.props
 
 		return (
-			<List className="list" onScroll={this.handleScroll.bind(this)}>
+			<List className="list" style={{padding:0}} onScroll={this.handleScroll.bind(this)}>
 				{posts && posts.map((item, i) =>
 					<PostListItem key={i}
 						post={item}

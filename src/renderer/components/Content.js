@@ -69,7 +69,9 @@ class Content extends Component {
 
 		if (!post.id) {
 			return (
-				<div className="content_wrap">Select post</div>
+				<div className="content_wrap">
+					<div className="content_empty_message">Editor for Tistory</div>
+				</div>
 			)
 		}
 
