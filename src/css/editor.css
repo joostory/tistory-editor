@@ -74,10 +74,8 @@ input, button, a { outline:none }
 .viewer_header .viewer_info {  }
 .viewer_content { margin:40px 0 }
 
-.editor .empty,
-.editor .ReactCodeMirror { position: absolute; top: 50px; bottom: 0; left: 0; right: 0; background:#162228; }
+.editor .ReactCodeMirror { position: absolute; top: 56px; bottom: 0; left: 0; right: 0; background:#162228; }
 .editor .CodeMirror { height: 100%; padding:0 10px }
-.editor .empty p { margin-top:30%; text-align:center; color:#aaa }
 .editor .statusbar { position: absolute; top: 0; height: 50px; left: 0; right: 0; background:#ddd; }
 .editor .statusbar .title:before { content:"# " }
 .editor .statusbar .title { position:absolute; left:15px; font-size:24px; bottom:10px }

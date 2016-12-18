@@ -4,14 +4,14 @@ import ContentDrafts from 'material-ui/svg-icons/content/drafts'
 class Visibility {
 
 	constructor(value) {
-		this.value = value
+		this.value = Number.parseInt(value)
 		this.name = this.toString()
 	}
 
 	toString() {
 		switch(this.value) {
-			case "2":
-			case "3":
+			case 2:
+			case 3:
 				return "발행"
 			default:
 				return "저장"
@@ -20,8 +20,8 @@ class Visibility {
 
 	toMaterialIcon() {
 		switch(this.value) {
-			case "2":
-			case "3":
+			case 2:
+			case 3:
 				return
 			default:
 				return <ContentDrafts />

@@ -15,6 +15,15 @@ import toMarkdown from 'to-markdown'
 import marked from 'marked'
 import Dropzone from 'react-dropzone'
 import { ipcRenderer } from 'electron'
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar'
+import Dialog from 'material-ui/Dialog'
+import SelectField from 'material-ui/SelectField'
+import MenuItem from 'material-ui/MenuItem'
+import TextField from 'material-ui/TextField'
+import FlatButton from 'material-ui/FlatButton'
+import IconButton from 'material-ui/IconButton'
+import ContentSave from 'material-ui/svg-icons/content/save'
+import ContentClear from 'material-ui/svg-icons/content/clear'
 
 class Editor extends Component {
 	constructor(props, context) {
@@ -60,6 +69,18 @@ class Editor extends Component {
 		}
 	}
 
+	handlePublishDialogClose() {
+		this.setState({
+			showInfoBox: false
+		})
+	}
+
+	handlePublishDialogOpen() {
+		this.setState({
+			showInfoBox: true
+		})
+	}
+
 	handleChangeTitle(e) {
 		console.log("change title", e.target.value)
 		this.setState({
@@ -85,7 +106,6 @@ class Editor extends Component {
 	}
 
 	handleChangeTags(e) {
-		console.log("change tag", e.target.value)
 		const { post } = this.state
 		let newPost = Object.assign({}, post, {
 			tags: {
@@ -97,11 +117,11 @@ class Editor extends Component {
 		})
 	}
 
-	handleChangeCategory(e) {
-		console.log("change category", e.target.value)
+	handleChangeCategory(e, index, value) {
+		console.log("change category", value)
 		const { post } = this.state
 		let newPost = Object.assign({}, post, {
-			categoryId: e.target.value
+			categoryId: value
 		})
 		this.setState({
 			post: newPost
@@ -109,15 +129,26 @@ class Editor extends Component {
 	}
 
 	handleSave() {
+		this.requestSave("0")
+	}
+
+	handlePublish() {
+		this.requestSave("3")
+	}
+
+	requestSave(visibility) {
 		const { currentBlog, onSave } = this.props
 		const { post, title, content } = this.state
 
 		let savePost = Object.assign({}, post, {
 			title: title,
+			visibility: visibility,
 			content: marked(content)
 		})
 
-		console.log("save", savePost)
+		this.setState({
+			post: savePost
+		})
 
 		if (post.id) {
 			ipcRenderer.send("save-content", currentBlog.name, savePost)
@@ -138,9 +169,7 @@ class Editor extends Component {
 
 		let savePost = Object.assign({}, post, {
 			id: postId,
-			date: (new Date()).toString(),
-			title: title,
-			content: marked(content)
+			date: post.id? post.date : dateformat(new Date(), 'yyyy-mm-dd HH:MM:ss')
 		})
 
 		onSave(savePost)
@@ -171,12 +200,6 @@ class Editor extends Component {
 		})
 	}
 
-	toggleInfoBox() {
-		const { showInfoBox } = this.state
-		this.setState({
-			showInfoBox: !showInfoBox
-		})
-	}
 
 	render() {
 		const { onCancel, categories } = this.props
@@ -204,45 +227,53 @@ class Editor extends Component {
 			category = post.categoryId
 		}
 
+		let publishDialogActions = [
+			<FlatButton
+				label="취소"
+				primary={true}
+				onTouchTap={this.handlePublishDialogClose.bind(this)}
+			/>,
+			<FlatButton
+				label="저장"
+				primary={true}
+				onTouchTap={this.handleSave.bind(this)}
+			/>,
+			<FlatButton
+				label="발행"
+				primary={true}
+				keyboardFocused={true}
+				onTouchTap={this.handlePublish.bind(this)}
+			/>
+		]
+
 		return (
 			<div className="content_wrap">
 				<div className="editor">
-					<div className="statusbar">
-						<span className="title">
-							<input type="text" value={title} onChange={this.handleChangeTitle.bind(this)} />
-						</span>
-						<div className="btn_wrap">
-							<button className={classnames({
-								"btn": true,
-								"btn_info": true,
-								"active": showInfoBox
-							})} onClick={this.toggleInfoBox.bind(this)}>i</button>
-							<button className="btn btn_save" onClick={this.handleSave.bind(this)}>저장</button>
-							<button className="btn btn_cancel" onClick={onCancel}>취소</button>
-						</div>
-					</div>
+					<Toolbar>
+						<ToolbarGroup style={{width:'100%'}}>
+							<TextField hintText="Title" type="text" value={title} fullWidth={true} onChange={this.handleChangeTitle.bind(this)} />
+						</ToolbarGroup>
+						<ToolbarGroup lastChild={true}>
+							<IconButton onClick={this.handlePublishDialogOpen.bind(this)}><ContentSave /></IconButton>
+							<IconButton onClick={onCancel}><ContentClear /></IconButton>
+						</ToolbarGroup>
+					</Toolbar>
 
-					{showInfoBox &&
-						<div className="info_box">
-							<label><input type="radio" name="visibility" value="0" checked={visibility == "0"} onChange={this.handleChangeVisibility.bind(this)} /> 저장</label>
-							<label><input type="radio" name="visibility" value="3" checked={visibility != "0"} onChange={this.handleChangeVisibility.bind(this)} /> 발행</label>
-							<span>
-								<input type="text" name="tags" value={tags} onChange={this.handleChangeTags.bind(this)} />
-							</span>
-							<select value={category} onChange={this.handleChangeCategory.bind(this)}>
-								<option value="0">분류없음</option>
-								{categories.map((item, i) =>
-									<option key={i} value={item.id}>
-										{item.label}
-									</option>
-								)}
-							</select>
-						</div>
-					}
+					<Dialog title="글의 속성을 확인해주세요." modal={false} open={showInfoBox}
+						actions={publishDialogActions}
+						onRequestClose={this.handlePublishDialogClose.bind(this)}>
 
-					{showInfoBox &&
-						<div className="cover" onClick={this.toggleInfoBox.bind(this)} />
-					}
+						<TextField floatingLabelText="태그" hintText="Tag" type="text" name="tags" value={tags} onChange={this.handleChangeTags.bind(this)} />
+
+						<br />
+
+						<SelectField floatingLabelText="카테고리" value={category} autoWidth={true} onChange={this.handleChangeCategory.bind(this)}>
+							<MenuItem value="0" primaryText="분류없음" />
+							{categories.map((item, i) =>
+								<MenuItem key={i} value={item.id} primaryText={item.label} />
+							)}
+		        </SelectField>
+					</Dialog>
 
 					<Dropzone disableClick={true} accept="image/*" onDrop={this.handleDropFile.bind(this)}>
 						<Codemirror ref="editor" value={content} onChange={this.handleChangeContent.bind(this)} options={options} />

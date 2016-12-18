@@ -82,22 +82,8 @@ const errorHandler = (res) => {
 
 module.exports.saveContent = (auth, blogName, post) => {
   console.log(post)
-  let formdata = new FormData();
-  formdata.append("access_token", auth.access_token)
-  formdata.append("output", "json")
-  formdata.append("blogName", blogName)
+  let formdata = makePostFormData(auth, blogName, post)
   formdata.append("postId", post.id)
-  formdata.append("title", post.title)
-  formdata.append("content", post.content)
-  if (post.category) {
-    formdata.append("category", post.categoryId)
-  }
-  if (post.visibility) {
-    formdata.append("visibility", post.visibility)
-  }
-  if (post.tags.tag) {
-    formdata.append("tag", post.tags.tag)
-  }
 
   return fetch("https://www.tistory.com/apis/post/modify", {
     method: 'post',
@@ -108,13 +94,24 @@ module.exports.saveContent = (auth, blogName, post) => {
 }
 
 module.exports.addContent = (auth, blogName, post) => {
-  let formdata = new FormData();
+  let formdata = makePostFormData(auth, blogName, post)
+
+  return fetch("https://www.tistory.com/apis/post/write", {
+    method: 'post',
+    body: formdata
+  })
+  .then(errorHandler)
+  .then(res => res.json())
+}
+
+const makePostFormData = (auth, blogName, post) => {
+  let formdata = new FormData()
   formdata.append("access_token", auth.access_token)
   formdata.append("output", "json")
   formdata.append("blogName", blogName)
   formdata.append("title", post.title)
   formdata.append("content", post.content)
-  if (post.category) {
+  if (post.categoryId) {
     formdata.append("category", post.categoryId)
   }
   if (post.visibility) {
@@ -123,13 +120,7 @@ module.exports.addContent = (auth, blogName, post) => {
   if (post.tags.tag) {
     formdata.append("tag", post.tags.tag)
   }
-
-  return fetch("https://www.tistory.com/apis/post/write", {
-    method: 'post',
-    body: formdata
-  })
-  .then(errorHandler)
-  .then(res => res.json())
+  return formdata
 }
 
 module.exports.uploadFile = (auth, blogName, filepath) => {

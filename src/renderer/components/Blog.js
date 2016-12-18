@@ -1,11 +1,13 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { ipcRenderer } from 'electron'
+import Snackbar from 'material-ui/Snackbar'
 
 import Sidebar from './Sidebar'
 import Content from './Content'
 import Editor from './Editor'
 import * as ContentMode from '../constants/ContentMode'
+import Visibility from '../model/Visibility'
 
 class Blog extends Component {
 
@@ -18,7 +20,9 @@ class Blog extends Component {
 			categories: [],
 			fetchPostLock: false,
 			fetchCategoryLock: false,
-			mode: ContentMode.VIEWER
+			mode: ContentMode.VIEWER,
+			message: "",
+			messageOpen: false
 		}
 
 		this.receivePostsListener = this.receivePostsListener.bind(this)
@@ -116,6 +120,25 @@ class Blog extends Component {
 		})
 	}
 
+	handleMessageClose() {
+		this.setState({
+			message: "",
+			messageOpen: false
+		})
+	}
+
+	handleMessageOpen(message) {
+		this.setState({
+			message: message,
+			messageOpen: true
+		})
+	}
+
+	notifySavePost(post) {
+		let visibility = new Visibility(post.visibility)
+		this.handleMessageOpen("'" + post.title + "' " + visibility.name + " 완료")
+	}
+
 	handleAddPost(post) {
 		const { posts } = this.state
 		let newPosts = posts.slice()
@@ -126,6 +149,8 @@ class Blog extends Component {
 			currentPost: post,
 			mode: ContentMode.VIEWER
 		})
+
+		this.notifySavePost(post)
 	}
 
 	handleSave(post) {
@@ -137,11 +162,13 @@ class Blog extends Component {
 		this.setState({
 			posts: newPosts
 		})
+
+		this.notifySavePost(post)
 	}
 
 	render() {
 		const { user, currentBlog } = this.props
-		const { mode, posts, currentPost, categories } = this.state
+		const { mode, posts, currentPost, categories, message, messageOpen } = this.state
 
 		let content;
 		if (mode == ContentMode.MARKDOWN) {
@@ -159,6 +186,13 @@ class Blog extends Component {
 					onSelectPost={this.handleSelectPost.bind(this)} />
 
 				{content}
+
+				<Snackbar
+          open={messageOpen}
+          message={message}
+          autoHideDuration={3000}
+          onRequestClose={this.handleMessageClose.bind(this)}
+        />
 			</div>
 		)
 	}
