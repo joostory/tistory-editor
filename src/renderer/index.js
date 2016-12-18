@@ -1,13 +1,13 @@
 import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
-import {ipcRenderer} from 'electron'
+import { ipcRenderer } from 'electron'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import App from './containers/App'
 import configureStore from './store/configureStore'
 import { fetchUser, fetchBlogs, receiveUser, receiveBlogs } from './actions'
 
-// import '../css/base.css'
 import '../css/editor.css'
 
 const store = configureStore()
@@ -24,7 +24,9 @@ ipcRenderer.on("receive-blogs", (e, user) => {
 
 render (
 	<Provider store={store}>
-		<App />
+		<MuiThemeProvider>
+			<App />
+		</MuiThemeProvider>
 	</Provider>,
 	document.getElementById('root')
 )

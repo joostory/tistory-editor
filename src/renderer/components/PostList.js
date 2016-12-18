@@ -1,6 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 import classnames from 'classnames'
 import PostListItem from './PostListItem'
+import {List, makeSelectable} from 'material-ui/List'
+
+let SelectableList = makeSelectable(List)
 
 class PostList extends Component {
 	constructor(props, context) {
@@ -12,7 +15,6 @@ class PostList extends Component {
 
 	handleSelect(item) {
 		const { onSelect } = this.props
-		console.log("handleSelct", item)
 		onSelect(item)
 	}
 
@@ -29,7 +31,7 @@ class PostList extends Component {
 		const { categories, posts, currentPost } = this.props
 
 		return (
-			<ul className="list" onScroll={this.handleScroll.bind(this)}>
+			<List className="list" onScroll={this.handleScroll.bind(this)}>
 				{posts && posts.map((item, i) =>
 					<PostListItem key={i}
 						post={item}
@@ -37,7 +39,7 @@ class PostList extends Component {
 						selected={item.id == currentPost.id}
 						onSelect={this.handleSelect.bind(this)} />
 				)}
-			</ul>
+			</List>
 		)
 	}
 }

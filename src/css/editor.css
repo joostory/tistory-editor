@@ -52,18 +52,17 @@ input, button, a { outline:none }
 .header .current_blog .blog_title { line-height: 30px; font-size:16px; color:#333; font-weight:bold }
 .header .title { color: #eee; font-weight: bold; line-height: 40px; padding: 5px 20px; }
 
-.list { margin: 0; padding:0; list-style:none; position:absolute; left:0; width:300px; top:50px; bottom:0; overflow:auto }
-.list li { position: relative; }
-.list li .item { position: relative; display: block; padding: 10px; text-decoration: none; color: #333; cursor: pointer; }
-.list li .item .item_date { color: #999; }
-.list li .item .item_visibility { color: #999; margin-left:5px }
-.list li .item .item_title { display: block; font-size: 14px; overflow:hidden; text-overflow: ellipsis; line-height:18px; height:18px; display:-webkit-box; -webkit-line-clamp: 1; -webkit-box-orient:vertical; margin:10px 0 }
-.list li .item .item_info { display:block; font-size:11px; }
-.list li .item:hover, .list li .item.selected { background: #fff; color: #666; }
-.list li .btn_add { display: block; color: #aaa; cursor: pointer; font-size: 12px; text-align: center; padding: 10px; text-decoration: none; }
-.list li .btn_add:hover { background: #263238; color: #ccc; }
-.list li .btn_del { position: absolute; right: 3px; top: 3px; color: #ccc; cursor: pointer; border: 0; background: transparent; display: none; }
-.list li:hover .btn_del { display: block; }
+.list { margin: 0; padding:0; position:absolute; left:0; width:300px; top:50px; bottom:0; overflow:auto }
+.list .item {  }
+.list .item .item_date { color: #999; }
+.list .item .item_category { color:#f1631b; margin-right:5px }
+.list .item .item_visibility { color: #999; margin-left:5px }
+.list .item .item_title { overflow:hidden; text-overflow: ellipsis }
+.list .item .item_info { display:block; font-size:11px; }
+.list .item.selected { background:#fff }
+.list .btn_add { display: block; color: #aaa; cursor: pointer; font-size: 12px; text-align: center; padding: 10px; text-decoration: none; }
+.list .btn_add:hover { background: #263238; color: #ccc; }
+.list .btn_del { position: absolute; right: 3px; top: 3px; color: #ccc; cursor: pointer; border: 0; background: transparent; display: none; }
 
 .content_wrap { position: absolute; left: 300px; right: 0; top:0; bottom: 0; overflow:auto }
 

@@ -1,3 +1,5 @@
+import React from 'react'
+import ContentDrafts from 'material-ui/svg-icons/content/drafts'
 
 class Visibility {
 
@@ -13,6 +15,16 @@ class Visibility {
 				return "발행"
 			default:
 				return "저장"
+		}
+	}
+
+	toMaterialIcon() {
+		switch(this.value) {
+			case "2":
+			case "3":
+				return
+			default:
+				return <ContentDrafts />
 		}
 	}
 }

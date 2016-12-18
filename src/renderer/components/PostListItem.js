@@ -1,35 +1,39 @@
 import React, { Component, PropTypes } from 'react'
 import classnames from 'classnames'
 import dateformat from 'dateformat'
+import {ListItem} from 'material-ui/List'
+import {fade} from 'material-ui/utils/colorManipulator'
+import ContentDrafts from 'material-ui/svg-icons/content/drafts'
 import Visibility from '../model/Visibility'
 
 class PostList extends Component {
 	render() {
 		const { post, category, selected, onSelect } = this.props
 
-		let className = classnames({
-			"item": true,
-			"selected": selected
+		let itemClassName = classnames({
+			"item": true
 		})
 		let visibility = new Visibility(post.visibility)
+		let primaryText = <div className="item_title">{post.title}</div>
+		let secondaryText = (
+			<div>
+				{category && <span className="item_category">{category.label}</span>}
+				{post.date}
+			</div>
+		)
+
+    const styles = {}
+		if (selected) {
+			styles.backgroundColor = fade("#333", 0.2)
+		}
 
 		return (
-			<li>
-				<a className={className} onClick={e => onSelect(post)}>
-					<span className="item_info">
-						<span className="item_date">{post.date}</span>
-						<span className="item_visibility">{visibility.name}</span>
-					</span>
-
-					<span className="item_title">{post.title}</span>
-
-					<span className="item_info">
-						{category &&
-							<span>{category.label}</span>
-						}
-					</span>
-				</a>
-			</li>
+			<ListItem className="item" style={styles}
+				onClick={() => {onSelect(post)}}
+				primaryText={primaryText}
+				secondaryText={secondaryText}
+				rightIcon={visibility.toMaterialIcon()}
+			/>
 		)
 	}
 }
