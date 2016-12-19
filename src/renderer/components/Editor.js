@@ -53,6 +53,7 @@ class Editor extends Component {
 
 		ipcRenderer.removeListener("finish-add-content", this.handleFinishSaveContent)
 		ipcRenderer.removeListener("finish-save-content", this.handleFinishSaveContent)
+		ipcRenderer.removeListener("finish-add-file", this.handleFinishUploadFile)
 	}
 
 	componentWillReceiveProps(nextProps) {

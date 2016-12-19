@@ -85,6 +85,7 @@ input, button, a { outline:none }
 .viewer_content img,
 .viewer_content iframe { max-width:100% }
 .viewer_content iframe { display:block; margin:10px auto }
+.viewer_content p code { background: #eee; padding: 2px 4px; border-radius: 2px;}
 
 .editor .ReactCodeMirror { position: absolute; top: 56px; bottom: 0; left: 0; right: 0; background:#162228; }
 .editor .CodeMirror { height: 100%; padding:0 10px }

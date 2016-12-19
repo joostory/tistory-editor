@@ -158,22 +158,23 @@ module.exports.init = () => {
 
 	ipcMain.on("add-file", (evt, blogName, filepath) => {
 		console.log("add-file", filepath)
-		storage.get("auth", (error, auth) => {
-			if (error) throw error
-
-			if (!auth || !auth.access_token) {
-				evt.sender.send('finish-add-file')
-				return
-			}
-
-			tistory.uploadFile(auth, blogName, filepath).then(res => {
-				console.log(res)
-				evt.sender.send('finish-add-file', res.tistory.url)
-			}).catch(err => {
-				console.error(err)
-				evt.sender.send('finish-add-file')
-			})
-		})
+		evt.sender.send('finish-add-file', filepath)
+		// storage.get("auth", (error, auth) => {
+		// 	if (error) throw error
+		//
+		// 	if (!auth || !auth.access_token) {
+		// 		evt.sender.send('finish-add-file')
+		// 		return
+		// 	}
+		//
+		// 	tistory.uploadFile(auth, blogName, filepath).then(res => {
+		// 		console.log(res)
+		// 		evt.sender.send('finish-add-file', res.tistory.url)
+		// 	}).catch(err => {
+		// 		console.error(err)
+		// 		evt.sender.send('finish-add-file')
+		// 	})
+		// })
 	})
 
 	ipcMain.on("request-auth", (evt, arg) => {
