@@ -1,6 +1,7 @@
 {
   "name": "tistory-editor",
-  "version": "1.0.0",
+  "productName": "TistoryEditor",
+  "version": "0.1.0",
   "description": "Editor for tistory",
   "main": "src/main/main.js",
   "scripts": {
@@ -8,7 +9,7 @@
     "watch": "NODE_ENV=development webpack --watch",
     "app": "electron .",
     "test": "jest -u",
-    "build-app": "electron-packager . TistoryEditor --all --ignore=node_modules/electron-*"
+    "dist": "build"
   },
   "repository": {
     "type": "git",
@@ -46,6 +47,7 @@
   "dependencies": {
     "classnames": "^2.2.5",
     "dateformat": "^1.0.12",
+    "electron-builder": "^10.9.2",
     "electron-json-storage": "^2.0.3",
     "electron-oauth2": "^2.3.1",
     "form-data": "^2.1.2",
@@ -74,5 +76,8 @@
         "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36"
       }
     }
+  },
+  "build": {
+    "appId": "net.joostory.tistory-editor"
   }
 }
