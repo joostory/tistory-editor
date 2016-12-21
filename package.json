@@ -9,7 +9,8 @@
     "watch": "NODE_ENV=development webpack --watch",
     "app": "NODE_ENV=development electron .",
     "test": "jest -u",
-    "dist": "build"
+    "dist": "build",
+		"dist-all": "build -mwl --x64"
   },
   "repository": {
     "type": "git",
