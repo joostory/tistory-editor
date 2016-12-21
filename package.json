@@ -7,7 +7,7 @@
   "scripts": {
     "build": "NODE_ENV=production webpack",
     "watch": "NODE_ENV=development webpack --watch",
-    "app": "electron .",
+    "app": "NODE_ENV=development electron .",
     "test": "jest -u",
     "dist": "build"
   },
@@ -19,7 +19,11 @@
     "editor",
     "tistory"
   ],
-  "author": "Joo",
+  "author": {
+		"name": "Joo",
+		"email": "joo@joostory.net",
+		"url": "http://joostory.net"
+	},
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/joostory/tistory-editor/issues"

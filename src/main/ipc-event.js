@@ -4,7 +4,6 @@ const tistory = require('./tistory-api')
 
 module.exports.init = () => {
 	const fetchUser = (evt, auth) => {
-		console.log("fetchUser", auth)
 		tistory.fetchUser(auth).then(res => {
 			evt.sender.send('receive-user', res.tistory.item)
 		}).catch(err => {
@@ -14,7 +13,6 @@ module.exports.init = () => {
 	}
 
 	const fetchBlogs = (evt, auth) => {
-		console.log("fetchBlogs", auth)
 		tistory.fetchBlogInfo(auth).then(res => {
 			evt.sender.send('receive-blogs', res.tistory.item.blogs)
 		}).catch(err => {
@@ -24,7 +22,6 @@ module.exports.init = () => {
 	}
 
 	ipcMain.on("fetch-user", (evt) => {
-		console.log("fetch-user")
 	  storage.get("auth", (error, auth) => {
 	    if (error) throw error
 
@@ -38,7 +35,6 @@ module.exports.init = () => {
 	})
 
 	ipcMain.on("fetch-blogs", (evt) => {
-		console.log("fetch-blogs")
 	  storage.get("auth", (error, auth) => {
 	    if (error) throw error
 
@@ -52,7 +48,6 @@ module.exports.init = () => {
 	})
 
 	ipcMain.on("fetch-posts", (evt, blogName, page) => {
-		console.log("fetch-posts")
 		storage.get("auth", (error, auth) => {
 			if (error) throw error
 
@@ -71,7 +66,6 @@ module.exports.init = () => {
 	})
 
 	ipcMain.on("fetch-categories", (evt, blogName) => {
-		console.log("fetch-categories")
 		storage.get("auth", (error, auth) => {
 			if (error) throw error
 
@@ -98,7 +92,6 @@ module.exports.init = () => {
 	})
 
 	ipcMain.on("fetch-content", (evt, blogName, postId) => {
-		console.log("fetch-content", blogName, postId)
 		storage.get("auth", (error, auth) => {
 			if (error) throw error
 
@@ -117,7 +110,6 @@ module.exports.init = () => {
 	})
 
 	ipcMain.on("save-content", (evt, blogName, post) => {
-		console.log("save-content")
 		storage.get("auth", (error, auth) => {
 			if (error) throw error
 
@@ -127,7 +119,6 @@ module.exports.init = () => {
 			}
 
 			tistory.saveContent(auth, blogName, post).then(res => {
-				console.log(res)
 				evt.sender.send('finish-save-content', res.tistory.postId)
 			}).catch(err => {
 				console.error(err)
@@ -137,7 +128,6 @@ module.exports.init = () => {
 	})
 
 	ipcMain.on("add-content", (evt, blogName, post) => {
-		console.log("add-content", post)
 		storage.get("auth", (error, auth) => {
 			if (error) throw error
 
@@ -147,7 +137,6 @@ module.exports.init = () => {
 			}
 
 			tistory.addContent(auth, blogName, post).then(res => {
-				console.log(res)
 				evt.sender.send('finish-add-content', res.tistory.postId)
 			}).catch(err => {
 				console.error(err)
@@ -157,40 +146,34 @@ module.exports.init = () => {
 	})
 
 	ipcMain.on("add-file", (evt, blogName, filepath) => {
-		console.log("add-file", filepath)
-		evt.sender.send('finish-add-file', filepath)
-		// storage.get("auth", (error, auth) => {
-		// 	if (error) throw error
-		//
-		// 	if (!auth || !auth.access_token) {
-		// 		evt.sender.send('finish-add-file')
-		// 		return
-		// 	}
-		//
-		// 	tistory.uploadFile(auth, blogName, filepath).then(res => {
-		// 		console.log(res)
-		// 		evt.sender.send('finish-add-file', res.tistory.url)
-		// 	}).catch(err => {
-		// 		console.error(err)
-		// 		evt.sender.send('finish-add-file')
-		// 	})
-		// })
+		storage.get("auth", (error, auth) => {
+			if (error) throw error
+
+			if (!auth || !auth.access_token) {
+				evt.sender.send('finish-add-file')
+				return
+			}
+
+			tistory.uploadFile(auth, blogName, filepath).then(res => {
+				evt.sender.send('finish-add-file', res.tistory.url)
+			}).catch(err => {
+				console.error(err)
+				evt.sender.send('finish-add-file')
+			})
+		})
 	})
 
 	ipcMain.on("request-auth", (evt, arg) => {
-		console.log("request-auth")
 	  tistory.getAccessToken(auth => {
-			console.log("getToken", auth)
 	    storage.set("auth", auth)
 	    fetchUser(evt, auth)
 			fetchBlogs(evt, auth)
 		}).catch(e => {
-			console.log(e)
+			console.error(e)
 		})
 	})
 
 	ipcMain.on("disconnect-auth", (evt, arg) => {
-		console.log("disconnect-auth")
     storage.set("auth", {})
     evt.sender.send('receive-user', {})
 	})

@@ -6,14 +6,18 @@ module.exports = {
 		path.join(__dirname, 'src', 'renderer', 'index')
 	],
 	output: {
-		path: path.join(__dirname, 'build'),
+		path: path.join(__dirname, 'app'),
 		publicPath: '/assets/',
 		filename: 'editor.min.js'
 	},
 	plugins: process.env.NODE_ENV !== "production" ? [] : [
 		new webpack.optimize.DedupePlugin(),
 		new webpack.optimize.OccurenceOrderPlugin(),
-		// new webpack.optimize.UglifyJsPlugin(),
+		new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        drop_console: true
+      }
+    }),
 		new webpack.DefinePlugin({
 		  'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
 		})

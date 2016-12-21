@@ -73,15 +73,13 @@ module.exports.fetchCategories = (auth, blogName) => {
 
 const errorHandler = (res) => {
   if (!res.ok) {
-    console.error(res)
-    throw "Error:" + res.status
+    throw res.json()
   }
 
   return res
 }
 
 module.exports.saveContent = (auth, blogName, post) => {
-  console.log(post)
   let formdata = makePostFormData(auth, blogName, post)
   formdata.append("postId", post.id)
 

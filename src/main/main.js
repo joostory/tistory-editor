@@ -38,12 +38,14 @@ const createWindow = (config) => {
   })
 
   mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, '../../build/index.html'),
+    pathname: path.join(__dirname, '../../app/index.html'),
     protocol: 'file:',
     slashes: true
   }))
 
-  mainWindow.webContents.openDevTools()
+  if (process.env.NODE_ENV == "development") {
+    mainWindow.webContents.openDevTools()
+  }
 }
 
 app.on('ready', () => {
