@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+
 import Codemirror from 'react-codemirror'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/addon/dialog/dialog.css'
@@ -9,21 +10,16 @@ import 'codemirror/addon/dialog/dialog'
 import 'codemirror/addon/search/search'
 import 'codemirror/addon/search/searchcursor'
 import 'codemirror/addon/search/jump-to-line'
-import classnames from 'classnames'
-import dateformat from 'dateformat'
 import toMarkdown from 'to-markdown'
 import marked from 'marked'
+
+import dateformat from 'dateformat'
 import Dropzone from 'react-dropzone'
 import { ipcRenderer } from 'electron'
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar'
-import Dialog from 'material-ui/Dialog'
-import SelectField from 'material-ui/SelectField'
-import MenuItem from 'material-ui/MenuItem'
 import TextField from 'material-ui/TextField'
-import FlatButton from 'material-ui/FlatButton'
-import IconButton from 'material-ui/IconButton'
-import ActionDone from 'material-ui/svg-icons/action/done'
-import ContentClear from 'material-ui/svg-icons/content/clear'
+
+import EditorToolbar from './EditorToolbar'
+import EditorInfoDialog from './EditorInfoDialog'
 
 class Editor extends Component {
 	constructor(props, context) {
@@ -97,26 +93,9 @@ class Editor extends Component {
 		})
 	}
 
-	handleChangeVisibility(e) {
-		console.log("change visibility", e.target.value)
-		const { post } = this.state
-		let newPost = Object.assign({}, post, {
-			visibility: e.target.value
-		})
-		this.setState({
-			post: newPost
-		})
-	}
-
 	handleChangeTags(e) {
-		const { post } = this.state
-		let newPost = Object.assign({}, post, {
-			tags: {
-				tag : e.target.value
-			}
-		})
 		this.setState({
-			post: newPost
+			tags: e.target.value
 		})
 	}
 
@@ -221,68 +200,26 @@ class Editor extends Component {
 			theme:'default'
     }
 
-		let visibility = "0"
-		if (post.visibility && post.visibility != "0") {
-			visibility = post.visibility
-		}
-
-		let category = "0"
-		if (post.categoryId) {
-			category = post.categoryId
-		}
-
-		let publishDialogActions = [
-			<FlatButton
-				label="취소"
-				primary={true}
-				onTouchTap={this.handlePublishDialogClose.bind(this)}
-			/>,
-			<FlatButton
-				label="저장"
-				primary={true}
-				onTouchTap={this.handleSave.bind(this)}
-			/>,
-			<FlatButton
-				label="발행"
-				primary={true}
-				keyboardFocused={true}
-				onTouchTap={this.handlePublish.bind(this)}
-			/>
-		]
-
 		return (
 			<div className="content_wrap">
 				<div className="editor">
-					<Toolbar>
-						<ToolbarGroup style={{width:'100%'}}>
-							<TextField hintText="Title" type="text" value={title} fullWidth={true} onChange={this.handleChangeTitle.bind(this)} />
-						</ToolbarGroup>
-						<ToolbarGroup lastChild={true}>
-							<IconButton onClick={this.handlePublishDialogOpen.bind(this)}><ActionDone /></IconButton>
-							<IconButton onClick={onCancel}><ContentClear /></IconButton>
-						</ToolbarGroup>
-					</Toolbar>
+					<Dropzone disableClick={true} accept="image/*" onDrop={this.handleDropFile.bind(this)} style={{width: "100%",height:"100%"}}>
+						<EditorToolbar title={title}
+							onTitleChange={this.handleChangeTitle.bind(this)}
+							onSaveClick={this.handlePublishDialogOpen.bind(this)}
+							onCancelClick={onCancel} />
 
-					<Dialog title="글의 속성을 확인해주세요." modal={false} open={showInfoBox}
-						actions={publishDialogActions}
-						onRequestClose={this.handlePublishDialogClose.bind(this)}>
+						<EditorInfoDialog open={showInfoBox} category={post.categoryId} categories={categories} tags={tags}
+						 	onTagsChange={this.handleChangeTags.bind(this)}
+							onCategoryChange={this.handleChangeCategory.bind(this)}
+							onRequestClose={this.handlePublishDialogClose.bind(this)}
+							onRequestSave={this.handleSave.bind(this)}
+							onRequestPublish={this.handlePublish.bind(this)} />
 
-						<TextField floatingLabelText="태그" hintText="Tag" type="text" name="tags" defaultValue={tags} onChange={this.handleChangeTags.bind(this)} />
+						<Codemirror ref="editor" options={options} value={content}
+							onChange={this.handleChangeContent.bind(this)} />
 
-						<br />
-
-						<SelectField floatingLabelText="카테고리" value={category} autoWidth={true} onChange={this.handleChangeCategory.bind(this)}>
-							<MenuItem value="0" primaryText="분류없음" />
-							{categories.map((item, i) =>
-								<MenuItem key={i} value={item.id} primaryText={item.label} />
-							)}
-		        </SelectField>
-					</Dialog>
-
-					<Dropzone disableClick={true} accept="image/*" onDrop={this.handleDropFile.bind(this)}>
-						<Codemirror ref="editor" value={content} onChange={this.handleChangeContent.bind(this)} options={options} />
 					</Dropzone>
-
 				</div>
 			</div>
 		)
