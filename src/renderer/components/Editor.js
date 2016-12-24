@@ -33,6 +33,7 @@ class Editor extends Component {
 			post: props.post? props.post: {},
 			title: props.post? props.post.title: "",
 			content: props.post? toMarkdown(props.post.content): "",
+			tags: props.post && props.post.tags && props.post.tags.tag? props.post.tags.tag.toString(): "",
 			showInfoBox: false
 		}
 		this.handleKeyDown = this.handleKeyDown.bind(this)
@@ -65,7 +66,8 @@ class Editor extends Component {
 			this.setState({
 				post: nextProps.post,
 				title: nextProps.post.title,
-				content: toMarkdown(nextProps.post.content)
+				content: toMarkdown(nextProps.post.content),
+				tags: nextProps.post.tags && nextProps.post.tags.tag? nextProps.post.tags.tag.toString(): ""
 			})
 		}
 	}
@@ -139,12 +141,15 @@ class Editor extends Component {
 
 	requestSave(visibility) {
 		const { currentBlog, onSave } = this.props
-		const { post, title, content } = this.state
+		const { post, title, content, tags } = this.state
 
 		let savePost = Object.assign({}, post, {
 			title: title,
 			visibility: visibility,
-			content: marked(content)
+			content: marked(content),
+			tags: {
+				tag: tags
+			}
 		})
 
 		this.setState({
@@ -160,7 +165,7 @@ class Editor extends Component {
 
 	handleFinishSaveContent(e, postId) {
 		const { onSave } = this.props
-		const { post, title, content } = this.state
+		const { post } = this.state
 
 		if (!postId) {
 			// handle Error
@@ -170,7 +175,10 @@ class Editor extends Component {
 
 		let savePost = Object.assign({}, post, {
 			id: postId,
-			date: post.id? post.date : dateformat(new Date(), 'yyyy-mm-dd HH:MM:ss')
+			date: post.id? post.date : dateformat(new Date(), 'yyyy-mm-dd HH:MM:ss'),
+			tags: {
+				tag: post.tags.tag.split(",")
+			}
 		})
 
 		onSave(savePost)
@@ -204,7 +212,7 @@ class Editor extends Component {
 
 	render() {
 		const { onCancel, categories } = this.props
-		const { post, title, content, showInfoBox } = this.state
+		const { post, title, content, tags, showInfoBox } = this.state
 
 		let options = {
 			lineNumbers: false,
@@ -212,11 +220,6 @@ class Editor extends Component {
 			mode: 'markdown',
 			theme:'default'
     }
-
-		let tags = ""
-		if (post.tags && post.tags.tag) {
-			tags = post.tags.tag.toString();
-		}
 
 		let visibility = "0"
 		if (post.visibility && post.visibility != "0") {
@@ -264,7 +267,7 @@ class Editor extends Component {
 						actions={publishDialogActions}
 						onRequestClose={this.handlePublishDialogClose.bind(this)}>
 
-						<TextField floatingLabelText="태그" hintText="Tag" type="text" name="tags" value={tags} onChange={this.handleChangeTags.bind(this)} />
+						<TextField floatingLabelText="태그" hintText="Tag" type="text" name="tags" defaultValue={tags} onChange={this.handleChangeTags.bind(this)} />
 
 						<br />
 
