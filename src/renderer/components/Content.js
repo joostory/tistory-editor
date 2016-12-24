@@ -44,7 +44,7 @@ class Content extends Component {
 
 	handleModify() {
 		this.setState({
-			mode: ContentMode.MARKDOWN
+			mode: ContentMode.EDITOR
 		})
 	}
 
@@ -76,9 +76,8 @@ class Content extends Component {
 		}
 
 		switch (mode) {
-			case ContentMode.MARKDOWN:
+			case ContentMode.EDITOR:
 				return <Editor currentBlog={currentBlog} post={post} categories={categories} onSave={this.handleSave.bind(this)} onCancel={this.handleView.bind(this)} />
-			case ContentMode.WYSIWYG:
 			case ContentMode.VIEWER:
 			default:
 				return <ContentViewer currentBlog={currentBlog} post={post} categories={categories} onModify={this.handleModify.bind(this)} />

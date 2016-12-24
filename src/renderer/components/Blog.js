@@ -109,7 +109,7 @@ class Blog extends Component {
 	handleRequestAddPost() {
 		console.log("handleRequestAddPost");
 		this.setState({
-			mode: ContentMode.MARKDOWN
+			mode: ContentMode.EDITOR
 		})
 
 	}
@@ -171,7 +171,7 @@ class Blog extends Component {
 		const { mode, posts, currentPost, categories, message, messageOpen } = this.state
 
 		let content;
-		if (mode == ContentMode.MARKDOWN) {
+		if (mode == ContentMode.EDITOR) {
 			content = <Editor currentBlog={currentBlog} categories={categories} onSave={this.handleAddPost.bind(this)} onCancel={this.handleCancelAddPost.bind(this)} />
 		} else {
 			content = <Content currentBlog={currentBlog} post={currentPost} categories={categories} onSave={this.handleSave.bind(this)} />
