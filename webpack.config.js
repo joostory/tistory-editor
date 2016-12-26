@@ -26,15 +26,18 @@ module.exports = {
     "jsdom": {}
   },
 	module: {
-		loaders: [{
-			test: /\.js$/,
-			loaders: ['babel-loader'],
-			exclude: /node_modules/,
-			include: __dirname
-		}, {
-			test: /\.css$/,
-			loader: "style-loader!css-loader"
-		}]
+		loaders: [
+			{
+				test: /\.js$/,
+				loaders: ['babel-loader'],
+				exclude: /node_modules/,
+				include: __dirname
+			},
+			{
+				test: /\.css$/,
+				loader: "style-loader!css-loader"
+			}
+		]
 	},
 	target: "electron"
 }

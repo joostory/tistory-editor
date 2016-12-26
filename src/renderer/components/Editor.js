@@ -1,22 +1,14 @@
 import React, { Component, PropTypes } from 'react'
 
-import Codemirror from 'react-codemirror'
-import 'codemirror/lib/codemirror.css'
-import 'codemirror/addon/dialog/dialog.css'
-import 'codemirror/mode/javascript/javascript'
-import 'codemirror/mode/xml/xml'
-import 'codemirror/mode/markdown/markdown'
-import 'codemirror/addon/dialog/dialog'
-import 'codemirror/addon/search/search'
-import 'codemirror/addon/search/searchcursor'
-import 'codemirror/addon/search/jump-to-line'
-import toMarkdown from 'to-markdown'
-import marked from 'marked'
+import MarkdownEditor from './MarkdownEditor'
+import RichEditor from './RichEditor'
 
 import dateformat from 'dateformat'
 import Dropzone from 'react-dropzone'
 import { ipcRenderer } from 'electron'
 import TextField from 'material-ui/TextField'
+
+import * as EditorMode from '../constants/EditorMode'
 
 import EditorToolbar from './EditorToolbar'
 import EditorInfoDialog from './EditorInfoDialog'
@@ -28,13 +20,13 @@ class Editor extends Component {
 		this.state = {
 			post: props.post? props.post: {},
 			title: props.post? props.post.title: "",
-			content: props.post? toMarkdown(props.post.content): "",
+			content: props.post? props.post.content: "",
 			tags: props.post && props.post.tags && props.post.tags.tag? props.post.tags.tag.toString(): "",
+			editorMode: EditorMode.MARKDOWN,
 			showInfoBox: false
 		}
 		this.handleKeyDown = this.handleKeyDown.bind(this)
 		this.handleFinishSaveContent = this.handleFinishSaveContent.bind(this)
-		this.handleFinishUploadFile = this.handleFinishUploadFile.bind(this)
 	}
 
 	componentWillMount() {
@@ -42,7 +34,6 @@ class Editor extends Component {
 
 		ipcRenderer.on("finish-add-content", this.handleFinishSaveContent)
 		ipcRenderer.on("finish-save-content", this.handleFinishSaveContent)
-		ipcRenderer.on("finish-add-file", this.handleFinishUploadFile)
 	}
 
 	componentWillUnmount() {
@@ -50,7 +41,6 @@ class Editor extends Component {
 
 		ipcRenderer.removeListener("finish-add-content", this.handleFinishSaveContent)
 		ipcRenderer.removeListener("finish-save-content", this.handleFinishSaveContent)
-		ipcRenderer.removeListener("finish-add-file", this.handleFinishUploadFile)
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -81,7 +71,6 @@ class Editor extends Component {
 	}
 
 	handleChangeTitle(e) {
-		console.log("change title", e.target.value)
 		this.setState({
 			title: e.target.value
 		})
@@ -100,7 +89,6 @@ class Editor extends Component {
 	}
 
 	handleChangeCategory(e, index, value) {
-		console.log("change category", value)
 		const { post } = this.state
 		let newPost = Object.assign({}, post, {
 			categoryId: value
@@ -120,12 +108,13 @@ class Editor extends Component {
 
 	requestSave(visibility) {
 		const { currentBlog, onSave } = this.props
-		const { post, title, content, tags } = this.state
+		const { post, title, content, tags, editorMode } = this.state
+		const { editor } = this.refs
 
 		let savePost = Object.assign({}, post, {
 			title: title,
 			visibility: visibility,
-			content: marked(content),
+			content: editor.getContent(),
 			tags: {
 				tag: tags
 			}
@@ -163,12 +152,16 @@ class Editor extends Component {
 		onSave(savePost)
 	}
 
-	handleFinishUploadFile(e, fileUrl) {
+	handleChangeEditorMode(mode) {
 		const { editor } = this.refs
-		console.log("finishUploadFile", fileUrl)
-		let cm = editor.getCodeMirror()
-		let CodeMirror = editor.getCodeMirrorInstance()
-		cm.replaceRange("![](" + fileUrl + ")", CodeMirror.Pos(cm.getCursor().line))
+		const { editorMode } = this.state
+		let nextEditorMode = editorMode == EditorMode.RICH ? EditorMode.MARKDOWN : EditorMode.RICH
+
+		console.log(nextEditorMode, editor.getContent())
+		this.setState({
+			content: editor.getContent(),
+			editorMode: nextEditorMode
+		})
 	}
 
 	handleKeyDown(e) {
@@ -188,17 +181,19 @@ class Editor extends Component {
 		})
 	}
 
+	getEditor() {
+		const { content, editorMode } = this.state
+
+		if (editorMode == EditorMode.RICH) {
+			return <RichEditor ref="editor" value={content} />
+		} else {
+			return <MarkdownEditor ref="editor" value={content} />
+		}
+	}
 
 	render() {
 		const { onCancel, categories } = this.props
 		const { post, title, content, tags, showInfoBox } = this.state
-
-		let options = {
-			lineNumbers: false,
-			lineWrapping: true,
-			mode: 'markdown',
-			theme:'default'
-    }
 
 		return (
 			<div className="content_wrap">
@@ -206,6 +201,7 @@ class Editor extends Component {
 					<Dropzone disableClick={true} accept="image/*" onDrop={this.handleDropFile.bind(this)} style={{width: "100%",height:"100%"}}>
 						<EditorToolbar title={title}
 							onTitleChange={this.handleChangeTitle.bind(this)}
+							onChangeEditorMode={this.handleChangeEditorMode.bind(this)}
 							onSaveClick={this.handlePublishDialogOpen.bind(this)}
 							onCancelClick={onCancel} />
 
@@ -216,8 +212,7 @@ class Editor extends Component {
 							onRequestSave={this.handleSave.bind(this)}
 							onRequestPublish={this.handlePublish.bind(this)} />
 
-						<Codemirror ref="editor" options={options} value={content}
-							onChange={this.handleChangeContent.bind(this)} />
+						{this.getEditor()}
 
 					</Dropzone>
 				</div>
