@@ -68,24 +68,25 @@ input, button, a { outline:none }
 .content_empty_message { position:absolute; top:50%; left:0; right:0; margin-top:-30px; height:60px; text-align:center; font-size:24px; color:#ccc }
 
 .viewer { position:absolute; top:0; bottom:0; left:0; right:0; overflow:auto }
-.viewer_header { margin:20px; padding-bottom:20px; border-bottom:1px solid #eee }
-.viewer_header .viewer_category { font-size:12px; color:#f1631b }
-.viewer_header .viewer_title { font-size:32px; margin: 16px 0; word-wrap: break-word }
-.viewer_header .viewer_info {  }
-.viewer_header .viewer_btn { position:absolute; right:20px; top:20px }
-.viewer_content { margin:20px 20px 40px; word-wrap: break-word }
-.viewer_content h1 { font-size:32px; margin:16px 0 }
-.viewer_content h2 { font-size:24px; margin:12px 0 }
-.viewer_content h3 { font-size:18px; margin:9px 0 }
-.viewer_content h4,
-.viewer_content h5,
-.viewer_content h6 { font-size:16px; margin:8px 0 }
-.viewer_content pre { background:#eee; padding:20px }
-.viewer_content .imageblock,
-.viewer_content img,
-.viewer_content iframe { max-width:100% }
-.viewer_content iframe { display:block; margin:10px auto }
-.viewer_content p code { background: #eee; padding: 2px 4px; border-radius: 2px;}
+.viewer .viewer_header { margin:20px; padding-bottom:20px; border-bottom:1px solid #eee }
+.viewer .viewer_header .viewer_category { font-size:12px; color:#f1631b }
+.viewer .viewer_header .viewer_title { font-size:32px; margin: 16px 0; word-wrap: break-word }
+.viewer .viewer_header .viewer_info {  }
+.viewer .viewer_header .viewer_btn { position:absolute; right:20px; top:20px }
+.viewer .viewer_content { margin:20px 20px 40px; word-wrap: break-word }
+.viewer .viewer_content h1 { font-size:32px; margin:16px 0 }
+.viewer .viewer_content h2 { font-size:24px; margin:12px 0 }
+.viewer .viewer_content h3 { font-size:18px; margin:9px 0 }
+.viewer .viewer_content h4,
+.viewer .viewer_content h5,
+.viewer .viewer_content h6 { font-size:16px; margin:8px 0 }
+.viewer .viewer_content pre { background:#eee; padding:20px }
+.viewer .viewer_content .imageblock,
+.viewer .viewer_content img,
+.viewer .viewer_content iframe { max-width:100% }
+.viewer .viewer_content iframe { display:block; margin:10px auto }
+.viewer .viewer_content p code { background: #eee; padding: 2px 4px; border-radius: 2px;}
+.viewer .viewer_tags { display: flex; flex-wrap: wrap; margin: 20px }
 
 .editor { width:100%; height:100% }
 .editor .Quill,

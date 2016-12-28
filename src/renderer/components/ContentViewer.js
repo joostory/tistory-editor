@@ -32,7 +32,7 @@ class ContentViewer extends Component {
 
           <div className="viewer_content" dangerouslySetInnerHTML={{__html: post.content}} />
 
-          <div style={{display:'flex', flexWrap:'wrap'}}>
+          <div className="viewer_tags">
             {tags.map((item, i) => <Chip key={i} style={{marginRight:'4px'}}>{item}</Chip>)}
           </div>
 

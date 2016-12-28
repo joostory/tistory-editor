@@ -14,7 +14,7 @@ module.exports.init = () => {
 
 	const fetchBlogs = (evt, auth) => {
 		tistory.fetchBlogInfo(auth).then(res => {
-			evt.sender.send('receive-blogs', res.tistory.item.blogs)
+			evt.sender.send('receive-blogs', [].concat(res.tistory.item.blogs))
 		}).catch(err => {
 			console.error(err)
 			evt.sender.send('receive-blogs', [])
@@ -57,7 +57,7 @@ module.exports.init = () => {
 			}
 
 			tistory.fetchPosts(auth, blogName, page).then(res => {
-				evt.sender.send('receive-posts', res.tistory.item.posts)
+				evt.sender.send('receive-posts', [].concat(res.tistory.item.posts))
 			}).catch(err => {
 				console.error(err)
 				evt.sender.send('receive-posts', [])
@@ -75,13 +75,16 @@ module.exports.init = () => {
 			}
 
 			tistory.fetchCategories(auth, blogName).then(res => {
-				let categories = res.tistory.item.categories.map(category => {
-					return {
-						'id': category.id,
-						'parent': category.parent,
-						'label': category.label
-					}
-				})
+				let categories = []
+				if (res.tistory.item.categories) {
+					categories = [].concat(res.tistory.item.categories).map(category => {
+						return {
+							'id': category.id,
+							'parent': category.parent,
+							'label': category.label
+						}
+					})
+				}
 
 				evt.sender.send('receive-categories', categories)
 			}).catch(err => {
