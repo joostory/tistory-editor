@@ -4,6 +4,7 @@ import MarkdownEditor from './MarkdownEditor'
 import RichEditor from './RichEditor'
 
 import dateformat from 'dateformat'
+import classnames from 'classnames'
 import Dropzone from 'react-dropzone'
 import { ipcRenderer } from 'electron'
 import TextField from 'material-ui/TextField'
@@ -48,7 +49,7 @@ class Editor extends Component {
 
 		console.log(nextProps);
 
-		if (post.id != nextProps.post.id) {
+		if (nextProps.post && post.id != nextProps.post.id) {
 			this.setState({
 				post: nextProps.post,
 				title: nextProps.post.title,
@@ -198,7 +199,9 @@ class Editor extends Component {
 		return (
 			<div className="content_wrap">
 				<div className="editor">
-					<Dropzone disableClick={true} accept="image/*" onDrop={this.handleDropFile.bind(this)} style={{width: "100%",height:"100%"}}>
+					<Dropzone disableClick={true} accept="image/*" style={{width: "100%",height:"100%"}}
+						onDrop={this.handleDropFile.bind(this)}>
+
 						<EditorToolbar title={title}
 							onTitleChange={this.handleChangeTitle.bind(this)}
 							onChangeEditorMode={this.handleChangeEditorMode.bind(this)}

@@ -1,6 +1,6 @@
 input, button, a { outline:none }
 
-.container { position:absolute; left:0; right:0; top:0; bottom:0 }
+.container { position:absolute; left:0; right:0; top:0; bottom:0; overflow:hidden }
 .btn { background:transparent; border:1px solid #ccc }
 .btn:hover { background:#eee }
 
@@ -91,7 +91,7 @@ input, button, a { outline:none }
 .editor { width:100%; height:100% }
 .editor .Quill,
 .editor .ReactCodeMirror { position: absolute; top: 56px; bottom: 0; left: 0; right: 0 }
-.editor .CodeMirror { height: 100%; padding:0 10px }
+.editor .CodeMirror { height: 100%; padding:0 10px; font-family:Menlo, Consolas, 'DejaVu Sans Mono', monospace }
 .editor .statusbar { position: absolute; top: 0; height: 50px; left: 0; right: 0; background:#ddd; }
 .editor .statusbar .title:before { content:"# " }
 .editor .statusbar .title { position:absolute; left:15px; font-size:24px; bottom:10px }

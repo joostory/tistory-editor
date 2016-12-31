@@ -27,6 +27,7 @@ class Blog extends Component {
 
 		this.receivePostsListener = this.receivePostsListener.bind(this)
 		this.receiveCategoriesListener = this.receiveCategoriesListener.bind(this)
+		this.notifyFinishUploadFile = this.notifyFinishUploadFile.bind(this)
 	}
 
 	receivePostsListener(e, posts) {
@@ -48,12 +49,14 @@ class Blog extends Component {
 		console.log("add listener")
 		ipcRenderer.on("receive-posts", this.receivePostsListener)
 		ipcRenderer.on("receive-categories", this.receiveCategoriesListener)
+		ipcRenderer.on("finish-add-file", this.notifyFinishUploadFile)
 	}
 
 	componentWillUnmount() {
 		console.log("remove listener")
 		ipcRenderer.removeListener("receive-posts", this.receivePostsListener)
 		ipcRenderer.removeListener("receive-categories", this.receiveCategoriesListener)
+		ipcRenderer.removeListener("finish-add-file", this.notifyFinishUploadFile)
 	}
 
 	addPosts(receivedPosts) {
@@ -137,6 +140,10 @@ class Blog extends Component {
 	notifySavePost(post) {
 		let visibility = new Visibility(post.visibility)
 		this.handleMessageOpen("'" + post.title + "' " + visibility.name + " 완료")
+	}
+
+	notifyFinishUploadFile(e, fileUrl) {
+		this.handleMessageOpen("이미지 업로드 완료")
 	}
 
 	handleAddPost(post) {
