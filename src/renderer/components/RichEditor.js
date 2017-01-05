@@ -1,10 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 import { ipcRenderer } from 'electron'
 import Quill from 'quill'
-
+import hljs from 'highlightjs'
+import 'highlightjs/styles/monokai-sublime.css'
 import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
-
 
 let quillInstance;
 
@@ -35,13 +34,49 @@ class RichEditor extends Component {
 
   componentDidMount() {
     const { container } = this.refs
+		const { onImageHandler } = this.props
     const { value } = this.state
 
     let options = {
-      module: {
-        toolbar: false
-      },
-      theme: 'bubble'
+			placeholder: '글을 작성하세요...',
+	    modules: {
+				syntax: {
+					highlight: (text) => {
+			      let result = hljs.highlightAuto(text);
+			      return result.value
+					}
+				},
+				toolbar: {
+					container: [
+			      [{ header: [2, 3, false] }],
+						['bold', 'italic', 'code', 'script'],
+						[{ list: 'ordered'}, { list: 'bullet' }],
+						[ 'blockquote', 'code-block', 'link', 'image'],
+						['clean']
+			    ],
+					handlers: {
+						image: () => {
+		          let fileInput = this.container.querySelector('input.ql-image[type=file]');
+		          if (fileInput == null) {
+		            fileInput = document.createElement('input');
+		            fileInput.setAttribute('type', 'file');
+		            fileInput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon, image/svg+xml');
+		            fileInput.classList.add('ql-image');
+		            fileInput.addEventListener('change', () => {
+									let files = []
+									for (let i = 0; i < fileInput.files.length ; i++) {
+										files.push(fileInput.files.item(i))
+									}
+									onImageHandler(files)
+		            });
+		            this.container.appendChild(fileInput);
+		          }
+		          fileInput.click();
+						}
+					}
+				}
+	    },
+	    theme: 'snow'
     }
 
     quillInstance = new Quill(container, options)
@@ -69,7 +104,8 @@ class RichEditor extends Component {
 }
 
 RichEditor.propTypes = {
-  value: PropTypes.string.isRequired
+  value: PropTypes.string.isRequired,
+	onImageHandler: PropTypes.func.isRequired
 }
 
 export default RichEditor

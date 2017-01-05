@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { ipcRenderer } from 'electron'
 import Chip from 'material-ui/Chip'
 import RaisedButton from 'material-ui/RaisedButton'
+import 'material-design-lite/material.css'
 
 class ContentViewer extends Component {
   render() {

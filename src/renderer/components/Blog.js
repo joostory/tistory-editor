@@ -112,6 +112,7 @@ class Blog extends Component {
 	handleRequestAddPost() {
 		console.log("handleRequestAddPost");
 		this.setState({
+			currentPost: {},
 			mode: ContentMode.EDITOR
 		})
 
@@ -119,6 +120,7 @@ class Blog extends Component {
 
 	handleCancelAddPost() {
 		this.setState({
+			currentPost: {},
 			mode: ContentMode.VIEWER
 		})
 	}
@@ -179,9 +181,16 @@ class Blog extends Component {
 
 		let content;
 		if (mode == ContentMode.EDITOR) {
-			content = <Editor currentBlog={currentBlog} categories={categories} onSave={this.handleAddPost.bind(this)} onCancel={this.handleCancelAddPost.bind(this)} />
+			content = (
+				<Editor currentBlog={currentBlog} categories={categories}
+					onSave={this.handleAddPost.bind(this)}
+					onCancel={this.handleCancelAddPost.bind(this)} />
+			)
 		} else {
-			content = <Content currentBlog={currentBlog} post={currentPost} categories={categories} onSave={this.handleSave.bind(this)} />
+			content = (
+				<Content currentBlog={currentBlog} post={currentPost} categories={categories}
+					onSave={this.handleSave.bind(this)} />
+			)
 		}
 
 		return (

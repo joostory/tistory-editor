@@ -104,3 +104,10 @@ input, button, a { outline:none }
 .editor .statusbar .btn_wrap .btn_info { margin-right:5px; border-radius:15px }
 .editor .info_box { position:absolute; top:70px; left:50%; width:500px; height:300px; margin-left:-250px; background:#fff; box-shadow: #333 0 1px 10px; border-radius:5px; z-index:10 }
 .editor .cover { position:absolute; top:50px; bottom:0; left:0; right:0; background:#333; opacity:0.7; z-index:9 }
+
+/* quill editor */
+.Quill .ql-toolbar.ql-snow { border:0 }
+.Quill .ql-container.ql-snow { height:auto; position:absolute; top:40px; bottom:0; left:0; right:0; border:0 }
+.Quill blockquote:before,
+.Quill blockquote:after { content:'' }
+.Quill p { margin-bottom:16px }

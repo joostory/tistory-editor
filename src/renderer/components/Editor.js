@@ -186,7 +186,7 @@ class Editor extends Component {
 		const { content, editorMode } = this.state
 
 		if (editorMode == EditorMode.RICH) {
-			return <RichEditor ref="editor" value={content} />
+			return <RichEditor ref="editor" value={content} onImageHandler={this.handleDropFile.bind(this)} />
 		} else {
 			return <MarkdownEditor ref="editor" value={content} />
 		}
