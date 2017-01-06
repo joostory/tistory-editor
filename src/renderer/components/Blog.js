@@ -20,6 +20,7 @@ class Blog extends Component {
 			categories: [],
 			fetchPostLock: false,
 			fetchCategoryLock: false,
+			selectPostLock: false,
 			mode: ContentMode.VIEWER,
 			message: "",
 			messageOpen: false
@@ -88,13 +89,22 @@ class Blog extends Component {
 	}
 
 	handleSelectBlog(blog) {
+		const { content } = this.refs
+		if (!content.canExit() && !confirm("작성 중인 내용이 사라집니다. 계속하시겠습니까?")) {
+			return
+		}
 		this.props.onSelect(blog)
 	}
 
 	handleSelectPost(post) {
+		const { content } = this.refs
+		if (!content.canExit() && !confirm("작성 중인 내용이 사라집니다. 계속하시겠습니까?")) {
+			return
+		}
 		this.setState({
 			currentPost: post,
-			mode: ContentMode.VIEWER
+			mode: ContentMode.VIEWER,
+			selectPostLock: false
 		})
 	}
 
@@ -119,6 +129,9 @@ class Blog extends Component {
 	}
 
 	handleCancelAddPost() {
+		if (!confirm("작성 중인 내용이 사라집니다. 계속하시겠습니까?")) {
+			return
+		}
 		this.setState({
 			currentPost: {},
 			mode: ContentMode.VIEWER
@@ -182,13 +195,13 @@ class Blog extends Component {
 		let content;
 		if (mode == ContentMode.EDITOR) {
 			content = (
-				<Editor currentBlog={currentBlog} categories={categories}
+				<Editor ref='content' currentBlog={currentBlog} categories={categories}
 					onSave={this.handleAddPost.bind(this)}
 					onCancel={this.handleCancelAddPost.bind(this)} />
 			)
 		} else {
 			content = (
-				<Content currentBlog={currentBlog} post={currentPost} categories={categories}
+				<Content ref='content' currentBlog={currentBlog} post={currentPost} categories={categories}
 					onSave={this.handleSave.bind(this)} />
 			)
 		}

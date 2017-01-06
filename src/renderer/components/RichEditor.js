@@ -41,10 +41,7 @@ class RichEditor extends Component {
 			placeholder: '글을 작성하세요...',
 	    modules: {
 				syntax: {
-					highlight: (text) => {
-			      let result = hljs.highlightAuto(text);
-			      return result.value
-					}
+					highlight: (text) => hljs.highlightAuto(text).value
 				},
 				toolbar: {
 					container: [

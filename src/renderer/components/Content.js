@@ -49,6 +49,9 @@ class Content extends Component {
 	}
 
 	handleView() {
+		if (!confirm("작성 중인 내용이 사라집니다. 계속하시겠습니까?")) {
+			return
+		}
 		this.setState({
 			mode: ContentMode.VIEWER
 		})
@@ -63,8 +66,12 @@ class Content extends Component {
 		onSave(post)
 	}
 
+	canExit() {
+		return this.state.mode != ContentMode.EDITOR
+	}
+
 	render() {
-		const { currentBlog, categories } = this.props
+		const { currentBlog, categories, onChange } = this.props
 		const { mode, post } = this.state
 
 		if (!post.id) {
@@ -77,10 +84,18 @@ class Content extends Component {
 
 		switch (mode) {
 			case ContentMode.EDITOR:
-				return <Editor currentBlog={currentBlog} post={post} categories={categories} onSave={this.handleSave.bind(this)} onCancel={this.handleView.bind(this)} />
+				return (
+					<Editor ref='editor' currentBlog={currentBlog} post={post} categories={categories}
+						onSave={this.handleSave.bind(this)}
+						onCancel={this.handleView.bind(this)}
+						onChange={onChange} />
+				)
 			case ContentMode.VIEWER:
 			default:
-				return <ContentViewer currentBlog={currentBlog} post={post} categories={categories} onModify={this.handleModify.bind(this)} />
+				return (
+					<ContentViewer currentBlog={currentBlog} post={post} categories={categories}
+						onModify={this.handleModify.bind(this)} />
+				)
 		}
 	}
 }

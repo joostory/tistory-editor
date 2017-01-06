@@ -72,14 +72,9 @@ class Editor extends Component {
 	}
 
 	handleChangeTitle(e) {
+		const { onChange } = this.props
 		this.setState({
 			title: e.target.value
-		})
-	}
-
-	handleChangeContent(value) {
-		this.setState({
-			content: value
 		})
 	}
 
@@ -130,6 +125,10 @@ class Editor extends Component {
 		} else {
 			ipcRenderer.send("add-content", currentBlog.name, savePost)
 		}
+	}
+
+	canExit() {
+		return false
 	}
 
 	handleFinishSaveContent(e, postId) {
