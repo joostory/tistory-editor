@@ -33,8 +33,7 @@ class RichEditor extends Component {
 	}
 
   componentDidMount() {
-    const { container } = this.refs
-		const { onImageHandler } = this.props
+    const { container, fileInput } = this.refs
     const { value } = this.state
 
     let options = {
@@ -46,28 +45,13 @@ class RichEditor extends Component {
 				toolbar: {
 					container: [
 			      [{ header: [2, 3, false] }],
-						['bold', 'italic', 'code', 'script'],
+						['bold', 'italic', 'code'],
 						[{ list: 'ordered'}, { list: 'bullet' }],
 						[ 'blockquote', 'code-block', 'link', 'image'],
 						['clean']
 			    ],
 					handlers: {
 						image: () => {
-		          let fileInput = this.container.querySelector('input.ql-image[type=file]');
-		          if (fileInput == null) {
-		            fileInput = document.createElement('input');
-		            fileInput.setAttribute('type', 'file');
-		            fileInput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon, image/svg+xml');
-		            fileInput.classList.add('ql-image');
-		            fileInput.addEventListener('change', () => {
-									let files = []
-									for (let i = 0; i < fileInput.files.length ; i++) {
-										files.push(fileInput.files.item(i))
-									}
-									onImageHandler(files)
-		            });
-		            this.container.appendChild(fileInput);
-		          }
 		          fileInput.click();
 						}
 					}
@@ -90,11 +74,22 @@ class RichEditor extends Component {
   }
 
   render() {
+		const { onImageHandler } = this.props
     const { value } = this.state
 
     return (
       <div className="Quill">
         <div ref="container" dangerouslySetInnerHTML={{__html:value}} />
+				<input ref="fileInput" type="file" accept="image/png, image/gif, image/jpeg, image/bmp, image/x-icon, image/svg+xml" className="ql-image" style={{display:'none'}}
+					onChange={(e) => {
+						let input = e.target
+						let files = []
+						for (let i = 0; i < input.files.length ; i++) {
+							files.push(input.files.item(i))
+						}
+						onImageHandler(files)
+					}}
+				/>
       </div>
     )
   }
