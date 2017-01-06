@@ -20,7 +20,6 @@ class Blog extends Component {
 			categories: [],
 			fetchPostLock: false,
 			fetchCategoryLock: false,
-			selectPostLock: false,
 			mode: ContentMode.VIEWER,
 			message: "",
 			messageOpen: false
@@ -103,8 +102,7 @@ class Blog extends Component {
 		}
 		this.setState({
 			currentPost: post,
-			mode: ContentMode.VIEWER,
-			selectPostLock: false
+			mode: ContentMode.VIEWER
 		})
 	}
 

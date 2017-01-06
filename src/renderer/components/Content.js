@@ -32,6 +32,13 @@ class Content extends Component {
 		ipcRenderer.removeAllListeners(["receive-content"])
 	}
 
+	componentDidMount() {
+		const { currentBlog, post } = this.props
+		if (post.id) {
+			ipcRenderer.send("fetch-content", currentBlog.name, post.id)
+		}
+	}
+
 	componentWillReceiveProps(nextProps) {
 		const { currentBlog, post } = nextProps
 		const currentPost = this.state.post
