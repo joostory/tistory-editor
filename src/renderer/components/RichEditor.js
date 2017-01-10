@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { ipcRenderer } from 'electron'
 import Quill from 'quill'
 import hljs from 'highlightjs'
+import deltaToHtml from 'delta-to-html'
 import 'highlightjs/styles/monokai-sublime.css'
 import 'quill/dist/quill.snow.css'
 
@@ -64,7 +65,7 @@ class RichEditor extends Component {
   }
 
   getContent() {
-    return quillInstance.root.innerHTML
+    return deltaToHtml(quillInstance.getContents())
   }
 
   updateContent(value) {
