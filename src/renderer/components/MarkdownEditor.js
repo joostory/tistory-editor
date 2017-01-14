@@ -37,7 +37,7 @@ class MarkdownEditor extends Component {
 		console.log("finishUploadFile", fileUrl)
 		let cm = editor.getCodeMirror()
 		let CodeMirror = editor.getCodeMirrorInstance()
-		cm.replaceRange("![](" + fileUrl + ")", CodeMirror.Pos(cm.getCursor().line))
+		cm.replaceRange("![](" + fileUrl + ")\n\n", CodeMirror.Pos(cm.getCursor().line))
 	}
 
   getContent() {
