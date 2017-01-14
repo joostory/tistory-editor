@@ -13,6 +13,7 @@ import * as EditorMode from '../constants/EditorMode'
 
 import EditorToolbar from './EditorToolbar'
 import EditorInfoDialog from './EditorInfoDialog'
+import Loading from './Loading'
 
 class Editor extends Component {
 	constructor(props, context) {
@@ -24,7 +25,8 @@ class Editor extends Component {
 			content: props.post? props.post.content: "",
 			tags: props.post && props.post.tags && props.post.tags.tag? props.post.tags.tag.toString(): "",
 			editorMode: EditorMode.MARKDOWN,
-			showInfoBox: false
+			showInfoBox: false,
+			showLoading: false
 		}
 		this.handleKeyDown = this.handleKeyDown.bind(this)
 		this.handleFinishSaveContent = this.handleFinishSaveContent.bind(this)
@@ -117,7 +119,8 @@ class Editor extends Component {
 		})
 
 		this.setState({
-			post: savePost
+			post: savePost,
+			showLoading: true
 		})
 
 		if (post.id) {
@@ -146,7 +149,8 @@ class Editor extends Component {
 			date: post.id? post.date : dateformat(new Date(), 'yyyy-mm-dd HH:MM:ss'),
 			tags: {
 				tag: post.tags.tag.split(",")
-			}
+			},
+			showLoading: false
 		})
 
 		onSave(savePost)
@@ -193,7 +197,7 @@ class Editor extends Component {
 
 	render() {
 		const { onCancel, categories } = this.props
-		const { post, title, content, tags, showInfoBox } = this.state
+		const { post, title, content, tags, showInfoBox, showLoading } = this.state
 
 		return (
 			<div className="content_wrap">
@@ -207,17 +211,20 @@ class Editor extends Component {
 							onSaveClick={this.handlePublishDialogOpen.bind(this)}
 							onCancelClick={onCancel} />
 
-						<EditorInfoDialog open={showInfoBox} category={post.categoryId} categories={categories} tags={tags}
-						 	onTagsChange={this.handleChangeTags.bind(this)}
-							onCategoryChange={this.handleChangeCategory.bind(this)}
-							onRequestClose={this.handlePublishDialogClose.bind(this)}
-							onRequestSave={this.handleSave.bind(this)}
-							onRequestPublish={this.handlePublish.bind(this)} />
-
 						{this.getEditor()}
 
 					</Dropzone>
 				</div>
+
+				<EditorInfoDialog open={showInfoBox} category={post.categoryId} categories={categories} tags={tags}
+					onTagsChange={this.handleChangeTags.bind(this)}
+					onCategoryChange={this.handleChangeCategory.bind(this)}
+					onRequestClose={this.handlePublishDialogClose.bind(this)}
+					onRequestSave={this.handleSave.bind(this)}
+					onRequestPublish={this.handlePublish.bind(this)} />
+
+				{showLoading && <Loading />}
+
 			</div>
 		)
 	}
