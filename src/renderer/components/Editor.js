@@ -186,12 +186,13 @@ class Editor extends Component {
 	}
 
 	getEditor() {
+		const { currentBlog } = this.props
 		const { content, editorMode } = this.state
 
 		if (editorMode == EditorMode.RICH) {
 			return <RichEditor ref="editor" value={content} onImageHandler={this.handleDropFile.bind(this)} />
 		} else {
-			return <MarkdownEditor ref="editor" value={content} />
+			return <MarkdownEditor ref="editor" value={content} currentBlog={currentBlog} />
 		}
 	}
 

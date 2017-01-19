@@ -156,7 +156,11 @@ class Blog extends Component {
 	}
 
 	notifyFinishUploadFile(e, fileUrl) {
-		this.handleMessageOpen("이미지 업로드 완료")
+		if (fileUrl) {
+			this.handleMessageOpen("이미지 업로드 완료")
+		} else {
+			this.handleMessageOpen("이미지 업로도 실패")
+		}
 	}
 
 	handleAddPost(post) {

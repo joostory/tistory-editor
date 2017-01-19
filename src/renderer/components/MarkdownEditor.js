@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { ipcRenderer } from 'electron'
+import { ipcRenderer, clipboard } from 'electron'
 import Codemirror from 'react-codemirror'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/addon/dialog/dialog.css'
@@ -22,6 +22,7 @@ class MarkdownEditor extends Component {
     }
 
     this.handleFinishUploadFile = this.handleFinishUploadFile.bind(this)
+		this.handlePaste = this.handlePaste.bind(this)
   }
 
   componentWillMount() {
@@ -32,12 +33,30 @@ class MarkdownEditor extends Component {
 		ipcRenderer.removeListener("finish-add-file", this.handleFinishUploadFile)
 	}
 
+	componentDidMount() {
+		const { editor } = this.refs
+		let cm = editor.getCodeMirror()
+		cm.on("paste", this.handlePaste)
+	}
+
   handleFinishUploadFile(e, fileUrl) {
 		const { editor } = this.refs
 		console.log("finishUploadFile", fileUrl)
-		let cm = editor.getCodeMirror()
-		let CodeMirror = editor.getCodeMirrorInstance()
-		cm.replaceRange("![](" + fileUrl + ")\n\n", CodeMirror.Pos(cm.getCursor().line))
+		if (fileUrl) {
+			let cm = editor.getCodeMirror()
+			let CodeMirror = editor.getCodeMirrorInstance()
+			cm.replaceRange("![](" + fileUrl + ")\n\n", CodeMirror.Pos(cm.getCursor().line))
+		}
+	}
+
+	handlePaste(e) {
+		const { currentBlog } = this.props
+
+		let image = clipboard.readImage()
+		if (!image.isEmpty()) {
+			ipcRenderer.send("add-clipboard-image", currentBlog.name)
+			console.log(image.getSize())
+		}
 	}
 
   getContent() {
@@ -69,7 +88,8 @@ class MarkdownEditor extends Component {
 }
 
 MarkdownEditor.propTypes = {
-  value: PropTypes.string.isRequired
+  value: PropTypes.string.isRequired,
+	currentBlog: PropTypes.object.isRequired
 }
 
 export default MarkdownEditor

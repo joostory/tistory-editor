@@ -1,5 +1,5 @@
 const storage = require('electron-json-storage')
-const {ipcMain} = require('electron')
+const {ipcMain, clipboard} = require('electron')
 const tistory = require('./tistory-api')
 
 module.exports.init = () => {
@@ -160,7 +160,30 @@ module.exports.init = () => {
 			tistory.uploadFile(auth, blogName, filepath).then(res => {
 				evt.sender.send('finish-add-file', res.tistory.url)
 			}).catch(err => {
-				console.error(err)
+				console.error("uploadFile error", err)
+				evt.sender.send('finish-add-file')
+			})
+		})
+	})
+
+	ipcMain.on("add-clipboard-image", (evt, blogName) => {
+		storage.get("auth", (error, auth) => {
+			if (error) throw error
+
+			if (!auth || !auth.access_token) {
+				evt.sender.send('finish-add-file')
+				return
+			}
+
+			let image = clipboard.readImage()
+			if (image.isEmpty()) {
+				return
+			}
+
+			tistory.uploadFileWithImage(auth, blogName, image).then(res => {
+				evt.sender.send('finish-add-file', res.tistory.url)
+			}).catch(err => {
+				console.error("uploadFile error", err)
 				evt.sender.send('finish-add-file')
 			})
 		})

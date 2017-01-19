@@ -5,6 +5,8 @@ const fetch = require('node-fetch')
 const querystring = require('querystring')
 const ipc = require('./ipc-event')
 const FormData = require('form-data')
+const {clipboard} = require('electron')
+const stream = require('stream');
 
 module.exports.getAccessToken = (callback) => {
   oauth2info = JSON.parse(fs.readFileSync(path.join(__dirname, "../../oauth2info.json"), 'utf8'))
@@ -76,6 +78,8 @@ const errorHandler = (res) => {
     throw res.json()
   }
 
+	console.log(res)
+
   return res
 }
 
@@ -122,11 +126,25 @@ const makePostFormData = (auth, blogName, post) => {
 }
 
 module.exports.uploadFile = (auth, blogName, filepath) => {
-  let formdata = new FormData();
-  formdata.append("access_token", auth.access_token)
+	console.log("uploadFile", blogName, filepath)
+	return uploadFile(auth.access_token, blogName, fs.createReadStream(filepath))
+}
+
+module.exports.uploadFileWithImage = (auth, blogName, image) => {
+	console.log("uploadFileWithImage", blogName)
+	var imageStream = new stream.PassThrough()
+	imageStream.end(image.toPNG())
+	return uploadFile(auth.access_token, blogName, imageStream)
+}
+
+const uploadFile = (accessToken, blogName, fileBlob) => {
+	let formdata = new FormData();
+  formdata.append("access_token", accessToken)
   formdata.append("output", "json")
   formdata.append("blogName", blogName)
-  formdata.append("uploadedfile", fs.createReadStream(filepath))
+  formdata.append("uploadedfile", fileBlob)
+
+	console.log(formdata)
 
   return fetch("https://www.tistory.com/apis/post/attach", {
     method: 'post',
