@@ -132,19 +132,22 @@ module.exports.uploadFile = (auth, blogName, filepath) => {
 
 module.exports.uploadFileWithImage = (auth, blogName, image) => {
 	console.log("uploadFileWithImage", blogName)
+	var pngImageBuffer = image.toPNG()
 	var imageStream = new stream.PassThrough()
-	imageStream.end(image.toPNG())
-	return uploadFile(auth.access_token, blogName, imageStream)
+	imageStream.end(pngImageBuffer)
+	return uploadFile(auth.access_token, blogName, imageStream, {
+		filename: 'clipboard.png',
+		contentType: 'image/png',
+		knownLength: pngImageBuffer.length
+	})
 }
 
-const uploadFile = (accessToken, blogName, fileBlob) => {
+const uploadFile = (accessToken, blogName, fileBlob, fileOption) => {
 	let formdata = new FormData();
   formdata.append("access_token", accessToken)
   formdata.append("output", "json")
   formdata.append("blogName", blogName)
-  formdata.append("uploadedfile", fileBlob)
-
-	console.log(formdata)
+  formdata.append("uploadedfile", fileBlob, fileOption)
 
   return fetch("https://www.tistory.com/apis/post/attach", {
     method: 'post',
