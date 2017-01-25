@@ -6,6 +6,14 @@ const querystring = require('querystring')
 const ipc = require('./ipc-event')
 const FormData = require('form-data')
 
+const errorHandler = (res) => {
+  if (!res.ok) {
+    throw res.json()
+  }
+
+  return res.json()
+}
+
 module.exports.getAccessToken = (callback) => {
   oauth2info = JSON.parse(fs.readFileSync(path.join(__dirname, "../../oauth2info.json"), 'utf8'))
   const tistoryOAuth = oauth2(oauth2info, {
@@ -26,7 +34,6 @@ module.exports.fetchBlogInfo = (auth) => {
     output: "json"
   }))
   .then(errorHandler)
-  .then(res => res.json())
 }
 
 module.exports.fetchUser = (auth) => {
@@ -35,7 +42,6 @@ module.exports.fetchUser = (auth) => {
     output: "json"
   }))
   .then(errorHandler)
-  .then(res => res.json())
 }
 
 module.exports.fetchPosts = (auth, blogName, page) => {
@@ -47,7 +53,6 @@ module.exports.fetchPosts = (auth, blogName, page) => {
     page: page? page : 1
   }))
   .then(errorHandler)
-  .then(res => res.json())
 }
 
 module.exports.fetchContent = (auth, blogName, postId) => {
@@ -58,7 +63,6 @@ module.exports.fetchContent = (auth, blogName, postId) => {
     postId: postId
   }))
   .then(errorHandler)
-  .then(res => res.json())
 }
 
 module.exports.fetchCategories = (auth, blogName) => {
@@ -68,15 +72,6 @@ module.exports.fetchCategories = (auth, blogName) => {
     blogName: blogName
   }))
   .then(errorHandler)
-  .then(res => res.json())
-}
-
-const errorHandler = (res) => {
-  if (!res.ok) {
-    throw res.json()
-  }
-
-  return res
 }
 
 module.exports.saveContent = (auth, blogName, post) => {
@@ -88,7 +83,6 @@ module.exports.saveContent = (auth, blogName, post) => {
     body: formdata
   })
   .then(errorHandler)
-  .then(res => res.json())
 }
 
 module.exports.addContent = (auth, blogName, post) => {
@@ -99,7 +93,6 @@ module.exports.addContent = (auth, blogName, post) => {
     body: formdata
   })
   .then(errorHandler)
-  .then(res => res.json())
 }
 
 const makePostFormData = (auth, blogName, post) => {
@@ -133,5 +126,4 @@ module.exports.uploadFile = (auth, blogName, filepath) => {
     body: formdata
   })
   .then(errorHandler)
-  .then(res => res.json())
 }
