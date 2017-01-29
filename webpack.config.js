@@ -11,8 +11,6 @@ module.exports = {
 		filename: 'editor.min.js'
 	},
 	plugins: process.env.NODE_ENV !== "production" ? [] : [
-		new webpack.optimize.DedupePlugin(),
-		new webpack.optimize.OccurenceOrderPlugin(),
 		new webpack.optimize.UglifyJsPlugin({
       compress: {
         drop_console: true
@@ -26,16 +24,19 @@ module.exports = {
     "jsdom": {}
   },
 	module: {
-		loaders: [
+		rules: [
 			{
 				test: /\.js$/,
-				loaders: ['babel-loader'],
+				use: ['babel-loader'],
 				exclude: /node_modules/,
 				include: __dirname
 			},
 			{
 				test: /\.css$/,
-				loader: "style-loader!css-loader"
+				use: [
+					"style-loader",
+					"css-loader"
+				]
 			}
 		]
 	},

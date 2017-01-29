@@ -51,7 +51,7 @@
     "object-assign": "^4.1.0",
     "react-test-renderer": "^15.4.1",
     "style-loader": "^0.13.1",
-    "webpack": "^1.14.0"
+    "webpack": "^2.2.0"
   },
   "dependencies": {
     "classnames": "^2.2.5",
