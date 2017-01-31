@@ -1,5 +1,4 @@
 import * as types from '../constants/ActionTypes'
-import Database from '../database'
 import { ipcRenderer } from 'electron'
 
 export function updateLocalPost(post) {

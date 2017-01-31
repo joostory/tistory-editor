@@ -7,7 +7,7 @@ import 'material-design-lite/material.css'
 
 class ContentViewer extends Component {
   render() {
-    const { post, categories, onModify } = this.props
+    const { currentBlog, post, categories, onModify } = this.props
 
     let category = categories.find(category => post.categoryId == category.id)
     let tags = []
@@ -24,7 +24,8 @@ class ContentViewer extends Component {
             }
     				<h1 className='viewer_title'>{post.title}</h1>
             <div className='viewer_info'>
-              <span>{post.date}</span>
+              <span>{post.date}</span><br/>
+							<a href={post.postUrl}>{post.postUrl}</a>
             </div>
             <div className='viewer_btn'>
               <RaisedButton onClick={onModify}>수정</RaisedButton>
@@ -44,6 +45,7 @@ class ContentViewer extends Component {
 }
 
 ContentViewer.propTypes = {
+	currentBlog: PropTypes.object.isRequired,
   post: PropTypes.object.isRequired,
   categories: PropTypes.array.isRequired,
   onModify: PropTypes.func.isRequired
