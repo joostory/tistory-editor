@@ -5,7 +5,7 @@ const fetch = require('node-fetch')
 const querystring = require('querystring')
 const ipc = require('./ipc-event')
 const FormData = require('form-data')
-const {clipboard} = require('electron')
+const {clipboard, session} = require('electron')
 const stream = require('stream');
 
 const errorHandler = (res) => {
@@ -22,7 +22,8 @@ module.exports.getAccessToken = (callback) => {
     alwaysOnTop: true,
     autoHideMenuBar: true,
     webPreferences: {
-        nodeIntegration: false
+        nodeIntegration: false,
+				session: session.fromPartition("tistory:oauth2:" + new Date())
     }
   })
 
