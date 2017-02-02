@@ -58,6 +58,7 @@
     "dateformat": "^2.0.0",
     "delta-to-html": "^0.1.4",
     "electron-json-storage": "^2.1.0",
+    "electron-localshortcut": "^1.0.0",
     "electron-oauth2": "^2.4.0",
     "form-data": "^2.1.2",
     "highlightjs": "^9.8.0",

@@ -10,7 +10,7 @@ input, button, a { outline:none }
 .btn_tistory:hover { background: #eb531f}
 
 /* ready */
-.ready { position:absolute; top: 50%; left: 50%; margin-right: -50%; transform: translate(-50%, -50%); text-align:center }
+.ready { position:absolute; top: 50%; left: 50%; margin-right: -50%; transform: translate(-50%, -50%); text-align:center; font-family: "Roboto", "Helvetica", "Arial", sans-serif; }
 .btn_connect { width:300px; height:80px; font-size:16px }
 
 /* index */

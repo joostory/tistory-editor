@@ -1,6 +1,7 @@
 const storage = require('electron-json-storage')
 const oauth2 = require('electron-oauth2');
-const {app, BrowserWindow, Menu} = require('electron')
+const {app, BrowserWindow, Menu, globalShortcut} = require('electron')
+const electronLocalshortcut = require('electron-localshortcut')
 const path = require('path')
 const url = require('url')
 const ipc = require('./ipc-event')
@@ -8,6 +9,12 @@ const ipc = require('./ipc-event')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
+let aboutWindow
+let appInfo = {
+	name: app.getName(),
+	version: app.getVersion(),
+	lastVersion: app.getVersion()
+}
 
 const initWindow = () => {
   storage.get('config', (error, data) => {
@@ -19,6 +26,40 @@ const initWindow = () => {
     }
     createWindow(data)
   })
+}
+
+const createAboutWindow = () => {
+	aboutWindow = new BrowserWindow({
+		width:640,
+		height:480,
+		frame:false,
+		titleBarStyle: 'hidden',
+		show:false,
+		parent: mainWindow,
+		modal:true
+	})
+
+	aboutWindow.loadURL(url.format({
+    pathname: path.join(__dirname, '../../app/about.html'),
+    protocol: 'file:',
+    slashes: true
+  }))
+
+	electronLocalshortcut.register(aboutWindow, 'Escape', closeAbout)
+	electronLocalshortcut.register(aboutWindow, 'CommandOrControl+W', closeAbout)
+}
+
+const closeAbout = () => {
+	if (aboutWindow) {
+		aboutWindow.hide()
+	}
+}
+const openAbout = () => {
+	if (!aboutWindow) {
+		createAboutWindow()
+	}
+
+	aboutWindow.show()
 }
 
 const createWindow = (config) => {
@@ -62,7 +103,12 @@ const createWindow = (config) => {
     {
       label: "Application",
       submenu: [
-        { label: "About Application", selector: "orderFrontStandardAboutPanel:" },
+        {
+					label: "About",
+					click() {
+						openAbout()
+					}
+				},
         { type: "separator" },
         { label: "Quit", accelerator: "CmdOrCtrl+Q", click: function() { app.quit(); }}
       ]

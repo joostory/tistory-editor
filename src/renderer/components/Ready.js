@@ -9,7 +9,7 @@ class Ready extends Component {
 		return (
 			<div className='container'>
 				<div className='ready'>
-					<h1>Editor for <span className="tistory">Tistory</span></h1>
+					<h1><span className="tistory">Tistory</span> Editor</h1>
 					<button className="btn btn_connect btn_tistory" onClick={requestAuth}>티스토리 인증</button>
 				</div>
 			</div>
