@@ -14,13 +14,19 @@
 		<div class='container'>
 			<div class='ready'>
 				<h1><span class="tistory">Tistory</span> Editor</h1>
-				<div><span id="version"></span></div>
+				<div>버전: <span id="version"></span></div>
+				<div id="needUpgrade" style="display:none; margin-top:10px; padding:15px; border-radius:5px; background-color:#f4f4f4">새로운 버전 <a href="https://joostory.github.io/tistory-editor" id="lastVersion"></a>이 준비되었습니다.</div>
 			</div>
 		</div>
 
 		<script>
-		const app = require('electron').remote.app
-		document.getElementById("version").innerHTML = app.getVersion()
+			const appInfo = require('electron').remote.require('./appInfo')
+			document.getElementById("version").innerHTML = appInfo.version
+			if (appInfo.version != appInfo.lastVersion) {
+				document.getElementById("lastVersion").innerHTML = appInfo.lastVersion
+				document.getElementById("needUpgrade").style.display = "block"
+			}
+
 		</script>
   </body>
 
