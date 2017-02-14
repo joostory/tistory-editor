@@ -1,2 +1,3 @@
-export const VIEWER = "VIEWER"
-export const EDITOR = "EDITOR"
+export const VIEW = "VIEW"
+export const EDIT = "EDIT"
+export const ADD = "ADD"

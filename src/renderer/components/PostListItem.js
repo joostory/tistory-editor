@@ -41,7 +41,7 @@ class PostList extends Component {
 PostList.propTypes = {
 	post: PropTypes.object.isRequired,
 	category: PropTypes.object,
-	selected: PropTypes.bool.isRequired,
+	selected: PropTypes.bool,
 	onSelect: PropTypes.func.isRequired
 }
 

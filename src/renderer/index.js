@@ -7,21 +7,36 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import App from './containers/App'
 import configureStore from './store/configureStore'
-import { fetchUser, fetchBlogs, receiveUser, receiveBlogs } from './actions'
-
-import '../css/editor.css'
+import { receiveUser, receiveBlogs, receivePosts, receiveCategories, selectPost, disconnectAuth } from './actions'
 
 injectTapEventPlugin()
 const store = configureStore()
-fetchUser()
-fetchBlogs()
+
+ipcRenderer.send("fetch-user")
+ipcRenderer.send("fetch-blogs")
+
 ipcRenderer.on("receive-user", (e, user) => {
-	console.log("receive-user", user)
 	store.dispatch(receiveUser(user))
 })
+
 ipcRenderer.on("receive-blogs", (e, user) => {
-	console.log("receive-blogs", user)
 	store.dispatch(receiveBlogs(user))
+})
+
+ipcRenderer.on("receive-posts", (e, res) => {
+	store.dispatch(receivePosts(res.page, res.posts))
+})
+
+ipcRenderer.on("receive-categories", (e, categories) => {
+	store.dispatch(receiveCategories(categories))
+})
+
+ipcRenderer.on("receive-content", (e, post) => {
+	store.dispatch(selectPost(post))
+})
+
+ipcRenderer.on("complete-disconnect-auth", (e) => {
+	store.dispatch(disconnectAuth())
 })
 
 render (

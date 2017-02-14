@@ -6,9 +6,10 @@ const initialState = null
 export default (state = initialState, action) => {
 	switch (action.type) {
 		case types.DISCONNECT_AUTH:
+		case types.GO_INDEX:
 			return initialState
-		case types.RECEIVE_USER:
-			return action.user
+		case types.SELECT_BLOG:
+			return action.blog
 		default:
 			return state
 	}

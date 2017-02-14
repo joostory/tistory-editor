@@ -37,16 +37,8 @@ export const receiveBlogs = (blogs) => {
 	return { type: types.RECEIVE_BLOGS, blogs }
 }
 
-export const receivePosts = (posts) => {
-	return { type: types.RECEIVE_POSTS, posts }
-}
-
-export const fetchUser = () => {
-	ipcRenderer.send("fetch-user")
-}
-
-export const fetchBlogs = () => {
-	ipcRenderer.send("fetch-blogs")
+export const receivePosts = (page, posts) => {
+	return { type: types.RECEIVE_POSTS, page, posts }
 }
 
 export const requestAuth = () => {
@@ -54,5 +46,21 @@ export const requestAuth = () => {
 }
 
 export const disconnectAuth = () => {
-	ipcRenderer.send("disconnect-auth")
+	return { type: types.DISCONNECT_AUTH }
+}
+
+export const selectBlog = (blog) => {
+	return { type: types.SELECT_BLOG, blog }
+}
+
+export const goIndex = () => {
+	return { type: types.GO_INDEX }
+}
+
+export const lockPostsLoad = () => {
+	return { type: types.LOCK_POSTS_LOAD }
+}
+
+export const selectPost = (post) => {
+	return { type: types.SELECT_POST, post }
 }

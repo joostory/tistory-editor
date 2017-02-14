@@ -1,4 +1,6 @@
 import React, { Component, PropTypes } from 'react'
+import { connect } from 'react-redux'
+import { goIndex } from '../actions'
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar'
 import Avatar from 'material-ui/Avatar'
 import IconButton from 'material-ui/IconButton'
@@ -7,17 +9,13 @@ import ContentCreate from 'material-ui/svg-icons/content/create'
 
 class Header extends Component {
 
-	handleSelect(blog) {
-		this.props.onSelect(blog)
-	}
-
 	render() {
-		const { user, currentBlog, onSelect, onRequestAddPost } = this.props
+		const { user, currentBlog, handleGoIndex, onRequestAddPost } = this.props
 
 		return (
 			<Toolbar>
 				<ToolbarGroup firstChild={true}>
-					<IconButton onClick={() => onSelect(null)}><NavigationBack /></IconButton>
+					<IconButton onClick={handleGoIndex}><NavigationBack /></IconButton>
 
 					{currentBlog.profileImageUrl && <Avatar src={currentBlog.profileImageUrl} size={30} />}
 					{!currentBlog.profileImageUrl && <Avatar size={30}>{currentBlog.title.slice(0,1)}</Avatar>}
@@ -36,8 +34,25 @@ class Header extends Component {
 Header.propTypes = {
 	user: PropTypes.object.isRequired,
 	currentBlog: PropTypes.object.isRequired,
-	onSelect: PropTypes.func.isRequired,
 	onRequestAddPost: PropTypes.func.isRequired
 }
 
-export default Header
+const mapStateToProps = (state) => {
+  return {
+		user: state.user,
+		currentBlog: state.currentBlog
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    handleGoIndex(e) {
+			dispatch(goIndex())
+		}
+  }
+}
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(Header)

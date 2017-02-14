@@ -10,6 +10,7 @@ const stream = require('stream');
 
 const errorHandler = (res) => {
   if (!res.ok) {
+		console.error("fetch failed", res)
     throw res.json()
   }
 

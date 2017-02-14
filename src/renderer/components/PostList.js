@@ -1,30 +1,48 @@
 import React, { Component, PropTypes } from 'react'
+import { connect } from 'react-redux'
 import classnames from 'classnames'
+import { ipcRenderer } from 'electron'
+
+import { List, makeSelectable } from 'material-ui/List'
+
 import PostListItem from './PostListItem'
-import {List, makeSelectable} from 'material-ui/List'
+import { selectPost, lockPostsLoad } from '../actions'
 
 let SelectableList = makeSelectable(List)
 
 class PostList extends Component {
 	constructor(props, context) {
 		super(props, context)
-		this.state = {
-			nextPage: 1
-		}
 	}
 
-	handleSelect(item) {
-		const { onSelect } = this.props
-		onSelect(item)
+	componentDidMount() {
+		this.requestNextPage()
+	}
+
+	requestNextPage() {
+		const { currentBlog, posts, lockPostsLoad } = this.props
+		console.log("request next page", posts)
+		if (!posts.lock) {
+			lockPostsLoad()
+			ipcRenderer.send('fetch-posts', currentBlog.name, parseInt(posts.page) + 1)
+		}
 	}
 
 	handleScroll(e) {
-		const { onRequestNextPage } = this.props
 		const { clientHeight, scrollHeight, scrollTop } = e.target
 
 		if (clientHeight + scrollTop + 200 > scrollHeight) {
-			onRequestNextPage()
+			this.requestNextPage()
 		}
+	}
+
+	handleSelectPost(item) {
+		const { currentPost, selectPost } = this.props
+		if (currentPost && currentPost.id == item.id) {
+			return
+		}
+
+		selectPost(item)
 	}
 
 	render() {
@@ -32,12 +50,12 @@ class PostList extends Component {
 
 		return (
 			<List className="list" style={{padding:0}} onScroll={this.handleScroll.bind(this)}>
-				{posts && posts.map((item, i) =>
+				{posts.list.map((item, i) =>
 					<PostListItem key={i}
 						post={item}
 						category={categories.find(category => item.categoryId == category.id)}
-						selected={item.id == currentPost.id}
-						onSelect={this.handleSelect.bind(this)} />
+						selected={currentPost && item.id == currentPost.id}
+						onSelect={this.handleSelectPost.bind(this)} />
 				)}
 			</List>
 		)
@@ -45,11 +63,36 @@ class PostList extends Component {
 }
 
 PostList.propTypes = {
-	categories: PropTypes.array.isRequired,
-	posts: PropTypes.array.isRequired,
-	currentPost: PropTypes.object.isRequired,
-	onRequestNextPage: PropTypes.func.isRequired,
-	onSelect: PropTypes.func.isRequired
+	posts: PropTypes.object.isRequired,
+	currentPost: PropTypes.object,
+	currentBlog: PropTypes.object,
+	categories: PropTypes.array,
+	selectPost: PropTypes.func.isRequired
 }
 
-export default PostList
+
+const mapStateToProps = (state) => {
+  return {
+		posts: state.posts,
+		currentPost: state.currentPost,
+		currentBlog: state.currentBlog,
+		categories: state.categories
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    selectPost(post) {
+			dispatch(selectPost(post))
+		},
+
+		lockPostsLoad() {
+			dispatch(lockPostsLoad())
+		}
+  }
+}
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(PostList)

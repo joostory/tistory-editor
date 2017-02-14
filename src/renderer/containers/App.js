@@ -10,32 +10,18 @@ import Ready from '../components/Ready'
 import Index from '../components/Index'
 import Blog from '../components/Blog'
 
-class App extends Component {
-	constructor(props, context) {
-		super(props, context)
-		this.state = {
-			currentBlog: null
-		}
-	}
+import '../../css/editor.css'
 
-	handleSelectBlog(blog) {
-		console.log("App.selectBlog", blog)
-		this.setState({
-			currentBlog: blog
-		})
-	}
+class App extends Component {
 
 	render() {
-		const { user, blogs } = this.props
-		const { currentBlog } = this.state
+		const { user, currentBlog } = this.props
 
-		console.log("App.render", user, blogs, currentBlog)
+		if (user && currentBlog) {
+			return <Blog />
 
-		if (user && user.name && currentBlog) {
-			return <Blog user={user} currentBlog={currentBlog} onSelect={this.handleSelectBlog.bind(this)} />
-
-		} else if (user && user.name) {
-			return <Index user={user} blogs={blogs} onSelect={this.handleSelectBlog.bind(this)} />
+		} else if (user) {
+			return <Index />
 
 		} else {
 			return <Ready />
@@ -44,15 +30,16 @@ class App extends Component {
 }
 
 App.propTypes = {
-	user: PropTypes.object.isRequired,
-	blogs: PropTypes.array.isRequired
+	user: PropTypes.object,
+	blogs: PropTypes.array,
+	currentBlog: PropTypes.object
 }
 
 const mapStateToProps = (state) => {
   return {
 		user: state.user,
 		blogs: state.blogs,
-		fetchlock: state.fetchlock
+		currentBlog: state.currentBlog
   }
 }
 

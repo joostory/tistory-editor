@@ -6,6 +6,31 @@ import RaisedButton from 'material-ui/RaisedButton'
 import 'material-design-lite/material.css'
 
 class ContentViewer extends Component {
+
+	constructor(props, context) {
+		super(props, context)
+
+		this.state = {
+			postId: props.post.id
+		}
+	}
+
+	componentDidMount() {
+		const { currentBlog, post } = this.props
+		if (post) {
+			ipcRenderer.send("fetch-content", currentBlog.name, post.id)
+		}
+	}
+
+	componentWillReceiveProps(nextProps) {
+		const { currentBlog, post } = nextProps
+		const { postId } = this.state
+		if (postId != post.id) {
+			this.setState({postId : post.id})
+			ipcRenderer.send("fetch-content", currentBlog.name, post.id)
+		}
+	}
+
   render() {
     const { currentBlog, post, categories, onModify } = this.props
 
@@ -47,8 +72,24 @@ class ContentViewer extends Component {
 ContentViewer.propTypes = {
 	currentBlog: PropTypes.object.isRequired,
   post: PropTypes.object.isRequired,
-  categories: PropTypes.array.isRequired,
-  onModify: PropTypes.func.isRequired
+  categories: PropTypes.array.isRequired
 }
 
-export default ContentViewer
+const mapStateToProps = (state) => {
+  return {
+		currentBlog: state.currentBlog,
+		post: state.currentPost,
+		categories: state.categories
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    dispatch: dispatch
+  }
+}
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(ContentViewer)

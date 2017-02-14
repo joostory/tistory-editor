@@ -8,7 +8,6 @@ module.exports.init = () => {
 			evt.sender.send('receive-user', res.tistory.item)
 		}).catch(err => {
 			console.error(err)
-			evt.sender.send('receive-user', {})
 		})
 	}
 
@@ -26,7 +25,6 @@ module.exports.init = () => {
 	    if (error) throw error
 
 			if (!auth || !auth.access_token) {
-				evt.sender.send('receive-user', {})
 				return
 			}
 
@@ -39,7 +37,6 @@ module.exports.init = () => {
 	    if (error) throw error
 
 			if (!auth || !auth.access_token) {
-				evt.sender.send('receive-user', {})
 				return
 			}
 
@@ -52,15 +49,17 @@ module.exports.init = () => {
 			if (error) throw error
 
 			if (!auth || !auth.access_token) {
-				evt.sender.send('receive-posts', [])
+				console.log("fetch-posts auth error")
 				return
 			}
 
 			tistory.fetchPosts(auth, blogName, page).then(res => {
-				evt.sender.send('receive-posts', [].concat(res.tistory.item.posts))
+				evt.sender.send('receive-posts', {
+					page: res.tistory.item.page,
+					posts: [].concat(res.tistory.item.posts)
+				})
 			}).catch(err => {
-				console.error(err)
-				evt.sender.send('receive-posts', [])
+				console.error("fetch-posts error", err)
 			})
 		})
 	})
@@ -99,7 +98,6 @@ module.exports.init = () => {
 			if (error) throw error
 
 			if (!auth || !auth.access_token) {
-				evt.sender.send('receive-content', {})
 				return
 			}
 
@@ -107,7 +105,6 @@ module.exports.init = () => {
 				evt.sender.send('receive-content', res.tistory.item)
 			}).catch(err => {
 				console.error(err)
-				evt.sender.send('receive-content', {})
 			})
 		})
 	})
@@ -201,6 +198,6 @@ module.exports.init = () => {
 
 	ipcMain.on("disconnect-auth", (evt, arg) => {
     storage.set("auth", {})
-    evt.sender.send('receive-user', {})
+    evt.sender.send('complete-disconnect-auth')
 	})
 }
