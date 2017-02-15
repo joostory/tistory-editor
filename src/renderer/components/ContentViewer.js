@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { ipcRenderer } from 'electron'
 import Chip from 'material-ui/Chip'
 import RaisedButton from 'material-ui/RaisedButton'
+import CircularProgress from 'material-ui/CircularProgress'
 import 'material-design-lite/material.css'
 
 class ContentViewer extends Component {
@@ -57,7 +58,12 @@ class ContentViewer extends Component {
             </div>
           </div>
 
-          <div className="viewer_content" dangerouslySetInnerHTML={{__html: post.content}} />
+					{!post.content &&
+						<div style={{textAlign:'center', marginTop:'100px'}}>
+							<CircularProgress size={50} thickness={5} />
+						</div>
+					}
+					<div className="viewer_content" dangerouslySetInnerHTML={{__html: post.content}} />
 
           <div className="viewer_tags">
             {tags.map((item, i) => <Chip key={i} style={{marginRight:'4px'}}>{item}</Chip>)}

@@ -37,8 +37,8 @@ export const receiveBlogs = (blogs) => {
 	return { type: types.RECEIVE_BLOGS, blogs }
 }
 
-export const receivePosts = (page, posts) => {
-	return { type: types.RECEIVE_POSTS, page, posts }
+export const receivePosts = (page, posts, hasNext) => {
+	return { type: types.RECEIVE_POSTS, page, posts, hasNext }
 }
 
 export const requestAuth = () => {

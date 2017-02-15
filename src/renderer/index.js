@@ -24,7 +24,7 @@ ipcRenderer.on("receive-blogs", (e, user) => {
 })
 
 ipcRenderer.on("receive-posts", (e, res) => {
-	store.dispatch(receivePosts(res.page, res.posts))
+	store.dispatch(receivePosts(res.page, res.posts, res.hasNext))
 })
 
 ipcRenderer.on("receive-categories", (e, categories) => {

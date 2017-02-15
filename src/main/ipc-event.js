@@ -56,7 +56,8 @@ module.exports.init = () => {
 			tistory.fetchPosts(auth, blogName, page).then(res => {
 				evt.sender.send('receive-posts', {
 					page: res.tistory.item.page,
-					posts: [].concat(res.tistory.item.posts)
+					posts: [].concat(res.tistory.item.posts),
+					hasNext: res.tistory.item.totalCount > res.tistory.item.page * res.tistory.item.count
 				})
 			}).catch(err => {
 				console.error("fetch-posts error", err)

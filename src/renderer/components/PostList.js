@@ -4,6 +4,7 @@ import classnames from 'classnames'
 import { ipcRenderer } from 'electron'
 
 import { List, makeSelectable } from 'material-ui/List'
+import CircularProgress from 'material-ui/CircularProgress'
 
 import PostListItem from './PostListItem'
 import { selectPost, lockPostsLoad } from '../actions'
@@ -22,7 +23,7 @@ class PostList extends Component {
 	requestNextPage() {
 		const { currentBlog, posts, lockPostsLoad } = this.props
 		console.log("request next page", posts)
-		if (!posts.lock) {
+		if (!posts.lock && posts.hasNext) {
 			lockPostsLoad()
 			ipcRenderer.send('fetch-posts', currentBlog.name, parseInt(posts.page) + 1)
 		}
@@ -57,6 +58,12 @@ class PostList extends Component {
 						selected={currentPost && item.id == currentPost.id}
 						onSelect={this.handleSelectPost.bind(this)} />
 				)}
+
+				{posts.hasNext &&
+					<div style={{textAlign:'center', padding:'10px'}}>
+						<CircularProgress size={30} thickness={3} />
+					</div>
+				}
 			</List>
 		)
 	}
