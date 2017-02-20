@@ -14,8 +14,14 @@ class Index extends Component {
 		ipcRenderer.send("disconnect-auth")
 	}
 
+	handleSelectBlog(blog) {
+		const { onSelectBlog } = this.props
+		ipcRenderer.send("fetch-categories", blog.name)
+		onSelectBlog(blog)
+	}
+
 	render() {
-		const { user, blogs, onSelectBlog } = this.props
+		const { user, blogs } = this.props
 
 		return (
 			<div className="container">
@@ -39,7 +45,7 @@ class Index extends Component {
 
 				<div className="blog_list">
 					{blogs.map(blog =>
-						<div key={blog.url} className="blog_item" onClick={() => onSelectBlog(blog)}>
+						<div key={blog.url} className="blog_item" onClick={e => this.handleSelectBlog(blog)}>
 							<span className="blog_image">
 								{blog.profileImageUrl && <img src={blog.profileImageUrl} />}
 								{!blog.profileImageUrl &&

@@ -13,6 +13,10 @@ export const receivePosts = (page, posts, hasNext) => {
 	return { type: types.RECEIVE_POSTS, page, posts, hasNext }
 }
 
+export const receiveCategories = (categories) => {
+	return { type: types.RECEIVE_CATEGORIES, categories }
+}
+
 export const disconnectAuth = () => {
 	return { type: types.DISCONNECT_AUTH }
 }
