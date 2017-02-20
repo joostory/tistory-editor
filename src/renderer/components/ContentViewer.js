@@ -33,7 +33,7 @@ class ContentViewer extends Component {
 	}
 
   render() {
-    const { currentBlog, post, categories, onModify } = this.props
+    const { currentBlog, post, categories, onRequestEditPost } = this.props
 
     let category = categories.find(category => post.categoryId == category.id)
     let tags = []
@@ -54,7 +54,7 @@ class ContentViewer extends Component {
 							<a href={post.postUrl}>{post.postUrl}</a>
             </div>
             <div className='viewer_btn'>
-              <RaisedButton onClick={onModify}>수정</RaisedButton>
+              <RaisedButton onClick={onRequestEditPost}>수정</RaisedButton>
             </div>
           </div>
 
@@ -78,7 +78,8 @@ class ContentViewer extends Component {
 ContentViewer.propTypes = {
 	currentBlog: PropTypes.object.isRequired,
   post: PropTypes.object.isRequired,
-  categories: PropTypes.array.isRequired
+  categories: PropTypes.array.isRequired,
+	onRequestEditPost: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => {

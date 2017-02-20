@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import classnames from 'classnames'
 import { connect } from 'react-redux'
 
-import { receiveLocalPost, removeLocalPost, updateLocalPost, requestAuth } from '../actions'
+import { receiveLocalPost, removeLocalPost, updateLocalPost } from '../actions'
 
 import Sidebar from '../components/Sidebar'
 import Editor from '../components/Editor'

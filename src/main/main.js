@@ -23,7 +23,8 @@ const initWindow = () => {
 const createWindow = (config) => {
   mainWindow = new BrowserWindow({
     width: config.width,
-    height: config.height
+    height: config.height,
+		autoHideMenuBar: true
   })
 
   mainWindow.setMenu(null)

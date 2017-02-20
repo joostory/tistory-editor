@@ -8,6 +8,8 @@ export default (state = initialState, action) => {
 		case types.DISCONNECT_AUTH:
 		case types.GO_INDEX:
 			return initialState
+		case types.ADD_POST:
+		case types.UPDATE_POST:
 		case types.SELECT_POST:
 			return action.post
 		default:

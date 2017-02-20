@@ -39,6 +39,14 @@ ipcRenderer.on("complete-disconnect-auth", (e) => {
 	store.dispatch(disconnectAuth())
 })
 
+ipcRenderer.on("finish-add-content", (e) => {
+	// TODO finish add
+})
+
+ipcRenderer.on("finish-save-content", (e) => {
+	// TODO finish save
+})
+
 render (
 	<Provider store={store}>
 		<MuiThemeProvider>

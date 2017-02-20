@@ -1,34 +1,6 @@
 import * as types from '../constants/ActionTypes'
 import { ipcRenderer } from 'electron'
 
-export function updateLocalPost(post) {
-	return { type: types.UPDATE_LOCAL_POST, post }
-}
-
-export function receiveLocalPost(post) {
-	return { type: types.RECEIVE_LOCAL_POST, post }
-}
-
-export function receiveLocalPosts(posts) {
-	return { type: types.RECEIVE_LOCAL_POSTS, posts }
-}
-
-export function removeLocalPost(id) {
-	return { type: types.REMOVE_LOCAL_POST, id }
-}
-
-const receiveFetchlock = (fetchlock) => {
-	return { type: types.RECEIVE_FETCH_LOCK, fetchlock: fetchlock }
-}
-
-const lockFetch = () => {
-	return receiveFetchlock(true)
-}
-
-const unlockFetch = () => {
-	return receiveFetchlock(false)
-}
-
 export const receiveUser = (user) => {
 	return { type: types.RECEIVE_USER, user }
 }
@@ -39,10 +11,6 @@ export const receiveBlogs = (blogs) => {
 
 export const receivePosts = (page, posts, hasNext) => {
 	return { type: types.RECEIVE_POSTS, page, posts, hasNext }
-}
-
-export const requestAuth = () => {
-	ipcRenderer.send("request-auth")
 }
 
 export const disconnectAuth = () => {
@@ -63,4 +31,12 @@ export const lockPostsLoad = () => {
 
 export const selectPost = (post) => {
 	return { type: types.SELECT_POST, post }
+}
+
+export const updatePost = (post) => {
+	return { type: types.UPDATE_POST, post }
+}
+
+export const addPost = (post) => {
+	return { type: types.ADD_POST, post }
 }

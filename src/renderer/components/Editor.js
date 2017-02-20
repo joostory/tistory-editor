@@ -1,7 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-
-import MarkdownEditor from './MarkdownEditor'
-import RichEditor from './RichEditor'
+import { connect } from 'react-redux'
 
 import dateformat from 'dateformat'
 import classnames from 'classnames'
@@ -9,8 +7,12 @@ import Dropzone from 'react-dropzone'
 import { ipcRenderer } from 'electron'
 import TextField from 'material-ui/TextField'
 
+import { addPost, updatePost } from '../actions'
+import * as ContentMode from '../constants/ContentMode'
 import * as EditorMode from '../constants/EditorMode'
 
+import MarkdownEditor from './MarkdownEditor'
+import RichEditor from './RichEditor'
 import EditorToolbar from './EditorToolbar'
 import EditorInfoDialog from './EditorInfoDialog'
 import Loading from './Loading'
@@ -19,17 +21,35 @@ class Editor extends Component {
 	constructor(props, context) {
 		super(props, context)
 
-		this.state = {
-			post: props.post? props.post: {},
-			title: props.post? props.post.title: "",
-			content: props.post? props.post.content: "",
-			tags: props.post && props.post.tags && props.post.tags.tag? props.post.tags.tag.toString(): "",
+		this.state = Object.assign({
 			editorMode: EditorMode.MARKDOWN,
 			showInfoBox: false,
 			showLoading: false
-		}
+		}, this.makePostState(props))
+
 		this.handleKeyDown = this.handleKeyDown.bind(this)
 		this.handleFinishSaveContent = this.handleFinishSaveContent.bind(this)
+	}
+
+	makePostState(props) {
+		if (props.mode == ContentMode.EDIT && props.post) {
+			return {
+				title: props.post.title,
+				content: props.post.content,
+				categoryId: props.post.categoryId,
+				visibility: props.post.visibility,
+				tags: props.post.tags && props.post.tags.tag? props.post.tags.tag.toString(): ""
+			}
+		} else {
+			return {
+				title: "",
+				content: "",
+				categoryId: "",
+				visibility: 0,
+				tags: ""
+			}
+		}
+
 	}
 
 	componentWillMount() {
@@ -47,17 +67,10 @@ class Editor extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		const { post } = this.state
-
-		console.log(nextProps);
+		const { post } = this.props
 
 		if (nextProps.post && post.id != nextProps.post.id) {
-			this.setState({
-				post: nextProps.post,
-				title: nextProps.post.title,
-				content: toMarkdown(nextProps.post.content),
-				tags: nextProps.post.tags && nextProps.post.tags.tag? nextProps.post.tags.tag.toString(): ""
-			})
+			this.setState(this.makePostState(nextProps))
 		}
 	}
 
@@ -74,7 +87,6 @@ class Editor extends Component {
 	}
 
 	handleChangeTitle(e) {
-		const { onChange } = this.props
 		this.setState({
 			title: e.target.value
 		})
@@ -87,12 +99,8 @@ class Editor extends Component {
 	}
 
 	handleChangeCategory(e, index, value) {
-		const { post } = this.state
-		let newPost = Object.assign({}, post, {
-			categoryId: value
-		})
 		this.setState({
-			post: newPost
+			categoryId: value
 		})
 	}
 
@@ -105,38 +113,42 @@ class Editor extends Component {
 	}
 
 	requestSave(visibility) {
-		const { currentBlog, onSave } = this.props
-		const { post, title, content, tags, editorMode } = this.state
+		const { post, currentBlog, mode } = this.props
+		const { title, categoryId, tags, editorMode } = this.state
 		const { editor } = this.refs
 
-		let savePost = Object.assign({}, post, {
+		let content = editor.getContent()
+		let savePost = {
 			title: title,
 			visibility: visibility,
-			content: editor.getContent(),
+			content: content,
+			categoryId: categoryId,
 			tags: {
 				tag: tags
 			}
-		})
+		}
 
 		this.setState({
-			post: savePost,
+			content: content,
+			visibility: visibility,
 			showLoading: true
 		})
 
-		if (post.id) {
+		if (mode == ContentMode.EDIT) {
+			savePost = Object.assign({}, post, savePost)
 			ipcRenderer.send("save-content", currentBlog.name, savePost)
 		} else {
 			ipcRenderer.send("add-content", currentBlog.name, savePost)
 		}
 	}
 
-	canExit() {
-		return false
-	}
-
 	handleFinishSaveContent(e, postId) {
-		const { onSave } = this.props
-		const { post } = this.state
+		const { onFinish, post, mode, onUpdate, onAdd } = this.props
+		const { title, visibility, content, categoryId, tags } = this.state
+
+		this.setState({
+			showLoading: false
+		})
 
 		if (!postId) {
 			// handle Error
@@ -144,16 +156,28 @@ class Editor extends Component {
 			return
 		}
 
-		let savePost = Object.assign({}, post, {
+		let savedPost = {
 			id: postId,
-			date: post.id? post.date : dateformat(new Date(), 'yyyy-mm-dd HH:MM:ss'),
+			title: title,
+			visibility: visibility,
+			content: content,
+			categoryId: categoryId,
 			tags: {
-				tag: post.tags.tag.split(",")
+				tag: tags
 			},
-			showLoading: false
-		})
+			date: dateformat(new Date(), 'yyyy-mm-dd HH:MM:ss'),
+		}
 
-		onSave(savePost)
+		mode == ContentMode.EDIT ? onUpdate(Object.assign(savedPost, {date: post.date})) : onAdd(savedPost)
+		onFinish()
+	}
+
+	handleCancel() {
+		const { onFinish } = this.props
+
+		if (confirm("작성 중인 내용이 사라집니다. 계속하시겠습니까?")) {
+			onFinish()
+		}
 	}
 
 	handleChangeEditorMode(mode) {
@@ -161,7 +185,6 @@ class Editor extends Component {
 		const { editorMode } = this.state
 		let nextEditorMode = editorMode == EditorMode.RICH ? EditorMode.MARKDOWN : EditorMode.RICH
 
-		console.log(nextEditorMode, editor.getContent())
 		this.setState({
 			content: editor.getContent(),
 			editorMode: nextEditorMode
@@ -180,7 +203,6 @@ class Editor extends Component {
 	handleDropFile(files) {
 		const { currentBlog } = this.props
 		files.map(file => {
-			console.log(file.path)
 			ipcRenderer.send("add-file", currentBlog.name, file.path)
 		})
 	}
@@ -197,11 +219,11 @@ class Editor extends Component {
 	}
 
 	render() {
-		const { onCancel, categories } = this.props
-		const { post, title, content, tags, showInfoBox, showLoading } = this.state
+		const { onFinish, categories, post } = this.props
+		const { title, content, categoryId, tags, showInfoBox, showLoading } = this.state
 
 		return (
-			<div className="content_wrap">
+			<div className="editor_wrap">
 				<div className="editor">
 					<Dropzone disableClick={true} accept="image/*" style={{width: "100%",height:"100%"}}
 						onDrop={this.handleDropFile.bind(this)}>
@@ -210,14 +232,14 @@ class Editor extends Component {
 							onTitleChange={this.handleChangeTitle.bind(this)}
 							onChangeEditorMode={this.handleChangeEditorMode.bind(this)}
 							onSaveClick={this.handlePublishDialogOpen.bind(this)}
-							onCancelClick={onCancel} />
+							onCancelClick={this.handleCancel.bind(this)} />
 
 						{this.getEditor()}
 
 					</Dropzone>
 				</div>
 
-				<EditorInfoDialog open={showInfoBox} category={post.categoryId} categories={categories} tags={tags}
+				<EditorInfoDialog open={showInfoBox} category={categoryId} categories={categories} tags={tags}
 					onTagsChange={this.handleChangeTags.bind(this)}
 					onCategoryChange={this.handleChangeCategory.bind(this)}
 					onRequestClose={this.handlePublishDialogClose.bind(this)}
@@ -235,8 +257,31 @@ Editor.propTypes = {
 	currentBlog: PropTypes.object.isRequired,
 	post: PropTypes.object,
 	categories: PropTypes.array.isRequired,
-	onSave: PropTypes.func.isRequired,
-	onCancel: PropTypes.func.isRequired
+	mode: PropTypes.string.isRequired,
+	onFinish: PropTypes.func.isRequired
 }
 
-export default Editor
+const mapStateToProps = (state) => {
+  return {
+		currentBlog: state.currentBlog,
+		post: state.currentPost,
+		categories: state.categories
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onUpdate: (post) => {
+			dispatch(updatePost(post))
+		},
+
+		onAdd: (post) => {
+			dispatch(addPost(post))
+		}
+  }
+}
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(Editor)

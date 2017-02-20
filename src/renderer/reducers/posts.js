@@ -14,12 +14,9 @@ export default (state = initialState, action) => {
 		case types.GO_INDEX:
 			return initialState
 		case types.LOCK_POSTS_LOAD:
-			return {
-				page: state.page,
-				list: state.list,
-				hasNext: state.hasNext,
+			return Object.assign({}, state, {
 				lock: true
-			}
+			})
 		case types.RECEIVE_POSTS:
 			return {
 				page: action.page,
@@ -27,6 +24,20 @@ export default (state = initialState, action) => {
 				hasNext: action.hasNext,
 				lock: false
 			}
+		case types.UPDATE_POST:
+			let newList = [...state.list]
+			let index = newList.findIndex((item) => {
+				console.log("findIndex", item.id, action.post.id, item.id == action.post.id)
+				return item.id == action.post.id
+			})
+			newList[index] = action.post
+			return Object.assign({}, state, {
+				list: newList
+			})
+		case types.ADD_POST:
+			return Object.assign({}, state, {
+				list: [action.post, ...state.list]
+			})
 		default:
 			return state
 	}

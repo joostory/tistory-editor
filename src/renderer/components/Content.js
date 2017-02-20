@@ -9,7 +9,7 @@ import Editor from './Editor'
 class Content extends Component {
 
 	render() {
-		const { post } = this.props
+		const { post, onRequestEditPost } = this.props
 
 		if (!post) {
 			return (
@@ -18,13 +18,14 @@ class Content extends Component {
 				</div>
 			)
 		} else {
-			return <ContentViewer />
+			return <ContentViewer onRequestEditPost={onRequestEditPost} />
 		}
 	}
 }
 
 Content.propTypes = {
-	post: PropTypes.object
+	post: PropTypes.object,
+	onRequestEditPost: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => {

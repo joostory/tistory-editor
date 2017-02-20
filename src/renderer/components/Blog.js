@@ -38,7 +38,7 @@ class Blog extends Component {
 		})
 	}
 
-	handleCancelAddPost() {
+	handleFinishEditor() {
 		this.setState({
 			mode: ContentMode.VIEW
 		})
@@ -88,9 +88,7 @@ class Blog extends Component {
         />
 
 				{(mode == ContentMode.EDIT || mode == ContentMode.ADD) &&
-					<Editor
-						onSave={this.handleAddPost.bind(this)}
-						onCancel={this.handleCancelAddPost.bind(this)} />
+					<Editor mode={mode} onFinish={this.handleFinishEditor.bind(this)} />
 				}
 			</div>
 		)
