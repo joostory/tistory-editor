@@ -11,7 +11,7 @@ class EditorToolbar extends Component {
     const { title, onTitleChange, onChangeEditorMode, onSaveClick, onCancelClick } = this.props
 
     return (
-      <Toolbar>
+      <Toolbar style={{background:"transparent"}}>
         <ToolbarGroup style={{width:'100%'}}>
           <TextField hintText="Title" type="text" value={title} fullWidth={true} onChange={onTitleChange} />
         </ToolbarGroup>

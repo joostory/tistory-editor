@@ -66,14 +66,6 @@ class Editor extends Component {
 		ipcRenderer.removeListener("finish-save-content", this.handleFinishSaveContent)
 	}
 
-	componentWillReceiveProps(nextProps) {
-		const { post } = this.props
-
-		if (nextProps.post && post.id != nextProps.post.id) {
-			this.setState(this.makePostState(nextProps))
-		}
-	}
-
 	handlePublishDialogClose() {
 		this.setState({
 			showInfoBox: false

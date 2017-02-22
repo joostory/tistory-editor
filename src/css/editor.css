@@ -91,11 +91,11 @@ input, button, a { outline:none }
 .viewer .viewer_content p code { background: #eee; padding: 2px 4px; border-radius: 2px;}
 .viewer .viewer_tags { display: flex; flex-wrap: wrap; margin: 20px }
 
-.editor_wrap { position:absolute; top:0; bottom:0; left:0; right:0; overflow:auto; background-color:rgba(96, 96, 96, 0.7) }
-.editor { max-width:800px; height:100%; margin: 0 auto; position:relative; background-color:#fff }
+.editor_wrap { position:absolute; top:0; bottom:0; left:0; right:0; overflow:hidden; background-color:rgba(96, 96, 96, 0.7) }
+.editor { position:absolute; left:0; right:0; top:0; bottom:0; background-color:#fff; transition: transform 0.35s ease-out; }
 .editor .Quill,
 .editor .ReactCodeMirror { position: absolute; top: 56px; bottom: 0; left: 0; right: 0 }
-.editor .CodeMirror { height: 100%; padding:0 10px; font-family:Menlo, Consolas, 'DejaVu Sans Mono', monospace }
+.editor .CodeMirror { height: 100%; padding:0 10px; font-family:Menlo, Consolas, 'DejaVu Sans Mono', monospace; background:transparent }
 .editor .statusbar { position: absolute; top: 0; height: 50px; left: 0; right: 0; background:#ddd; }
 .editor .statusbar .title:before { content:"# " }
 .editor .statusbar .title { position:absolute; left:15px; font-size:24px; bottom:10px }
@@ -106,6 +106,10 @@ input, button, a { outline:none }
 .editor .statusbar .btn_wrap .btn:disabled { background:#444; color:#666 }
 .editor .statusbar .btn_wrap .btn.active { background:#777 }
 .editor .statusbar .btn_wrap .btn_info { margin-right:5px; border-radius:15px }
+
+@media (min-width: 800px) {
+	.editor { top:10px; bottom:10px; width:800px; margin:0 auto; border-radius:5px; box-shadow:0 2px 10px #666 }
+}
 
 /* quill editor */
 .Quill .ql-toolbar.ql-snow { border:0 }
