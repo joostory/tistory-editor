@@ -1,5 +1,6 @@
 const storage = require('electron-json-storage')
 const {ipcMain, clipboard} = require('electron')
+const dateformat = require('dateformat')
 const tistory = require('./tistory-api')
 
 module.exports.init = () => {
@@ -8,6 +9,7 @@ module.exports.init = () => {
 			evt.sender.send('receive-user', res.tistory.item)
 		}).catch(err => {
 			console.error(err)
+			evt.sender.send('receive-message', '사용자 정보를 불러오지 못했습니다.')
 		})
 	}
 
@@ -17,6 +19,7 @@ module.exports.init = () => {
 		}).catch(err => {
 			console.error(err)
 			evt.sender.send('receive-blogs', [])
+			evt.sender.send('receive-message', '블로그 리스트를 불러오지 못했습니다.')
 		})
 	}
 
@@ -61,6 +64,7 @@ module.exports.init = () => {
 				})
 			}).catch(err => {
 				console.error("fetch-posts error", err)
+				evt.sender.send('receive-message', '글 목록을 불러오지 못했습니다.')
 			})
 		})
 	})
@@ -106,6 +110,7 @@ module.exports.init = () => {
 				evt.sender.send('receive-content', res.tistory.item)
 			}).catch(err => {
 				console.error(err)
+				evt.sender.send('receive-message', '글 정보를 불러오지 못했습니다.')
 			})
 		})
 	})
@@ -114,16 +119,22 @@ module.exports.init = () => {
 		storage.get("auth", (error, auth) => {
 			if (error) throw error
 
+			let publishType = post.visibility > 1 ? '발행' : '저장'
+			let messagePrefix = dateformat(new Date(), 'HH:MM:ss : ')
+
 			if (!auth || !auth.access_token) {
 				evt.sender.send('finish-save-content')
+				evt.sender.send('receive-message', messagePrefix + '글을 ' + publishType + '하지 못했습니다.')
 				return
 			}
 
 			tistory.saveContent(auth, blogName, post).then(res => {
 				evt.sender.send('finish-save-content', res.tistory.postId)
+				evt.sender.send('receive-message', '\'' + post.title + '\' ' + publishType + ' 완료')
 			}).catch(err => {
 				console.error(err)
 				evt.sender.send('finish-save-content')
+				evt.sender.send('receive-message', messagePrefix + '글을 ' + publishType + '하지 못했습니다.')
 			})
 		})
 	})
@@ -132,16 +143,22 @@ module.exports.init = () => {
 		storage.get("auth", (error, auth) => {
 			if (error) throw error
 
+			let publishType = post.visibility > 1 ? '발행' : '저장'
+			let messagePrefix = dateformat(new Date(), 'HH:MM:ss : ')
+
 			if (!auth || !auth.access_token) {
 				evt.sender.send('finish-add-content')
+				evt.sender.send('receive-message', messagePrefix + '글을 ' + publishType + '하지 못했습니다.')
 				return
 			}
 
 			tistory.addContent(auth, blogName, post).then(res => {
 				evt.sender.send('finish-add-content', res.tistory.postId)
+				evt.sender.send('receive-message', '\'' + post.title + '\' ' + publishType + ' 완료')
 			}).catch(err => {
 				console.error(err)
 				evt.sender.send('finish-add-content')
+				evt.sender.send('receive-message', messagePrefix + '글을 ' + publishType + '하지 못했습니다.')
 			})
 		})
 	})
@@ -157,9 +174,11 @@ module.exports.init = () => {
 
 			tistory.uploadFile(auth, blogName, filepath).then(res => {
 				evt.sender.send('finish-add-file', res.tistory.url)
+				evt.sender.send('receive-message', '이미지 업로드 완료')
 			}).catch(err => {
 				console.error("uploadFile error", err)
 				evt.sender.send('finish-add-file')
+				evt.sender.send('receive-message', '이미지 업로드 실패')
 			})
 		})
 	})
@@ -180,9 +199,11 @@ module.exports.init = () => {
 
 			tistory.uploadFileWithImage(auth, blogName, image).then(res => {
 				evt.sender.send('finish-add-file', res.tistory.url)
+				evt.sender.send('receive-message', '클립보드 이미지 업로드 완료')
 			}).catch(err => {
 				console.error("uploadFile error", err)
 				evt.sender.send('finish-add-file')
+				evt.sender.send('receive-message', '클립보드 이미지 업로드 실패')
 			})
 		})
 	})
@@ -200,5 +221,6 @@ module.exports.init = () => {
 	ipcMain.on("disconnect-auth", (evt, arg) => {
     storage.set("auth", {})
     evt.sender.send('complete-disconnect-auth')
+		evt.sender.send('receive-message', '인증해제 했습니다.')
 	})
 }

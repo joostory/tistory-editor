@@ -6,6 +6,7 @@ import posts from './posts'
 import categories from './categories'
 import currentBlog from './currentBlog'
 import currentPost from './currentPost'
+import message from './message'
 
 export default combineReducers({
 	user,
@@ -13,5 +14,6 @@ export default combineReducers({
 	currentBlog,
 	categories,
 	posts,
-	currentPost
+	currentPost,
+	message
 })

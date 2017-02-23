@@ -7,7 +7,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import App from './containers/App'
 import configureStore from './store/configureStore'
-import { receiveUser, receiveBlogs, receivePosts, receiveCategories, selectPost, disconnectAuth } from './actions'
+import { receiveUser, receiveBlogs, receivePosts, receiveCategories, selectPost, disconnectAuth, openMessage } from './actions'
 
 injectTapEventPlugin()
 const store = configureStore()
@@ -39,12 +39,8 @@ ipcRenderer.on("complete-disconnect-auth", (e) => {
 	store.dispatch(disconnectAuth())
 })
 
-ipcRenderer.on("finish-add-content", (e) => {
-	// TODO finish add
-})
-
-ipcRenderer.on("finish-save-content", (e) => {
-	// TODO finish save
+ipcRenderer.on("receive-message", (e, message) => {
+	store.dispatch(openMessage(message))
 })
 
 render (

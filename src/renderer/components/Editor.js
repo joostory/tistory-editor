@@ -143,8 +143,6 @@ class Editor extends Component {
 		})
 
 		if (!postId) {
-			// handle Error
-			alert("오류가 발생했습니다.")
 			return
 		}
 
