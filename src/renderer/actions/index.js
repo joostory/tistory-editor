@@ -44,7 +44,3 @@ export const updatePost = (post) => {
 export const addPost = (post) => {
 	return { type: types.ADD_POST, post }
 }
-
-export const openMessage = (message) => {
-	return { type: types.RECEIVE_MESSAGE, message }
-}

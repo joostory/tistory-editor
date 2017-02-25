@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import classnames from 'classnames'
 import { connect } from 'react-redux'
+import { ipcRenderer } from 'electron'
 import Snackbar from 'material-ui/Snackbar'
 
 import { receiveLocalPost, removeLocalPost, updateLocalPost } from '../actions'
@@ -18,28 +19,38 @@ class App extends Component {
 	constructor(props, context) {
 		super(props, context)
 		this.state = {
+			message: "",
 			messageOpen: false
 		}
+
+		this.handleReceiveMessage = this.handleReceiveMessage.bind(this)
 	}
 
-	componentWillReceiveProps(nextProps) {
-		const { message } = this.props
-		if (nextProps.message && nextProps.message != message) {
-			this.setState({
-				messageOpen: true
-			})
-		}
+	componentWillMount() {
+		ipcRenderer.on("receive-message", this.handleReceiveMessage)
+	}
+
+	componentWillUnmount() {
+		ipcRenderer.removeListener("receive-message", this.handleReceiveMessage)
+	}
+
+	handleReceiveMessage(e, message) {
+		this.setState({
+			message: message,
+			messageOpen: true
+		})
 	}
 
 	handleMessageClose() {
 		this.setState({
+			message: "",
 			messageOpen: false
 		})
 	}
 
 	render() {
-		const { user, currentBlog, message } = this.props
-		const { messageOpen } = this.state
+		const { user, currentBlog } = this.props
+		const { message, messageOpen } = this.state
 
 		let mainContainer;
 		if (user && currentBlog) {
@@ -79,8 +90,7 @@ const mapStateToProps = (state) => {
   return {
 		user: state.user,
 		blogs: state.blogs,
-		currentBlog: state.currentBlog,
-		message: state.message
+		currentBlog: state.currentBlog
   }
 }
 

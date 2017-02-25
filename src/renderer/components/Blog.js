@@ -7,7 +7,6 @@ import Content from './Content'
 import Editor from './Editor'
 import * as ContentMode from '../constants/ContentMode'
 import Visibility from '../model/Visibility'
-import { openMessage } from '../actions'
 
 class Blog extends Component {
 
@@ -67,9 +66,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-  	openMessage: (message) => {
-			dispatch(openMessage(message))
-		}
+		dispatch: dispatch
   }
 }
 

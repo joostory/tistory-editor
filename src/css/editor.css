@@ -92,7 +92,7 @@ input, button, a { outline:none }
 .viewer .viewer_tags { display: flex; flex-wrap: wrap; margin: 20px }
 
 .editor_wrap { position:absolute; top:0; bottom:0; left:0; right:0; overflow:hidden; background-color:rgba(96, 96, 96, 0.7) }
-.editor { position:absolute; left:0; right:0; top:0; bottom:0; background-color:#fff; transition: transform 0.35s ease-out; }
+.editor { position:absolute; left:0; right:0; top:0; bottom:0; background-color:#fff }
 .editor .Quill,
 .editor .ReactCodeMirror { position: absolute; top: 56px; bottom: 0; left: 0; right: 0 }
 .editor .CodeMirror { height: 100%; padding:0 10px; font-family:Menlo, Consolas, 'DejaVu Sans Mono', monospace; background:transparent }
