@@ -6,6 +6,9 @@ import classnames from 'classnames'
 import Dropzone from 'react-dropzone'
 import { ipcRenderer } from 'electron'
 import TextField from 'material-ui/TextField'
+import Dialog from 'material-ui/Dialog'
+import FloatingActionButton from 'material-ui/FloatingActionButton'
+import ActionSwapVert from 'material-ui/svg-icons/action/swap-vert'
 
 import { addPost, updatePost } from '../actions'
 import * as ContentMode from '../constants/ContentMode'
@@ -24,7 +27,8 @@ class Editor extends Component {
 		this.state = Object.assign({
 			editorMode: EditorMode.MARKDOWN,
 			showInfoBox: false,
-			showLoading: false
+			showLoading: false,
+			showPreview: false,
 		}, this.makePostState(props))
 
 		this.handleKeyDown = this.handleKeyDown.bind(this)
@@ -153,7 +157,7 @@ class Editor extends Component {
 			content: content,
 			categoryId: categoryId,
 			tags: {
-				tag: tags
+				tag: tags.split(",")
 			},
 			date: dateformat(new Date(), 'yyyy-mm-dd HH:MM:ss'),
 		}
@@ -165,12 +169,12 @@ class Editor extends Component {
 	handleCancel() {
 		const { onFinish } = this.props
 
-		if (confirm("작성 중인 내용이 사라집니다. 계속하시겠습니까?")) {
+		if (confirm("저장하지 않은 내용은 사라집니다. 계속하시겠습니까?")) {
 			onFinish()
 		}
 	}
 
-	handleChangeEditorMode(mode) {
+	handleChangeEditorMode() {
 		const { editor } = this.refs
 		const { editorMode } = this.state
 		let nextEditorMode = editorMode == EditorMode.RICH ? EditorMode.MARKDOWN : EditorMode.RICH
@@ -185,7 +189,7 @@ class Editor extends Component {
 		if (e.metaKey || e.altKey) {
 			if (e.keyCode == 83) {
 				e.preventDefault()
-				this.handleSave()
+				this.handlePublishDialogOpen()
 			}
 		}
 	}
@@ -194,6 +198,20 @@ class Editor extends Component {
 		const { currentBlog } = this.props
 		files.map(file => {
 			ipcRenderer.send("add-file", currentBlog.name, file.path)
+		})
+	}
+
+	handlePreview() {
+		const { editor } = this.refs
+		this.setState({
+			content: editor.getContent(),
+			showPreview: true
+		})
+	}
+
+	handleClosePreview() {
+		this.setState({
+			showPreview: false
 		})
 	}
 
@@ -210,7 +228,7 @@ class Editor extends Component {
 
 	render() {
 		const { onFinish, categories, post } = this.props
-		const { title, content, categoryId, tags, showInfoBox, showLoading } = this.state
+		const { title, content, categoryId, tags, showInfoBox, showLoading, showPreview } = this.state
 
 		return (
 			<div className="editor_wrap">
@@ -220,7 +238,7 @@ class Editor extends Component {
 
 						<EditorToolbar title={title}
 							onTitleChange={this.handleChangeTitle.bind(this)}
-							onChangeEditorMode={this.handleChangeEditorMode.bind(this)}
+							onPreviewClick={this.handlePreview.bind(this)}
 							onSaveClick={this.handlePublishDialogOpen.bind(this)}
 							onCancelClick={this.handleCancel.bind(this)} />
 
@@ -229,12 +247,21 @@ class Editor extends Component {
 					</Dropzone>
 				</div>
 
+				<Dialog title={title} actions={[]} modal={false} open={showPreview} autoScrollBodyContent={true}
+					onRequestClose={this.handleClosePreview.bind(this)}>
+					<div className="content preview_content" dangerouslySetInnerHTML={{__html: content}} />
+				</Dialog>
+
 				<EditorInfoDialog open={showInfoBox} category={categoryId} categories={categories} tags={tags}
 					onTagsChange={this.handleChangeTags.bind(this)}
 					onCategoryChange={this.handleChangeCategory.bind(this)}
 					onRequestClose={this.handlePublishDialogClose.bind(this)}
 					onRequestSave={this.handleSave.bind(this)}
 					onRequestPublish={this.handlePublish.bind(this)} />
+
+				<FloatingActionButton className="btn_change_editor" mini={true} onClick={this.handleChangeEditorMode.bind(this)}>
+					<ActionSwapVert />
+				</FloatingActionButton>
 
 				{showLoading && <Loading />}
 

@@ -2,13 +2,13 @@ import React, { Component, PropTypes } from 'react'
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar'
 import TextField from 'material-ui/TextField'
 import IconButton from 'material-ui/IconButton'
-import ActionSwapVert from 'material-ui/svg-icons/action/swap-vert'
-import ActionDone from 'material-ui/svg-icons/action/done'
+import FlatButton from 'material-ui/FlatButton';
+import ActionVisibility from 'material-ui/svg-icons/action/visibility'
 import ContentClear from 'material-ui/svg-icons/content/clear'
 
 class EditorToolbar extends Component {
   render() {
-    const { title, onTitleChange, onChangeEditorMode, onSaveClick, onCancelClick } = this.props
+    const { title, onTitleChange, onPreviewClick, onSaveClick, onCancelClick } = this.props
 
     return (
       <Toolbar style={{background:"transparent"}}>
@@ -16,8 +16,8 @@ class EditorToolbar extends Component {
           <TextField hintText="Title" type="text" value={title} fullWidth={true} onChange={onTitleChange} />
         </ToolbarGroup>
         <ToolbarGroup lastChild={true}>
-          <IconButton onClick={onChangeEditorMode}><ActionSwapVert /></IconButton>
-          <IconButton onClick={onSaveClick}><ActionDone /></IconButton>
+          <FlatButton onClick={onSaveClick} label="저장" primary={true} style={{margin:0}} />
+          <IconButton onClick={onPreviewClick} tooltip="미리보기"><ActionVisibility /></IconButton>
           <IconButton onClick={onCancelClick}><ContentClear /></IconButton>
         </ToolbarGroup>
       </Toolbar>
@@ -28,7 +28,7 @@ class EditorToolbar extends Component {
 EditorToolbar.PropTypes = {
   title: PropTypes.string.isRequired,
   onTitleChange: PropTypes.func.isRequired,
-  onChangeEditorMode: PropTypes.func.isRequired,
+  onPreviewClick: PropTypes.func.isRequired,
   onSaveClick: PropTypes.func.isRequired,
   onCancelClick: PropTypes.func.isRequired
 }

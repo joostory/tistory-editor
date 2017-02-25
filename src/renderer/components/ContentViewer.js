@@ -63,7 +63,7 @@ class ContentViewer extends Component {
 							<CircularProgress size={50} thickness={5} />
 						</div>
 					}
-					<div className="viewer_content" dangerouslySetInnerHTML={{__html: post.content}} />
+					<div className="viewer_content content" dangerouslySetInnerHTML={{__html: post.content}} />
 
           <div className="viewer_tags">
             {tags.map((item, i) => <Chip key={i} style={{marginRight:'4px'}}>{item}</Chip>)}
