@@ -3,8 +3,9 @@ import { connect } from 'react-redux'
 import { ipcRenderer } from 'electron'
 import Chip from 'material-ui/Chip'
 import RaisedButton from 'material-ui/RaisedButton'
+import IconButton from 'material-ui/IconButton'
 import CircularProgress from 'material-ui/CircularProgress'
-import 'material-design-lite/material.css'
+import OpenInBrowser from 'material-ui/svg-icons/action/open-in-browser'
 
 class ContentViewer extends Component {
 
@@ -50,8 +51,8 @@ class ContentViewer extends Component {
             }
     				<h1 className='viewer_title'>{post.title}</h1>
             <div className='viewer_info'>
-              <span>{post.date}</span><br/>
-							<a href={post.postUrl}>{post.postUrl}</a>
+              <span>{post.date}</span>
+							<IconButton href={post.postUrl}><OpenInBrowser /></IconButton>
             </div>
             <div className='viewer_btn'>
               <RaisedButton onClick={onRequestEditPost}>수정</RaisedButton>
