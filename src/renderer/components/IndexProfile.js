@@ -30,7 +30,7 @@ class IndexProfile extends Component {
         <RaisedButton
           className="btn_disconnect"
           label="연결해제"
-          labelStyle={{ color:"#fff", padding: "10px" }}
+          labelStyle={{ color:"#fff" }}
           backgroundColor="#f1631b"
           onClick={this.handleDisconnectAuth.bind(this)} />
       </div>

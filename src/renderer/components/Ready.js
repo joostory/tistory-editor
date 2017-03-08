@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { ipcRenderer } from 'electron'
 
+import RaisedButton from 'material-ui/RaisedButton'
+
 class Ready extends Component {
 
 	handleRequestAuth() {
@@ -14,7 +16,14 @@ class Ready extends Component {
 			<div className='container'>
 				<div className='ready'>
 					<h1><span className="tistory">Tistory</span> Editor</h1>
-					<button className="btn btn_connect btn_tistory" onClick={this.handleRequestAuth.bind(this)}>티스토리 인증</button>
+
+					<RaisedButton
+						label="티스토리 인증"
+						labelStyle={{ color:"#fff" }}
+						fullWidth={true}
+	          backgroundColor="#f1631b"
+						onClick={this.handleRequestAuth.bind(this)}
+					/>
 				</div>
 			</div>
 		)
