@@ -52,7 +52,7 @@ class ContentViewer extends Component {
     				<h1 className='viewer_title'>{post.title}</h1>
             <div className='viewer_info'>
               <span>{post.date}</span>
-							<IconButton href={post.postUrl}><OpenInBrowser /></IconButton>
+							<IconButton href={post.postUrl} tooltip="브라우저에서 보기"><OpenInBrowser /></IconButton>
             </div>
             <div className='viewer_btn'>
               <RaisedButton onClick={onRequestEditPost}>수정</RaisedButton>

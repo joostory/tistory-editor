@@ -24,7 +24,7 @@ class Header extends Component {
 
 				</ToolbarGroup>
 				<ToolbarGroup lastChild={true}>
-					<IconButton onClick={onRequestAddPost}><ContentCreate /></IconButton>
+					<IconButton onClick={onRequestAddPost} tooltip="새글쓰기"><ContentCreate /></IconButton>
 				</ToolbarGroup>
 			</Toolbar>
 		)
