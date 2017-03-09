@@ -42,7 +42,7 @@ class Editor extends Component {
 				content: props.post.content,
 				categoryId: props.post.categoryId,
 				visibility: props.post.visibility,
-				tags: props.post.tags && props.post.tags.tag? props.post.tags.tag.toString(): ""
+				tags: props.post.tags && props.post.tags.tag? props.post.tags.tag: []
 			}
 		} else {
 			return {
@@ -50,7 +50,7 @@ class Editor extends Component {
 				content: "",
 				categoryId: "",
 				visibility: 0,
-				tags: ""
+				tags: []
 			}
 		}
 
@@ -88,9 +88,9 @@ class Editor extends Component {
 		})
 	}
 
-	handleChangeTags(e) {
+	handleChangeTags(tags) {
 		this.setState({
-			tags: e.target.value
+			tags: tags
 		})
 	}
 
@@ -120,7 +120,7 @@ class Editor extends Component {
 			content: content,
 			categoryId: categoryId,
 			tags: {
-				tag: tags
+				tag: tags.join(",")
 			}
 		}
 
@@ -157,7 +157,7 @@ class Editor extends Component {
 			content: content,
 			categoryId: categoryId,
 			tags: {
-				tag: tags.split(",")
+				tag: tags
 			},
 			date: dateformat(new Date(), 'yyyy-mm-dd HH:MM:ss'),
 		}

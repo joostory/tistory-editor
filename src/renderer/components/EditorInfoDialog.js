@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import Dialog from 'material-ui/Dialog'
 import SelectField from 'material-ui/SelectField'
 import MenuItem from 'material-ui/MenuItem'
-import TextField from 'material-ui/TextField'
+import ChipInput from 'material-ui-chip-input'
 import FlatButton from 'material-ui/FlatButton'
 
 class EditorInfoDialog extends Component {
@@ -19,7 +19,7 @@ class EditorInfoDialog extends Component {
       <Dialog title="글의 속성을 확인해주세요." modal={false} open={open} actions={publishDialogActions}
         onRequestClose={onRequestClose}>
 
-        <TextField floatingLabelText="태그" hintText="Tag" type="text" name="tags" defaultValue={tags} onChange={onTagsChange} />
+        <ChipInput floatingLabelText="태그" hintText="Tag" newChipKeyCodes={[13, 188]} defaultValue={tags} onChange={onTagsChange} />
 
         <br />
 

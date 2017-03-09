@@ -60,6 +60,7 @@
     "highlightjs": "^9.8.0",
     "marked": "^0.3.6",
     "material-ui": "^0.16.7",
+    "material-ui-chip-input": "^0.13.1",
     "node-fetch": "^1.6.3",
     "querystring": "^0.2.0",
     "quill": "^1.2.0",
