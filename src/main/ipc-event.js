@@ -223,4 +223,18 @@ module.exports.init = () => {
     evt.sender.send('complete-disconnect-auth')
 		evt.sender.send('receive-message', '인증해제 했습니다.')
 	})
+
+	ipcMain.on("fetch-preferences", (evt) => {
+		storage.get("preferences", (error, data) => {
+			if (error || !data) {
+				data = {}
+			}
+			evt.sender.send("receive-preferences", data)
+		})
+	})
+
+	ipcMain.on("save-preferences", (evt, preferences) => {
+		storage.set("preferences", preferences)
+		evt.sender.send("receive-preferences", preferences)
+	})
 }

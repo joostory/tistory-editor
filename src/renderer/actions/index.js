@@ -44,3 +44,7 @@ export const updatePost = (post) => {
 export const addPost = (post) => {
 	return { type: types.ADD_POST, post }
 }
+
+export const receivePreferences = (preferences) => {
+	return { type: types.RECEIVE_PREFERENCES, preferences }
+}

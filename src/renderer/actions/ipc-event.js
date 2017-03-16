@@ -5,12 +5,14 @@ import {
   receivePosts,
   receiveCategories,
   selectPost,
-  disconnectAuth
+  disconnectAuth,
+  receivePreferences
 } from './index'
 
 export const registIpcEvent = (store) => {
   ipcRenderer.send("fetch-user")
   ipcRenderer.send("fetch-blogs")
+  ipcRenderer.send("fetch-preferences")
 
   ipcRenderer.on("receive-user", (e, user) => {
   	store.dispatch(receiveUser(user))
@@ -34,5 +36,9 @@ export const registIpcEvent = (store) => {
 
   ipcRenderer.on("complete-disconnect-auth", (e) => {
   	store.dispatch(disconnectAuth())
+  })
+
+  ipcRenderer.on("receive-preferences", (e, preferences) => {
+    store.dispatch(receivePreferences(preferences))
   })
 }

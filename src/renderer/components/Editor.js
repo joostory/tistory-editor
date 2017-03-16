@@ -15,7 +15,7 @@ import * as ContentMode from '../constants/ContentMode'
 import * as EditorMode from '../constants/EditorMode'
 
 import MarkdownEditor from './MarkdownEditor'
-import RichEditor from './RichEditor'
+import QuillEditor from './QuillEditor'
 import EditorToolbar from './EditorToolbar'
 import EditorInfoDialog from './EditorInfoDialog'
 import Loading from './Loading'
@@ -25,7 +25,7 @@ class Editor extends Component {
 		super(props, context)
 
 		this.state = Object.assign({
-			editorMode: EditorMode.MARKDOWN,
+			editorMode: props.preferences.editor || EditorMode.MARKDOWN,
 			showInfoBox: false,
 			showLoading: false,
 			showPreview: false,
@@ -177,7 +177,7 @@ class Editor extends Component {
 	handleChangeEditorMode() {
 		const { editor } = this.refs
 		const { editorMode } = this.state
-		let nextEditorMode = editorMode == EditorMode.RICH ? EditorMode.MARKDOWN : EditorMode.RICH
+		let nextEditorMode = editorMode == EditorMode.QUILL ? EditorMode.MARKDOWN : EditorMode.QUILL
 
 		this.setState({
 			content: editor.getContent(),
@@ -219,8 +219,8 @@ class Editor extends Component {
 		const { currentBlog } = this.props
 		const { content, editorMode } = this.state
 
-		if (editorMode == EditorMode.RICH) {
-			return <RichEditor ref="editor" value={content} onImageHandler={this.handleDropFile.bind(this)} />
+		if (editorMode == EditorMode.QUILL) {
+			return <QuillEditor ref="editor" value={content} onImageHandler={this.handleDropFile.bind(this)} />
 		} else {
 			return <MarkdownEditor ref="editor" value={content} currentBlog={currentBlog} />
 		}
@@ -282,7 +282,8 @@ const mapStateToProps = (state) => {
   return {
 		currentBlog: state.currentBlog,
 		post: state.currentPost,
-		categories: state.categories
+		categories: state.categories,
+		preferences: state.preferences
   }
 }
 

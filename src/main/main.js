@@ -1,6 +1,6 @@
 const storage = require('electron-json-storage')
 const oauth2 = require('electron-oauth2');
-const {app, BrowserWindow, Menu, shell} = require('electron')
+const { app, BrowserWindow, Menu, shell } = require('electron')
 const path = require('path')
 const url = require('url')
 const ipc = require('./ipc-event')
@@ -62,14 +62,10 @@ const createWindow = (config) => {
     {
       label: "Application",
       submenu: [
-        {
-					label: "About",
-					click() {
-						appInfo.openWindow()
-					}
-				},
+        { label: "About", click() { appInfo.openWindow() }},
+        { label: "Preferences...", accelerator: "CmdOrCtrl+,", click() { mainWindow.webContents.send("open-preference") }},
         { type: "separator" },
-        { label: "Quit", accelerator: "CmdOrCtrl+Q", click: function() { app.quit(); }}
+        { label: "Quit", accelerator: "CmdOrCtrl+Q", click() { app.quit() }}
       ]
     },
     {

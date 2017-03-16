@@ -8,7 +8,7 @@ import 'quill/dist/quill.snow.css'
 
 let quillInstance;
 
-class RichEditor extends Component {
+class QuillEditor extends Component {
 
   constructor(props, context) {
     super(props, context)
@@ -96,9 +96,9 @@ class RichEditor extends Component {
   }
 }
 
-RichEditor.propTypes = {
+QuillEditor.propTypes = {
   value: PropTypes.string.isRequired,
 	onImageHandler: PropTypes.func.isRequired
 }
 
-export default RichEditor
+export default QuillEditor

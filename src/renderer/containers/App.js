@@ -11,6 +11,7 @@ import Editor from '../components/Editor'
 import Ready from '../components/Ready'
 import Index from '../components/Index'
 import Blog from '../components/Blog'
+import Preference from '../components/Preference'
 
 import '../../css/editor.css'
 
@@ -50,7 +51,7 @@ class App extends Component {
 
 	render() {
 		const { user, currentBlog } = this.props
-		const { message, messageOpen } = this.state
+		const { message, messageOpen, preferenceOpen } = this.state
 
 		let mainContainer;
 		if (user && currentBlog) {
@@ -75,6 +76,8 @@ class App extends Component {
 						onRequestClose={this.handleMessageClose.bind(this)}
 					/>
 				}
+
+				<Preference />
 			</div>
 		)
 	}
