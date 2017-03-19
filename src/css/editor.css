@@ -106,9 +106,12 @@ body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; }
 
 .editor_wrap { position:absolute; top:0; bottom:0; left:0; right:0; overflow:hidden; background-color:rgba(255, 255, 255, 0.7) }
 .editor { position:absolute; left:0; right:0; top:0; bottom:0; background-color:#fff }
+.editor .mce-content-body,
 .editor .Quill,
 .editor .ReactCodeMirror { position: absolute; top: 56px; bottom: 0; left: 0; right: 0 }
-.editor .CodeMirror { height: 100%; padding:0 10px; font-family:Menlo, Consolas, 'DejaVu Sans Mono', monospace; background:transparent }
+.editor .CodeMirror { height: 100%; padding:0 15px; font-family:Menlo, Consolas, 'DejaVu Sans Mono', monospace; background:transparent }
+.editor .ql-container { font-size:16px }
+.editor .mce-content-body { padding:15px 24px; outline:none; overflow:auto }
 .editor .statusbar { position: absolute; top: 0; height: 50px; left: 0; right: 0; background:#ddd; }
 .editor .statusbar .title:before { content:"# " }
 .editor .statusbar .title { position:absolute; left:15px; font-size:24px; bottom:10px }

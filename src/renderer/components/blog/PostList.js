@@ -7,7 +7,7 @@ import { List, makeSelectable } from 'material-ui/List'
 import CircularProgress from 'material-ui/CircularProgress'
 
 import PostListItem from './PostListItem'
-import { selectPost, lockPostsLoad } from '../actions'
+import { selectPost, lockPostsLoad } from '../../actions'
 
 let SelectableList = makeSelectable(List)
 

@@ -4,7 +4,7 @@ import dateformat from 'dateformat'
 import {ListItem} from 'material-ui/List'
 import {fade} from 'material-ui/utils/colorManipulator'
 import ContentDrafts from 'material-ui/svg-icons/content/drafts'
-import Visibility from '../model/Visibility'
+import Visibility from '../../model/Visibility'
 
 class PostList extends Component {
 	render() {

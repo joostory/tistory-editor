@@ -10,15 +10,18 @@ import Dialog from 'material-ui/Dialog'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import ActionSwapVert from 'material-ui/svg-icons/action/swap-vert'
 
-import { addPost, updatePost } from '../actions'
-import * as ContentMode from '../constants/ContentMode'
-import * as EditorMode from '../constants/EditorMode'
+import { addPost, updatePost } from '../../actions'
+import * as ContentMode from '../../constants/ContentMode'
+import * as EditorMode from '../../constants/EditorMode'
 
 import MarkdownEditor from './MarkdownEditor'
 import QuillEditor from './QuillEditor'
+import TinymceEditor from './TinymceEditor'
 import EditorToolbar from './EditorToolbar'
 import EditorInfoDialog from './EditorInfoDialog'
-import Loading from './Loading'
+import Loading from '../Loading'
+
+import '../../../css/editor.css'
 
 class Editor extends Component {
 	constructor(props, context) {
@@ -177,12 +180,23 @@ class Editor extends Component {
 	handleChangeEditorMode() {
 		const { editor } = this.refs
 		const { editorMode } = this.state
-		let nextEditorMode = editorMode == EditorMode.QUILL ? EditorMode.MARKDOWN : EditorMode.QUILL
 
 		this.setState({
 			content: editor.getContent(),
-			editorMode: nextEditorMode
+			editorMode: this.getNextEditorMode(editorMode)
 		})
+	}
+
+	getNextEditorMode(editorMode) {
+		switch(editorMode) {
+			case EditorMode.QUILL:
+				return EditorMode.TINYMCE
+			case EditorMode.TINYMCE:
+				return EditorMode.MARKDOWN
+			case EditorMode.MARKDOWN:
+			default:
+				return EditorMode.QUILL
+		}
 	}
 
 	handleKeyDown(e) {
@@ -220,7 +234,9 @@ class Editor extends Component {
 		const { content, editorMode } = this.state
 
 		if (editorMode == EditorMode.QUILL) {
-			return <QuillEditor ref="editor" value={content} onImageHandler={this.handleDropFile.bind(this)} />
+			return <QuillEditor ref="editor" value={content} currentBlog={currentBlog} onImageHandler={this.handleDropFile.bind(this)} />
+		} else if (editorMode == EditorMode.TINYMCE) {
+			return <TinymceEditor ref="editor" value={content} currentBlog={currentBlog} />
 		} else {
 			return <MarkdownEditor ref="editor" value={content} currentBlog={currentBlog} />
 		}

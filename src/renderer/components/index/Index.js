@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { ipcRenderer } from 'electron'
 
-import { disconnectAuth, selectBlog } from '../actions'
+import { disconnectAuth, selectBlog } from '../../actions'
 import IndexProfile from './IndexProfile'
 import BlogList from './BlogList'
 

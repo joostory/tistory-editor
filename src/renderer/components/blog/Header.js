@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { goIndex } from '../actions'
+import { goIndex } from '../../actions'
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar'
 import Avatar from 'material-ui/Avatar'
 import IconButton from 'material-ui/IconButton'

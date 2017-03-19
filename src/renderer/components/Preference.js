@@ -63,7 +63,8 @@ class Preference extends Component {
         기본 에디터
         <RadioButtonGroup name="editor" defaultSelected={defaultEditor} onChange={this.handleChangeEditor}>
           <RadioButton value={EditorMode.MARKDOWN} label="Markdown Editor" />
-          <RadioButton value={EditorMode.QUILL} label="Rich Editor" />
+          <RadioButton value={EditorMode.QUILL} label="Rich Editor (Quill)" />
+          <RadioButton value={EditorMode.TINYMCE} label="Rich Editor (TinyMCE)" />
         </RadioButtonGroup>
       </Dialog>
     )

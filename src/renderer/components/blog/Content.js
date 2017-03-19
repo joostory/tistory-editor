@@ -2,9 +2,9 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { ipcRenderer } from 'electron'
 
-import * as ContentMode from '../constants/ContentMode'
+import * as ContentMode from '../../constants/ContentMode'
 import ContentViewer from './ContentViewer'
-import Editor from './Editor'
+import Editor from '../editor/Editor'
 
 class Content extends Component {
 

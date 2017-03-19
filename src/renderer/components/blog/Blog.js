@@ -4,9 +4,9 @@ import { ipcRenderer } from 'electron'
 
 import Sidebar from './Sidebar'
 import Content from './Content'
-import Editor from './Editor'
-import * as ContentMode from '../constants/ContentMode'
-import Visibility from '../model/Visibility'
+import Editor from '../editor/Editor'
+import * as ContentMode from '../../constants/ContentMode'
+import Visibility from '../../model/Visibility'
 
 class Blog extends Component {
 

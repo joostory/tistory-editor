@@ -6,14 +6,10 @@ import Snackbar from 'material-ui/Snackbar'
 
 import { receiveLocalPost, removeLocalPost, updateLocalPost } from '../actions'
 
-import Sidebar from '../components/Sidebar'
-import Editor from '../components/Editor'
 import Ready from '../components/Ready'
-import Index from '../components/Index'
-import Blog from '../components/Blog'
+import Index from '../components/index/Index'
+import Blog from '../components/blog/Blog'
 import Preference from '../components/Preference'
-
-import '../../css/editor.css'
 
 class App extends Component {
 
