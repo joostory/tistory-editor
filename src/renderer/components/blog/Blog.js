@@ -44,7 +44,7 @@ class Blog extends Component {
 
 				<Content onRequestEditPost={this.handleRequestEditPost.bind(this)}/>
 
-				{(mode == ContentMode.EDIT || mode == ContentMode.ADD) &&
+				{(mode === ContentMode.EDIT || mode === ContentMode.ADD) &&
 					<Editor mode={mode} onFinish={this.handleFinishEditor.bind(this)} />
 				}
 			</div>

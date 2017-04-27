@@ -2,3 +2,4 @@ node_modules
 __snapshots__
 dist
 .vscode
+.idea

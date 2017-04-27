@@ -3,6 +3,7 @@ import {
   receiveUser,
   receiveBlogs,
   receivePosts,
+  receivePostsFailed,
   receiveCategories,
   selectPost,
   disconnectAuth,
@@ -22,6 +23,9 @@ export const registIpcEvent = (store) => {
   	store.dispatch(receiveBlogs(user))
   })
 
+  ipcRenderer.on("receive-posts-failed", (e, res) => {
+    store.dispatch(receivePostsFailed())
+  })
   ipcRenderer.on("receive-posts", (e, res) => {
   	store.dispatch(receivePosts(res.page, res.posts, res.hasNext))
   })

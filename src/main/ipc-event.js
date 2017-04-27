@@ -65,6 +65,7 @@ module.exports.init = () => {
 			}).catch(err => {
 				console.error("fetch-posts error", err)
 				evt.sender.send('receive-message', '글 목록을 불러오지 못했습니다.')
+				evt.sender.send('receive-posts-failed')
 			})
 		})
 	})

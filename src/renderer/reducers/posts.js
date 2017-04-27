@@ -17,6 +17,11 @@ export default (state = initialState, action) => {
 			return Object.assign({}, state, {
 				lock: true
 			})
+		case types.RECEIVE_POSTS_FAILED:
+			return Object.assign({}, state, {
+				hasNext: false,
+				lock: false
+			})
 		case types.RECEIVE_POSTS:
 			return {
 				page: action.page,

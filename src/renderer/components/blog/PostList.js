@@ -59,6 +59,12 @@ class PostList extends Component {
 						onSelect={this.handleSelectPost.bind(this)} />
 				)}
 
+				{!posts.hasNext && posts.list.length === 0 &&
+					<div style={{textAlign:'center', padding:'10px', color:'#aaa'}}>
+						No contents
+					</div>
+				}
+
 				{posts.hasNext &&
 					<div style={{textAlign:'center', padding:'10px'}}>
 						<CircularProgress size={30} thickness={3} />

@@ -9,6 +9,10 @@ export const receiveBlogs = (blogs) => {
 	return { type: types.RECEIVE_BLOGS, blogs }
 }
 
+export const receivePostsFailed = () => {
+	return { type: types.RECEIVE_POSTS_FAILED }
+}
+
 export const receivePosts = (page, posts, hasNext) => {
 	return { type: types.RECEIVE_POSTS, page, posts, hasNext }
 }
