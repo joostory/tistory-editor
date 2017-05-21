@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { ipcRenderer, clipboard } from 'electron'
 import Codemirror from 'react-codemirror'
 import 'codemirror/lib/codemirror.css'

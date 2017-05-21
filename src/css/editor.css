@@ -67,7 +67,6 @@ body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; }
 .viewer .viewer_header { margin:20px; padding-bottom:20px; border-bottom:1px solid #eee }
 .viewer .viewer_header .viewer_category { font-size:14px; color:#f1631b }
 .viewer .viewer_header .viewer_title { font-size:32px; margin: 16px 0; word-wrap: break-word }
-.viewer .viewer_header .viewer_info {  }
 .viewer .viewer_header .viewer_btn { position:absolute; right:20px; top:20px }
 .viewer .viewer_content { margin:20px 20px 40px; word-wrap: break-word }
 .viewer .viewer_tags { display: flex; flex-wrap: wrap; margin: 20px }
@@ -104,7 +103,7 @@ body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; }
 .content hr { margin: 3em 5em 3em; border: 0; border-bottom: 1px solid #ccc; }
 
 
-.editor_wrap { position:absolute; top:0; bottom:0; left:0; right:0; overflow:hidden; background-color:rgba(255, 255, 255, 0.7) }
+.editor_wrap { position:absolute; z-index:2; top:0; bottom:0; left:0; right:0; overflow:hidden; background-color:rgba(255, 255, 255, 0.7) }
 .editor { position:absolute; left:0; right:0; top:0; bottom:0; background-color:#fff }
 .editor .mce-content-body,
 .editor .Quill,
@@ -112,6 +111,7 @@ body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; }
 .editor .CodeMirror { height: 100%; padding:0 15px; font-family:Menlo, Consolas, 'DejaVu Sans Mono', monospace; background:transparent }
 .editor .ql-container { font-size:16px }
 .editor .mce-content-body { padding:15px 24px; outline:none; overflow:auto }
+
 .editor .statusbar { position: absolute; top: 0; height: 50px; left: 0; right: 0; background:#ddd; }
 .editor .statusbar .title:before { content:"# " }
 .editor .statusbar .title { position:absolute; left:15px; font-size:24px; bottom:10px }
@@ -126,8 +126,10 @@ body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; }
 .btn_change_editor { position:absolute; right:40px; bottom:30px; z-index:10 }
 .preview_content { margin-top:25px }
 
-@media (min-width: 800px) {
-	.editor { top:10px; bottom:10px; width:800px; margin:0 auto; border-radius:5px; box-shadow:0 1px 20px #999 }
+@media (min-width: 700px) {
+	.editor .mce-content-body,
+	.editor .Quill,
+	.editor .ReactCodeMirror { width:700px; left:50%; right:inherit; transform:translateX(-50%) }
 }
 
 /* quill editor */
