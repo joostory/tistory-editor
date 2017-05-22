@@ -46,14 +46,12 @@ class TinymceEditor extends Component {
 				className='content'
 				content={ value }
 				config={{
-          plugins: 'link media table textcolor contextmenu hr preview',
-					insert_toolbar: 'quickimage quicktable',
-					selection_toolbar: 'bold italic | alignleft aligncenter alignright | bullist numlist | quicklink h2 h3 blockquote',
+          plugins: 'link media table textcolor hr advlist',
+					toolbar: 'formatselect bold italic | alignleft aligncenter alignright | bullist numlist | blockquote link hr',
 					resize: false,
 					statusbar: false,
+					menubar: false,
 					height: '100%',
-					theme: 'inlite',
-					inline: true,
 					file_picker_type: 'image'
         }}
 				onChange={this.handleChange.bind(this)}

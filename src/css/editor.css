@@ -105,12 +105,15 @@ body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; }
 
 .editor_wrap { position:absolute; z-index:2; top:0; bottom:0; left:0; right:0; overflow:hidden; background-color:rgba(255, 255, 255, 0.7) }
 .editor { position:absolute; left:0; right:0; top:0; bottom:0; background-color:#fff }
-.editor .mce-content-body,
+.editor .mce-tinymce,
 .editor .Quill,
 .editor .ReactCodeMirror { position: absolute; top: 56px; bottom: 0; left: 0; right: 0 }
 .editor .CodeMirror { height: 100%; padding:0 15px; font-family:Menlo, Consolas, 'DejaVu Sans Mono', monospace; background:transparent }
 .editor .ql-container { font-size:16px }
-.editor .mce-content-body { padding:15px 24px; outline:none; overflow:auto }
+.editor .mce-tinymce { border:0; background-color:#fff }
+.editor .mce-tinymce .mce-toolbar-grp { border:1px solid #eee; background-color:#fff }
+.editor .mce-tinymce .mce-toolbar-grp .mce-btn { background-color:#fff }
+.editor .mce-tinymce .mce-edit-area { border:0; position: absolute; top: 38px; bottom: 0; left: 0; right: 0; }
 
 .editor .statusbar { position: absolute; top: 0; height: 50px; left: 0; right: 0; background:#ddd; }
 .editor .statusbar .title:before { content:"# " }
@@ -127,9 +130,9 @@ body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; }
 .preview_content { margin-top:25px }
 
 @media (min-width: 700px) {
-	.editor .mce-content-body,
+	.editor .mce-tinymce,
 	.editor .Quill,
-	.editor .ReactCodeMirror { width:700px; left:50%; right:inherit; transform:translateX(-50%) }
+	.editor .ReactCodeMirror { width:700px !important; left:50%; right:inherit; transform:translateX(-50%) }
 }
 
 /* quill editor */
