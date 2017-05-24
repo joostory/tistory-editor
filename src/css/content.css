@@ -1,0 +1,32 @@
+@charset "utf-8"
+
+.content { padding:20px 0;word-wrap:break-word; color:#333; font-size:14px }
+.content h1 { font-size:2em; margin:2em 0 1em }
+.content h2 { font-size:1.5em; margin:2em 0 1em }
+.content h3 { font-size:1.2em; margin:2em 0 1em }
+.content h4,
+.content h5,
+.content h6 { font-size:1em; margin:2em 0 1em }
+.content p { line-height:1.6em; margin:0 auto 28px}
+.content a {color:#3db39e}
+
+.content ul, ol { margin: 0 auto 32px; padding: 0 0 0 10px; }
+.content ul li, ol li { margin-left:24px; margin-bottom:10px; }
+.content ul li { list-style:disc }
+.content ol li { list-style:decimal }
+
+.content blockquote { padding: 10px 20px; margin: 0 auto 28px; border-left:5px solid #eee }
+.content blockquote,
+.content blockquote p { font-size:18px; line-height:30px }
+.content blockquote ol:last-child,
+.content blockquote ul:last-child,
+.content blockquote p:last-child { margin-bottom:0 }
+
+.content code { font-family: Menlo,Consolas,Monaco,monospace; }
+.content p code { padding:2px 5px; border-radius:3px; background:#efefef; color:#333; margin:0 2px; border:1px solid #e0e0e0 }
+.content pre { font-size:14px; padding:15px; border-radius:3px; margin-bottom:10px; font-family: Menlo,Consolas,Monaco,monospace; border:1px solid #ddd; background-color:#F6F7F8; margin:28px auto;  overflow:auto }
+
+.content iframe { max-width:100%; display:block; margin:0 auto 20px }
+.content figure { margin:0 }
+.content img { max-width:100%; height:auto }
+.content hr { margin: 3em 5em 3em; border: 0; border-bottom: 1px solid #ccc; }

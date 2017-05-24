@@ -22,8 +22,6 @@ import EditorToolbar from './EditorToolbar'
 import EditorInfoDialog from './EditorInfoDialog'
 import Loading from '../Loading'
 
-import '../../../css/editor.css'
-
 class Editor extends Component {
 	constructor(props, context) {
 		super(props, context)

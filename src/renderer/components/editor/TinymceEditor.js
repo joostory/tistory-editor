@@ -49,10 +49,14 @@ class TinymceEditor extends Component {
           plugins: 'link media table textcolor hr advlist',
 					toolbar: 'formatselect bold italic | alignleft aligncenter alignright | bullist numlist | blockquote link hr',
 					resize: false,
+					branding: false,
 					statusbar: false,
 					menubar: false,
 					height: '100%',
-					file_picker_type: 'image'
+					file_picker_type: 'image',
+					block_formats: '문단=p;제목 2=h2;제목 3=h3',
+					body_class: 'content',
+					content_css: '../src/css/content.css'
         }}
 				onChange={this.handleChange.bind(this)}
 			/>
