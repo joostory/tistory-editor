@@ -21,6 +21,9 @@ $ npm run build
 
 # electron start
 $ npm run app
+
+# react build and run app (development)
+# npm start
 ```
 
 ## 앱 생성 (배포)
