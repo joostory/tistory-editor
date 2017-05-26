@@ -8,6 +8,9 @@ import Dropzone from 'react-dropzone'
 import { ipcRenderer } from 'electron'
 import TextField from 'material-ui/TextField'
 import Dialog from 'material-ui/Dialog'
+import Popover, { PopoverAnimationVertical } from 'material-ui/Popover'
+import Menu from 'material-ui/Menu'
+import MenuItem from 'material-ui/MenuItem'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import ActionSwapVert from 'material-ui/svg-icons/action/swap-vert'
 
@@ -31,10 +34,14 @@ class Editor extends Component {
 			showInfoBox: false,
 			showLoading: false,
 			showPreview: false,
+			showEditorMode: false,
+			popoverParent: null,
 		}, this.makePostState(props))
 
 		this.handleKeyDown = this.handleKeyDown.bind(this)
 		this.handleFinishSaveContent = this.handleFinishSaveContent.bind(this)
+		this.handleOpenEditorMode = this.handleOpenEditorMode.bind(this)
+		this.handleCloseEditorMode = this.handleCloseEditorMode.bind(this)
 	}
 
 	makePostState(props) {
@@ -176,26 +183,28 @@ class Editor extends Component {
 		}
 	}
 
-	handleChangeEditorMode() {
-		const { editor } = this.refs
-		const { editorMode } = this.state
-
+	handleOpenEditorMode(e) {
+		e.preventDefault()
 		this.setState({
-			content: editor.getContent(),
-			editorMode: this.getNextEditorMode(editorMode)
+			showEditorMode: true,
+			popoverParent: e.currentTarget
 		})
 	}
 
-	getNextEditorMode(editorMode) {
-		switch(editorMode) {
-			case EditorMode.QUILL:
-				return EditorMode.TINYMCE
-			case EditorMode.TINYMCE:
-				return EditorMode.MARKDOWN
-			case EditorMode.MARKDOWN:
-			default:
-				return EditorMode.QUILL
-		}
+	handleCloseEditorMode(e) {
+		this.setState({
+			showEditorMode: false
+		})
+	}
+
+	handleChangeEditorMode(selectedMode) {
+		const { editor } = this.refs
+
+		this.setState({
+			content: editor.getContent(),
+			editorMode: selectedMode,
+			showEditorMode: false
+		})
 	}
 
 	handleKeyDown(e) {
@@ -243,7 +252,7 @@ class Editor extends Component {
 
 	render() {
 		const { onFinish, categories, post } = this.props
-		const { title, content, categoryId, tags, showInfoBox, showLoading, showPreview } = this.state
+		const { title, content, categoryId, tags, showInfoBox, showLoading, showPreview, showEditorMode, popoverParent, editorMode } = this.state
 
 		return (
 			<div className="editor_wrap">
@@ -274,9 +283,24 @@ class Editor extends Component {
 					onRequestSave={this.handleSave.bind(this)}
 					onRequestPublish={this.handlePublish.bind(this)} />
 
-				<FloatingActionButton className="btn_change_editor" mini={true} onClick={this.handleChangeEditorMode.bind(this)}>
+				<FloatingActionButton className="btn_change_editor" mini={true} onClick={this.handleOpenEditorMode}>
 					<ActionSwapVert />
 				</FloatingActionButton>
+
+				<Popover open={this.state.showEditorMode}
+					anchorEl={this.state.popoverParent}
+					anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+					targetOrigin={{horizontal: 'right', vertical: 'bottom'}}
+					onRequestClose={this.handleCloseEditorMode}>
+					<Menu>
+						<MenuItem primaryText="Rich Editor (Quill)" checked={editorMode === EditorMode.QUILL}
+							onTouchTap={e => this.handleChangeEditorMode(EditorMode.QUILL)} />
+						<MenuItem primaryText="Rich Editor (Tinymce)" checked={editorMode === EditorMode.TINYMCE}
+							onTouchTap={e => this.handleChangeEditorMode(EditorMode.TINYMCE)} />
+						<MenuItem primaryText="Markdown Editor" checked={editorMode === EditorMode.MARKDOWN}
+							onTouchTap={e => this.handleChangeEditorMode(EditorMode.MARKDOWN)} />
+					</Menu>
+				</Popover>
 
 				{showLoading && <Loading />}
 
