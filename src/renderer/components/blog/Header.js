@@ -13,15 +13,16 @@ class Header extends Component {
 	render() {
 		const { user, currentBlog, handleGoIndex, onRequestAddPost } = this.props
 
+		let avatar = currentBlog.profileImageUrl? <Avatar src={currentBlog.profileImageUrl} size={30} /> : <Avatar size={30}>{currentBlog.title.slice(0,1)}</Avatar>
+
 		return (
 			<Toolbar>
 				<ToolbarGroup firstChild={true}>
 					<IconButton onClick={handleGoIndex}><NavigationBack /></IconButton>
 
-					{currentBlog.profileImageUrl && <Avatar src={currentBlog.profileImageUrl} size={30} />}
-					{!currentBlog.profileImageUrl && <Avatar size={30}>{currentBlog.title.slice(0,1)}</Avatar>}
+					{ avatar }
 
-					<ToolbarTitle text={currentBlog.title} style={{marginLeft:'5px'}} />
+					<ToolbarTitle text={currentBlog.title} style={{marginLeft:'5px', width:'151px', overflow:'hidden'}} />
 
 				</ToolbarGroup>
 				<ToolbarGroup lastChild={true}>
