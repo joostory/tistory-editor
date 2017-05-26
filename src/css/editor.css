@@ -27,7 +27,7 @@ body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; }
 .svg_profile text { transform: translate(25px, 32px); text-anchor:middle; font-size:20px; stroke:#ccc; fill:#ccc; text-transform: uppercase; }
 
 /* sidebar */
-.sidebar { position: absolute; top: 0; bottom: 0; left: 0; width: 300px; background: #eee; }
+.sidebar { position: absolute; top: 0; bottom: 0; left: 0; background: #eee; }
 
 /* header */
 .header { height: 50px; background: #ddd; }
@@ -45,7 +45,7 @@ body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; }
 .header .current_blog .blog_title { line-height: 30px; font-size:16px; color:#333; font-weight:bold }
 .header .title { color: #eee; font-weight: bold; line-height: 40px; padding: 5px 20px; }
 
-.list { margin: 0; padding:0; position:absolute; left:0; width:300px; top:56px; bottom:0; overflow:auto }
+.list { margin: 0; padding:0; position:absolute; left:0; width:100%; top:56px; bottom:0; overflow:auto }
 .list .item {  }
 .list .item .item_date { color: #999; }
 .list .item .item_category { color:#f1631b; margin-right:5px }
