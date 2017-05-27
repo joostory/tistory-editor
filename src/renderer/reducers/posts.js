@@ -32,7 +32,6 @@ export default (state = initialState, action) => {
 		case types.UPDATE_POST:
 			let newList = [...state.list]
 			let index = newList.findIndex((item) => {
-				console.log("findIndex", item.id, action.post.id, item.id == action.post.id)
 				return item.id == action.post.id
 			})
 			newList[index] = action.post

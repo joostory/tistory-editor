@@ -6,7 +6,7 @@ import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui
 import Avatar from 'material-ui/Avatar'
 import IconButton from 'material-ui/IconButton'
 import NavigationBack from 'material-ui/svg-icons/navigation/arrow-back'
-import ContentCreate from 'material-ui/svg-icons/content/create'
+import NoteAdd from 'material-ui/svg-icons/action/note-add'
 
 class Header extends Component {
 
@@ -26,7 +26,7 @@ class Header extends Component {
 
 				</ToolbarGroup>
 				<ToolbarGroup lastChild={true}>
-					<IconButton onClick={onRequestAddPost} tooltip="새글쓰기"><ContentCreate /></IconButton>
+					<IconButton onClick={onRequestAddPost} tooltip="새글쓰기"><NoteAdd /></IconButton>
 				</ToolbarGroup>
 			</Toolbar>
 		)

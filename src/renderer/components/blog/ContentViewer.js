@@ -3,10 +3,10 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { ipcRenderer } from 'electron'
 import Chip from 'material-ui/Chip'
-import RaisedButton from 'material-ui/RaisedButton'
 import IconButton from 'material-ui/IconButton'
 import CircularProgress from 'material-ui/CircularProgress'
 import OpenInBrowser from 'material-ui/svg-icons/action/open-in-browser'
+import ModeEdit from 'material-ui/svg-icons/editor/mode-edit'
 
 class ContentViewer extends Component {
 
@@ -43,6 +43,14 @@ class ContentViewer extends Component {
       tags = tags.concat(post.tags.tag)
     }
 
+		let buttonStyle = {
+			verticalAlign:'middle',
+			width: '24px',
+			height: '24px',
+			padding: 0,
+			marginLeft: '5px'
+		}
+
     return (
       <div className='content_wrap'>
         <div className='viewer'>
@@ -52,11 +60,9 @@ class ContentViewer extends Component {
             }
     				<h1 className='viewer_title'>{post.title}</h1>
             <div className='viewer_info'>
-              <span>{post.date}</span>
-							<IconButton href={post.postUrl} tooltip="브라우저에서 보기"><OpenInBrowser /></IconButton>
-            </div>
-            <div className='viewer_btn'>
-              <RaisedButton onClick={onRequestEditPost}>수정</RaisedButton>
+              <span>{post.date} / {post.postUrl}</span>
+							<IconButton href={post.postUrl} tooltip="브라우저에서 보기" style={buttonStyle}><OpenInBrowser /></IconButton>
+							<IconButton onClick={onRequestEditPost} tooltip="수정하기" style={buttonStyle}><ModeEdit /></IconButton>
             </div>
           </div>
 
