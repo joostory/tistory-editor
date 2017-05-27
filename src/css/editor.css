@@ -66,7 +66,7 @@ body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; }
 .viewer { position:absolute; top:0; bottom:0; left:0; right:0; overflow:auto }
 .viewer .viewer_header { margin:20px; padding-bottom:20px; border-bottom:1px solid #eee }
 .viewer .viewer_header .viewer_category { font-size:14px; color:#f1631b }
-.viewer .viewer_header .viewer_title { font-size:32px; margin: 16px 0; word-wrap: break-word }
+.viewer .viewer_header .viewer_title { font-size:32px; margin: 16px 0; word-wrap: break-word; line-height: 130% }
 .viewer .viewer_header .viewer_btn { position:absolute; right:20px; top:20px }
 .viewer .viewer_content { margin:20px 20px 40px; word-wrap: break-word }
 .viewer .viewer_tags { display: flex; flex-wrap: wrap; margin: 20px }
