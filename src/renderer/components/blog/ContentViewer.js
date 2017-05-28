@@ -60,7 +60,7 @@ class ContentViewer extends Component {
             }
     				<h1 className='viewer_title'>{post.title}</h1>
             <div className='viewer_info'>
-              <span>{post.date} / {post.postUrl}</span>
+              <span>{post.date}</span>
 							<IconButton href={post.postUrl} tooltip="브라우저에서 보기" style={buttonStyle}><OpenInBrowser /></IconButton>
 							<IconButton onClick={onRequestEditPost} tooltip="수정하기" style={buttonStyle}><ModeEdit /></IconButton>
             </div>
