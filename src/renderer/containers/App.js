@@ -22,6 +22,7 @@ class App extends Component {
 		}
 
 		this.handleReceiveMessage = this.handleReceiveMessage.bind(this)
+		this.handleMessageClose = this.handleMessageClose.bind(this)
 	}
 
 	componentWillMount() {
@@ -70,7 +71,7 @@ class App extends Component {
 						open={messageOpen}
 						message={message}
 						autoHideDuration={3000}
-						onRequestClose={this.handleMessageClose.bind(this)}
+						onRequestClose={this.handleMessageClose}
 					/>
 				}
 

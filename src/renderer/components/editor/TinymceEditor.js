@@ -12,6 +12,7 @@ class TinymceEditor extends Component {
       value: props.value
     }
     this.handleFinishUploadFile = this.handleFinishUploadFile.bind(this)
+		this.handleChange = this.handleChange.bind(this)
   }
 
   componentWillMount() {
@@ -58,7 +59,7 @@ class TinymceEditor extends Component {
 					body_class: 'content',
 					content_css: '../src/css/content.css'
         }}
-				onChange={this.handleChange.bind(this)}
+				onChange={this.handleChange}
 			/>
 		)
 	}

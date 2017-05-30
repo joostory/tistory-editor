@@ -11,6 +11,8 @@ class Index extends Component {
 
 	constructor(props, context) {
 		super(props, context)
+
+		this.handleSelectBlog = this.handleSelectBlog.bind(this)
 	}
 
 	handleSelectBlog(blog) {
@@ -25,7 +27,7 @@ class Index extends Component {
 		return (
 			<div className="container">
 				<IndexProfile user={user} />
-				<BlogList blogs={blogs} onSelect={this.handleSelectBlog.bind(this)} />
+				<BlogList blogs={blogs} onSelect={this.handleSelectBlog} />
 			</div>
 		)
 	}
