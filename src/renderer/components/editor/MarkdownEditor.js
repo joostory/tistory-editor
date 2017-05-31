@@ -41,6 +41,10 @@ class MarkdownEditor extends Component {
 		cm.on("paste", this.handlePaste)
 	}
 
+	shouldComponentUpdate(nextProps, nextState) {
+		return false
+	}
+
   handleFinishUploadFile(e, fileUrl) {
 		const { editor } = this.refs
 		console.log("finishUploadFile", fileUrl)

@@ -263,7 +263,7 @@ class Editor extends Component {
 		if (editorMode == EditorMode.QUILL) {
 			return <QuillEditor ref="editor" value={content} currentBlog={currentBlog} onImageHandler={this.handleDropFile} />
 		} else if (editorMode == EditorMode.TINYMCE) {
-			return <TinymceEditor ref="editor" value={content} currentBlog={currentBlog} />
+			return <TinymceEditor ref="editor" value={content} currentBlog={currentBlog} onImageHandler={this.handleDropFile} />
 		} else {
 			return <MarkdownEditor ref="editor" value={content} currentBlog={currentBlog} />
 		}
