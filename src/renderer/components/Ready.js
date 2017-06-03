@@ -7,6 +7,12 @@ import RaisedButton from 'material-ui/RaisedButton'
 
 class Ready extends Component {
 
+	constructor(props, context) {
+		super(props, context)
+
+		this.handleRequestAuth = this.handleRequestAuth.bind(this)
+	}
+
 	handleRequestAuth() {
 		ipcRenderer.send('request-auth')
 	}
@@ -22,8 +28,8 @@ class Ready extends Component {
 						label="티스토리 인증"
 						labelStyle={{ color:"#fff" }}
 						fullWidth={true}
-	          backgroundColor="#f1631b"
-						onClick={this.handleRequestAuth.bind(this)}
+						backgroundColor="#f1631b"
+						onClick={this.handleRequestAuth}
 					/>
 				</div>
 			</div>

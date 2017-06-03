@@ -16,6 +16,10 @@ class Blog extends Component {
 		this.state = {
 			mode: ContentMode.VIEW
 		}
+
+		this.handleRequestAddPost = this.handleRequestAddPost.bind(this)
+		this.handleRequestEditPost = this.handleRequestEditPost.bind(this)
+		this.handleFinishEditor = this.handleFinishEditor.bind(this)
 	}
 
 	handleRequestAddPost() {
@@ -41,12 +45,12 @@ class Blog extends Component {
 
 		return (
 			<div className="container">
-				<Sidebar onRequestAddPost={this.handleRequestAddPost.bind(this)} />
+				<Sidebar onRequestAddPost={this.handleRequestAddPost} />
 
-				<Content onRequestEditPost={this.handleRequestEditPost.bind(this)}/>
+				<Content onRequestEditPost={this.handleRequestEditPost}/>
 
 				{(mode === ContentMode.EDIT || mode === ContentMode.ADD) &&
-					<Editor mode={mode} onFinish={this.handleFinishEditor.bind(this)} />
+					<Editor mode={mode} onFinish={this.handleFinishEditor} />
 				}
 			</div>
 		)

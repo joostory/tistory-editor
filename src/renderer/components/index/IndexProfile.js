@@ -8,6 +8,12 @@ import RaisedButton from 'material-ui/RaisedButton'
 
 class IndexProfile extends Component {
 
+  constructor(props, context) {
+		super(props, context)
+
+    this.handleDisconnectAuth = this.handleDisconnectAuth.bind(this)
+  }
+
   handleDisconnectAuth() {
 		ipcRenderer.send("disconnect-auth")
 	}
@@ -33,7 +39,7 @@ class IndexProfile extends Component {
           label="연결해제"
           labelStyle={{ color:"#fff" }}
           backgroundColor="#f1631b"
-          onClick={this.handleDisconnectAuth.bind(this)} />
+          onClick={this.handleDisconnectAuth} />
       </div>
     )
   }

@@ -24,6 +24,7 @@ class MarkdownEditor extends Component {
 
     this.handleFinishUploadFile = this.handleFinishUploadFile.bind(this)
 		this.handlePaste = this.handlePaste.bind(this)
+		this.handleChangeContent = this.handleChangeContent.bind(this)
   }
 
   componentWillMount() {
@@ -38,6 +39,10 @@ class MarkdownEditor extends Component {
 		const { editor } = this.refs
 		let cm = editor.getCodeMirror()
 		cm.on("paste", this.handlePaste)
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return false
 	}
 
   handleFinishUploadFile(e, fileUrl) {
@@ -56,7 +61,6 @@ class MarkdownEditor extends Component {
 		let image = clipboard.readImage()
 		if (!image.isEmpty()) {
 			ipcRenderer.send("add-clipboard-image", currentBlog.name)
-			console.log(image.getSize())
 		}
 	}
 
@@ -83,7 +87,7 @@ class MarkdownEditor extends Component {
 
 		return (
 			<Codemirror ref="editor" options={options} value={value}
-				onChange={this.handleChangeContent.bind(this)} />
+				onChange={this.handleChangeContent} />
 		)
   }
 }

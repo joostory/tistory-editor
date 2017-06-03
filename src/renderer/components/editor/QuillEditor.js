@@ -28,6 +28,10 @@ class QuillEditor extends Component {
     ipcRenderer.removeListener("finish-add-file", this.handleFinishUploadFile)
   }
 
+	shouldComponentUpdate(nextProps, nextState) {
+		return false
+	}
+
   handleFinishUploadFile(e, fileUrl) {
 		console.log("finishUploadFile", fileUrl)
     let range = quillInstance.getSelection()

@@ -15,6 +15,9 @@ let SelectableList = makeSelectable(List)
 class PostList extends Component {
 	constructor(props, context) {
 		super(props, context)
+
+		this.handleScroll = this.handleScroll.bind(this)
+		this.handleSelectPost = this.handleSelectPost.bind(this)
 	}
 
 	componentDidMount() {
@@ -23,7 +26,6 @@ class PostList extends Component {
 
 	requestNextPage() {
 		const { currentBlog, posts, lockPostsLoad } = this.props
-		console.log("request next page", posts)
 		if (!posts.lock && posts.hasNext) {
 			lockPostsLoad()
 			ipcRenderer.send('fetch-posts', currentBlog.name, parseInt(posts.page) + 1)
@@ -51,13 +53,13 @@ class PostList extends Component {
 		const { categories, posts, currentPost } = this.props
 
 		return (
-			<List className="list" style={{padding:0}} onScroll={this.handleScroll.bind(this)}>
+			<List className="list" style={{padding:0}} onScroll={this.handleScroll}>
 				{posts.list.map((item, i) =>
 					<PostListItem key={i}
 						post={item}
 						category={categories.find(category => item.categoryId == category.id)}
 						selected={currentPost && item.id == currentPost.id}
-						onSelect={this.handleSelectPost.bind(this)} />
+						onSelect={this.handleSelectPost} />
 				)}
 
 				{!posts.hasNext && posts.list.length === 0 &&

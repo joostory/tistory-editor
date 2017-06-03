@@ -40,8 +40,24 @@ class Editor extends Component {
 
 		this.handleKeyDown = this.handleKeyDown.bind(this)
 		this.handleFinishSaveContent = this.handleFinishSaveContent.bind(this)
+		
 		this.handleOpenEditorMode = this.handleOpenEditorMode.bind(this)
 		this.handleCloseEditorMode = this.handleCloseEditorMode.bind(this)
+		this.handleDropFile = this.handleDropFile.bind(this)
+		
+		this.handleChangeTitle = this.handleChangeTitle.bind(this)
+		this.handleCancel = this.handleCancel.bind(this)
+		this.handleChangeTags = this.handleChangeTags.bind(this)
+		this.handleChangeCategory = this.handleChangeCategory.bind(this)
+		
+		this.handlePreview = this.handlePreview.bind(this)
+		this.handleClosePreview = this.handleClosePreview.bind(this)
+
+		this.handlePublishDialogOpen = this.handlePublishDialogOpen.bind(this)
+		this.handlePublishDialogClose = this.handlePublishDialogClose.bind(this)
+
+		this.handleSave = this.handleSave.bind(this)
+		this.handlePublish = this.handlePublish.bind(this)
 	}
 
 	makePostState(props) {
@@ -208,7 +224,10 @@ class Editor extends Component {
 	}
 
 	handleKeyDown(e) {
-		if (e.metaKey || e.altKey) {
+		let isMac = navigator.platform.indexOf("Mac") === 0
+		let commandKey = isMac? e.metaKey : e.ctrlKey
+
+		if (commandKey) {
 			if (e.keyCode == 83) {
 				e.preventDefault()
 				this.handlePublishDialogOpen()
@@ -242,9 +261,9 @@ class Editor extends Component {
 		const { content, editorMode } = this.state
 
 		if (editorMode == EditorMode.QUILL) {
-			return <QuillEditor ref="editor" value={content} currentBlog={currentBlog} onImageHandler={this.handleDropFile.bind(this)} />
+			return <QuillEditor ref="editor" value={content} currentBlog={currentBlog} onImageHandler={this.handleDropFile} />
 		} else if (editorMode == EditorMode.TINYMCE) {
-			return <TinymceEditor ref="editor" value={content} currentBlog={currentBlog} />
+			return <TinymceEditor ref="editor" value={content} currentBlog={currentBlog} onImageHandler={this.handleDropFile} />
 		} else {
 			return <MarkdownEditor ref="editor" value={content} currentBlog={currentBlog} />
 		}
@@ -258,13 +277,13 @@ class Editor extends Component {
 			<div className="editor_wrap">
 				<div className="editor">
 					<Dropzone disableClick={true} accept="image/*" style={{width: "100%",height:"100%"}}
-						onDrop={this.handleDropFile.bind(this)}>
+						onDrop={this.handleDropFile}>
 
 						<EditorToolbar title={title}
-							onTitleChange={this.handleChangeTitle.bind(this)}
-							onPreviewClick={this.handlePreview.bind(this)}
-							onSaveClick={this.handlePublishDialogOpen.bind(this)}
-							onCancelClick={this.handleCancel.bind(this)} />
+							onTitleChange={this.handleChangeTitle}
+							onPreviewClick={this.handlePreview}
+							onSaveClick={this.handlePublishDialogOpen}
+							onCancelClick={this.handleCancel} />
 
 						{this.getEditor()}
 
@@ -272,16 +291,16 @@ class Editor extends Component {
 				</div>
 
 				<Dialog title={title} actions={[]} modal={false} open={showPreview} autoScrollBodyContent={true}
-					onRequestClose={this.handleClosePreview.bind(this)}>
+					onRequestClose={this.handleClosePreview}>
 					<div className="content preview_content" dangerouslySetInnerHTML={{__html: content}} />
 				</Dialog>
 
 				<EditorInfoDialog open={showInfoBox} category={categoryId} categories={categories} tags={tags}
-					onTagsChange={this.handleChangeTags.bind(this)}
-					onCategoryChange={this.handleChangeCategory.bind(this)}
-					onRequestClose={this.handlePublishDialogClose.bind(this)}
-					onRequestSave={this.handleSave.bind(this)}
-					onRequestPublish={this.handlePublish.bind(this)} />
+					onTagsChange={this.handleChangeTags}
+					onCategoryChange={this.handleChangeCategory}
+					onRequestClose={this.handlePublishDialogClose}
+					onRequestSave={this.handleSave}
+					onRequestPublish={this.handlePublish} />
 
 				<FloatingActionButton className="btn_change_editor" mini={true} onClick={this.handleOpenEditorMode}>
 					<ActionSwapVert />
@@ -329,12 +348,12 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onUpdate: (post) => {
-			dispatch(updatePost(post))
-		},
+		dispatch(updatePost(post))
+	},
 
-		onAdd: (post) => {
-			dispatch(addPost(post))
-		}
+	onAdd: (post) => {
+		dispatch(addPost(post))
+	}
   }
 }
 
