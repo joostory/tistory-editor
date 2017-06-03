@@ -5,8 +5,8 @@
   "description": "Editor for tistory",
   "main": "src/main/main.js",
   "scripts": {
-    "build": "NODE_ENV=production webpack",
-    "watch": "NODE_ENV=development webpack --watch",
+    "build": "NODE_ENV=production webpack --progress",
+    "watch": "NODE_ENV=development webpack --watch --progress",
     "app": "NODE_ENV=development electron .",
     "start": "concurrently \"yarn run watch\" \"yarn run app\"",
     "test": "jest -u",
@@ -63,7 +63,7 @@
     "marked": "^0.3.6",
     "material-ui": "^0.18.1",
     "material-ui-chip-input": "^0.14.0",
-    "node-fetch": "^1.7.0",
+    "node-fetch": "^1.7.1",
     "prop-types": "^15.5.10",
     "querystring": "^0.2.0",
     "quill": "^1.2.5",
@@ -78,6 +78,7 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
     "tinymce": "^4.6.3",
+    "tinymce-plugin-codeblock": "^1.1.5",
     "to-markdown": "^3.0.3"
   },
   "jest": {

@@ -1110,7 +1110,7 @@ code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
 
-codemirror@^5.18.2:
+codemirror@^5.18.2, codemirror@^5.25.0:
   version "5.25.2"
   resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.25.2.tgz#8c77677ca9c9248d757d3a07ed1e89a8404850b7"
 
@@ -2203,7 +2203,7 @@ hawk@~3.1.3:
     hoek "2.x.x"
     sntp "1.x.x"
 
-highlightjs@^9.8.0:
+highlightjs@^9.10.0, highlightjs@^9.8.0:
   version "9.10.0"
   resolved "https://registry.yarnpkg.com/highlightjs/-/highlightjs-9.10.0.tgz#fca9b78ddaa3b1abca89d6c3ee105ad270a80190"
 
@@ -3014,7 +3014,7 @@ lodash@^3.9.3:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
 
-lodash@^4.0.1, lodash@^4.14.0, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.5.1:
+lodash@^4.0.1, lodash@^4.14.0, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.5.1:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
@@ -3227,9 +3227,9 @@ node-emoji@^1.5.1:
   dependencies:
     string.prototype.codepointat "^0.2.0"
 
-node-fetch@^1.0.1, node-fetch@^1.3.3, node-fetch@^1.7.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-1.7.0.tgz#3ff6c56544f9b7fb00682338bb55ee6f54a8a0ef"
+node-fetch@^1.0.1, node-fetch@^1.3.3, node-fetch@^1.7.1:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-1.7.1.tgz#899cb3d0a3c92f952c47f1b876f4c8aeabd400d5"
   dependencies:
     encoding "^0.1.11"
     is-stream "^1.0.1"
@@ -4738,6 +4738,14 @@ timers-browserify@^2.0.2:
   resolved "https://registry.yarnpkg.com/timers-browserify/-/timers-browserify-2.0.2.tgz#ab4883cf597dcd50af211349a00fbca56ac86b86"
   dependencies:
     setimmediate "^1.0.4"
+
+tinymce-plugin-codeblock@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/tinymce-plugin-codeblock/-/tinymce-plugin-codeblock-1.1.5.tgz#73cad84c429791a005e757c516cea88299ef57d4"
+  dependencies:
+    codemirror "^5.25.0"
+    highlightjs "^9.10.0"
+    lodash "^4.17.4"
 
 tinymce@^4.6.3:
   version "4.6.3"

@@ -21,7 +21,9 @@ module.exports = {
 		})
 	],
 	externals: {
-    "jsdom": {}
+    "jsdom": {},
+		"codemirror": "CodeMirror",
+		"tinymce": "tinymce"
   },
 	module: {
 		rules: [
