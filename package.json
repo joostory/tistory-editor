@@ -44,7 +44,7 @@
     "concurrently": "^3.4.0",
     "css-loader": "^0.28.4",
     "electron": "^1.6.10",
-    "electron-builder": "^18.3.0",
+    "electron-builder": "^18.3.5",
     "jest": "^20.0.4",
     "object-assign": "^4.1.1",
     "react-test-renderer": "^15.4.2",
