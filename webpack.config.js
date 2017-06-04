@@ -23,6 +23,7 @@ module.exports = {
 	externals: {
     "jsdom": {},
 		"codemirror": "CodeMirror",
+		"highlightjs": "hljs",
 		"tinymce": "tinymce"
   },
 	module: {

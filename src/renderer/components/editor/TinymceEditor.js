@@ -57,7 +57,7 @@ class TinymceEditor extends Component {
 				className='content'
 				config={{
           plugins: 'link media table textcolor hr advlist paste codeblock',
-					toolbar: 'formatselect bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock hr',
+					toolbar: 'formatselect bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock hr removeformat',
 					resize: false,
 					branding: false,
 					statusbar: false,
@@ -73,7 +73,7 @@ class TinymceEditor extends Component {
 						args.preventDefault()
 					},
 					codeblock: {
-						highlightStyle: '../node_modules/highlightjs/styles/github.css'
+						highlightStyle: '../node_modules/highlightjs/styles/atom-one-dark.css'
 					},
 					init_instance_callback: (editor) => {
 						editor.on("paste", this.handlePaste)
