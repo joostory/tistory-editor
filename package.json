@@ -54,6 +54,7 @@
   "dependencies": {
     "classnames": "^2.2.5",
     "dateformat": "^2.0.0",
+    "debug": "^2.6.8",
     "delta-to-html": "^0.1.4",
     "electron-json-storage": "^3.0.1",
     "electron-localshortcut": "^2.0.0",
