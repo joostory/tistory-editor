@@ -56,7 +56,7 @@ class TinymceEditor extends Component {
 				id='tinymce'
 				className='content'
 				config={{
-          plugins: 'link media table textcolor hr advlist paste codeblock',
+          plugins: 'link media table textcolor hr lists paste codeblock',
 					toolbar: 'formatselect bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock hr removeformat',
 					resize: false,
 					branding: false,
