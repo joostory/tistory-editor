@@ -163,7 +163,7 @@ class Editor extends Component {
 		}
 	}
 
-	handleFinishSaveContent(e, postId) {
+	handleFinishSaveContent(e, postId, url) {
 		const { onFinish, post, mode, onUpdate, onAdd } = this.props
 		const { title, visibility, content, categoryId, tags } = this.state
 
@@ -184,6 +184,7 @@ class Editor extends Component {
 			tags: {
 				tag: tags
 			},
+			postUrl: url,
 			date: dateformat(new Date(), 'yyyy-mm-dd HH:MM:ss'),
 		}
 

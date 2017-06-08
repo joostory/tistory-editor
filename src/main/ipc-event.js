@@ -130,7 +130,7 @@ module.exports.init = () => {
 			}
 
 			tistory.saveContent(auth, blogName, post).then(res => {
-				evt.sender.send('finish-save-content', res.tistory.postId)
+				evt.sender.send('finish-save-content', res.tistory.postId, res.tistory.url)
 				evt.sender.send('receive-message', '\'' + post.title + '\' ' + publishType + ' 완료')
 			}).catch(err => {
 				console.error(err)
@@ -154,7 +154,7 @@ module.exports.init = () => {
 			}
 
 			tistory.addContent(auth, blogName, post).then(res => {
-				evt.sender.send('finish-add-content', res.tistory.postId)
+				evt.sender.send('finish-add-content', res.tistory.postId, res.tistory.url)
 				evt.sender.send('receive-message', '\'' + post.title + '\' ' + publishType + ' 완료')
 			}).catch(err => {
 				console.error(err)
