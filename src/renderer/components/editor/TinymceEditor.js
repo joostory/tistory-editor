@@ -27,15 +27,18 @@ class TinymceEditor extends Component {
 
   handleFinishUploadFile(e, fileUrl) {
 		console.log("finishUploadFile", fileUrl)
-		tinymce.get("tinymce").execCommand('mceInsertContent',false,'<p><img src="'+fileUrl+'" /></p>');
+		tinymce.activeEditor.execCommand('mceInsertContent',false,'<figure><img src="'+fileUrl+'" /></figure>');
 	}
 
 	handlePaste(e) {
 		const { currentBlog } = this.props
 
+		let text = clipboard.readHTML()
 		let image = clipboard.readImage()
-		if (!image.isEmpty()) {
+		if (!text && !image.isEmpty()) {
 			ipcRenderer.send("add-clipboard-image", currentBlog.name)
+		} else {
+			tinymce.activeEditor.execCommand('mceInsertContent', false, text);
 		}
 	}
 
@@ -45,7 +48,7 @@ class TinymceEditor extends Component {
 	}
 
   getContent() {
-		return tinymce.get("tinymce").getContent()
+		return tinymce.activeEditor.getContent()
   }
 
 	render() {
