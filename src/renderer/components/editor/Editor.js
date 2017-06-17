@@ -97,8 +97,8 @@ class Editor extends Component {
 	componentWillUnmount() {
 		document.body.removeEventListener("keydown", this.handleKeyDown, false)
 
-		ipcRenderer.removeEventListener("start-add-file", this.handleStartAddFile)
-		ipcRenderer.removeEventListener("finish-add-file", this.handleFinishAddFile)
+		ipcRenderer.removeListener("start-add-file", this.handleStartAddFile)
+		ipcRenderer.removeListener("finish-add-file", this.handleFinishAddFile)
 		ipcRenderer.removeListener("finish-add-content", this.handleFinishSaveContent)
 		ipcRenderer.removeListener("finish-save-content", this.handleFinishSaveContent)
 	}
