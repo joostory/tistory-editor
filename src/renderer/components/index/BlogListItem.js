@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 
 import { ListItem } from 'material-ui/List'
 import Avatar from 'material-ui/Avatar'
+import Stars from 'material-ui/svg-icons/action/stars'
 
 class BlogListItem extends Component {
   render() {
@@ -23,10 +24,16 @@ class BlogListItem extends Component {
       </p>
     )
 
+		let defaultBlogIcon;
+		if (blog.default === 'Y') {
+			defaultBlogIcon = <Stars />
+		}
+
     return (
       <ListItem
         onClick={e => onSelect(blog)}
         leftAvatar={avatar}
+				rightIcon={defaultBlogIcon}
         primaryText={blog.title}
         secondaryText={info}
         secondaryTextLines={2}
