@@ -12,7 +12,7 @@ class BlogList extends Component {
       <div className="blog_list">
         <List>
           {blogs.sort((a,b) =>
-						a.default > b.default ? -1 : 1
+						(a.default === 'Y')? -1 : b.default === 'Y'? 1 : 0
 					).map(blog =>
             <BlogListItem key={blog.url} blog={blog} onSelect={onSelect} />
           )}
