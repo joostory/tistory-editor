@@ -276,17 +276,21 @@ class Editor extends Component {
 
 		return (
 			<div className="editor_wrap">
+				<EditorToolbar title={title}
+					onTitleChange={this.handleChangeTitle}
+					onPreviewClick={this.handlePreview}
+					onSaveClick={this.handlePublishDialogOpen}
+					onCancelClick={this.handleCancel} />
+
 				<div className="editor">
-					<Dropzone disableClick={true} accept="image/*" style={{width: "100%",height:"100%"}}
+					<Dropzone disableClick={true} accept="image/*" activeClassName="droppable" style={{width: "100%",height:"100%"}}
 						onDrop={this.handleDropFile}>
 
-						<EditorToolbar title={title}
-							onTitleChange={this.handleChangeTitle}
-							onPreviewClick={this.handlePreview}
-							onSaveClick={this.handlePublishDialogOpen}
-							onCancelClick={this.handleCancel} />
-
 						{this.getEditor()}
+
+						<div className="dropzone_box">
+							<b>파일을 넣어주세요.</b>
+						</div>
 
 					</Dropzone>
 				</div>

@@ -70,11 +70,11 @@ body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; }
 .viewer .viewer_content { margin:20px auto 40px; word-wrap: break-word; max-width:700px }
 .viewer .viewer_tags { display: flex; flex-wrap: wrap; margin: 20px auto; max-width:700px }
 
-.editor_wrap { position:absolute; z-index:2; top:0; bottom:0; left:0; right:0; overflow:hidden; background-color:rgba(255, 255, 255, 0.7) }
-.editor { position:absolute; left:0; right:0; top:0; bottom:0; background-color:#fff }
+.editor_wrap { position:absolute; z-index:2; top:0; bottom:0; left:0; right:0; overflow:hidden; background-color:#fff }
+.editor { position:absolute; left:0; right:0; top:56px; bottom:0; }
 .editor .mce-tinymce,
 .editor .Quill,
-.editor .ReactCodeMirror { position: absolute; top: 56px; bottom: 0; left: 0; right: 0 }
+.editor .ReactCodeMirror { position: absolute; top:0; bottom: 0; left: 0; right: 0 }
 .editor .CodeMirror { height: 100%; padding:0 15px; font-family:Menlo, Consolas, 'DejaVu Sans Mono', monospace; background:transparent }
 .editor .ql-container { font-size:16px }
 .editor .mce-tinymce { border:0; background-color:#fff }
@@ -82,16 +82,8 @@ body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; }
 .editor .mce-tinymce .mce-toolbar-grp .mce-btn { background-color:#fff }
 .editor .mce-tinymce .mce-edit-area { border:0; position: absolute; top: 38px; bottom: 0; left: 0; right: 0; }
 
-.editor .statusbar { position: absolute; top: 0; height: 50px; left: 0; right: 0; background:#ddd; }
-.editor .statusbar .title:before { content:"# " }
-.editor .statusbar .title { position:absolute; left:15px; font-size:24px; bottom:10px }
-.editor .statusbar .title input { width:500px; font-size:24px; border:0; background:transparent }
-.editor .statusbar .btn_wrap { position: absolute; right: 10px; bottom: 10px; }
-.editor .statusbar .btn_wrap .btn { height: 30px; padding: 0 15px; background:#666; border:0; color:#ccc }
-.editor .statusbar .btn_wrap .btn:hover { background:#777 }
-.editor .statusbar .btn_wrap .btn:disabled { background:#444; color:#666 }
-.editor .statusbar .btn_wrap .btn.active { background:#777 }
-.editor .statusbar .btn_wrap .btn_info { margin-right:5px; border-radius:15px }
+.editor .dropzone_box { position:absolute; top:0; bottom:0; left:0; right:0; border:3px dashed #999; border-radius:10px; background-color:#eee; display:none; align-items: center; justify-content: center; z-index:20; color:#999 }
+.editor .droppable .dropzone_box { display:flex }
 
 .btn_change_editor { position:absolute; right:40px; bottom:30px; z-index:10 }
 .preview_content { margin-top:25px }
