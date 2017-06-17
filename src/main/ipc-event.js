@@ -168,6 +168,8 @@ module.exports.init = () => {
 		storage.get("auth", (error, auth) => {
 			if (error) throw error
 
+			evt.sender.send('start-add-file')
+			
 			if (!auth || !auth.access_token) {
 				evt.sender.send('finish-add-file')
 				return
@@ -187,6 +189,8 @@ module.exports.init = () => {
 	ipcMain.on("add-clipboard-image", (evt, blogName) => {
 		storage.get("auth", (error, auth) => {
 			if (error) throw error
+
+			evt.sender.send('start-add-file')
 
 			if (!auth || !auth.access_token) {
 				evt.sender.send('finish-add-file')

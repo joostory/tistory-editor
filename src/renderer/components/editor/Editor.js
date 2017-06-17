@@ -36,10 +36,14 @@ class Editor extends Component {
 			showPreview: false,
 			showEditorMode: false,
 			popoverParent: null,
+			uploadFileCount: 0,
+			uploadFinishedFileCount: 0
 		}, this.makePostState(props))
 
 		this.handleKeyDown = this.handleKeyDown.bind(this)
 		this.handleFinishSaveContent = this.handleFinishSaveContent.bind(this)
+		this.handleStartAddFile = this.handleStartAddFile.bind(this)
+		this.handleFinishAddFile = this.handleFinishAddFile.bind(this)
 		
 		this.handleOpenEditorMode = this.handleOpenEditorMode.bind(this)
 		this.handleCloseEditorMode = this.handleCloseEditorMode.bind(this)
@@ -84,6 +88,8 @@ class Editor extends Component {
 	componentWillMount() {
 		document.body.addEventListener("keydown", this.handleKeyDown, false)
 
+		ipcRenderer.on("start-add-file", this.handleStartAddFile)
+		ipcRenderer.on("finish-add-file", this.handleFinishAddFile)
 		ipcRenderer.on("finish-add-content", this.handleFinishSaveContent)
 		ipcRenderer.on("finish-save-content", this.handleFinishSaveContent)
 	}
@@ -91,6 +97,8 @@ class Editor extends Component {
 	componentWillUnmount() {
 		document.body.removeEventListener("keydown", this.handleKeyDown, false)
 
+		ipcRenderer.removeEventListener("start-add-file", this.handleStartAddFile)
+		ipcRenderer.removeEventListener("finish-add-file", this.handleFinishAddFile)
 		ipcRenderer.removeListener("finish-add-content", this.handleFinishSaveContent)
 		ipcRenderer.removeListener("finish-save-content", this.handleFinishSaveContent)
 	}
@@ -161,6 +169,30 @@ class Editor extends Component {
 		} else {
 			ipcRenderer.send("add-content", currentBlog.name, savePost)
 		}
+	}
+
+	handleStartAddFile(e) {
+		// TODO
+		const { uploadFileCount, uploadFinishedFileCount } = this.state
+		this.setState({
+			uploadFileCount: uploadFileCount + 1
+		})
+	}
+
+	handleFinishAddFile(e) {
+		// TODO
+		const { uploadFileCount, uploadFinishedFileCount } = this.state
+		if (uploadFileCount == uploadFinishedFileCount + 1) {
+			this.setState({
+				uploadFileCount: 0,
+				uploadFinishedFileCount: 0
+			})
+		} else {
+			this.setState({
+				uploadFinishedFileCount: uploadFinishedFileCount + 1
+			})
+		}
+		
 	}
 
 	handleFinishSaveContent(e, postId, url) {
@@ -272,7 +304,14 @@ class Editor extends Component {
 
 	render() {
 		const { onFinish, categories, post } = this.props
-		const { title, content, categoryId, tags, showInfoBox, showLoading, showPreview, showEditorMode, popoverParent, editorMode } = this.state
+		const { title, content, categoryId, tags, showInfoBox, showLoading, showPreview, showEditorMode, popoverParent, editorMode, uploadFileCount, uploadFinishedFileCount } = this.state
+
+		let uploadMessage = "파일을 넣어주세요."
+		let uploading = false
+		if (uploadFileCount > 0) {
+			uploading = true
+			uploadMessage = `업로드 중 (${uploadFinishedFileCount} / ${uploadFileCount})`
+		}
 
 		return (
 			<div className="editor_wrap">
@@ -283,13 +322,13 @@ class Editor extends Component {
 					onCancelClick={this.handleCancel} />
 
 				<div className="editor">
-					<Dropzone disableClick={true} accept="image/*" activeClassName="droppable" style={{width: "100%",height:"100%"}}
+					<Dropzone disableClick={true} accept="image/*" className={classnames({droppable: uploading})} activeClassName="droppable" style={{width: "100%",height:"100%"}}
 						onDrop={this.handleDropFile}>
 
 						{this.getEditor()}
 
 						<div className="dropzone_box">
-							<b>파일을 넣어주세요.</b>
+							<b>{uploadMessage}</b>
 						</div>
 
 					</Dropzone>

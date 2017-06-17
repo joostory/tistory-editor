@@ -27,7 +27,7 @@ class TinymceEditor extends Component {
 
   handleFinishUploadFile(e, fileUrl) {
 		console.log("finishUploadFile", fileUrl)
-		tinymce.activeEditor.execCommand('mceInsertContent',false,'<figure><img src="'+fileUrl+'" /></figure>');
+		tinymce.activeEditor.execCommand('mceInsertContent', false, '<img src="'+fileUrl+'" />');
 	}
 
 	handlePaste(e) {
