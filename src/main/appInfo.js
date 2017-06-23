@@ -2,7 +2,7 @@ const { app, BrowserWindow, shell } = require('electron')
 const path = require('path')
 const url = require('url')
 const electronLocalshortcut = require('electron-localshortcut')
-const fetch = require('node-fetch')
+const fetch = require('isomorphic-fetch')
 
 let infoWindow
 

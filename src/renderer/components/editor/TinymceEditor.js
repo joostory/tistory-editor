@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { ipcRenderer, clipboard } from 'electron'
 import TinyMCE from 'react-tinymce'
+import OpengraphFetcher from '../../../lib/OpengraphFetcher'
 
 class TinymceEditor extends Component {
 
@@ -11,6 +12,7 @@ class TinymceEditor extends Component {
     this.handleFinishUploadFile = this.handleFinishUploadFile.bind(this)
 		this.handlePaste = this.handlePaste.bind(this)
 		this.handleDrop = this.handleDrop.bind(this)
+		this.handleFetchOpengraph = this.handleFetchOpengraph.bind(this)
   }
 
   componentWillMount() {
@@ -47,6 +49,10 @@ class TinymceEditor extends Component {
 		onImageHandler(Array.prototype.slice.call(e.dataTransfer.files))
 	}
 
+	handleFetchOpengraph(url, callback) {
+		OpengraphFetcher.fetch(url, callback)
+	}
+
   getContent() {
 		return tinymce.activeEditor.getContent()
   }
@@ -59,8 +65,8 @@ class TinymceEditor extends Component {
 				id='tinymce'
 				className='content'
 				config={{
-          plugins: 'link media table textcolor hr lists paste codeblock',
-					toolbar: 'formatselect bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock hr removeformat',
+          plugins: 'link table textcolor hr lists paste codeblock opengraph',
+					toolbar: 'formatselect bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock opengraph hr removeformat',
 					resize: false,
 					branding: false,
 					statusbar: false,
@@ -77,6 +83,9 @@ class TinymceEditor extends Component {
 					},
 					codeblock: {
 						highlightStyle: '../node_modules/highlightjs/styles/atom-one-dark.css'
+					},
+					opengraph: {
+						fetch_handler: this.handleFetchOpengraph
 					},
 					init_instance_callback: (editor) => {
 						editor.on("paste", this.handlePaste)
