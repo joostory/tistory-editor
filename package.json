@@ -1,7 +1,7 @@
 {
   "name": "tistory-editor",
   "productName": "TistoryEditor",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "description": "Editor for tistory",
   "main": "src/main/main.js",
   "scripts": {
@@ -52,6 +52,7 @@
     "webpack": "^2.6.1"
   },
   "dependencies": {
+    "cheerio": "^1.0.0-rc.1",
     "classnames": "^2.2.5",
     "dateformat": "^2.0.0",
     "debug": "^2.6.8",
