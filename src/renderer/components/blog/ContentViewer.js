@@ -9,6 +9,11 @@ import OpenInBrowser from 'material-ui/svg-icons/action/open-in-browser'
 import ModeEdit from 'material-ui/svg-icons/editor/mode-edit'
 import highlightjs from 'highlightjs'
 
+@connect(state => ({
+	currentBlog: state.currentBlog,
+	post: state.currentPost,
+	categories: state.categories
+}), dispatch => ({}))
 class ContentViewer extends Component {
 
 	constructor(props, context) {
@@ -98,21 +103,4 @@ ContentViewer.propTypes = {
 	onRequestEditPost: PropTypes.func.isRequired
 }
 
-const mapStateToProps = (state) => {
-  return {
-		currentBlog: state.currentBlog,
-		post: state.currentPost,
-		categories: state.categories
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    dispatch: dispatch
-  }
-}
-
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(ContentViewer)
+export default ContentViewer

@@ -25,6 +25,19 @@ import EditorToolbar from './EditorToolbar'
 import EditorInfoDialog from './EditorInfoDialog'
 import Loading from '../Loading'
 
+@connect((state) => ({
+	currentBlog: state.currentBlog,
+	post: state.currentPost,
+	categories: state.categories,
+	preferences: state.preferences
+}), dispatch => ({
+	onUpdate: (post) => {
+		dispatch(updatePost(post))
+	},
+	onAdd: (post) => {
+		dispatch(addPost(post))
+	}
+}))
 class Editor extends Component {
 	constructor(props, context) {
 		super(props, context)
@@ -380,28 +393,4 @@ Editor.propTypes = {
 	onFinish: PropTypes.func.isRequired
 }
 
-const mapStateToProps = (state) => {
-  return {
-		currentBlog: state.currentBlog,
-		post: state.currentPost,
-		categories: state.categories,
-		preferences: state.preferences
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onUpdate: (post) => {
-		dispatch(updatePost(post))
-	},
-
-	onAdd: (post) => {
-		dispatch(addPost(post))
-	}
-  }
-}
-
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(Editor)
+export default Editor

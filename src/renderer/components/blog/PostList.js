@@ -12,6 +12,19 @@ import { selectPost, lockPostsLoad } from '../../actions'
 
 let SelectableList = makeSelectable(List)
 
+@connect(state => ({
+	posts: state.posts,
+	currentPost: state.currentPost,
+	currentBlog: state.currentBlog,
+	categories: state.categories
+}), dispatch => ({
+	selectPost(post) {
+		dispatch(selectPost(post))
+	},
+	lockPostsLoad() {
+		dispatch(lockPostsLoad())
+	}
+}))
 class PostList extends Component {
 	constructor(props, context) {
 		super(props, context)
@@ -87,28 +100,4 @@ PostList.propTypes = {
 }
 
 
-const mapStateToProps = (state) => {
-  return {
-		posts: state.posts,
-		currentPost: state.currentPost,
-		currentBlog: state.currentBlog,
-		categories: state.categories
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    selectPost(post) {
-			dispatch(selectPost(post))
-		},
-
-		lockPostsLoad() {
-			dispatch(lockPostsLoad())
-		}
-  }
-}
-
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(PostList)
+export default PostList
