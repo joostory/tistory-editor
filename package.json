@@ -6,7 +6,7 @@
   "main": "src/main/main.js",
   "scripts": {
     "build": "NODE_ENV=production webpack --progress",
-    "watch": "NODE_ENV=development webpack --watch --progress",
+    "watch": "NODE_ENV=development webpack --watch",
     "app": "NODE_ENV=development electron .",
     "start": "concurrently \"npm run watch\" \"npm run app\"",
     "test": "jest -u",
