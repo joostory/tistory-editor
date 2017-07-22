@@ -43,13 +43,13 @@
     "babel-preset-react": "^6.23.0",
     "concurrently": "^3.4.0",
     "css-loader": "^0.28.4",
-    "electron": "^1.6.10",
+    "electron": "^1.6.11",
     "electron-builder": "^19.4.2",
     "jest": "^20.0.4",
     "object-assign": "^4.1.1",
     "react-test-renderer": "^15.4.2",
     "style-loader": "^0.18.1",
-    "webpack": "^2.6.1"
+    "webpack": "^3.3.0"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.1",
@@ -59,7 +59,7 @@
     "delta-to-html": "^0.1.4",
     "electron-json-storage": "^3.0.1",
     "electron-localshortcut": "^2.0.0",
-    "electron-oauth2": "^2.4.1",
+    "electron-oauth2": "^3.0.0",
     "form-data": "^2.1.2",
     "highlightjs": "^9.8.0",
     "isomorphic-fetch": "^2.2.1",
