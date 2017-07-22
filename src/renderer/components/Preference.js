@@ -9,6 +9,9 @@ import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton'
 
 import * as EditorMode from '../constants/EditorMode'
 
+@connect(state => ({
+	preferences: state.preferences
+}), dispatch => ({}))
 class Preference extends Component {
 
   constructor(props, context) {
@@ -76,19 +79,4 @@ Preference.propTypes = {
   preferences: PropTypes.object.isRequired
 }
 
-const mapStateToProps = (state) => {
-  return {
-		preferences: state.preferences
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    dispatch: dispatch
-  }
-}
-
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(Preference)
+export default Preference

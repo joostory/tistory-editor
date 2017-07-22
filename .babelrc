@@ -3,5 +3,6 @@
   "env": {
     "development": {
     }
-  }
+	},
+	"plugins": ["transform-decorators-legacy"]
 }

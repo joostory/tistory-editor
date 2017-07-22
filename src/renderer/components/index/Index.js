@@ -7,6 +7,14 @@ import { disconnectAuth, selectBlog } from '../../actions'
 import IndexProfile from './IndexProfile'
 import BlogList from './BlogList'
 
+@connect(state => ({
+	user: state.user,
+	blogs: state.blogs
+}), dispatch => ({
+	onSelectBlog(blog) {
+		dispatch(selectBlog(blog))
+	}
+}))
 class Index extends Component {
 
 	constructor(props, context) {
@@ -33,22 +41,4 @@ class Index extends Component {
 	}
 }
 
-const mapStateToProps = (state) => {
-  return {
-		user: state.user,
-		blogs: state.blogs
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onSelectBlog(blog) {
-			dispatch(selectBlog(blog))
-		}
-  }
-}
-
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(Index)
+export default Index

@@ -8,6 +8,14 @@ import IconButton from 'material-ui/IconButton'
 import NavigationBack from 'material-ui/svg-icons/navigation/arrow-back'
 import NoteAdd from 'material-ui/svg-icons/action/note-add'
 
+@connect(state => ({
+	user: state.user,
+	currentBlog: state.currentBlog
+}), dispatch => ({
+	handleGoIndex(e) {
+		dispatch(goIndex())
+	}
+}))
 class Header extends Component {
 
 	render() {
@@ -39,22 +47,4 @@ Header.propTypes = {
 	onRequestAddPost: PropTypes.func.isRequired
 }
 
-const mapStateToProps = (state) => {
-  return {
-		user: state.user,
-		currentBlog: state.currentBlog
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    handleGoIndex(e) {
-			dispatch(goIndex())
-		}
-  }
-}
-
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(Header)
+export default Header

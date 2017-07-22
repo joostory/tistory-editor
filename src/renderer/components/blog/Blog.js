@@ -9,6 +9,10 @@ import Editor from '../editor/Editor'
 import * as ContentMode from '../../constants/ContentMode'
 import Visibility from '../../model/Visibility'
 
+@connect(state => ({
+	user: state.user,
+	currentBlog: state.currentBlog
+}), dispatch => ({}))
 class Blog extends Component {
 
 	constructor(props, context) {
@@ -62,20 +66,4 @@ Blog.propTypes = {
 	currentBlog: PropTypes.object.isRequired
 }
 
-const mapStateToProps = (state) => {
-  return {
-		user: state.user,
-		currentBlog: state.currentBlog
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-		dispatch: dispatch
-  }
-}
-
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(Blog)
+export default Blog

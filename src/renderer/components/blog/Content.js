@@ -7,6 +7,9 @@ import * as ContentMode from '../../constants/ContentMode'
 import ContentViewer from './ContentViewer'
 import Editor from '../editor/Editor'
 
+@connect(state => ({
+	post: state.currentPost
+}), dispatch => ({}))
 class Content extends Component {
 
 	render() {
@@ -29,19 +32,4 @@ Content.propTypes = {
 	onRequestEditPost: PropTypes.func.isRequired
 }
 
-const mapStateToProps = (state) => {
-  return {
-		post: state.currentPost
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    dispatch: dispatch
-  }
-}
-
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(Content)
+export default Content
