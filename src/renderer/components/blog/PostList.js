@@ -21,7 +21,6 @@ let SelectableList = makeSelectable(List)
 	selectPost(post) {
 		dispatch(selectPost(post))
 	},
-
 	lockPostsLoad() {
 		dispatch(lockPostsLoad())
 	}

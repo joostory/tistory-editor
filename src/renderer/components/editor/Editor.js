@@ -31,10 +31,10 @@ import Loading from '../Loading'
 	categories: state.categories,
 	preferences: state.preferences
 }), dispatch => ({
-	onUpdate(post) {
+	onUpdate: (post) => {
 		dispatch(updatePost(post))
 	},
-	onAdd(post) {
+	onAdd: (post) => {
 		dispatch(addPost(post))
 	}
 }))

@@ -12,6 +12,11 @@ import Index from '../components/index/Index'
 import Blog from '../components/blog/Blog'
 import Preference from '../components/Preference'
 
+@connect(state => ({
+	user: state.user,
+	blogs: state.blogs,
+	currentBlog: state.currentBlog
+}), dispatch => ({}))
 class App extends Component {
 
 	constructor(props, context) {
@@ -87,21 +92,4 @@ App.propTypes = {
 	currentBlog: PropTypes.object
 }
 
-const mapStateToProps = (state) => {
-  return {
-		user: state.user,
-		blogs: state.blogs,
-		currentBlog: state.currentBlog
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    dispatch: dispatch
-  }
-}
-
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(App)
+export default App
