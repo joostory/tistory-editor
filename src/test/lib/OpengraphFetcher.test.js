@@ -19,14 +19,14 @@ it('Opengraph Fetch', async done => {
 		expect(opengraph.type).toBe(expected.type)
 		expect(opengraph.url).toBe(expected.url)
 		expect(opengraph.image).toBe(expected.image)
-		expect(opengraph.mediaUrl).toBe(undefined)
+		expect(opengraph.mediaUrl).toBe('')
 		done()
 	})
 })
 
 it('None Image', async done => {
 	await OpengraphFetcher.fetch("https://joostory.github.io/og.html", opengraph => {
-		expect(opengraph.image).toBe(undefined)
+		expect(opengraph.image).toBe('')
 		done()
 	})
 })
@@ -59,6 +59,16 @@ it('None opengraph', async done => {
 		expect(opengraph.title).toBe('TinyMCE | tinymce.Shortcuts')
 		expect(opengraph.description).toBe('Contains all logic for handling of keyboard shortcuts.')
 		expect(opengraph.image).toBe('https://www.tinymce.com/images/fb-share@2x.png')
+		expect(opengraph.type).toBe('website')
+		done()
+	})
+})
+
+it('not found', async done => {
+	await OpengraphFetcher.fetch('http://dev.joostory.net/study/html5_canvas_lines', opengraph => {
+		expect(opengraph.title).toBe('JooStory.net')
+		expect(opengraph.description).toBe('')
+		expect(opengraph.image).toBe('')
 		expect(opengraph.type).toBe('website')
 		done()
 	})

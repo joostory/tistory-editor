@@ -4,19 +4,25 @@ import { URL } from 'url'
 
 const makeTitle = ($) => {
 	let ogTitle = $('head meta[property="og:title"]').attr('content')
+	let htmlTitle = $('head title').text()
 	if (ogTitle) {
 		return ogTitle
+	} else if (htmlTitle) {
+		return htmlTitle
 	} else {
-		return $('head title').text()
+		return ''
 	}
 }
 
 const makeDescription = ($) => {
 	let ogDescription = $('head meta[property="og:description"]').attr('content')
+	let htmlDescription = $('head meta[name="description"]').attr('content')
 	if (ogDescription) {
 		return ogDescription
+	} else if (htmlDescription) {
+		return htmlDescription
 	} else {
-		return $('head meta[name="description"]').attr('content')
+		return ''
 	}
 }
 
@@ -33,6 +39,8 @@ const makeImage = ($) => {
 	let og = $('head meta[property="og:image"]').attr('content')
 	if (og) {
 		return og
+	} else {
+		return ''
 	}
 }
 
@@ -49,6 +57,8 @@ const makeMediaUrl = ($, url) => {
 	let og = $('head meta[property="og:video:url"]').attr('content')
 	if (og) {
 		return og
+	} else {
+		return ''
 	}
 }
 
