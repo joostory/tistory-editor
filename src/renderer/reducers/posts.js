@@ -1,5 +1,6 @@
 import * as types from '../constants/ActionTypes'
 import { combineReducers } from 'redux'
+import update from 'immutability-helper'
 
 const initialState = {
 	page: 0,
@@ -14,13 +15,19 @@ export default (state = initialState, action) => {
 		case types.GO_INDEX:
 			return initialState
 		case types.LOCK_POSTS_LOAD:
-			return Object.assign({}, state, {
-				lock: true
+			return update(state, {
+				lock: {
+					$set: true
+				}
 			})
 		case types.RECEIVE_POSTS_FAILED:
-			return Object.assign({}, state, {
-				hasNext: false,
-				lock: false
+			return update(sate, {
+				hasNext: {
+					$set: false
+				},
+				lock: {
+					$set: false
+				}
 			})
 		case types.RECEIVE_POSTS:
 			return {
@@ -30,17 +37,21 @@ export default (state = initialState, action) => {
 				lock: false
 			}
 		case types.UPDATE_POST:
-			let newList = [...state.list]
-			let index = newList.findIndex((item) => {
+			let index = state.list.findIndex((item) => {
 				return item.id == action.post.id
 			})
-			newList[index] = action.post
-			return Object.assign({}, state, {
-				list: newList
+			return update(state, {
+				list: {
+					[index]: {
+						$set: action.post
+					}
+				}
 			})
 		case types.ADD_POST:
-			return Object.assign({}, state, {
-				list: [action.post, ...state.list]
+			return update(state, {
+				list: {
+					$unshift: [action.post]
+				}
 			})
 		default:
 			return state
