@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { ipcRenderer } from 'electron'
+import autobind from 'autobind-decorator'
 import Quill from 'quill'
 import hljs from 'highlightjs'
 import deltaToHtml from 'delta-to-html'
@@ -16,7 +17,6 @@ class QuillEditor extends Component {
     this.state = {
       value: props.value
     }
-    this.handleFinishUploadFile = this.handleFinishUploadFile.bind(this)
   }
 
   componentWillMount() {
@@ -31,6 +31,7 @@ class QuillEditor extends Component {
 		return false
 	}
 
+	@autobind
   handleFinishUploadFile(e, fileUrl) {
 		console.log("finishUploadFile", fileUrl)
     let range = quillInstance.getSelection()

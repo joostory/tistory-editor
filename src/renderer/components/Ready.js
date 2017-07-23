@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { ipcRenderer } from 'electron'
+import autobind from 'autobind-decorator'
 
 import RaisedButton from 'material-ui/RaisedButton'
 
@@ -9,10 +10,9 @@ class Ready extends Component {
 
 	constructor(props, context) {
 		super(props, context)
-
-		this.handleRequestAuth = this.handleRequestAuth.bind(this)
 	}
 
+	@autobind
 	handleRequestAuth() {
 		ipcRenderer.send('request-auth')
 	}

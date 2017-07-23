@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { ipcRenderer, clipboard } from 'electron'
+import autobind from 'autobind-decorator'
 import TinyMCE from 'react-tinymce'
 import OpengraphFetcher from '../../../lib/OpengraphFetcher'
 
@@ -8,11 +9,6 @@ class TinymceEditor extends Component {
 
   constructor(props, context) {
     super(props, context)
-
-    this.handleFinishUploadFile = this.handleFinishUploadFile.bind(this)
-		this.handlePaste = this.handlePaste.bind(this)
-		this.handleDrop = this.handleDrop.bind(this)
-		this.handleFetchOpengraph = this.handleFetchOpengraph.bind(this)
   }
 
   componentWillMount() {
@@ -27,11 +23,13 @@ class TinymceEditor extends Component {
 		return false
 	}
 
+	@autobind
   handleFinishUploadFile(e, fileUrl) {
 		console.log("finishUploadFile", fileUrl)
 		tinymce.activeEditor.execCommand('mceInsertContent', false, '<img src="'+fileUrl+'" />');
 	}
 
+	@autobind
 	handlePaste(e) {
 		const { currentBlog } = this.props
 
@@ -44,11 +42,13 @@ class TinymceEditor extends Component {
 		}
 	}
 
+	@autobind
 	handleDrop(e) {
 		const { onImageHandler } = this.props
 		onImageHandler(Array.prototype.slice.call(e.dataTransfer.files))
 	}
 
+	@autobind
 	handleFetchOpengraph(url, callback) {
 		OpengraphFetcher.fetch(url, callback)
 	}

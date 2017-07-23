@@ -1,22 +1,14 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import classnames from 'classnames'
-import { connect } from 'react-redux'
 import { ipcRenderer } from 'electron'
+import autobind from 'autobind-decorator'
 import Snackbar from 'material-ui/Snackbar'
 
 import { receiveLocalPost, removeLocalPost, updateLocalPost } from '../actions'
 
-import Ready from '../components/Ready'
-import Index from '../components/index/Index'
-import Blog from '../components/blog/Blog'
+import Main from './Main'
 import Preference from '../components/Preference'
 
-@connect(state => ({
-	user: state.user,
-	blogs: state.blogs,
-	currentBlog: state.currentBlog
-}), dispatch => ({}))
 class App extends Component {
 
 	constructor(props, context) {
@@ -25,9 +17,6 @@ class App extends Component {
 			message: "",
 			messageOpen: false
 		}
-
-		this.handleReceiveMessage = this.handleReceiveMessage.bind(this)
-		this.handleMessageClose = this.handleMessageClose.bind(this)
 	}
 
 	componentWillMount() {
@@ -38,6 +27,7 @@ class App extends Component {
 		ipcRenderer.removeListener("receive-message", this.handleReceiveMessage)
 	}
 
+	@autobind
 	handleReceiveMessage(e, message) {
 		this.setState({
 			message: message,
@@ -45,6 +35,7 @@ class App extends Component {
 		})
 	}
 
+	@autobind
 	handleMessageClose() {
 		this.setState({
 			message: "",
@@ -53,23 +44,11 @@ class App extends Component {
 	}
 
 	render() {
-		const { user, currentBlog } = this.props
 		const { message, messageOpen, preferenceOpen } = this.state
-
-		let mainContainer;
-		if (user && currentBlog) {
-			mainContainer = <Blog />
-
-		} else if (user) {
-			mainContainer = <Index />
-
-		} else {
-			mainContainer = <Ready />
-		}
 
 		return (
 			<div>
-				{mainContainer}
+				<Main />
 
 				{messageOpen && message &&
 					<Snackbar
@@ -84,12 +63,6 @@ class App extends Component {
 			</div>
 		)
 	}
-}
-
-App.propTypes = {
-	user: PropTypes.object,
-	blogs: PropTypes.array,
-	currentBlog: PropTypes.object
 }
 
 export default App

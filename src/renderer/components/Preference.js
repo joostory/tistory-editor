@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { ipcRenderer } from 'electron'
+import autobind from 'autobind-decorator'
 import Dialog from 'material-ui/Dialog'
 import SelectField from 'material-ui/SelectField'
 import FlatButton from 'material-ui/FlatButton'
@@ -19,9 +20,6 @@ class Preference extends Component {
     this.state = {
       open: false
     }
-    this.handlePreferenceOpen = this.handlePreferenceOpen.bind(this)
-    this.handlePreferenceClose = this.handlePreferenceClose.bind(this)
-    this.handleChangeEditor = this.handleChangeEditor.bind(this)
   }
 
   componentWillMount() {
@@ -32,18 +30,21 @@ class Preference extends Component {
     ipcRenderer.removeListener("open-preference", this.handlePreferenceOpen)
   }
 
+	@autobind
   handlePreferenceOpen() {
     this.setState({
       open: true
     })
   }
 
+	@autobind
   handlePreferenceClose() {
     this.setState({
       open: false
     })
   }
 
+	@autobind
   handleChangeEditor(e, value) {
     const { preferences } = this.props
     let savePreferences = Object.assign({}, preferences, {
@@ -76,7 +77,7 @@ class Preference extends Component {
 }
 
 Preference.propTypes = {
-  preferences: PropTypes.object.isRequired
+  preferences: PropTypes.object
 }
 
 export default Preference

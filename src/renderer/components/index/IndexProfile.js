@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { ipcRenderer } from 'electron'
+import autobind from 'autobind-decorator'
 
 import Avatar from 'material-ui/Avatar'
 import RaisedButton from 'material-ui/RaisedButton'
@@ -10,10 +11,9 @@ class IndexProfile extends Component {
 
   constructor(props, context) {
 		super(props, context)
-
-    this.handleDisconnectAuth = this.handleDisconnectAuth.bind(this)
   }
 
+	@autobind
   handleDisconnectAuth() {
 		ipcRenderer.send("disconnect-auth")
 	}

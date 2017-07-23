@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { ipcRenderer, clipboard } from 'electron'
+import autobind from 'autobind-decorator'
 import Codemirror from 'react-codemirror'
 import toMarkdown from 'to-markdown'
 import marked from 'marked'
@@ -12,10 +13,6 @@ class MarkdownEditor extends Component {
     this.state = {
       value: toMarkdown(props.value)
     }
-
-    this.handleFinishUploadFile = this.handleFinishUploadFile.bind(this)
-		this.handlePaste = this.handlePaste.bind(this)
-		this.handleChangeContent = this.handleChangeContent.bind(this)
   }
 
   componentWillMount() {
@@ -36,6 +33,7 @@ class MarkdownEditor extends Component {
 		return false
 	}
 
+	@autobind
   handleFinishUploadFile(e, fileUrl) {
 		const { editor } = this.refs
 		console.log("finishUploadFile", fileUrl)
@@ -46,6 +44,7 @@ class MarkdownEditor extends Component {
 		}
 	}
 
+	@autobind
 	handlePaste(e) {
 		const { currentBlog } = this.props
 
@@ -60,6 +59,7 @@ class MarkdownEditor extends Component {
     return marked(value)
   }
 
+	@autobind
   handleChangeContent(value) {
     this.setState({
       value: value

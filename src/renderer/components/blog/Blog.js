@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { ipcRenderer } from 'electron'
+import autobind from 'autobind-decorator'
 
 import Sidebar from './Sidebar'
 import Content from './Content'
@@ -20,24 +21,23 @@ class Blog extends Component {
 		this.state = {
 			mode: ContentMode.VIEW
 		}
-
-		this.handleRequestAddPost = this.handleRequestAddPost.bind(this)
-		this.handleRequestEditPost = this.handleRequestEditPost.bind(this)
-		this.handleFinishEditor = this.handleFinishEditor.bind(this)
 	}
 
+	@autobind
 	handleRequestAddPost() {
 		this.setState({
 			mode: ContentMode.ADD
 		})
 	}
 
+	@autobind
 	handleRequestEditPost() {
 		this.setState({
 			mode: ContentMode.EDIT
 		})
 	}
 
+	@autobind
 	handleFinishEditor() {
 		this.setState({
 			mode: ContentMode.VIEW

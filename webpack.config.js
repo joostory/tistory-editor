@@ -13,7 +13,7 @@ module.exports = {
 	plugins: process.env.NODE_ENV !== "production" ? [] : [
 		new webpack.optimize.UglifyJsPlugin({
       compress: {
-        drop_console: true
+				drop_console: true
       }
     }),
 		new webpack.DefinePlugin({

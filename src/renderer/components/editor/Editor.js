@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
+import autobind from 'autobind-decorator'
 import dateformat from 'dateformat'
 import classnames from 'classnames'
 import Dropzone from 'react-dropzone'
@@ -52,29 +53,6 @@ class Editor extends Component {
 			uploadFileCount: 0,
 			uploadFinishedFileCount: 0
 		}, this.makePostState(props))
-
-		this.handleKeyDown = this.handleKeyDown.bind(this)
-		this.handleFinishSaveContent = this.handleFinishSaveContent.bind(this)
-		this.handleStartAddFile = this.handleStartAddFile.bind(this)
-		this.handleFinishAddFile = this.handleFinishAddFile.bind(this)
-		
-		this.handleOpenEditorMode = this.handleOpenEditorMode.bind(this)
-		this.handleCloseEditorMode = this.handleCloseEditorMode.bind(this)
-		this.handleDropFile = this.handleDropFile.bind(this)
-		
-		this.handleChangeTitle = this.handleChangeTitle.bind(this)
-		this.handleCancel = this.handleCancel.bind(this)
-		this.handleChangeTags = this.handleChangeTags.bind(this)
-		this.handleChangeCategory = this.handleChangeCategory.bind(this)
-		
-		this.handlePreview = this.handlePreview.bind(this)
-		this.handleClosePreview = this.handleClosePreview.bind(this)
-
-		this.handlePublishDialogOpen = this.handlePublishDialogOpen.bind(this)
-		this.handlePublishDialogClose = this.handlePublishDialogClose.bind(this)
-
-		this.handleSave = this.handleSave.bind(this)
-		this.handlePublish = this.handlePublish.bind(this)
 	}
 
 	makePostState(props) {
@@ -116,40 +94,47 @@ class Editor extends Component {
 		ipcRenderer.removeListener("finish-save-content", this.handleFinishSaveContent)
 	}
 
+	@autobind
 	handlePublishDialogClose() {
 		this.setState({
 			showInfoBox: false
 		})
 	}
 
+	@autobind
 	handlePublishDialogOpen() {
 		this.setState({
 			showInfoBox: true
 		})
 	}
 
+	@autobind
 	handleChangeTitle(e) {
 		this.setState({
 			title: e.target.value
 		})
 	}
 
+	@autobind
 	handleChangeTags(tags) {
 		this.setState({
 			tags: tags
 		})
 	}
 
+	@autobind
 	handleChangeCategory(e, index, value) {
 		this.setState({
 			categoryId: value
 		})
 	}
 
+	@autobind
 	handleSave() {
 		this.requestSave("0")
 	}
 
+	@autobind
 	handlePublish() {
 		this.requestSave("3")
 	}
@@ -184,6 +169,7 @@ class Editor extends Component {
 		}
 	}
 
+	@autobind
 	handleStartAddFile(e) {
 		// TODO
 		const { uploadFileCount, uploadFinishedFileCount } = this.state
@@ -192,6 +178,7 @@ class Editor extends Component {
 		})
 	}
 
+	@autobind
 	handleFinishAddFile(e) {
 		// TODO
 		const { uploadFileCount, uploadFinishedFileCount } = this.state
@@ -208,6 +195,7 @@ class Editor extends Component {
 		
 	}
 
+	@autobind
 	handleFinishSaveContent(e, postId, url) {
 		const { onFinish, post, mode, onUpdate, onAdd } = this.props
 		const { title, visibility, content, categoryId, tags } = this.state
@@ -237,6 +225,7 @@ class Editor extends Component {
 		onFinish()
 	}
 
+	@autobind
 	handleCancel() {
 		const { onFinish } = this.props
 
@@ -245,6 +234,7 @@ class Editor extends Component {
 		}
 	}
 
+	@autobind
 	handleOpenEditorMode(e) {
 		e.preventDefault()
 		this.setState({
@@ -253,6 +243,7 @@ class Editor extends Component {
 		})
 	}
 
+	@autobind
 	handleCloseEditorMode(e) {
 		this.setState({
 			showEditorMode: false
@@ -269,6 +260,7 @@ class Editor extends Component {
 		})
 	}
 
+	@autobind
 	handleKeyDown(e) {
 		let isMac = navigator.platform.indexOf("Mac") === 0
 		let commandKey = isMac? e.metaKey : e.ctrlKey
@@ -281,6 +273,7 @@ class Editor extends Component {
 		}
 	}
 
+	@autobind
 	handleDropFile(files) {
 		const { currentBlog } = this.props
 		files.map(file => {
@@ -288,6 +281,7 @@ class Editor extends Component {
 		})
 	}
 
+	@autobind
 	handlePreview() {
 		const { editor } = this.refs
 		this.setState({
@@ -296,6 +290,7 @@ class Editor extends Component {
 		})
 	}
 
+	@autobind
 	handleClosePreview() {
 		this.setState({
 			showPreview: false

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import classnames from 'classnames'
 import { ipcRenderer } from 'electron'
+import autobind from 'autobind-decorator'
 
 import { List, makeSelectable } from 'material-ui/List'
 import CircularProgress from 'material-ui/CircularProgress'
@@ -26,12 +27,6 @@ let SelectableList = makeSelectable(List)
 	}
 }))
 class PostList extends Component {
-	constructor(props, context) {
-		super(props, context)
-
-		this.handleScroll = this.handleScroll.bind(this)
-		this.handleSelectPost = this.handleSelectPost.bind(this)
-	}
 
 	componentDidMount() {
 		this.requestNextPage()
@@ -45,6 +40,7 @@ class PostList extends Component {
 		}
 	}
 
+	@autobind
 	handleScroll(e) {
 		const { clientHeight, scrollHeight, scrollTop } = e.target
 
@@ -53,6 +49,7 @@ class PostList extends Component {
 		}
 	}
 
+	@autobind
 	handleSelectPost(item) {
 		const { currentPost, selectPost } = this.props
 		if (currentPost && currentPost.id == item.id) {
