@@ -21,7 +21,7 @@ export default (state = initialState, action) => {
 				}
 			})
 		case types.RECEIVE_POSTS_FAILED:
-			return update(sate, {
+			return update(state, {
 				hasNext: {
 					$set: false
 				},
