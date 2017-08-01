@@ -7,7 +7,7 @@ import {fade} from 'material-ui/utils/colorManipulator'
 import ContentDrafts from 'material-ui/svg-icons/content/drafts'
 import Visibility from '../../model/Visibility'
 
-class PostList extends Component {
+class PostListItem extends Component {
 	render() {
 		const { post, category, selected, onSelect } = this.props
 
@@ -39,11 +39,11 @@ class PostList extends Component {
 	}
 }
 
-PostList.propTypes = {
+PostListItem.propTypes = {
 	post: PropTypes.object.isRequired,
 	category: PropTypes.object,
 	selected: PropTypes.bool,
 	onSelect: PropTypes.func.isRequired
 }
 
-export default PostList
+export default PostListItem
