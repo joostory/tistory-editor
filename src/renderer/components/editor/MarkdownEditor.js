@@ -5,14 +5,15 @@ import autobind from 'autobind-decorator'
 import Codemirror from 'react-codemirror'
 import toMarkdown from 'to-markdown'
 import marked from 'marked'
+import MarkdownHelper from './MarkdownHelper'
 
 class MarkdownEditor extends Component {
 
   constructor(props, context) {
     super(props, context)
     this.state = {
-      value: toMarkdown(props.value)
-    }
+      value: MarkdownHelper.htmlToMarkdown(props.value)
+		}
   }
 
   componentWillMount() {
@@ -56,7 +57,7 @@ class MarkdownEditor extends Component {
 
   getContent() {
     const { value } = this.state
-    return marked(value)
+    return MarkdownHelper.markdownToHtml(value)
   }
 
 	@autobind
