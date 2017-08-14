@@ -33,12 +33,9 @@ class TinymceEditor extends Component {
 	handlePaste(e) {
 		const { currentBlog } = this.props
 
-		let text = clipboard.readHTML()
 		let image = clipboard.readImage()
-		if (!text && !image.isEmpty()) {
+		if (!image.isEmpty()) {
 			ipcRenderer.send("add-clipboard-image", currentBlog.name)
-		} else {
-			tinymce.activeEditor.execCommand('mceInsertContent', false, text);
 		}
 	}
 
@@ -79,7 +76,10 @@ class TinymceEditor extends Component {
 					body_class: 'content',
 					content_css: '../src/css/content.css',
 					paste_preprocess: (plugin, args) => {
-						args.preventDefault()
+						let image = clipboard.readImage()
+						if (!image.isEmpty()) {
+							args.preventDefault()
+						}
 					},
 					codeblock: {
 						highlightStyle: '../node_modules/highlightjs/styles/atom-one-dark.css'
