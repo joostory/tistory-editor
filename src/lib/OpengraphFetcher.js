@@ -27,21 +27,15 @@ const makeDescription = ($) => {
 }
 
 const makeUrl = ($, url) => {
-	let og = $('head meta[property="og:url"]').attr('content')
-	if (og) {
-		return og
-	} else {
-		return url
-	}
+	const og = $('head meta[property="og:url"]').attr('content')
+	let result = og? og : url
+	return result.replace(/^\/\//, 'http://')
 }
 
 const makeImage = ($) => {
-	let og = $('head meta[property="og:image"]').attr('content')
-	if (og) {
-		return og
-	} else {
-		return ''
-	}
+	const og = $('head meta[property="og:image"]').attr('content')
+	let result = og? og : ''
+	return result.replace(/^\/\//, 'http://')
 }
 
 const makeType = ($, url) => {

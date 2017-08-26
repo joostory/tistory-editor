@@ -85,7 +85,7 @@
     "redux-thunk": "^2.2.0",
     "tinymce": "^4.6.5",
     "tinymce-plugin-codeblock": "^1.2.2",
-    "tinymce-plugin-opengraph": "^0.2.5",
+    "tinymce-plugin-opengraph": "^0.2.6",
     "to-markdown": "^3.1.0"
   },
   "jest": {

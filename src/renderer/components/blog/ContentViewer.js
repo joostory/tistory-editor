@@ -8,6 +8,7 @@ import CircularProgress from 'material-ui/CircularProgress'
 import OpenInBrowser from 'material-ui/svg-icons/action/open-in-browser'
 import ModeEdit from 'material-ui/svg-icons/editor/mode-edit'
 import highlightjs from 'highlightjs'
+import * as ContentHelper from '../../../lib/ContentHelper'
 
 @connect(state => ({
 	currentBlog: state.currentBlog,
@@ -84,7 +85,7 @@ class ContentViewer extends Component {
 							<CircularProgress size={50} thickness={5} />
 						</div>
 					}
-					<div ref="viewerContent" className="viewer_content content" dangerouslySetInnerHTML={{__html: post.content}} />
+					<div ref="viewerContent" className="viewer_content content" dangerouslySetInnerHTML={{__html: ContentHelper.makeUrlBase(post.content)}} />
 
           <div className="viewer_tags">
             {tags.map((item, i) => <Chip key={i} style={{marginRight:'4px'}}>{item}</Chip>)}
