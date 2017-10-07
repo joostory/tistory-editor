@@ -41,6 +41,10 @@ export const selectPost = (post) => {
 	return { type: types.SELECT_POST, post }
 }
 
+export const receivePostContent = (post) => {
+	return { type: types.RECEIVE_POST_CONTENT, post }
+}
+
 export const updatePost = (post) => {
 	return { type: types.UPDATE_POST, post }
 }

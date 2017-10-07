@@ -1,13 +1,13 @@
 import { ipcRenderer } from 'electron'
 import {
-  receiveUser,
-  receiveBlogs,
-  receivePosts,
-  receivePostsFailed,
-  receiveCategories,
-  selectPost,
-  disconnectAuth,
-  receivePreferences
+	receiveUser,
+	receiveBlogs,
+	receivePosts,
+	receivePostsFailed,
+	receiveCategories,
+	selectPost,
+	disconnectAuth,
+	receivePreferences, receivePostContent
 } from './index'
 
 export const registIpcEvent = (store) => {
@@ -35,7 +35,7 @@ export const registIpcEvent = (store) => {
   })
 
   ipcRenderer.on("receive-content", (e, post) => {
-  	store.dispatch(selectPost(post))
+  	store.dispatch(receivePostContent(post))
   })
 
   ipcRenderer.on("complete-disconnect-auth", (e) => {

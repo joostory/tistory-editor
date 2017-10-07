@@ -1,5 +1,5 @@
 import * as types from '../constants/ActionTypes'
-import { combineReducers } from 'redux'
+import update from 'immutability-helper'
 
 const initialState = null
 
@@ -12,6 +12,12 @@ export default (state = initialState, action) => {
 		case types.UPDATE_POST:
 		case types.SELECT_POST:
 			return action.post
+		case types.RECEIVE_POST_CONTENT:
+			return update(action.post, {
+				fetched: {
+					$set: true
+				}
+			})
 		default:
 			return state
 	}

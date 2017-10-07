@@ -35,8 +35,10 @@ class ContentViewer extends Component {
 	componentWillReceiveProps(nextProps) {
 		const { currentBlog, post } = nextProps
 		const { postId } = this.state
-		if (postId != post.id) {
-			this.setState({postId : post.id})
+		if (postId !== post.id) {
+			this.setState({
+				postId: post.id,
+			})
 			ipcRenderer.send("fetch-content", currentBlog.name, post.id)
 		}
 	}
@@ -49,7 +51,7 @@ class ContentViewer extends Component {
 	}
 
   render() {
-    const { currentBlog, post, categories, onRequestEditPost } = this.props
+    const { post, categories, onRequestEditPost } = this.props
 
     let category = categories.find(category => post.categoryId == category.id)
     let tags = []
@@ -80,7 +82,7 @@ class ContentViewer extends Component {
             </div>
           </div>
 
-					{!post.content &&
+					{!post.fetched &&
 						<div style={{textAlign:'center', marginTop:'100px'}}>
 							<CircularProgress size={50} thickness={5} />
 						</div>
@@ -98,9 +100,9 @@ class ContentViewer extends Component {
 }
 
 ContentViewer.propTypes = {
-	currentBlog: PropTypes.object.isRequired,
-  post: PropTypes.object.isRequired,
-  categories: PropTypes.array.isRequired,
+	currentBlog: PropTypes.object,
+  post: PropTypes.object,
+  categories: PropTypes.array,
 	onRequestEditPost: PropTypes.func.isRequired
 }
 
