@@ -74,12 +74,11 @@ body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; }
 .editor { position:absolute; left:0; right:0; top:56px; bottom:0; }
 .editor .mce-tinymce,
 .editor .Quill,
-.editor .ReactCodeMirror { position: absolute; top:0; bottom: 0; left: 0; right: 0 }
+.editor .ReactCodeMirror { position: absolute; top:0; bottom: 0; left: 0; right: 0; box-shadow:none }
 .editor .CodeMirror { height: 100%; padding:0 15px; font-family:Menlo, Consolas, 'DejaVu Sans Mono', monospace; background:transparent }
 .editor .ql-container { font-size:16px }
 .editor .mce-tinymce { border:0; background-color:#fff }
 .editor .mce-tinymce .mce-toolbar-grp { border:1px solid #eee; background-color:#fff }
-.editor .mce-tinymce .mce-toolbar-grp .mce-btn { background-color:#fff }
 .editor .mce-tinymce .mce-edit-area { border:0; position: absolute; top: 38px; bottom: 0; left: 0; right: 0; }
 
 .editor .dropzone_box { position:absolute; top:0; bottom:0; left:0; right:0; border:3px dashed #999; border-radius:10px; background-color:#eee; display:none; align-items: center; justify-content: center; z-index:20; color:#999 }

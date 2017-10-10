@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { ipcRenderer, clipboard } from 'electron'
 import autobind from 'autobind-decorator'
-import TinyMCE from 'react-tinymce'
+import TinyMCE from './Tinymce'
 import OpengraphFetcher from '../../../lib/OpengraphFetcher'
 
 class TinymceEditor extends Component {
