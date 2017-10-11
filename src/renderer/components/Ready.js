@@ -5,11 +5,16 @@ import { ipcRenderer } from 'electron'
 import autobind from 'autobind-decorator'
 
 import RaisedButton from 'material-ui/RaisedButton'
+import { pageview } from '../modules/AnalyticsHelper'
 
 class Ready extends Component {
 
 	constructor(props, context) {
 		super(props, context)
+	}
+
+	componentDidMount() {
+		pageview('/ready', '인증대기')
 	}
 
 	@autobind

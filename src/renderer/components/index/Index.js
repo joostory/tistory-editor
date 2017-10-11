@@ -8,6 +8,8 @@ import { disconnectAuth, selectBlog } from '../../actions'
 import IndexProfile from './IndexProfile'
 import BlogList from './BlogList'
 
+import { pageview } from '../../modules/AnalyticsHelper'
+
 @connect(state => ({
 	user: state.user,
 	blogs: state.blogs
@@ -20,6 +22,10 @@ class Index extends Component {
 
 	constructor(props, context) {
 		super(props, context)
+	}
+
+	componentDidMount() {
+		pageview('/index', 'Index')
 	}
 
 	@autobind

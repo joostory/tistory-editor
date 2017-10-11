@@ -26,6 +26,8 @@ import EditorToolbar from './EditorToolbar'
 import EditorInfoDialog from './EditorInfoDialog'
 import Loading from '../Loading'
 
+import { pageview } from '../../modules/AnalyticsHelper'
+
 @connect(state => ({
 	currentBlog: state.currentBlog,
 	post: state.currentPost,
@@ -74,6 +76,16 @@ class Editor extends Component {
 			}
 		}
 
+	}
+
+	componentDidMount() {
+		const { currentBlog, post } = this.props
+		if (post) {
+			pageview(`/blog/${currentBlog.blogId}/post/${post.id}/edit`, `${post.title}`)
+		} else {
+			pageview(`/blog/${currentBlog.blogId}/post`, '새 글 작성')
+		}
+		
 	}
 
 	componentWillMount() {

@@ -20,8 +20,8 @@ class Preference extends Component {
     this.state = {
       open: false
     }
-  }
-
+	}
+	
   componentWillMount() {
     ipcRenderer.on("open-preference", this.handlePreferenceOpen)
   }

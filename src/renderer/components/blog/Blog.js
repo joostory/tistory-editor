@@ -10,6 +10,8 @@ import Editor from '../editor/Editor'
 import * as ContentMode from '../../constants/ContentMode'
 import Visibility from '../../model/Visibility'
 
+import { pageview } from '../../modules/AnalyticsHelper'
+
 @connect(state => ({
 	user: state.user,
 	currentBlog: state.currentBlog
@@ -20,6 +22,13 @@ class Blog extends Component {
 		super(props, context)
 		this.state = {
 			mode: ContentMode.VIEW
+		}
+	}
+
+	componentDidMount() {
+		const { currentBlog } = this.props
+		if (currentBlog) {
+			pageview(`/blog/${currentBlog.blogId}`, `${currentBlog.name}`)
 		}
 	}
 
