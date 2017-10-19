@@ -1,4 +1,4 @@
-const storage = require('electron-json-storage')
+const settings = require('electron-settings')
 const oauth2 = require('electron-oauth2');
 const { app, BrowserWindow, Menu, shell } = require('electron')
 const path = require('path')
@@ -9,15 +9,14 @@ const appInfo = require('./appInfo')
 let mainWindow
 
 const initWindow = () => {
-  storage.get('config', (error, data) => {
-    if (error || !data) {
-      data = {
-        width: 1024,
-        height: 720
-      }
-    }
-    createWindow(data)
-  })
+	let data = settings.get('config')
+	if (!data) {
+		data = {
+			width: 1024,
+			height: 720
+		}
+	}
+	createWindow(data)
 }
 
 const createWindow = (config) => {
@@ -30,7 +29,7 @@ const createWindow = (config) => {
   mainWindow.setMenu(null)
 
   mainWindow.on("close", () => {
-    storage.set('config', mainWindow.getBounds())
+    settings.set('config', mainWindow.getBounds())
   })
 
   mainWindow.on('closed', function () {

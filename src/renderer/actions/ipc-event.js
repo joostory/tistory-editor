@@ -1,5 +1,8 @@
 import { ipcRenderer } from 'electron'
 import {
+	initialized,
+	startFetchUser,
+	endFetchUser,
 	receiveUser,
 	receiveBlogs,
 	receivePosts,
@@ -11,9 +14,20 @@ import {
 } from './index'
 
 export const registIpcEvent = (store) => {
-  ipcRenderer.send("fetch-user")
-  ipcRenderer.send("fetch-blogs")
+	ipcRenderer.send('fetch-initial-data')
   ipcRenderer.send("fetch-preferences")
+
+	ipcRenderer.on('initialized', (e) => {
+		store.dispatch(initialized())
+	})
+
+	ipcRenderer.on("start-fetch-user", (e, user) => {
+  	store.dispatch(startFetchUser(user))
+	})
+
+	ipcRenderer.on("end-fetch-user", (e, user) => {
+  	store.dispatch(endFetchUser(user))
+  })
 
   ipcRenderer.on("receive-user", (e, user) => {
   	store.dispatch(receiveUser(user))
