@@ -102,7 +102,7 @@ module.exports = () => {
 	})
 	
 	ipcMain.on("request-auth", (evt, arg) => {
-		tistory.getAccessToken(auth => {
+		tistory.getAccessToken.then(auth => {
 			settings.set('auth', auth)
 			fetchUser(evt, auth)
 			fetchBlogs(evt, auth)

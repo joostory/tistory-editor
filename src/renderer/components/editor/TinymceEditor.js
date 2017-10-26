@@ -4,6 +4,7 @@ import { ipcRenderer, clipboard } from 'electron'
 import autobind from 'autobind-decorator'
 import TinyMCE from 'react-tinymce'
 import OpengraphFetcher from '../../../lib/OpengraphFetcher'
+import '../../modules/tinymce/plugins/google-photos'
 
 class TinymceEditor extends Component {
 
@@ -62,8 +63,8 @@ class TinymceEditor extends Component {
 				id='tinymce'
 				className='content'
 				config={{
-          plugins: 'link table textcolor hr lists paste codeblock opengraph',
-					toolbar: 'formatselect bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock opengraph hr removeformat',
+          plugins: 'link table textcolor hr lists paste codeblock opengraph google-photos',
+					toolbar: 'formatselect bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock google-photos opengraph hr removeformat',
 					resize: false,
 					branding: false,
 					statusbar: false,

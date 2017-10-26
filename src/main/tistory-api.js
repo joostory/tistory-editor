@@ -17,19 +17,18 @@ const errorHandler = (res) => {
   return res.json()
 }
 
-module.exports.getAccessToken = (callback) => {
+module.exports.getAccessToken = () => {
   oauth2info = JSON.parse(fs.readFileSync(path.join(__dirname, "../../oauth2info.json"), 'utf8'))
-  const tistoryOAuth = oauth2(oauth2info, {
+  const tistoryOAuth = oauth2(oauth2info.tistory, {
     alwaysOnTop: true,
     autoHideMenuBar: true,
     webPreferences: {
-        nodeIntegration: false,
-				session: session.fromPartition("tistory:oauth2:" + new Date())
+			nodeIntegration: false,
+			session: session.fromPartition("tistory:oauth2:" + new Date())
     }
   })
 
   return tistoryOAuth.getAccessToken({})
-    .then(token => callback(token))
 }
 
 module.exports.fetchBlogInfo = (auth) => {

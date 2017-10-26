@@ -80,6 +80,17 @@ body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; }
 .editor .mce-tinymce { border:0; background-color:#fff }
 .editor .mce-tinymce .mce-toolbar-grp { border:1px solid #eee; background-color:#fff }
 .editor .mce-tinymce .mce-edit-area { border:0; position: absolute; top: 38px; bottom: 0; left: 0; right: 0; }
+.mce-google-photos { min-width:640px; min-height:480px }
+.mce-container-body { overflow:auto }
+.mce-google-photos .google-photos-wrap { position:absolute; top:0; bottom:0; left:0; right:0; overflow:auto }
+.mce-google-photos .google-photos-wrap .google-photos-cover { display: flex;justify-content: center;align-items: center; height: 100%;}
+.mce-google-photos .google-photos-wrap .google-photos-footer { display: flex;justify-content: center;align-items: center; height: 100px; }
+.mce-google-photos .google-photos-wrap div { color:#fff }
+.mce-google-photos .google-photos-wrap * { vertical-align:middle; line-height:inherit }
+.mce-google-photos .google-photos-wrap .photos-header { position:absolute; top:0; height:48px; left:0; right:0 }
+.mce-google-photos .google-photos-wrap .photos-header .album-title { color:rgba(0, 0, 0, 0.54); line-height:48px; font-weight:500; margin-left:10px; margin-right:10px }
+.mce-google-photos .google-photos-wrap .photos-list { position:absolute; top:48px; bottom:0; left:0; right:0; overflow:auto }
+
 
 .editor .dropzone_box { position:absolute; top:0; bottom:0; left:0; right:0; border:3px dashed #999; border-radius:10px; background-color:#eee; display:none; align-items: center; justify-content: center; z-index:20; color:#999 }
 .editor .droppable .dropzone_box { display:flex }

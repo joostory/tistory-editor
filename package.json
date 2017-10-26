@@ -87,7 +87,8 @@
     "tinymce-plugin-codeblock": "^1.3.0",
     "tinymce-plugin-opengraph": "^0.2.6",
     "to-markdown": "^3.1.0",
-    "uuid": "^3.1.0"
+    "uuid": "^3.1.0",
+    "xml2js": "^0.4.19"
   },
   "jest": {
     "testEnvironment": "node",
