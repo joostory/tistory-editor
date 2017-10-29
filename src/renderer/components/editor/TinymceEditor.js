@@ -69,7 +69,6 @@ class TinymceEditor extends Component {
 					branding: false,
 					statusbar: false,
 					menubar: false,
-					paste_as_text: true,
 					paste_data_images: true,
 					height: '100%',
 					file_picker_type: 'image',
