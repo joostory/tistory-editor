@@ -63,7 +63,7 @@ class TinymceEditor extends Component {
 				id='tinymce'
 				className='content'
 				config={{
-          plugins: 'link table textcolor hr lists paste codeblock opengraph google-photos',
+          plugins: 'link table textcolor hr lists paste codeblock opengraph google-photos autoresize',
 					toolbar: 'formatselect bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock google-photos opengraph hr removeformat',
 					resize: false,
 					branding: false,
