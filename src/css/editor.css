@@ -74,11 +74,12 @@ body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; }
 .editor { position:absolute; left:0; right:0; top:56px; bottom:0; }
 .editor .mce-tinymce,
 .editor .Quill,
-.editor .ReactCodeMirror { position: absolute; top:0; bottom: 0; left: 0; right: 0; box-shadow:none }
-.editor .CodeMirror { height: 100%; padding:0 15px; font-family:Menlo, Consolas, 'DejaVu Sans Mono', monospace; background:transparent }
+.editor .ReactCodeMirror { position: absolute; top:0; bottom: 0; left: 0; right: 0; box-shadow:none; overflow:auto }
+.editor .CodeMirror { width:700px; height:auto; margin:0 auto; padding:66px 0 15px; font-family:Menlo, Consolas, 'DejaVu Sans Mono', monospace; background:transparent }
 .editor .ql-container { font-size:16px }
 .editor .mce-tinymce { border:0; background-color:#fff; overflow:auto }
-.editor .mce-tinymce .mce-toolbar-grp { position:fixed; top:66px; width:700px; border:1px solid #eee; background-color:#fff; left: 50%; transform: translate(-50%,0); z-index:1 }
+.editor .editor-toolbar,
+.editor .mce-tinymce .mce-toolbar-grp { position:fixed; top:66px; width:700px; height:34px; background-color:#fff; left: 50%; transform: translate(-50%,0); z-index:10; box-shadow:rgba(0, 0, 0, 0.16) 0px 3px 10px, rgba(0, 0, 0, 0.23) 0px 3px 10px }
 .editor .mce-tinymce .mce-edit-area { border:0; margin: 46px auto; width:700px }
 .mce-google-photos { min-width:640px; min-height:480px }
 .mce-container-body { overflow:auto }
@@ -99,8 +100,7 @@ body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; }
 .preview_content { margin-top:25px }
 
 @media (min-width: 700px) {
-	.editor .Quill,
-	.editor .ReactCodeMirror { width:700px !important; left:50%; right:inherit; transform:translateX(-50%) }
+	.editor .Quill { width:700px !important; left:50%; right:inherit; transform:translateX(-50%) }
 }
 @media (max-width: 1040px) {
 	.viewer .viewer_header .viewer_title,
