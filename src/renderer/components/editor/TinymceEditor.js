@@ -5,6 +5,7 @@ import autobind from 'autobind-decorator'
 import TinyMCE from 'react-tinymce'
 import OpengraphFetcher from '../../../lib/OpengraphFetcher'
 import '../../modules/tinymce/plugins/google-photos'
+import '../../modules/tinymce/plugins/file-upload'
 
 class TinymceEditor extends Component {
 
@@ -27,7 +28,14 @@ class TinymceEditor extends Component {
 	@autobind
   handleFinishUploadFile(e, fileUrl) {
 		console.log("finishUploadFile", fileUrl)
-		tinymce.activeEditor.execCommand('mceInsertContent', false, '<img src="'+fileUrl+'" />');
+		const editor = tinymce.activeEditor
+		editor.execCommand('mceInsertContent', false, '<img id="__photos_new" src="'+fileUrl+'" />');
+		let $img = editor.$('#__photos_new')
+		$img.removeAttr('id')
+		$img.on('load', e => {
+			editor.nodeChanged()
+			$img.off('load')
+		})
 	}
 
 	@autobind
@@ -56,15 +64,15 @@ class TinymceEditor extends Component {
   }
 
 	render() {
-		const { value, currentBlog } = this.props
+		const { value, currentBlog, onOpenFile } = this.props
 
 		return (
 			<TinyMCE 
 				id='tinymce'
 				className='content'
 				config={{
-          plugins: 'link table textcolor hr lists paste codeblock opengraph google-photos autoresize',
-					toolbar: 'formatselect bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock google-photos opengraph hr removeformat',
+          plugins: 'link table textcolor hr lists paste codeblock opengraph google-photos file-upload autoresize',
+					toolbar: 'formatselect bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock google-photos file-upload opengraph hr removeformat',
 					resize: false,
 					branding: false,
 					statusbar: false,
@@ -87,6 +95,7 @@ class TinymceEditor extends Component {
 					opengraph: {
 						fetch_handler: this.handleFetchOpengraph
 					},
+					open_file_handler: onOpenFile,
 					init_instance_callback: (editor) => {
 						editor.on("paste", this.handlePaste)
 						editor.on("drop", this.handleDrop)

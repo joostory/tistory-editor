@@ -9,11 +9,13 @@ import MarkdownHelper from './MarkdownHelper'
 
 import FlatButton from 'material-ui/FlatButton'
 import IconButton from 'material-ui/IconButton'
-import EditorFormatBold from 'material-ui/svg-icons/editor/format-bold'
-import EditorFormatItalic from 'material-ui/svg-icons/editor/format-italic'
-import EditorFormatUnderlined from 'material-ui/svg-icons/editor/format-underlined'
+import IconEditorFormatBold from 'material-ui/svg-icons/editor/format-bold'
+import IconEditorFormatItalic from 'material-ui/svg-icons/editor/format-italic'
+import IconEditorFormatUnderlined from 'material-ui/svg-icons/editor/format-underlined'
+import IconFileAttachment from 'material-ui/svg-icons/file/attachment'
 
 import CodeMirrorHelper from './CodeMirrorHelper'
+import GooglePhotosDialog from './plugins/google-photos/GooglePhotosDialog'
 
 const MacKeymap = [
 	{ 'Cmd-2': (cm) => CodeMirrorHelper.header2(cm) },
@@ -38,7 +40,8 @@ class MarkdownEditor extends Component {
   constructor(props, context) {
     super(props, context)
     this.state = {
-      value: MarkdownHelper.htmlToMarkdown(props.value)
+			value: MarkdownHelper.htmlToMarkdown(props.value),
+			openGooglePhotos: false
 		}
   }
 
@@ -59,19 +62,11 @@ class MarkdownEditor extends Component {
 		keymap.map(map => cm.addKeyMap(map))
 	}
 
-	shouldComponentUpdate(nextProps, nextState) {
-		return false
-	}
-
 	@autobind
   handleFinishUploadFile(e, fileUrl) {
 		const { editor } = this.refs
 		console.log("finishUploadFile", fileUrl)
-		if (fileUrl) {
-			let cm = editor.getCodeMirror()
-			let CodeMirror = editor.getCodeMirrorInstance()
-			cm.replaceRange("![](" + fileUrl + ")\n\n", CodeMirror.Pos(cm.getCursor().line))
-		}
+		CodeMirrorHelper.insertImage(editor.getCodeMirror(), fileUrl)
 	}
 
 	@autobind
@@ -138,8 +133,29 @@ class MarkdownEditor extends Component {
 		CodeMirrorHelper.link(editor.getCodeMirror())
 	}
 
+	@autobind
+	handleGooglePhotos(e) {
+		this.setState({
+			openGooglePhotos: true
+		})
+	}
+
+	@autobind
+	handleCloseGooglePhotos() {
+		this.setState({
+			openGooglePhotos: false
+		})
+	}
+
+	@autobind
+	handleInsertImage(url) {
+		const { editor } = this.refs
+		CodeMirrorHelper.insertImage(editor.getCodeMirror(), url)
+	}
+
   render() {
-    const { value } = this.state
+		const { onOpenFile } = this.props
+    const { value, openGooglePhotos } = this.state
 
     const options = {
 			lineNumbers: false,
@@ -149,11 +165,10 @@ class MarkdownEditor extends Component {
 		}
 		
 		const iconButtonStyle = {
-			padding: '6px',
-			minWidth: '36px',
-			height: '36px',
-			lineHeight: '24px',
-			verticalAlign: 'center'
+			padding: '5px',
+			minWidth: '34px',
+			height: '34px',
+			lineHeight: '24px'
 		}
 
 		return (
@@ -161,13 +176,16 @@ class MarkdownEditor extends Component {
 				<div className="editor-toolbar">
 					<FlatButton onClick={this.handleHeader2} style={iconButtonStyle}>H2</FlatButton>
 					<FlatButton onClick={this.handleHeader3} style={iconButtonStyle}>H3</FlatButton>
-					<FlatButton onClick={this.handleBold} style={iconButtonStyle} icon={<EditorFormatBold />} />
-					<FlatButton onClick={this.handleItalic} style={iconButtonStyle} icon={<EditorFormatItalic />} />
-					<FlatButton onClick={this.handleUnderline} style={iconButtonStyle} icon={<EditorFormatUnderlined />} />
+					<FlatButton onClick={this.handleBold} style={iconButtonStyle} icon={<IconEditorFormatBold />} />
+					<FlatButton onClick={this.handleItalic} style={iconButtonStyle} icon={<IconEditorFormatItalic />} />
+					<FlatButton onClick={this.handleUnderline} style={iconButtonStyle} icon={<IconEditorFormatUnderlined />} />
 					<FlatButton onClick={this.handleLink} style={iconButtonStyle}>Link</FlatButton>
+					<FlatButton onClick={this.handleGooglePhotos} style={iconButtonStyle} icon={<img src='../src/images/google-photos-logo.png' />} />
+					<FlatButton onClick={onOpenFile} style={iconButtonStyle} icon={<IconFileAttachment />} />
 				</div>
 				<Codemirror ref="editor" options={options} value={value}
 					onChange={this.handleChangeContent} />
+				<GooglePhotosDialog open={openGooglePhotos} onClose={this.handleCloseGooglePhotos} onSelectImage={this.handleInsertImage} />
 			</div>
 		)
   }

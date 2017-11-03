@@ -309,6 +309,12 @@ class Editor extends Component {
 		})
 	}
 
+	@autobind
+	handleOpenFile() {
+		const { dropzone } = this.refs
+		dropzone.open()
+	}
+
 	getEditor() {
 		const { currentBlog } = this.props
 		const { content, editorMode } = this.state
@@ -316,9 +322,9 @@ class Editor extends Component {
 		if (editorMode == EditorMode.QUILL) {
 			return <QuillEditor ref="editor" value={content} currentBlog={currentBlog} onImageHandler={this.handleDropFile} />
 		} else if (editorMode == EditorMode.TINYMCE) {
-			return <TinymceEditor ref="editor" value={content} currentBlog={currentBlog} onImageHandler={this.handleDropFile} />
+			return <TinymceEditor ref="editor" value={content} currentBlog={currentBlog} onImageHandler={this.handleDropFile} onOpenFile={this.handleOpenFile} />
 		} else {
-			return <MarkdownEditor ref="editor" value={content} currentBlog={currentBlog} />
+			return <MarkdownEditor ref="editor" value={content} currentBlog={currentBlog} onOpenFile={this.handleOpenFile} />
 		}
 	}
 
@@ -342,7 +348,7 @@ class Editor extends Component {
 					onCancelClick={this.handleCancel} />
 
 				<div className="editor">
-					<Dropzone disableClick={true} accept="image/*" className={classnames({droppable: uploading})} activeClassName="droppable" style={{width: "100%",height:"100%"}}
+					<Dropzone ref='dropzone' disableClick={true} accept="image/*" className={classnames({droppable: uploading})} activeClassName="droppable" style={{width: "100%",height:"100%"}}
 						onDrop={this.handleDropFile}>
 
 						{this.getEditor()}

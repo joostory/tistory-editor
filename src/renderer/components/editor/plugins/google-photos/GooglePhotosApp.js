@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { ipcRenderer } from 'electron'
 import autobind from 'autobind-decorator'
 import RaisedButton from 'material-ui/RaisedButton'
-import Loading from '../../../../components/Loading'
+import Loading from '../../../Loading'
 import AlbumList from './AlbumList'
 import PhotoList from './PhotoList'
 
@@ -67,18 +67,10 @@ class GooglePhotosApp extends Component {
 
 	@autobind
 	handleImageSelect(image) {
-		const { editor } = this.props
+		const { onSelectImage } = this.props
 		if (confirm('이미지를 삽입하시겠습니까?')) {
-			editor.undoManager.transact(() => {
-				const url = image['content'][0]['$']['src']
-				editor.insertContent(`<img id="__photos_new" src="${url}" data-photos-src="${url}">`)
-				let $img = editor.$('#__photos_new')
-				$img.removeAttr('id')
-				$img.on('load', e => {
-					editor.nodeChanged()
-					$img.off('load')
-				})
-			})
+			const url = image['content'][0]['$']['src']
+			onSelectImage(url)
 		}
 	}
 

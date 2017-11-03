@@ -34,6 +34,12 @@ class CodeMirrorHelper {
 		doc.replaceRange(`${coverText} `, pos, pos)
 	}
 
+	static insertImage(cm, url) {
+		if (url) {
+			cm.replaceRange("![](" + url + ")\n\n", cm.getCursor())
+		}
+	}
+
 	static bold(cm) {
 		CodeMirrorHelper.wrapSelection(cm, '**')
 	}

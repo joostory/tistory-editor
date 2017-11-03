@@ -2,7 +2,7 @@ import React from 'react'
 import { render, unmountComponentAtNode } from 'react-dom'
 import autobind from 'autobind-decorator'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import GooglePhotosApp from './GooglePhotosApp'
+import GooglePhotosApp from '../../../../components/editor/plugins/google-photos/GooglePhotosApp'
 
 const plugin = (editor, pluginUrl) => {
 	const $ = editor.$
@@ -12,18 +12,26 @@ const plugin = (editor, pluginUrl) => {
 			title: 'Google Photos',
 			items: [{
 				type: 'container',
-				html: '<div class="mce-google-photos"></div>'
+				html: '<div class="plugin-google-photos"></div>'
 			}],
 			buttons: []
 		})
 
 		win.statusbar.remove()
-		const dialogContainer = win.$el.find(".mce-google-photos")[0]
+		const dialogContainer = win.$el.find(".plugin-google-photos")[0]
 	
 		render(
 			<MuiThemeProvider>
-				<GooglePhotosApp editor={editor} onClose={() => {
-					win.close()
+				<GooglePhotosApp onSelectImage={url => {
+					editor.undoManager.transact(() => {
+						editor.insertContent(`<img id="__photos_new" src="${url}" data-photos-src="${url}">`)
+						let $img = editor.$('#__photos_new')
+						$img.removeAttr('id')
+						$img.on('load', e => {
+							editor.nodeChanged()
+							$img.off('load')
+						})
+					})
 				}} />
 			</MuiThemeProvider>,
 			dialogContainer
@@ -37,7 +45,7 @@ const plugin = (editor, pluginUrl) => {
 	editor.addCommand('google-photos', handleButtonClick)
 	editor.addButton('google-photos', {
 		cmd: 'google-photos',
-		icon: 'image',
+		icon: 'google-photos',
 		tooltip: 'Google Photos'
 	})
 }
