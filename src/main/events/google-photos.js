@@ -22,7 +22,7 @@ module.exports = () => {
 				}
 			})
 		} else {
-			console.error("no auth", auth)
+			console.error("no auth")
 			evt.sender.send('receive-google-photos-albums', null)
 		}
 	}
@@ -47,7 +47,7 @@ module.exports = () => {
 				}
 			})
 		} else {
-			console.error("no auth", auth)
+			console.error("no auth")
 			evt.sender.send('receive-google-photos-images', null)
 		}
 	}
@@ -67,7 +67,7 @@ module.exports = () => {
 		})
 	})
 
-	ipcMain.on("disconnect-google-photo-auth", (evt, arg) => {
+	ipcMain.on("disconnect-google-photos-auth", (evt, arg) => {
 		settings.delete('google-auth')
 	})	
 }
