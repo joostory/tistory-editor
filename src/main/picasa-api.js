@@ -9,8 +9,6 @@ const {clipboard, session} = require('electron')
 const stream = require('stream')
 const { parseString } = require('xml2js')
 
-// const DATA_URI = "https://picasaweb.google.com/data/"
-
 const errorHandler = (res) => {
   if (!res.ok) {
 		console.error("fetch failed", res)

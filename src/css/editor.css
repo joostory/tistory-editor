@@ -84,7 +84,7 @@ body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; }
 .mce-container-body { overflow:auto }
 
 .mce-ico.mce-i-google-photos { background:url('../images/google-photos-logo.png') no-repeat; background-size:16px 16px }
-.plugin-google-photos { min-width:640px; min-height:480px; position: relative; }
+.plugin-google-photos { min-height:480px; position: relative; }
 .plugin-google-photos .google-photos-wrap { position:absolute; top:0; bottom:0; left:0; right:0; overflow:auto }
 .plugin-google-photos .google-photos-wrap .google-photos-cover { display: flex;justify-content: center;align-items: center; height: 100%;}
 .plugin-google-photos .google-photos-wrap .google-photos-footer { display: flex;justify-content: center;align-items: center; height: 100px; }
