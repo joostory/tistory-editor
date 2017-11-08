@@ -6,6 +6,7 @@ import Quill from 'quill'
 import hljs from 'highlightjs'
 import deltaToHtml from 'delta-to-html'
 import 'quill/dist/quill.snow.css'
+import '../../../css/quill-content.css'
 
 let quillInstance;
 
@@ -62,7 +63,8 @@ class QuillEditor extends Component {
 						}
 					}
 				}
-	    },
+			},
+			scrollingContainer: '#quill-scrolling-container',
 	    theme: 'snow'
     }
 
@@ -85,7 +87,7 @@ class QuillEditor extends Component {
 
     return (
       <div className="Quill">
-        <div ref="container" dangerouslySetInnerHTML={{__html:value}} />
+        <div ref="container" id="quill-scrolling-container" className="content" dangerouslySetInnerHTML={{__html:value}} />
 				<input ref="fileInput" type="file" accept="image/png, image/gif, image/jpeg, image/bmp, image/x-icon, image/svg+xml" className="ql-image" style={{display:'none'}}
 					onChange={(e) => {
 						let input = e.target
