@@ -70,23 +70,48 @@ body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; }
 .viewer .viewer_content { margin:20px auto 40px; word-wrap: break-word; max-width:700px }
 .viewer .viewer_tags { display: flex; flex-wrap: wrap; margin: 20px auto; max-width:700px }
 
+@media (max-width: 1040px) {
+	.viewer .viewer_header .viewer_title,
+	.viewer .viewer_content,
+	.viewer .viewer_tags { margin-left:20px; margin-right:20px }
+}
+
+/* editor */
 .editor_wrap { position:absolute; z-index:2; top:0; bottom:0; left:0; right:0; overflow:hidden; background-color:#fff }
 .editor { position:absolute; left:0; right:0; top:56px; bottom:0; }
 .editor .mce-tinymce,
 .editor .Quill,
 .editor .ReactCodeMirror { position: absolute; top:0; bottom: 0; left: 0; right: 0; box-shadow:none; overflow:auto }
-.editor .CodeMirror { width:700px; height:auto; margin:0 auto; padding:66px 0 15px; font-family:Menlo, Consolas, 'DejaVu Sans Mono', monospace; background:transparent }
-.editor .ql-container { font-size:16px }
-.editor .mce-tinymce { border:0; background-color:#fff; overflow:auto }
+
 .editor .Quill .ql-toolbar,
 .editor .editor-toolbar,
 .editor .mce-tinymce .mce-toolbar-grp { position:fixed; top:66px; width:700px; height:34px; background-color:#fff; left: 50%; transform: translate(-50%,0); z-index:10; box-shadow:rgba(0, 0, 0, 0.16) 0px 3px 10px, rgba(0, 0, 0, 0.23) 0px 3px 10px; padding:3px; border-radius:3px }
 .editor .Quill .ql-editor,
 .editor .mce-tinymce .mce-edit-area { border:0; margin: 46px auto; width:700px; overflow-y:inherit }
-.mce-container-body { overflow:auto }
-
 .editor .Quill .ql-editor { width:700px; margin:0 auto; padding:46px auto; }
 
+.editor .dropzone_box { position:absolute; top:0; bottom:0; left:0; right:0; border:3px dashed #999; border-radius:10px; background-color:#eee; display:none; align-items: center; justify-content: center; z-index:20; color:#999 }
+.editor .droppable .dropzone_box { display:flex }
+
+.btn_change_editor { position:absolute; right:40px; bottom:30px; z-index:10 }
+.preview_content { margin-top:25px }
+
+/* tinymce */
+.editor .mce-tinymce { border:0; background-color:#fff; overflow:auto }
+.mce-container-body { overflow:auto }
+
+/* codemirror */
+.editor .CodeMirror { width:700px; height:auto; margin:0 auto; padding:66px 0 15px; font-family:Menlo, Consolas, 'DejaVu Sans Mono', monospace; background:transparent }
+.editor .CodeMirror .CodeMirror-dialog { position:fixed; top:112px; width:700px; background-color:#fff; left: 50%; transform: translate(-50%,0); z-index:10; box-shadow:rgba(0, 0, 0, 0.16) 0px 3px 10px, rgba(0, 0, 0, 0.23) 0px 3px 10px; padding:3px; border-radius:3px }
+
+/* quill editor */
+.editor .ql-container { font-size:16px }
+.Quill .ql-toolbar.ql-snow { border:0 }
+.Quill .ql-container.ql-snow { height:auto; position:absolute; top:40px; bottom:0; left:0; right:0; border:0 }
+.Quill blockquote:before,
+.Quill blockquote:after { content:'' }
+
+/* photos plugin */
 .mce-ico.mce-i-google-photos { background:url('../images/google-photos-logo.png') no-repeat; background-size:16px 16px }
 .mce-container .plugin-google-photos { min-width:640px }
 .plugin-google-photos { min-height:480px; position: relative; }
@@ -98,21 +123,3 @@ body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; }
 .plugin-google-photos .google-photos-wrap .photos-header { position:absolute; top:0; height:48px; left:0; right:0 }
 .plugin-google-photos .google-photos-wrap .photos-header .album-title { color:rgba(0, 0, 0, 0.54); line-height:48px; font-weight:500; margin-left:10px; margin-right:10px }
 .plugin-google-photos .google-photos-wrap .photos-list { position:absolute; top:48px; bottom:0; left:0; right:0; overflow:hidden; overflow-y:auto }
-
-.editor .dropzone_box { position:absolute; top:0; bottom:0; left:0; right:0; border:3px dashed #999; border-radius:10px; background-color:#eee; display:none; align-items: center; justify-content: center; z-index:20; color:#999 }
-.editor .droppable .dropzone_box { display:flex }
-
-.btn_change_editor { position:absolute; right:40px; bottom:30px; z-index:10 }
-.preview_content { margin-top:25px }
-
-@media (max-width: 1040px) {
-	.viewer .viewer_header .viewer_title,
-	.viewer .viewer_content,
-	.viewer .viewer_tags { margin-left:20px; margin-right:20px }
-}
-
-/* quill editor */
-.Quill .ql-toolbar.ql-snow { border:0 }
-.Quill .ql-container.ql-snow { height:auto; position:absolute; top:40px; bottom:0; left:0; right:0; border:0 }
-.Quill blockquote:before,
-.Quill blockquote:after { content:'' }
