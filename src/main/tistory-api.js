@@ -17,6 +17,8 @@ const errorHandler = (res) => {
   return res.json()
 }
 
+const BASE_URL = 'https://www.tistory.com/apis'
+
 module.exports.getAccessToken = () => {
   oauth2info = JSON.parse(fs.readFileSync(path.join(__dirname, "../../oauth2info.json"), 'utf8'))
   const tistoryOAuth = oauth2(oauth2info.tistory, {
@@ -32,7 +34,7 @@ module.exports.getAccessToken = () => {
 }
 
 module.exports.fetchBlogInfo = (auth) => {
-  return fetch("https://www.tistory.com/apis/blog/info?" + querystring.stringify({
+  return fetch(BASE_URL + "/blog/info?" + querystring.stringify({
     access_token: auth.access_token,
     output: "json"
   }))
@@ -40,7 +42,7 @@ module.exports.fetchBlogInfo = (auth) => {
 }
 
 module.exports.fetchUser = (auth) => {
-  return fetch("https://www.tistory.com/apis/user/?" + querystring.stringify({
+  return fetch(BASE_URL + "/user/?" + querystring.stringify({
     access_token: auth.access_token,
     output: "json"
   }))
@@ -48,7 +50,7 @@ module.exports.fetchUser = (auth) => {
 }
 
 module.exports.fetchPosts = (auth, blogName, page) => {
-  return fetch("https://www.tistory.com/apis/post/list?" + querystring.stringify({
+  return fetch(BASE_URL + "/post/list?" + querystring.stringify({
     access_token: auth.access_token,
     output: "json",
     blogName: blogName,
@@ -59,7 +61,7 @@ module.exports.fetchPosts = (auth, blogName, page) => {
 }
 
 module.exports.fetchContent = (auth, blogName, postId) => {
-  return fetch("https://www.tistory.com/apis/post/read?" + querystring.stringify({
+  return fetch(BASE_URL + "/post/read?" + querystring.stringify({
     access_token: auth.access_token,
     output: "json",
     blogName: blogName,
@@ -69,7 +71,7 @@ module.exports.fetchContent = (auth, blogName, postId) => {
 }
 
 module.exports.fetchCategories = (auth, blogName) => {
-  return fetch("https://www.tistory.com/apis/category/list?" + querystring.stringify({
+  return fetch(BASE_URL + "/category/list?" + querystring.stringify({
     access_token: auth.access_token,
     output: "json",
     blogName: blogName
@@ -81,7 +83,7 @@ module.exports.saveContent = (auth, blogName, post) => {
   let formdata = makePostFormData(auth, blogName, post)
   formdata.append("postId", post.id)
 
-  return fetch("https://www.tistory.com/apis/post/modify", {
+  return fetch(BASE_URL + "/post/modify", {
     method: 'post',
     body: formdata
   })
@@ -91,7 +93,7 @@ module.exports.saveContent = (auth, blogName, post) => {
 module.exports.addContent = (auth, blogName, post) => {
   let formdata = makePostFormData(auth, blogName, post)
 
-  return fetch("https://www.tistory.com/apis/post/write", {
+  return fetch(BASE_URL + "/post/write", {
     method: 'post',
     body: formdata
   })
@@ -141,7 +143,7 @@ const uploadFile = (accessToken, blogName, fileBlob, fileOption) => {
   formdata.append("blogName", blogName)
   formdata.append("uploadedfile", fileBlob, fileOption)
 
-  return fetch("https://www.tistory.com/apis/post/attach", {
+  return fetch(BASE_URL + "/post/attach", {
     method: 'post',
     body: formdata
   })
