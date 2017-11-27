@@ -55,52 +55,6 @@ module.exports = () => {
 		fetchBlogs(evt, auth)
 	})
 	
-	ipcMain.on("fetch-posts", (evt, blogName, page) => {
-		let auth = settings.get('auth')
-		if (!auth || !auth.access_token) {
-			console.log("fetch-posts auth error")
-			return
-		}
-
-		tistory.fetchPosts(auth, blogName, page).then(res => {
-			evt.sender.send('receive-posts', {
-				page: res.tistory.item.page,
-				posts: [].concat(res.tistory.item.posts),
-				hasNext: res.tistory.item.totalCount > res.tistory.item.page * res.tistory.item.count
-			})
-		}).catch(err => {
-			console.error("fetch-posts error", err)
-			evt.sender.send('receive-message', '글 목록을 불러오지 못했습니다.')
-			evt.sender.send('receive-posts-failed')
-		})
-	})
-	
-	ipcMain.on("fetch-categories", (evt, blogName) => {
-		let auth = settings.get('auth')
-			if (!auth || !auth.access_token) {
-			evt.sender.send('receive-categories', [])
-			return
-		}
-
-		tistory.fetchCategories(auth, blogName).then(res => {
-			let categories = []
-			if (res.tistory.item.categories) {
-				categories = [].concat(res.tistory.item.categories).map(category => {
-					return {
-						'id': category.id,
-						'parent': category.parent,
-						'label': category.label
-					}
-				})
-			}
-
-			evt.sender.send('receive-categories', categories)
-		}).catch(err => {
-			console.error(err)
-			evt.sender.send('receive-categories', [])
-		})
-	})
-	
 	ipcMain.on("request-auth", (evt, arg) => {
 		tistory.getAccessToken().then(auth => {
 			settings.set('auth', auth)
