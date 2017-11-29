@@ -31,7 +31,7 @@ $ npm run app
 ## 앱 생성 (배포)
 
 ```
-# 현재 플랫폼으로 앱생성
+# 윈도우, 리눅스(AppImage), 맥(zip) 앱 생성
 $ npm run dist
 
 # 윈도우 앱생성
@@ -42,7 +42,4 @@ $ npm run dist-linux
 
 # 맥 앱생성 (dmg)
 $ npm run dist-mac
-
-# 윈도우, 리눅스(AppImage), 맥(zip) 앱 생성
-$ npm run dist-all
 ```
