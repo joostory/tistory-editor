@@ -1,14 +1,9 @@
-osx_image: xcode8.3
-
 dist: trusty
-
 sudo: false
-
-services:
-	- docker
 
 language: node_js
 node_js: '6'
+
 os:
 	- linux
 	- osx
