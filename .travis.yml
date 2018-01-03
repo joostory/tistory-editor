@@ -5,35 +5,35 @@ language: node_js
 node_js: '6'
 
 os:
-	- linux
-	- osx
+  - linux
+  - osx
 
 env:
   global:
-		- ELECTRON_CACHE=$HOME/.cache/electron
-		- ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+    - ELECTRON_CACHE=$HOME/.cache/electron
+    - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
 
 cache:
   directories:
-		- node_modules
-		- $HOME/.cache/electron
-		- $HOME/.cache/electron-builder
+    - node_modules
+    - $HOME/.cache/electron
+    - $HOME/.cache/electron-builder
 
 addons:
-	apt:
-		packages:
-			- rpm
+  apt:
+    packages:
+      - rpm
 
 install:
-	- npm install
+  - npm install
 
 script:
-	- npm run dist
+  - npm run dist
 
 
 before_cache:
-	- rm -rf $HOME/.cache/electron-builder/wine
+  - rm -rf $HOME/.cache/electron-builder/wine
 
 
 notifications:
-email: false
+  email: false
