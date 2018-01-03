@@ -9,13 +9,16 @@ directories:
 
 files:
   - package.json
-  - init.js
-  - build/
+  - oauth2info.json
+  - src/lib/
+  - src/main/
+  - src/css/
+  - app/
   - node_modules/
 
 mac:
   target: zip
-  category: public.app-category.tools
+  category: public.app-category.utilities
 
 win:
   target: nsis
