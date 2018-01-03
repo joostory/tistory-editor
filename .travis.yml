@@ -1,0 +1,44 @@
+osx_image: xcode8.3
+
+dist: trusty
+
+sudo: false
+
+services:
+	- docker
+
+language: node_js
+node_js: '6'
+os:
+	- linux
+	- osx
+
+env:
+  global:
+		- ELECTRON_CACHE=$HOME/.cache/electron
+		- ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+
+cache:
+  directories:
+		- node_modules
+		- $HOME/.cache/electron
+		- $HOME/.cache/electron-builder
+
+addons:
+	apt:
+		packages:
+			- rpm
+
+install:
+	- npm install
+
+script:
+	- npm run dist
+
+
+before_cache:
+	- rm -rf $HOME/.cache/electron-builder/wine
+
+
+notifications:
+email: false
