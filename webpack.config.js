@@ -38,5 +38,5 @@ module.exports = {
 			}
 		]
 	},
-	target: "electron"
+	target: "electron-renderer"
 }
