@@ -77,10 +77,11 @@ class TinymceEditor extends Component {
 					branding: false,
 					statusbar: false,
 					menubar: false,
-					paste_data_images: true,
+          paste_data_images: true,
+          extended_valid_elements : 'script[type|src]',
 					height: '100%',
 					file_picker_type: 'image',
-					block_formats: '문단=p;제목 2=h2;제목 3=h3',
+					block_formats: '문단=p;주제=h2;소주제=h3',
 					body_class: 'content',
 					content_css: '../src/css/content.css',
 					paste_preprocess: (plugin, args) => {
