@@ -18,6 +18,9 @@ cache:
   - "$HOME/.cache/electron"
   - "$HOME/.cache/electron-builder"
 
+before_install:
+- openssl aes-256-cbc -K $encrypted_8307fd996c28_key -iv $encrypted_8307fd996c28_iv -in oauth2info.json.enc -out oauth2info.json -d
+
 install:
 - npm install
 
