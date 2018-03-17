@@ -1,7 +1,7 @@
 const settings = require('electron-settings')
 const { ipcMain, clipboard } = require('electron')
 const dateformat = require('dateformat')
-const tistory = require('../tistory-api')
+const tistory = require('../apis/tistory-api')
 
 const fetchUser = (evt, auth) => {
 	evt.sender.send('start-fetch-user', {})

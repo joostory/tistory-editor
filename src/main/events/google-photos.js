@@ -1,6 +1,6 @@
 const { ipcMain } = require('electron')
 const settings = require('electron-settings')
-const picasa = require('../picasa-api')
+const picasa = require('../apis/picasa-api')
 
 module.exports = () => {
 	const fetchAlbums = (evt) => {

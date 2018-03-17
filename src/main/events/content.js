@@ -1,7 +1,7 @@
 const settings = require('electron-settings')
 const { ipcMain, clipboard } = require('electron')
 const dateformat = require('dateformat')
-const tistory = require('../tistory-api')
+const tistory = require('../apis/tistory-api')
 
 module.exports = () => {
 	ipcMain.on("fetch-posts", (evt, blogName, page) => {

@@ -3,7 +3,7 @@ const path = require('path')
 const fs = require('fs')
 const fetch = require('isomorphic-fetch')
 const querystring = require('querystring')
-const ipc = require('./ipc-event')
+const ipc = require('../ipc-event')
 const FormData = require('form-data')
 const {clipboard, session} = require('electron')
 const stream = require('stream')
@@ -18,7 +18,7 @@ const errorHandler = (res) => {
   return res.text()
 }
 
-const oauth2info = JSON.parse(fs.readFileSync(path.join(__dirname, "../../oauth2info.json"), 'utf8'))
+const oauth2info = JSON.parse(fs.readFileSync(path.join(__dirname, "../../../oauth2info.json"), 'utf8'))
 let googleOAuth = null
 
 const makeGoogleOAuth = () => {
