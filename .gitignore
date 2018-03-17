@@ -3,3 +3,4 @@ __snapshots__
 dist
 .vscode
 .idea
+app/editor.min.js
