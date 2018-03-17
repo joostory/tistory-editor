@@ -1,7 +1,16 @@
 {
-	"clientId": "CLIENT_ID",
-	"clientSecret": "CLIENT_SECRET",
-	"authorizationUrl": "https://www.tistory.com/oauth/authorize",
-	"tokenUrl": "https://www.tistory.com/oauth/access_token",
-	"redirectUri": "http://localhost"
+  "tistory": {
+    "clientId": "CLIENT_ID",
+    "clientSecret": "CLIENT_SECRET",
+    "authorizationUrl": "https://www.tistory.com/oauth/authorize",
+    "tokenUrl": "https://www.tistory.com/oauth/access_token",
+    "redirectUri": "http://localhost"
+	},
+	"google": {
+    "clientId": "CLIENT_ID",
+    "clientSecret": "CLIENT_SECRET",
+    "authorizationUrl": "https://accounts.google.com/o/oauth2/auth",
+		"tokenUrl": "https://accounts.google.com/o/oauth2/token",
+		"redirectUri": "http://localhost"
+	}
 }
