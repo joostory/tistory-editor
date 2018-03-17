@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { ipcRenderer, clipboard } from 'electron'
 import autobind from 'autobind-decorator'
 import TinyMCE from 'react-tinymce'
-import OpengraphFetcher from '../../../lib/OpengraphFetcher'
+import OpengraphFetcher from 'opengraph-fetcher'
 import '../../modules/tinymce/plugins/google-photos'
 import '../../modules/tinymce/plugins/file-upload'
 
