@@ -4,3 +4,4 @@ dist
 .vscode
 .idea
 app/editor.min.js
+.oauth2info.json

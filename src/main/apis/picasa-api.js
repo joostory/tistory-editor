@@ -8,6 +8,7 @@ const FormData = require('form-data')
 const {clipboard, session} = require('electron')
 const stream = require('stream')
 const { parseString } = require('xml2js')
+const Oauth2infoReader = require('../Oauth2infoReader')
 
 const errorHandler = (res) => {
   if (!res.ok) {
@@ -18,12 +19,13 @@ const errorHandler = (res) => {
   return res.text()
 }
 
-const oauth2info = JSON.parse(fs.readFileSync(path.join(__dirname, "../../../oauth2info.json"), 'utf8'))
+const oauth2infoReader = new Oauth2infoReader()
+const oauth2info = oauth2infoReader.getGoogle()
 let googleOAuth = null
 
 const makeGoogleOAuth = () => {
 	if (!googleOAuth) {
-		googleOAuth = oauth2(oauth2info.google, {
+		googleOAuth = oauth2(oauth2info, {
 			alwaysOnTop: true,
 			autoHideMenuBar: true,
 			webPreferences: {
