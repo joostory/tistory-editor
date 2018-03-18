@@ -32,8 +32,6 @@ deploy:
   provider: releases
   api_key:
     secure: $GH_TOKEN
-  file:
-    - "dist/TistoryEditor-*-*.*"
+  skin_cleanup: true
   on:
     tags: true
-    repo: joostory/tistory-editor
