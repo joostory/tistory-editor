@@ -1,6 +1,7 @@
 appId: net.joostory.tistory-editor
 copyright: Joo
 productName: TistoryEditor
+artifactName: ${productName}-${version}-${os}.${ext}
 
 asar: true
 

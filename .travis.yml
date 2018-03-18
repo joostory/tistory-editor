@@ -2,36 +2,38 @@ dist: trusty
 sudo: false
 language: node_js
 node_js: '6'
-
 os:
 - linux
 - osx
-
 env:
   global:
   - ELECTRON_CACHE=$HOME/.cache/electron
   - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
-
 cache:
   directories:
   - node_modules
   - "$HOME/.cache/electron"
   - "$HOME/.cache/electron-builder"
-
 before_install:
-- openssl aes-256-cbc -K $encrypted_8307fd996c28_key -iv $encrypted_8307fd996c28_iv -in oauth2info.json.enc -out oauth2info.json -d
-
+- openssl aes-256-cbc -K $encrypted_8307fd996c28_key -iv $encrypted_8307fd996c28_iv
+  -in oauth2info.json.enc -out oauth2info.json -d
 install:
 - npm install
-
 script:
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run build; npm run dist; fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run build; npm run dist -- -mw; fi
-
 before_cache:
 - rm -rf $HOME/.cache/electron-builder/wine
-
 notifications:
   email: false
   slack:
-    secure: NMvT/iGYZ9bQJJDEJXgcXIwGpoU/7wl8gAJAslkwa4qC2NcTKEqxkH2tGgYuGU+pVRiigTZJdv8bC7NXVJfR0uu0q1SXjAwU63PO5zL0s+zeHIJ+xe3XZeandCnNL5PGO7h4t3+Jzt7z5oIKw5amOmxmmPQbGEfOUgsleZGfouxNVd0mSOGltwMyEAE3amyvKp1ZHLAg32jIBMRgzmFxVzy54cNn0Vbk4hNTVn/WeyabbxMpeS2+8c2LqO5WtqNczwGMgS/Lcas8kRwUwWUni5GQhbowpVTuTFdeqhb3l3LEr74tvrDhKeNW2Ef2OQk18NqqnvGmbSbOQarF9CYCNPaYNfaLehzvsbx0d2qFFkHDYbizeN/w4bIxfa4nL7TY092cJA9qaxJYwiua3y+/7RDTSf7JYjfGpVpF5mVTTyIhAwSDsIOKTv88bcJPzuVzfUB8o8rui1f/XDO/bxjs0iU7JFRijg2e/5p7KynSsDmzHFVTxluwhQS45v/+x7jsxLxNdtt5LUO6s6Q+yZjvQSC25O4MQ2fmtEaZd0BEdqV7ve56IuptIoVIVk6MZ+KwTZ25HvtohMlpCgQSXwu9mwaZ7x9txO7n/Fs0OTZdUtAZGz1u05BSkJ+VrEPfj5CQT9RwimBjah848IQ+MfmEjHyc51DAZiSk7BolTBXTV58=
+    secure: $SLACK_TOKEN
+deploy:
+  provider: releases
+  api_key:
+    secure: $GH_TOKEN
+  file:
+    - "dist/TistoryEditor-*-*.*"
+  on:
+    tags: true
+    repo: joostory/tistory-editor
