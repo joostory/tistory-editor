@@ -5,7 +5,7 @@
   "description": "Editor for tistory",
   "main": "src/main/main.js",
   "scripts": {
-    "build": "NODE_ENV=production webpack --progress --mode production",
+    "build": "NODE_ENV=production webpack --mode production",
     "watch": "NODE_ENV=development webpack --watch --mode development",
     "app": "NODE_ENV=development electron .",
     "start": "npm-run-all --parallel watch app",
