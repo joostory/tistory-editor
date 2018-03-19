@@ -1,7 +1,7 @@
 {
   "name": "tistory-editor",
   "productName": "TistoryEditor",
-  "version": "0.5.7",
+  "version": "0.5.8",
   "description": "Editor for tistory",
   "main": "src/main/main.js",
   "scripts": {
@@ -23,7 +23,7 @@
   "author": {
     "name": "Joo",
     "email": "joo@joostory.net",
-    "url": "http://joostory.net"
+    "url": "https://joostory.net"
   },
   "license": "MIT",
   "bugs": {

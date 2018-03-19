@@ -42,9 +42,9 @@ const openWindow = () => {
 	electronLocalshortcut.register(infoWindow, 'CommandOrControl+W', closeWindow)
 
 	infoWindow.on("closed", () => {
-		infoWindow = null
 		electronLocalshortcut.unregister(infoWindow, 'Escape', closeWindow)
-		electronLocalshortcut.unregister(infoWindow, 'CommandOrControl+W', closeWindow)
+    electronLocalshortcut.unregister(infoWindow, 'CommandOrControl+W', closeWindow)
+    infoWindow = null
 	})
 
   var handleRedirect = (e, url) => {

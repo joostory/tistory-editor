@@ -1,6 +1,6 @@
 input, button, a { outline:none }
 
-body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; }
+body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; background-color:#fff }
 
 .container { position:absolute; left:0; right:0; top:0; bottom:0; overflow:hidden; }
 .btn { background:transparent; border:1px solid #ccc }
