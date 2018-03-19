@@ -11,9 +11,11 @@ directories:
 files:
   - package.json
   - oauth2info.json
+  - .oauth2info.json
   - src/lib/
   - src/main/
   - src/css/
+  - src/images/
   - app/
   - node_modules/
 
