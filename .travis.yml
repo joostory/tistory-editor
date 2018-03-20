@@ -32,5 +32,3 @@ deploy:
     secure: $GH_TOKEN
   skin_cleanup: true
   draft: true
-  on:
-    tags: true
