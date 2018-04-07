@@ -6,7 +6,7 @@ import autobind from 'autobind-decorator'
 import dateformat from 'dateformat'
 import classnames from 'classnames'
 import Dropzone from 'react-dropzone'
-import { ipcRenderer } from 'electron'
+import { ipcRenderer, remote } from 'electron'
 import TextField from 'material-ui/TextField'
 import Dialog from 'material-ui/Dialog'
 import Popover, { PopoverAnimationVertical } from 'material-ui/Popover'
@@ -85,7 +85,6 @@ class Editor extends Component {
 		} else {
 			pageview(`/blog/${currentBlog.blogId}/post`, '새 글 작성')
 		}
-		
 	}
 
 	componentWillMount() {
@@ -95,6 +94,8 @@ class Editor extends Component {
 		ipcRenderer.on("finish-add-file", this.handleFinishAddFile)
 		ipcRenderer.on("finish-add-content", this.handleFinishSaveContent)
 		ipcRenderer.on("finish-save-content", this.handleFinishSaveContent)
+
+		remote.app.showExitPrompt = true
 	}
 
 	componentWillUnmount() {
@@ -104,6 +105,8 @@ class Editor extends Component {
 		ipcRenderer.removeListener("finish-add-file", this.handleFinishAddFile)
 		ipcRenderer.removeListener("finish-add-content", this.handleFinishSaveContent)
 		ipcRenderer.removeListener("finish-save-content", this.handleFinishSaveContent)
+
+		remote.app.showExitPrompt = false
 	}
 
 	@autobind

@@ -1,11 +1,12 @@
 const settings = require('electron-settings')
-const oauth2 = require('electron-oauth2');
-const { app, BrowserWindow, Menu, shell } = require('electron')
+const oauth2 = require('electron-oauth2')
+const { app, BrowserWindow, Menu, shell, dialog } = require('electron')
 const path = require('path')
 const url = require('url')
 const ipc = require('./ipc-event')
 const appInfo = require('./appInfo')
 
+app.showExitPrompt = false
 let mainWindow
 
 const initWindow = () => {
@@ -28,7 +29,21 @@ const createWindow = (config) => {
 
   mainWindow.setMenu(null)
 
-  mainWindow.on("close", () => {
+  mainWindow.on("close", (e) => {
+    if (app.showExitPrompt) {
+      e.preventDefault()
+      dialog.showMessageBox({
+        type: 'question',
+        buttons: ['Yes', 'No'],
+        title: 'Confirm',
+        message: '지금 앱을 종료하면 저장하지 않는 내용이 사라집니다. 종료하시겠습니까?'
+      }, function (response) {
+        if (response === 0) {
+          app.showExitPrompt = false
+          mainWindow.close()
+        }
+      })
+    }
     settings.set('config', mainWindow.getBounds())
   })
 
