@@ -21,7 +21,7 @@ class EditorToolbar extends Component {
         </ToolbarGroup>
         <ToolbarGroup lastChild={true}>
           <IconButton onClick={onPreviewClick} tooltip="미리보기"><ActionVisibility /></IconButton>
-          <FlatButton onClick={onSaveClick} label="저장" primary={true} style={{margin:0}} />
+          <FlatButton onClick={onSaveClick} label="저장" primary={true} disabled={title.length == 0} style={{margin:0}} />
         </ToolbarGroup>
       </Toolbar>
     )

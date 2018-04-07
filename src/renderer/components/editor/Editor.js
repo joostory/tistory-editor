@@ -183,7 +183,6 @@ class Editor extends Component {
 
 	@autobind
 	handleStartAddFile(e) {
-		// TODO
 		const { uploadFileCount, uploadFinishedFileCount } = this.state
 		this.setState({
 			uploadFileCount: uploadFileCount + 1
@@ -192,7 +191,6 @@ class Editor extends Component {
 
 	@autobind
 	handleFinishAddFile(e) {
-		// TODO
 		const { uploadFileCount, uploadFinishedFileCount } = this.state
 		if (uploadFileCount == uploadFinishedFileCount + 1) {
 			this.setState({

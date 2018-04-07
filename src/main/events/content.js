@@ -70,6 +70,12 @@ module.exports = () => {
 		let publishType = post.visibility > 1 ? '발행' : '저장'
 		let messagePrefix = dateformat(new Date(), 'HH:MM:ss : ')
 
+		if (post.title.length == 0) {
+			evt.sender.send('finish-save-content')
+			evt.sender.send('receive-message', messagePrefix + '제목을 입력해주세요.')
+			return
+		}
+
 		if (!auth || !auth.access_token) {
 			evt.sender.send('finish-save-content')
 			evt.sender.send('receive-message', messagePrefix + '글을 ' + publishType + '하지 못했습니다.')
@@ -90,6 +96,12 @@ module.exports = () => {
 		let auth = settings.get('auth')
 		let publishType = post.visibility > 1 ? '발행' : '저장'
 		let messagePrefix = dateformat(new Date(), 'HH:MM:ss : ')
+
+		if (post.title.length == 0) {
+			evt.sender.send('finish-save-content')
+			evt.sender.send('receive-message', messagePrefix + '제목을 입력해주세요.')
+			return
+		}
 
 		if (!auth || !auth.access_token) {
 			evt.sender.send('finish-add-content')
