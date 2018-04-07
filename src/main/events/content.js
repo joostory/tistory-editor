@@ -1,6 +1,7 @@
 const settings = require('electron-settings')
 const { ipcMain, clipboard } = require('electron')
 const dateformat = require('dateformat')
+const fetch = require('node-fetch')
 const tistory = require('../apis/tistory-api')
 
 module.exports = () => {
@@ -106,46 +107,82 @@ module.exports = () => {
 		})
 	})
 
-	ipcMain.on("add-file", (evt, blogName, filepath) => {
+	ipcMain.on("add-file", async (evt, blogName, filepath) => {
 		let auth = settings.get('auth')
 		evt.sender.send('start-add-file')
 		
-		if (!auth || !auth.access_token) {
-			evt.sender.send('finish-add-file')
-			return
-		}
+		try {
+			if (!auth || !auth.access_token) {
+				throw new Error("NO_AUTH")
+			}
 
-		tistory.uploadFile(auth, blogName, filepath).then(res => {
+			const res = await tistory.uploadFile(auth, blogName, filepath)
 			evt.sender.send('finish-add-file', res.tistory.url)
 			evt.sender.send('receive-message', '이미지 업로드 완료')
-		}).catch(err => {
-			console.error("uploadFile error", err)
+		} catch (e) {
+			console.error("uploadFile error", e)
 			evt.sender.send('finish-add-file')
 			evt.sender.send('receive-message', '이미지 업로드 실패')
-		})
+		}
 	})
 
-	ipcMain.on("add-clipboard-image", (evt, blogName) => {
+	ipcMain.on("add-clipboard-image", async (evt, blogName) => {
 		let auth = settings.get('auth')
 		evt.sender.send('start-add-file')
 
-		if (!auth || !auth.access_token) {
-			evt.sender.send('finish-add-file')
-			return
-		}
-
-		let image = clipboard.readImage()
-		if (image.isEmpty()) {
-			return
-		}
-
-		tistory.uploadFileWithImage(auth, blogName, image).then(res => {
+		try {
+			if (!auth || !auth.access_token) {
+				throw new Error("NO_AUTH")
+			}
+			let image = clipboard.readImage()
+			if (image.isEmpty()) {
+				throw new Error("NO_IMAGE")
+			}
+			const imageBuffer = image.toPNG()
+			const res = await tistory.uploadFileWithBuffer(auth, blogName, image, {
+				filename: 'clipboard.png',
+				contentType: 'image/png',
+				knownLength: imageBuffer.length
+			})
 			evt.sender.send('finish-add-file', res.tistory.url)
 			evt.sender.send('receive-message', '클립보드 이미지 업로드 완료')
-		}).catch(err => {
-			console.error("uploadFile error", err)
+
+		} catch(e) {
+			console.error("uploadFile error", e)
 			evt.sender.send('finish-add-file')
 			evt.sender.send('receive-message', '클립보드 이미지 업로드 실패')
-		})
+		}
+	})
+
+	ipcMain.on("add-image-url", async (evt, blogName, url, filename) => {
+		let auth = settings.get('auth')
+		evt.sender.send('start-add-file')
+
+		try {
+			if (!auth || !auth.access_token) {
+				throw new Error("NO AUTH")
+			}
+
+			const res = await fetch(url)
+			if (!res.ok) {
+				throw new Error(`FETCH_ERROR:${res.status} ${res.statusText}`)
+			}
+			const contentType = res.headers.get('content-type')
+			const length = res.headers.get('content-length')
+			const buffer = await res.buffer()
+
+			const uploadRes = await tistory.uploadFileWithBuffer(auth, blogName, buffer, {
+				filename: filename,
+				contentType: contentType,
+				knownLength: length
+			})
+
+			evt.sender.send('finish-add-file', uploadRes.tistory.url)
+			evt.sender.send('receive-message', '이미지 업로드 완료')
+		} catch (e) {
+			console.error("uploadFile error", e.message)
+			evt.sender.send('finish-add-file')
+			evt.sender.send('receive-message', '이미지 업로드 실패')
+		}
 	})
 }

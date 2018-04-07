@@ -1,6 +1,6 @@
 import React from 'react'
 import renderer from 'react-test-renderer'
-import Visibility from '../../../renderer/model/Visibility'
+import Visibility from './Visibility'
 
 test('Visibility', () => {
   expect((new Visibility("3")).toString()).toBe("발행")

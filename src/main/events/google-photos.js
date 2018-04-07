@@ -3,51 +3,56 @@ const settings = require('electron-settings')
 const picasa = require('../apis/picasa-api')
 
 module.exports = () => {
-	const fetchAlbums = (evt) => {
+	const fetchAlbums = async (evt) => {
 		const auth = settings.get('google-auth')
-		if (auth && auth.access_token) {
-			picasa.fetchAlbums(auth, json => {
-				evt.sender.send('receive-google-photos-albums', json.feed.entry)
-			}).catch(err => {
-				console.error(err)
-				if (auth.refresh_token) {
-					picasa.refreshToken(auth.refresh_token).then(auth => {
-						settings.set('google-auth', auth)
-						fetchAlbums(evt)
-					}).catch(err => {
-						evt.sender.send('receive-google-photos-albums', null)
-					})
-				} else {
-					evt.sender.send('receive-google-photos-albums', null)
+		try {
+			if (!auth || !auth.access_token) {
+				throw new Error("NO_AUTH")
+			}
+
+			const result = await picasa.fetchAlbums(auth)
+			evt.sender.send('receive-google-photos-albums', result.feed.entry)
+
+		} catch(e) {
+			console.error(e)
+			if (auth && auth.refresh_token) {
+				try {
+					const refreshAuth = await picasa.refreshToken(auth.refresh_token)
+					settings.set('google-auth', refreshAuth)
+					fetchAlbums(evt)
+					return
+				} catch (authError) {
+					settings.set('google-auth', null)
 				}
-			})
-		} else {
-			console.error("no auth")
+			}
+
 			evt.sender.send('receive-google-photos-albums', null)
 		}
 	}
 
-	const fetchImages = (evt, albumId, startIndex) => {
+	const fetchImages = async (evt, albumId, startIndex) => {
 		const auth = settings.get('google-auth')
 
-		if (auth && auth.access_token) {
-			picasa.fetchImages(auth, albumId, startIndex, 50, json => {
-				evt.sender.send('receive-google-photos-images', json.feed.entry)
-			}).catch(err => {
-				console.error(err)
-				if (auth.refresh_token) {
-					picasa.refreshToken(auth.refresh_token).then(auth => {
-						settings.set('google-auth', auth)
-						fetchImages(evt)
-					}).catch(err => {
-						evt.sender.send('receive-google-photos-images', null)
-					})
-				} else {
-					evt.sender.send('receive-google-photos-images', null)
+		try {
+			if (!auth || !auth.access_token) {
+				throw new Error("NO_AUTH")
+			}
+
+			const result = await picasa.fetchImages(auth, albumId, startIndex, 50)
+			evt.sender.send('receive-google-photos-images', result.feed.entry)
+
+		} catch(e) {
+			console.error(e)
+			if (auth && auth.refresh_token) {
+				try {
+					const refreshAuth = await picasa.refreshToken(auth.refresh_token)
+					settings.set('google-auth', refreshAuth)
+					fetchImages(evt)
+					return
+				} catch (authError) {
+					settings.set('google-auth', null)
 				}
-			})
-		} else {
-			console.error("no auth")
+			}
 			evt.sender.send('receive-google-photos-images', null)
 		}
 	}

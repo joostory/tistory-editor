@@ -96,6 +96,11 @@ class TinymceEditor extends Component {
 					opengraph: {
 						fetch_handler: this.handleFetchOpengraph
 					},
+					google_photos: {
+						add_handler: (url, filename) => {
+							ipcRenderer.send("add-image-url", currentBlog.name, url, filename)
+						}
+					},
 					open_file_handler: onOpenFile,
 					init_instance_callback: (editor) => {
 						editor.on("paste", this.handlePaste)

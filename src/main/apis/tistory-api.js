@@ -11,8 +11,9 @@ const Oauth2infoReader = require('../Oauth2infoReader')
 
 const errorHandler = (res) => {
   if (!res.ok) {
-		console.error("fetch failed", res)
-    throw res.json()
+    console.error("fetch failed", res)
+    res.text().then(text => console.error("fetch body", text))
+    throw new Error(res)
   }
 
   return res.json()
@@ -125,16 +126,22 @@ module.exports.uploadFile = (auth, blogName, filepath) => {
 	return uploadFile(auth.access_token, blogName, fs.createReadStream(filepath))
 }
 
-module.exports.uploadFileWithImage = (auth, blogName, image) => {
-	console.log("uploadFileWithImage", blogName)
-	var pngImageBuffer = image.toPNG()
+module.exports.uploadFileWithBuffer = (auth, blogName, buffer, options) => {
+	console.log("uploadFileWithClipboard", blogName)
 	var imageStream = new stream.PassThrough()
-	imageStream.end(pngImageBuffer)
+	imageStream.end(buffer)
+	return uploadFile(auth.access_token, blogName, imageStream, options)
+}
+
+module.exports.uploadFileWithBlob = (auth, blogName, blob, options) => {
+  console.log("uploadFileWithBlob", blogName)
+  var imageStream = new stream.PassThrough()
+	imageStream.end(blob.buffer)
 	return uploadFile(auth.access_token, blogName, imageStream, {
-		filename: 'clipboard.png',
-		contentType: 'image/png',
-		knownLength: pngImageBuffer.length
-	})
+    filename: 'blobimage.jpg',
+		contentType: options.contentType,
+		knownLength: options.length
+  })
 }
 
 const uploadFile = (accessToken, blogName, fileBlob, fileOption) => {

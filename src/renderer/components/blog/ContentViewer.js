@@ -8,7 +8,7 @@ import CircularProgress from 'material-ui/CircularProgress'
 import OpenInBrowser from 'material-ui/svg-icons/action/open-in-browser'
 import ModeEdit from 'material-ui/svg-icons/editor/mode-edit'
 import highlightjs from 'highlightjs'
-import * as ContentHelper from '../../../lib/ContentHelper'
+import * as ContentHelper from '../../modules/ContentHelper'
 import { pageview } from '../../modules/AnalyticsHelper'
 
 @connect(state => ({

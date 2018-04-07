@@ -5,6 +5,7 @@ import RaisedButton from 'material-ui/RaisedButton'
 import Loading from '../../../Loading'
 import AlbumList from './AlbumList'
 import PhotoList from './PhotoList'
+import { toOriginalUrl } from '../../../../modules/GooglePhotosHelper'
 
 class GooglePhotosApp extends Component {
 
@@ -69,8 +70,9 @@ class GooglePhotosApp extends Component {
 	handleImageSelect(image) {
 		const { onSelectImage } = this.props
 		if (confirm('이미지를 삽입하시겠습니까?')) {
-			const url = image['content'][0]['$']['src']
-			onSelectImage(url)
+			const url = toOriginalUrl(image.content[0]['$']['src'])
+			const filename = image.title[0]
+			onSelectImage(url, filename)
 		}
 	}
 

@@ -13,7 +13,7 @@ const Oauth2infoReader = require('../Oauth2infoReader')
 const errorHandler = (res) => {
   if (!res.ok) {
 		console.error("fetch failed", res)
-    throw res.text()
+    throw new Error(res.status)
   }
 
   return res.text()
@@ -53,7 +53,7 @@ module.exports.refreshToken = (refreshToken) => {
 	return makeGoogleOAuth().refreshToken(refreshToken)
 }
 
-module.exports.fetchAlbums = (auth, callback) => {
+module.exports.fetchAlbums = (auth) => {
   return fetch("https://picasaweb.google.com/data/feed/api/user/default?" + querystring.stringify({
 		access_token: auth.access_token,
 		kind: 'album',
@@ -64,10 +64,16 @@ module.exports.fetchAlbums = (auth, callback) => {
 		}
 	})
 	.then(errorHandler)
-	.then(text => parseString(text, (err, result) => callback(result)))
+	.then(text => new Promise((resolve, reject) => parseString(text, (err, result) => {
+		if (err) {
+			reject(err)
+		} else {
+			resolve(result)
+		}
+	})))
 }
 
-module.exports.fetchImages = (auth, albumId, startIndex = 1, maxResults = 50, callback) => {
+module.exports.fetchImages = (auth, albumId, startIndex = 1, maxResults = 50) => {
 	return fetch(`https://picasaweb.google.com/data/feed/api/user/default/albumid/${albumId}?` + querystring.stringify({
 		access_token: auth.access_token,
 		kind: 'photo',
@@ -80,5 +86,11 @@ module.exports.fetchImages = (auth, albumId, startIndex = 1, maxResults = 50, ca
 		}
 	})
 	.then(errorHandler)
-	.then(text => parseString(text, (err, result) => callback(result)))
+	.then(text => new Promise((resolve, reject) => parseString(text, (err, result) => {
+		if (err) {
+			reject(err)
+		} else {
+			resolve(result)
+		}
+	})))
 }

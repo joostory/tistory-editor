@@ -1,4 +1,4 @@
-import * as ContentHelper from '../../lib/ContentHelper'
+import * as ContentHelper from './ContentHelper'
 
 test('makeUrlBase', () => {
 	const target = "<img src='//test.com/image.png' />"
