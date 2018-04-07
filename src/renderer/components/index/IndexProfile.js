@@ -15,7 +15,9 @@ class IndexProfile extends Component {
 
 	@autobind
   handleDisconnectAuth() {
-		ipcRenderer.send("disconnect-auth")
+    if (confirm("인증을 해제하면 인증 정보가 삭제됩니다. 계속하시겠습니까?")) {
+      ipcRenderer.send("disconnect-auth")
+    }
 	}
 
   render() {
