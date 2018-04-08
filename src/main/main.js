@@ -27,6 +27,7 @@ const createWindow = (config) => {
 		autoHideMenuBar: true
   })
 
+  mainWindow.setFullScreenable(true)
   mainWindow.setMenu(null)
 
   mainWindow.on("close", (e) => {
@@ -92,6 +93,12 @@ const createWindow = (config) => {
         { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
         { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
         { label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
+      ]
+    },
+    {
+      label: "View",
+      submenu: [
+        { label: "Toggle Fullscreen", accelerator: "F11", click() { mainWindow.setFullScreen(!mainWindow.isFullScreen()) }}
       ]
     }
   ];
