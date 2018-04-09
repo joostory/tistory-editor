@@ -44,7 +44,7 @@ module.exports.fetchBlogInfo = (auth) => {
 }
 
 module.exports.fetchUser = (auth) => {
-  return fetch(BASE_URL + "/user/?" + querystring.stringify({
+  return fetch(BASE_URL + "/user?" + querystring.stringify({
     access_token: auth.access_token,
     output: "json"
   }))
