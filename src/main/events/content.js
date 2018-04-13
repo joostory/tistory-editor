@@ -151,7 +151,7 @@ module.exports = () => {
 				throw new Error("NO_IMAGE")
 			}
 			const imageBuffer = image.toPNG()
-			const res = await tistory.uploadFileWithBuffer(auth, blogName, image, {
+			const res = await tistory.uploadFileWithBuffer(auth, blogName, imageBuffer, {
 				filename: 'clipboard.png',
 				contentType: 'image/png',
 				knownLength: imageBuffer.length
