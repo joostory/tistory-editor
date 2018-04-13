@@ -4,6 +4,7 @@ language: node_js
 node_js: '8'
 os:
 - osx
+if: tag IS present
 env:
   global:
   - ELECTRON_CACHE=$HOME/.cache/electron
@@ -32,3 +33,5 @@ deploy:
     secure: $GH_TOKEN
   skin_cleanup: true
   draft: true
+  on:
+    tags: true
