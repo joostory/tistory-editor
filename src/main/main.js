@@ -5,9 +5,6 @@ const path = require('path')
 const url = require('url')
 const ipc = require('./ipc-event')
 const appInfo = require('./appInfo')
-const updateApp = require('update-electron-app')
-
-updateApp()
 
 app.showExitPrompt = false
 let mainWindow
