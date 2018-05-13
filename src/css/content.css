@@ -2,11 +2,20 @@
 
 .content { padding:20px 0;word-wrap:break-word; color:#333; font-size:14px }
 .content h1 { font-size:2em; margin:2em 0 1em }
-.content h2 { font-size:1.5em; margin:2em 0 1em }
-.content h3 { font-size:1.2em; margin:2em 0 1em }
+.content h2 { font-size:1.8em; margin:2em 0 1em }
+.content h3 { font-size:1.5em; margin:2em 0 1em }
 .content h4,
 .content h5,
 .content h6 { font-size:1em; margin:2em 0 1em }
+.content h1,
+.content h2,
+.content h3,
+.content h4,
+.content h5,
+.content h6
+{
+  font-family: "Yeon Sung", sans-serif; font-weight: 400;
+}
 .content p { line-height:1.6em; margin:0 auto 28px}
 .content a {color:#3db39e}
 

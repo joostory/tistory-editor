@@ -83,7 +83,10 @@ class TinymceEditor extends Component {
 					file_picker_type: 'image',
 					block_formats: '문단=p;주제=h2;소주제=h3',
 					body_class: 'content',
-					content_css: '../src/css/content.css',
+					content_css: [
+            '../src/css/content.css',
+            'https://fonts.googleapis.com/css?family=Nanum+Gothic|Yeon+Sung'
+          ],
 					paste_preprocess: (plugin, args) => {
 						let image = clipboard.readImage()
 						if (!image.isEmpty()) {
