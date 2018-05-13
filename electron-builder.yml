@@ -28,4 +28,5 @@ win:
   target: nsis
 
 linux:
-  target: [AppImage, deb]
+  target: deb
+  asar: false
