@@ -20,12 +20,21 @@ const initWindow = () => {
 	createWindow(data)
 }
 
+const makeWindowIconPath = () => {
+  const iconPath = '../../build/icons/256x256.png'
+  if (__dirname.indexOf('app.asar') >= 0) {
+    return iconPath
+  } else {
+    return path.join(__dirname, iconPath)
+  }
+}
+
 const createWindow = (config) => {
   mainWindow = new BrowserWindow({
     width: config.width,
     height: config.height,
     autoHideMenuBar: true,
-    icon: `../../build/icons/256x256.png`
+    icon: makeWindowIconPath()
   })
 
   mainWindow.setFullScreenable(true)
