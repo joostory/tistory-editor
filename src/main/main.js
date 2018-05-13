@@ -25,7 +25,7 @@ const createWindow = (config) => {
     width: config.width,
     height: config.height,
     autoHideMenuBar: true,
-    icon: `${__dirname}/../../build/icons/256x256.png`
+    icon: `../../build/icons/256x256.png`
   })
 
   mainWindow.setFullScreenable(true)
