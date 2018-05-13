@@ -7,10 +7,10 @@ const fetch = require('isomorphic-fetch')
 let infoWindow
 
 const fetchLastVersion = () => {
-  fetch("https://joostory.github.io/tistory-editor/app.json")
+  fetch("https://api.github.com/repos/joostory/tistory-editor/releases/latest")
     .then(res => res.json())
     .then(json => {
-      appInfo.lastVersion = json.version
+      appInfo.lastVersion = json.tag_name
       if (appInfo.version != appInfo.lastVersion) {
         openWindow()
       }
@@ -60,8 +60,8 @@ const openWindow = () => {
 }
 
 let appInfo = {
-  version: app.getVersion(),
-	lastVersion: app.getVersion(),
+  version: `v${app.getVersion()}`,
+	lastVersion: `v${app.getVersion()}`,
   openWindow: openWindow,
   closeWindow: closeWindow,
   fetchLastVersion: fetchLastVersion
