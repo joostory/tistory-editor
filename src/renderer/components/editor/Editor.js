@@ -70,7 +70,7 @@ class Editor extends Component {
 			return {
 				title: "",
 				content: "",
-				categoryId: "",
+				categoryId: '0',
 				visibility: 0,
 				tags: []
 			}
