@@ -6,13 +6,7 @@
 
 ![](https://joostory.github.io/tistory-editor/image/screenshot_mac.png)
 
-## run
-
-```
-$ npm run app
-```
-
-## 개발
+## Run
 
 ```
 # react build (development)
@@ -28,18 +22,8 @@ $ npm run app
 # npm start
 ```
 
-## 앱 생성 (배포)
+## 앱 생성
 
 ```
-# 윈도우, 리눅스(AppImage), 맥(zip) 앱 생성
-$ npm run dist
-
-# 윈도우 앱생성
-$ npm run dist-win
-
-# 리눅스 앱생성 (AppImage)
-$ npm run dist-linux
-
-# 맥 앱생성 (dmg)
-$ npm run dist-mac
+$ npm run dist -- -mwl
 ```
