@@ -8,12 +8,20 @@ let infoWindow
 
 const fetchLastVersion = () => {
   fetch("https://api.github.com/repos/joostory/tistory-editor/releases/latest")
+    .then(res => {
+      if (!res.ok) {
+        throw res
+      }
+    })
     .then(res => res.json())
     .then(json => {
       appInfo.lastVersion = json.tag_name
       if (appInfo.version != appInfo.lastVersion) {
         openWindow()
       }
+    })
+    .catch(res => {
+      // ignore
     })
 }
 
