@@ -1,78 +1,68 @@
 const { ipcMain } = require('electron')
 const settings = require('electron-settings')
-const picasa = require('../apis/picasa-api')
+const { GoogleAuthApi, PhotosApi } = require('../apis/picasa-api')
 
 module.exports = () => {
-	const fetchAlbums = async (evt) => {
+	const authApi = new GoogleAuthApi()
+	const fetchImages = async (evt, startIndex) => {
 		const auth = settings.get('google-auth')
-		try {
-			if (!auth || !auth.access_token) {
-				throw new Error("NO_AUTH")
-			}
-
-			const result = await picasa.fetchAlbums(auth)
-			evt.sender.send('receive-google-photos-albums', result.feed.entry)
-
-		} catch(e) {
-			console.error(e)
-			if (auth && auth.refresh_token) {
-				try {
-					const refreshAuth = await picasa.refreshToken(auth.refresh_token)
-					settings.set('google-auth', refreshAuth)
-					fetchAlbums(evt)
-					return
-				} catch (authError) {
-					settings.set('google-auth', null)
-				}
-			}
-
-			evt.sender.send('receive-google-photos-albums', null)
-		}
-	}
-
-	const fetchImages = async (evt, albumId, startIndex) => {
-		const auth = settings.get('google-auth')
+		const photosData = settings.get('photos-data') || {}
 
 		try {
 			if (!auth || !auth.access_token) {
 				throw new Error("NO_AUTH")
 			}
-
-			const result = await picasa.fetchImages(auth, albumId, startIndex, 50)
-			evt.sender.send('receive-google-photos-images', result.feed.entry)
+			evt.sender.send('start-fetch-google-photos-images')
+			const photosApi = new PhotosApi(auth)
+			console.log(photosData.albumId)
+			if (!photosData.albumId) {
+				const albums = await photosApi.fetchAlbums()
+				const instantUploadAlbum = albums.find(album => album.type == "InstantUpload")
+        if (!instantUploadAlbum) {
+          throw new Error("NO_ALBUM")
+        }
+				photosData.albumId = instantUploadAlbum.id
+			}
+			
+			const images = await photosApi.fetchImages(photosData.albumId, startIndex, 50)
+			console.log(images)
+			if (startIndex === 1) {
+				photosData.images = []
+			}
+			photosData.images.push(images)
+			settings.set('photos-data', photosData)
+			evt.sender.send('receive-google-photos-images', images)
 
 		} catch(e) {
 			console.error(e)
 			if (auth && auth.refresh_token) {
 				try {
-					const refreshAuth = await picasa.refreshToken(auth.refresh_token)
+					const refreshAuth = await authApi.refreshToken(auth.refresh_token)
 					settings.set('google-auth', refreshAuth)
-					fetchImages(evt)
+					fetchImages(evt, startIndex)
 					return
 				} catch (authError) {
 					settings.set('google-auth', null)
 				}
 			}
-			evt.sender.send('receive-google-photos-images', null)
+			evt.sender.send('receive-google-connected', false)
 		}
 	}
 
-	ipcMain.on('fetch-google-photos-albums', (evt) => {
-		fetchAlbums(evt)
-	})
-
-	ipcMain.on('fetch-google-photos-images', (evt, albumId, startIndex) => {
-		fetchImages(evt, albumId, startIndex)
+	ipcMain.on('fetch-google-photos-images', (evt, startIndex) => {
+		fetchImages(evt, startIndex)
 	})
 
 	ipcMain.on("request-google-photos-auth", (evt, arg) => {
-		picasa.getAccessToken().then(auth => {
+		authApi.getAccessToken().then(auth => {
 			settings.set('google-auth', auth)
-			fetchAlbums(evt)
+			evt.sender.send('receive-google-connected', true)
+			fetchImages(evt, 1)
 		})
 	})
 
 	ipcMain.on("disconnect-google-photos-auth", (evt, arg) => {
 		settings.delete('google-auth')
+		evt.sender.send('receive-google-connected', false)
 	})	
 }

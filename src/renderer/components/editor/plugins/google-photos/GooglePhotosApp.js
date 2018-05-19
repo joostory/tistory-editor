@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { ipcRenderer } from 'electron'
 import autobind from 'autobind-decorator'
+import update from 'immutability-helper'
 import RaisedButton from 'material-ui/RaisedButton'
 import Loading from '../../../Loading'
-import AlbumList from './AlbumList'
 import PhotoList from './PhotoList'
 import { toOriginalUrl } from '../../../../modules/GooglePhotosHelper'
 
@@ -12,30 +12,74 @@ class GooglePhotosApp extends Component {
 	constructor(props, context) {
 		super(props, context)
 		this.state = {
-			albums: null,
 			initialized: false,
-			selectedAlbum: null,
+			connected: false,
+			images: [],
+			fetching: false
 		}
 	}
 
 	componentWillMount() {
-		ipcRenderer.on("receive-google-photos-albums", this.handleReceiveAlbums)
+		ipcRenderer.on("receive-google-photos-images", this.handleReceiveImages)
+		ipcRenderer.on("start-fetch-google-photos-images", this.handleStartFetch)
+		ipcRenderer.on("receive-google-connected", this.handleReceiveConnected)
 	}
 
 	componentWillUnmount() {
-		ipcRenderer.removeListener("receive-google-photos-albums", this.handleReceiveAlbums)
+		ipcRenderer.removeListener("receive-google-photos-images", this.handleReceiveImages)
+		ipcRenderer.removeListener("start-fetch-google-photos-images", this.handleStartFetch)
+		ipcRenderer.removeListener("receive-google-connected", this.handleReceiveConnected)
 	}
 
 	componentDidMount() {
-		ipcRenderer.send('fetch-google-photos-albums', this.handleReceiveAlbums)
+		this.handleRequestFetch(1)
 	}
 
 	@autobind
-	handleReceiveAlbums(e, data) {
+	handleReceiveImages(e, data) {
+		const { images, fetching } = this.state
+		if (data === null) {
+			this.handleDisconnect()
+			return
+		}
+
 		this.setState({
 			initialized: true,
-			albums: data
+			connected: true,
+			images: update(images, {
+				$push: data
+			}),
+			fetching: false
 		})
+	}
+
+	@autobind
+	handleReceiveConnected(e, connected) {
+		if (connected) {
+			this.setState({
+				initialized: true,
+				connected: true
+			})
+		} else {
+			this.setState({
+				initialized: true,
+				images: [],
+				connected: false
+			})
+		}
+		
+	}
+
+	@autobind
+	handleStartFetch(e) {
+		this.setState({
+			fetching: true
+		})
+	}
+
+	@autobind
+	handleRequestFetch(startIndex) {
+		ipcRenderer.send('fetch-google-photos-images', startIndex)
 	}
 
 	@autobind
@@ -44,26 +88,8 @@ class GooglePhotosApp extends Component {
 	}
 
 	@autobind
-	handleAlbumSelect(album) {
-		this.setState({
-			selectedAlbum: album
-		})
-	}
-
-	@autobind
-	handleAlbumDeselect() {
-		this.setState({
-			selectedAlbum: null
-		})
-	}
-
-	@autobind
 	handleDisconnect() {
 		ipcRenderer.send("disconnect-google-photos-auth")
-		this.setState({
-			selectedAlbum: null,
-			albums: null
-		})
 	}
 
 	@autobind
@@ -77,7 +103,7 @@ class GooglePhotosApp extends Component {
 	}
 
 	render() {
-		const { albums, initialized, selectedAlbum } = this.state
+		const { initialized, connected, images, fetching } = this.state
 
 		if (!initialized) {
 			return (
@@ -89,7 +115,7 @@ class GooglePhotosApp extends Component {
 			)
 		}
 
-		if (!albums) {
+		if (!connected) {
 			return (
 				<div className="google-photos-wrap">
 					<div className="google-photos-cover">
@@ -99,15 +125,12 @@ class GooglePhotosApp extends Component {
 			)
 		}
 
-		if (selectedAlbum) {
-			return (
-				<PhotoList album={selectedAlbum} onBack={this.handleAlbumDeselect} onClick={this.handleImageSelect} onDisconnect={this.handleDisconnect} />
-			)
-		} else {
-			return (
-				<AlbumList albums={albums} onClick={this.handleAlbumSelect} onDisconnect={this.handleDisconnect} />
-			)
-		}
+		return (
+			<PhotoList images={images} fetching={fetching}
+				onFetch={this.handleRequestFetch}
+				onClick={this.handleImageSelect}
+				onDisconnect={this.handleDisconnect} />
+		)
 	}
 }
 

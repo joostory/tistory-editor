@@ -19,78 +19,95 @@ const errorHandler = (res) => {
   return res.text()
 }
 
-const oauth2infoReader = new Oauth2infoReader()
-const oauth2info = oauth2infoReader.getGoogle()
-let googleOAuth = null
+class GoogleAuthApi {
+	constructor() {
+		this.googleOAuth = null
+	}
 
-const makeGoogleOAuth = () => {
-	if (!googleOAuth) {
-		googleOAuth = oauth2(oauth2info, {
-			alwaysOnTop: true,
-			autoHideMenuBar: true,
-			webPreferences: {
-				nodeIntegration: false,
-				session: session.fromPartition("google:oauth2:" + new Date())
-			}
+	makeGoogleOAuth() {
+		if (!this.googleOAuth) {
+			const oauth2infoReader = new Oauth2infoReader()
+			const oauth2info = oauth2infoReader.getGoogle()
+
+			this.googleOAuth = oauth2(oauth2info, {
+				alwaysOnTop: true,
+				autoHideMenuBar: true,
+				webPreferences: {
+					nodeIntegration: false,
+					session: session.fromPartition("google:oauth2:" + new Date())
+				}
+			})
+		}
+		
+		return this.googleOAuth
+	}
+
+	getAccessToken() {
+		return this.makeGoogleOAuth().getAccessToken({
+			'scope': ['https://picasaweb.google.com/data/'],
+			'response_type': 'code',
+			'access_type': 'offline',
+			'prompt': 'consent',
+			'include_granted_scopes': 'true'
 		})
 	}
 	
-	return googleOAuth
+	refreshToken(refreshToken) {
+		return this.makeGoogleOAuth().refreshToken(refreshToken)
+	}
 }
+module.exports.GoogleAuthApi = GoogleAuthApi
 
 
-module.exports.getAccessToken = () => {
-  return makeGoogleOAuth().getAccessToken({
-		'scope': ['https://picasaweb.google.com/data/'],
-		'response_type': 'code',
-		'access_type': 'offline',
-		'prompt': 'consent',
-		'include_granted_scopes': 'true'
-  })
-}
+class PhotosApi {
+	constructor(auth) {
+		this.auth = auth
+	}
 
-module.exports.refreshToken = (refreshToken) => {
-	return makeGoogleOAuth().refreshToken(refreshToken)
-}
+	fetchAlbums() {
+		return fetch("https://picasaweb.google.com/data/feed/api/user/default?" + querystring.stringify({
+			access_token: this.auth.access_token,
+			kind: 'album',
+			access: 'all'
+		}), {
+			headers: {
+				"GData-Version": 3
+			}
+		})
+		.then(errorHandler)
+		.then(text => new Promise((resolve, reject) => parseString(text, (err, result) => {
+			if (err) {
+				reject(err)
+			} else {
+				resolve(result.feed.entry.map(entry => ({
+					id: entry['gphoto:id'][0],
+					title: entry['title'][0],
+					type: entry['gphoto:albumType']? entry['gphoto:albumType'][0] : 'user'
+				})))
+			}
+		})))
+	}
 
-module.exports.fetchAlbums = (auth) => {
-  return fetch("https://picasaweb.google.com/data/feed/api/user/default?" + querystring.stringify({
-		access_token: auth.access_token,
-		kind: 'album',
-		access: 'all'
-  }), {
-		headers: {
-			"GData-Version": 3
-		}
-	})
-	.then(errorHandler)
-	.then(text => new Promise((resolve, reject) => parseString(text, (err, result) => {
-		if (err) {
-			reject(err)
-		} else {
-			resolve(result)
-		}
-	})))
+	fetchImages(albumId, startIndex = 1, maxResults = 50) {
+		return fetch(`https://picasaweb.google.com/data/feed/api/user/default/albumid/${albumId}?` + querystring.stringify({
+			access_token: this.auth.access_token,
+			kind: 'photo',
+			access: 'all',
+			'start-index': startIndex,
+			'max-results': maxResults
+		}), {
+			headers: {
+				"GData-Version": 3
+			}
+		})
+		.then(errorHandler)
+		.then(text => new Promise((resolve, reject) => parseString(text, (err, result) => {
+			if (err) {
+				reject(err)
+			} else {
+				resolve(result.feed.entry)
+			}
+		})))
+	}
 }
-
-module.exports.fetchImages = (auth, albumId, startIndex = 1, maxResults = 50) => {
-	return fetch(`https://picasaweb.google.com/data/feed/api/user/default/albumid/${albumId}?` + querystring.stringify({
-		access_token: auth.access_token,
-		kind: 'photo',
-		access: 'all',
-		'start-index': startIndex,
-		'max-results': maxResults
-	}), {
-		headers: {
-			"GData-Version": 3
-		}
-	})
-	.then(errorHandler)
-	.then(text => new Promise((resolve, reject) => parseString(text, (err, result) => {
-		if (err) {
-			reject(err)
-		} else {
-			resolve(result)
-		}
-	})))
-}
+module.exports.PhotosApi = PhotosApi
