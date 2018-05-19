@@ -96,8 +96,8 @@ class GooglePhotosApp extends Component {
 	handleImageSelect(image) {
 		const { onSelectImage } = this.props
 		if (confirm('이미지를 삽입하시겠습니까?')) {
-			const url = toOriginalUrl(image.content[0]['$']['src'])
-			const filename = image.title[0]
+			const url = toOriginalUrl(image.url)
+			const filename = image.title
 			onSelectImage(url, filename)
 		}
 	}

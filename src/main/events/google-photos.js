@@ -5,6 +5,7 @@ const { GoogleAuthApi, PhotosApi } = require('../apis/picasa-api')
 module.exports = () => {
 	const authApi = new GoogleAuthApi()
 	const fetchImages = async (evt, startIndex) => {
+		console.log('fetchImage', startIndex)
 		const auth = settings.get('google-auth')
 		const photosData = settings.get('photos-data') || {}
 
@@ -14,7 +15,6 @@ module.exports = () => {
 			}
 			evt.sender.send('start-fetch-google-photos-images')
 			const photosApi = new PhotosApi(auth)
-			console.log(photosData.albumId)
 			if (!photosData.albumId) {
 				const albums = await photosApi.fetchAlbums()
 				const instantUploadAlbum = albums.find(album => album.type == "InstantUpload")
@@ -25,7 +25,6 @@ module.exports = () => {
 			}
 			
 			const images = await photosApi.fetchImages(photosData.albumId, startIndex, 50)
-			console.log(images)
 			if (startIndex === 1) {
 				photosData.images = []
 			}

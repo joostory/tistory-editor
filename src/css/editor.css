@@ -120,6 +120,5 @@ body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; bac
 .plugin-google-photos .google-photos-wrap .google-photos-footer { display: flex;justify-content: center;align-items: center; height: 100px; }
 .plugin-google-photos .google-photos-wrap div { color:#fff }
 .plugin-google-photos .google-photos-wrap * { vertical-align:middle; line-height:inherit }
-.plugin-google-photos .google-photos-wrap .photos-header { position:absolute; top:0; height:48px; left:0; right:0 }
-.plugin-google-photos .google-photos-wrap .photos-header .album-title { color:rgba(0, 0, 0, 0.54); line-height:48px; font-weight:500; margin-left:10px; margin-right:10px }
+.plugin-google-photos .google-photos-wrap .photos-header { position:absolute; top:0; height:48px; left:0; right:0; padding: 6px; }
 .plugin-google-photos .google-photos-wrap .photos-list { position:absolute; top:48px; bottom:0; left:0; right:0; overflow:hidden; overflow-y:auto }

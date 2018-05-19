@@ -105,7 +105,13 @@ class PhotosApi {
 			if (err) {
 				reject(err)
 			} else {
-				resolve(result.feed.entry)
+				resolve(result.feed.entry.map(item => ({
+					id: item['id'][0],
+					title: item['title'][0],
+					subtitle: item['summary'][0],
+					url: item['content'][0]['$']['src'],
+					isVideo: !!item['gphoto:videostatus']
+				})))
 			}
 		})))
 	}

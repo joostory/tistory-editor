@@ -53,9 +53,9 @@ class PhotoList extends Component {
 					}
 					{images &&
 						<GridList cols={3}>
-							{Array.prototype.filter.call(images, item => (!item['gphoto:videostatus'])).map(item => (
-								<GridTile key={item['id'][0]} title={item['title'][0]} subtitle={item['summary'][0]} onClick={e => onClick(item)}>
-									<img src={item['content'][0]['$']['src']} />
+							{images.filter(item => !item.isVideo).map(item => (
+								<GridTile key={item.id} title={item.title} subtitle={item.subtitle} onClick={e => onClick(item)}>
+									<img src={item.url} />
 								</GridTile>
 							))}
 						</GridList>
