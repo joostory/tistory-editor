@@ -3,7 +3,6 @@ const oauth2 = require('electron-oauth2')
 const { app, BrowserWindow, Menu, shell, dialog } = require('electron')
 const path = require('path')
 const url = require('url')
-const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer')
 const ipc = require('./ipc-event')
 const appInfo = require('./appInfo')
 
@@ -19,6 +18,7 @@ const initWindow = () => {
 		}
   }
   if (process.env.NODE_ENV == "development") {
+    const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer')
     installExtension(REACT_DEVELOPER_TOOLS)
       .then((name) => console.log(`Added Extension:  ${name}`))
       .catch((err) => console.log('An error occurred: ', err));
