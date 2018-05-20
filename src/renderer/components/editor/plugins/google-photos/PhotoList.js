@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { ipcRenderer } from 'electron'
 import autobind from 'autobind-decorator'
 import IconButton from 'material-ui/IconButton'
@@ -9,6 +9,7 @@ import Subheader from 'material-ui/Subheader'
 import update from 'immutability-helper'
 
 import Loading from '../../../../components/Loading'
+import { timstampToDate } from '../../../../modules/ContentHelper'
 
 class PhotoList extends Component {
 	
@@ -40,6 +41,8 @@ class PhotoList extends Component {
 	render() {
 		const { onClick, onDisconnect, images, fetching } = this.props
 
+		let lastDate = ''
+
 		return (
 			<div className="google-photos-wrap">
 				<div className="photos-header">
@@ -53,11 +56,15 @@ class PhotoList extends Component {
 					}
 					{images &&
 						<GridList cols={3}>
-							{images.filter(item => !item.isVideo).map(item => (
-								<GridTile key={item.id} title={item.title} subtitle={item.subtitle} onClick={e => onClick(item)}>
-									<img src={item.url} />
-								</GridTile>
-							))}
+							{images.filter(item => !item.isVideo).map(item => {
+								return (
+									<Fragment>
+										<GridTile key={item.id} title={timstampToDate(item.timestamp)} subtitle={item.summary} onClick={e => onClick(item)}>
+											<img src={item.url} />
+										</GridTile>
+									</Fragment>
+								)
+							})}
 						</GridList>
 					}
 					{images.length > 0 && fetching &&

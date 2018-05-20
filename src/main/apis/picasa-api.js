@@ -108,8 +108,9 @@ class PhotosApi {
 				resolve(result.feed.entry.map(item => ({
 					id: item['id'][0],
 					title: item['title'][0],
-					subtitle: item['summary'][0],
+					summary: item['summary'][0],
 					url: item['content'][0]['$']['src'],
+					timestamp: item['gphoto:timestamp'][0],
 					isVideo: !!item['gphoto:videostatus']
 				})))
 			}
