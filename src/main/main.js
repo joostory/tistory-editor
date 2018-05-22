@@ -7,6 +7,7 @@ const ipc = require('./ipc-event')
 const appInfo = require('./appInfo')
 
 app.showExitPrompt = false
+const USER_AGENT = `Tistory Editor ${appInfo.version} (With Chrome in Electron)`
 let mainWindow
 
 const initWindow = () => {
@@ -64,6 +65,8 @@ const createWindow = (config) => {
     protocol: 'file:',
     slashes: true
   }))
+
+  mainWindow.webContents.setUserAgent(USER_AGENT)
 
   if (process.env.NODE_ENV == "development") {
     mainWindow.webContents.openDevTools()
