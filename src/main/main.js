@@ -1,3 +1,4 @@
+const os = require('os')
 const settings = require('electron-settings')
 const oauth2 = require('electron-oauth2')
 const { app, BrowserWindow, Menu, shell, dialog } = require('electron')
@@ -7,7 +8,6 @@ const ipc = require('./ipc-event')
 const appInfo = require('./appInfo')
 
 app.showExitPrompt = false
-const USER_AGENT = `Tistory Editor ${appInfo.version} (With Chrome in Electron)`
 let mainWindow
 
 const initWindow = () => {
@@ -66,7 +66,7 @@ const createWindow = (config) => {
     slashes: true
   }))
 
-  mainWindow.webContents.setUserAgent(USER_AGENT)
+  mainWindow.webContents.setUserAgent(appInfo.userAgentFull)
 
   if (process.env.NODE_ENV == "development") {
     mainWindow.webContents.openDevTools()

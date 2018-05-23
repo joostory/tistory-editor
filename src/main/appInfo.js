@@ -1,4 +1,5 @@
 const { app, BrowserWindow, shell } = require('electron')
+const os = require('os')
 const path = require('path')
 const url = require('url')
 const electronLocalshortcut = require('electron-localshortcut')
@@ -55,7 +56,7 @@ const openWindow = () => {
     infoWindow = null
 	})
 
-  var handleRedirect = (e, url) => {
+  const handleRedirect = (e, url) => {
     if(url != infoWindow.webContents.getURL()) {
       e.preventDefault()
       shell.openExternal(url)
@@ -67,12 +68,25 @@ const openWindow = () => {
   infoWindow.webContents.on('new-window', handleRedirect)
 }
 
-let appInfo = {
-  version: `v${app.getVersion()}`,
-	lastVersion: `v${app.getVersion()}`,
-  openWindow: openWindow,
-  closeWindow: closeWindow,
-  fetchLastVersion: fetchLastVersion
+const makePlatformString = () => {
+  const platform = os.platform()
+  if (platform == 'darwin') {
+    return 'Mac'
+  } else {
+    return platform
+  }
 }
 
-module.exports = appInfo
+const APP_VERSION = `v${app.getVersion()}`
+const USER_AGENT = `Tistory Editor ${APP_VERSION}`
+const USER_AGENT_FULL = `${USER_AGENT} (With Chrome in ${makePlatformString()} Electron)`
+
+module.exports = {
+  version: APP_VERSION,
+	lastVersion: APP_VERSION,
+  openWindow: openWindow,
+  closeWindow: closeWindow,
+  fetchLastVersion: fetchLastVersion,
+  userAgent: USER_AGENT,
+  userAgentFull: USER_AGENT_FULL
+}

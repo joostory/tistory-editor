@@ -8,6 +8,7 @@ const FormData = require('form-data')
 const {clipboard, session} = require('electron')
 const stream = require('stream')
 const Oauth2infoReader = require('../Oauth2infoReader')
+const appInfo = require('../appInfo')
 
 const errorHandler = (res) => {
   if (!res.ok) {
@@ -39,7 +40,11 @@ module.exports.fetchBlogInfo = (auth) => {
   return fetch(BASE_URL + "/blog/info?" + querystring.stringify({
     access_token: auth.access_token,
     output: "json"
-  }))
+  }), {
+    headers: {
+      'User-Agent': appInfo.userAgent
+    }
+  })
   .then(errorHandler)
 }
 
@@ -47,7 +52,11 @@ module.exports.fetchUser = (auth) => {
   return fetch(BASE_URL + "/user?" + querystring.stringify({
     access_token: auth.access_token,
     output: "json"
-  }))
+  }), {
+    headers: {
+      'User-Agent': appInfo.userAgent
+    }
+  })
   .then(errorHandler)
 }
 
@@ -58,7 +67,11 @@ module.exports.fetchPosts = (auth, blogName, page) => {
     blogName: blogName,
     count: 30,
     page: page? page : 1
-  }))
+  }), {
+    headers: {
+      'User-Agent': appInfo.userAgent
+    }
+  })
   .then(errorHandler)
 }
 
@@ -68,7 +81,11 @@ module.exports.fetchContent = (auth, blogName, postId) => {
     output: "json",
     blogName: blogName,
     postId: postId
-  }))
+  }), {
+    headers: {
+      'User-Agent': appInfo.userAgent
+    }
+  })
   .then(errorHandler)
 }
 
@@ -77,7 +94,11 @@ module.exports.fetchCategories = (auth, blogName) => {
     access_token: auth.access_token,
     output: "json",
     blogName: blogName
-  }))
+  }), {
+    headers: {
+      'User-Agent': appInfo.userAgent
+    }
+  })
   .then(errorHandler)
 }
 
@@ -88,6 +109,10 @@ module.exports.saveContent = (auth, blogName, post) => {
   return fetch(BASE_URL + "/post/modify", {
     method: 'post',
     body: formdata
+  }, {
+    headers: {
+      'User-Agent': appInfo.userAgent
+    }
   })
   .then(errorHandler)
 }
@@ -98,6 +123,10 @@ module.exports.addContent = (auth, blogName, post) => {
   return fetch(BASE_URL + "/post/write", {
     method: 'post',
     body: formdata
+  }, {
+    headers: {
+      'User-Agent': appInfo.userAgent
+    }
   })
   .then(errorHandler)
 }

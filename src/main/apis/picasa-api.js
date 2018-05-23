@@ -9,6 +9,7 @@ const {clipboard, session} = require('electron')
 const stream = require('stream')
 const { parseString } = require('xml2js')
 const Oauth2infoReader = require('../Oauth2infoReader')
+const appInfo = require('../appInfo')
 
 const errorHandler = (res) => {
   if (!res.ok) {
@@ -71,7 +72,8 @@ class PhotosApi {
 			access: 'all'
 		}), {
 			headers: {
-				"GData-Version": 3
+				"GData-Version": 3,
+				'User-Agent': appInfo.userAgent
 			}
 		})
 		.then(errorHandler)
@@ -97,7 +99,8 @@ class PhotosApi {
 			'max-results': maxResults
 		}), {
 			headers: {
-				"GData-Version": 3
+				"GData-Version": 3,
+				'User-Agent': appInfo.userAgent
 			}
 		})
 		.then(errorHandler)
