@@ -72,6 +72,8 @@ const makePlatformString = () => {
   const platform = os.platform()
   if (platform == 'darwin') {
     return 'Mac'
+  } else if (platform.indexOf('win') >= 0) {
+    return 'Windows'
   } else {
     return platform
   }
