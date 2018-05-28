@@ -8,7 +8,7 @@ class GooglePhotosDialog extends Component {
 		const { open, onClose, onSelectImage } = this.props
 
 		const actions = [
-      <FlatButton label="닫기" primary={true} onTouchTap={onClose} />,
+      <FlatButton label="닫기" primary={true} onClick={onClose} />,
 		]
 		
 		return(

@@ -58,7 +58,7 @@ class Preference extends Component {
     const { preferences } = this.props
 
     let actions = [
-      <FlatButton label="닫기" primary={true} onTouchTap={this.handlePreferenceClose} />,
+      <FlatButton label="닫기" primary={true} onClick={this.handlePreferenceClose} />,
     ]
 
     let defaultEditor = preferences.editor || EditorMode.MARKDOWN

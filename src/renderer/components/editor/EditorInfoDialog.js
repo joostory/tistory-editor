@@ -11,9 +11,9 @@ class EditorInfoDialog extends Component {
     const { onRequestClose, onRequestSave, onRequestPublish, onTagsChange, onCategoryChange, categories, category, tags, open } = this.props
 
     let publishDialogActions = [
-			<FlatButton label="취소" primary={true} onTouchTap={onRequestClose} />,
-			<FlatButton label="저장" primary={true} onTouchTap={onRequestSave} />,
-			<FlatButton label="발행" primary={true} keyboardFocused={true} onTouchTap={onRequestPublish} />
+			<FlatButton label="취소" primary={true} onClick={onRequestClose} />,
+			<FlatButton label="저장" primary={true} onClick={onRequestSave} />,
+			<FlatButton label="발행" primary={true} keyboardFocused={true} onClick={onRequestPublish} />
 		]
 
     return (
