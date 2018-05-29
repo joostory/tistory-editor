@@ -89,11 +89,11 @@ class PostList extends Component {
 }
 
 PostList.propTypes = {
-	posts: PropTypes.object.isRequired,
+	posts: PropTypes.object,
 	currentPost: PropTypes.object,
 	currentBlog: PropTypes.object,
 	categories: PropTypes.array,
-	selectPost: PropTypes.func.isRequired
+	selectPost: PropTypes.func
 }
 
 export default PostList

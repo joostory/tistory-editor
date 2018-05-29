@@ -22,7 +22,7 @@ class Sidebar extends Component {
 	}
 }
 
-Sidebar.PropTypes = {
+Sidebar.propTypes = {
 	onRequestAddPost: PropTypes.func.isRequired
 }
 

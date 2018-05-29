@@ -13,7 +13,6 @@ import Visibility from '../../model/Visibility'
 import { pageview } from '../../modules/AnalyticsHelper'
 
 @connect(state => ({
-	user: state.user,
 	currentBlog: state.currentBlog
 }), dispatch => ({}))
 class Blog extends Component {
@@ -71,8 +70,7 @@ class Blog extends Component {
 }
 
 Blog.propTypes = {
-	user: PropTypes.object.isRequired,
-	currentBlog: PropTypes.object.isRequired
+	currentBlog: PropTypes.object
 }
 
 export default Blog

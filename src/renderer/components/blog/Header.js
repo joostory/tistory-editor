@@ -9,7 +9,6 @@ import NavigationBack from 'material-ui/svg-icons/navigation/arrow-back'
 import NoteAdd from 'material-ui/svg-icons/action/note-add'
 
 @connect(state => ({
-	user: state.user,
 	currentBlog: state.currentBlog
 }), dispatch => ({
 	handleGoIndex(e) {
@@ -19,7 +18,7 @@ import NoteAdd from 'material-ui/svg-icons/action/note-add'
 class Header extends Component {
 
 	render() {
-		const { user, currentBlog, handleGoIndex, onRequestAddPost } = this.props
+		const { currentBlog, handleGoIndex, onRequestAddPost } = this.props
 
 		let avatar = currentBlog.profileImageUrl? <Avatar src={currentBlog.profileImageUrl} size={30} /> : <Avatar size={30}>{currentBlog.title.slice(0,1)}</Avatar>
 
@@ -42,8 +41,7 @@ class Header extends Component {
 }
 
 Header.propTypes = {
-	user: PropTypes.object.isRequired,
-	currentBlog: PropTypes.object.isRequired,
+	currentBlog: PropTypes.object,
 	onRequestAddPost: PropTypes.func.isRequired
 }
 
