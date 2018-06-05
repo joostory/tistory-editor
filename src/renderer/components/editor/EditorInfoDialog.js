@@ -35,7 +35,7 @@ class EditorInfoDialog extends Component {
   }
 }
 
-EditorInfoDialog.PropTypes = {
+EditorInfoDialog.propTypes = {
   onRequestClose: PropTypes.func.isRequired,
   onRequestSave: PropTypes.func.isRequired,
   onRequestPublish: PropTypes.func.isRequired,
@@ -44,7 +44,7 @@ EditorInfoDialog.PropTypes = {
 
   categories: PropTypes.array.isRequired,
   category: PropTypes.string.isRequired,
-  tags: PropTypes.string.isRequired,
+  tags: PropTypes.array.isRequired,
   open: PropTypes.bool.isRequired
 }
 

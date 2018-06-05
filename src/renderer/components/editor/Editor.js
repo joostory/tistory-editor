@@ -400,9 +400,9 @@ class Editor extends Component {
 }
 
 Editor.propTypes = {
-	currentBlog: PropTypes.object.isRequired,
+	currentBlog: PropTypes.object,
 	post: PropTypes.object,
-	categories: PropTypes.array.isRequired,
+	categories: PropTypes.array,
 	mode: PropTypes.string.isRequired,
 	onFinish: PropTypes.func.isRequired
 }

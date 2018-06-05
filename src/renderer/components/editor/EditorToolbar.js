@@ -28,7 +28,7 @@ class EditorToolbar extends Component {
   }
 }
 
-EditorToolbar.PropTypes = {
+EditorToolbar.propTypes = {
   title: PropTypes.string.isRequired,
   onTitleChange: PropTypes.func.isRequired,
   onPreviewClick: PropTypes.func.isRequired,
