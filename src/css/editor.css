@@ -101,8 +101,65 @@ body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; bac
 .mce-container-body { overflow:auto }
 
 /* codemirror */
-.editor .CodeMirror { width:700px; height:auto; margin:0 auto; padding:66px 0 15px; font-family:Menlo, Consolas, 'DejaVu Sans Mono', monospace; background:transparent }
-.editor .CodeMirror .CodeMirror-dialog { position:fixed; top:112px; width:700px; background-color:#fff; left: 50%; transform: translate(-50%,0); z-index:10; box-shadow:rgba(0, 0, 0, 0.16) 0px 3px 10px, rgba(0, 0, 0, 0.23) 0px 3px 10px; padding:3px; border-radius:3px }
+.editor .CodeMirror {
+	width:700px;
+	height:auto;
+	margin:0 auto;
+	padding:66px 0 15px;
+	font-family:Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+	background:transparent;
+}
+.editor .CodeMirror .CodeMirror-dialog {
+	position:fixed;
+	top:112px;
+	width:700px;
+	background-color:#fff;
+	left: 50%;
+	transform: translate(-50%,0);
+	z-index:10;
+	box-shadow:rgba(0, 0, 0, 0.16) 0px 3px 10px, rgba(0, 0, 0, 0.23) 0px 3px 10px;
+	padding:3px;
+	border-radius:3px;
+}
+.editor .markdown-editor {
+	position:absolute;
+	top:0; bottom:0;
+	left:0; right:0;
+}
+.editor .preview-on .markdown-editor {
+	right: inherit;
+	width:50%;
+}
+.editor .preview-on .markdown-editor .CodeMirror {
+	width: 100%;
+}
+.editor .preview-on .markdown-editor .CodeMirror .CodeMirror-dialog {
+	width:50%;
+	left:0;
+	transform: translate(0,0);
+	box-shadow: none;
+}
+
+.editor .markdown-preview {
+	display:none;
+	position:absolute;
+	top:0; bottom:0;
+	right:0; width:50%;
+	overflow: auto;
+}
+.editor .markdown-preview .markdown-preview-content {
+	padding: 20px;
+}
+.editor .preview-on .markdown-preview {
+	display:block;
+}
+.editor .preview-on .editor-toolbar {
+	position:fixed;
+	width: 50%;
+	left: 0;
+	transform: translate(0, 0);
+}
+
 
 /* quill editor */
 .editor .ql-container { font-size:16px }

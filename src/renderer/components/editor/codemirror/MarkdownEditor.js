@@ -1,5 +1,6 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 import { ipcRenderer, clipboard } from 'electron'
 import autobind from 'autobind-decorator'
 import Codemirror from 'react-codemirror'
@@ -41,7 +42,8 @@ class MarkdownEditor extends Component {
     super(props, context)
     this.state = {
 			value: MarkdownHelper.htmlToMarkdown(props.value),
-			openGooglePhotos: false
+			openGooglePhotos: false,
+			preview: false
 		}
   }
 
@@ -153,9 +155,17 @@ class MarkdownEditor extends Component {
 		CodeMirrorHelper.insertImage(editor.getCodeMirror(), url)
 	}
 
+	@autobind
+	handleTogglePreview() {
+		const { preview } = this.state
+		this.setState({
+			preview: !preview
+		})
+	}
+
   render() {
 		const { onOpenFile } = this.props
-    const { value, openGooglePhotos } = this.state
+    const { value, openGooglePhotos, preview } = this.state
 
     const options = {
 			lineNumbers: false,
@@ -172,19 +182,25 @@ class MarkdownEditor extends Component {
 		}
 
 		return (
-			<div>
-				<div className="editor-toolbar">
-					<FlatButton onClick={this.handleHeader2} style={iconButtonStyle}>H2</FlatButton>
-					<FlatButton onClick={this.handleHeader3} style={iconButtonStyle}>H3</FlatButton>
-					<FlatButton onClick={this.handleBold} style={iconButtonStyle} icon={<IconEditorFormatBold />} />
-					<FlatButton onClick={this.handleItalic} style={iconButtonStyle} icon={<IconEditorFormatItalic />} />
-					<FlatButton onClick={this.handleUnderline} style={iconButtonStyle} icon={<IconEditorFormatUnderlined />} />
-					<FlatButton onClick={this.handleLink} style={iconButtonStyle}>Link</FlatButton>
-					<FlatButton onClick={this.handleGooglePhotos} style={iconButtonStyle} icon={<img src='../src/images/google-photos-logo.png' />} />
-					<FlatButton onClick={onOpenFile} style={iconButtonStyle} icon={<IconFileAttachment />} />
+			<div className={classnames({ 'preview-on':preview })}>
+				<div className="markdown-editor">
+					<div className="editor-toolbar">
+						<FlatButton onClick={this.handleHeader2} style={iconButtonStyle}>H2</FlatButton>
+						<FlatButton onClick={this.handleHeader3} style={iconButtonStyle}>H3</FlatButton>
+						<FlatButton onClick={this.handleBold} style={iconButtonStyle} icon={<IconEditorFormatBold />} />
+						<FlatButton onClick={this.handleItalic} style={iconButtonStyle} icon={<IconEditorFormatItalic />} />
+						<FlatButton onClick={this.handleUnderline} style={iconButtonStyle} icon={<IconEditorFormatUnderlined />} />
+						<FlatButton onClick={this.handleLink} style={iconButtonStyle}>Link</FlatButton>
+						<FlatButton onClick={this.handleGooglePhotos} style={iconButtonStyle} icon={<img src='../src/images/google-photos-logo.png' />} />
+						<FlatButton onClick={onOpenFile} style={iconButtonStyle} icon={<IconFileAttachment />} />
+						<FlatButton onClick={this.handleTogglePreview} style={iconButtonStyle}>Preview</FlatButton>
+					</div>
+					<Codemirror ref="editor" options={options} value={value}
+						onChange={this.handleChangeContent} />
 				</div>
-				<Codemirror ref="editor" options={options} value={value}
-					onChange={this.handleChangeContent} />
+				<div className="markdown-preview">
+					<div className="markdown-preview-content content" dangerouslySetInnerHTML={{__html: MarkdownHelper.markdownToHtml(value)}} />
+				</div>
 				<GooglePhotosDialog open={openGooglePhotos} onClose={this.handleCloseGooglePhotos} onSelectImage={this.handleInsertImage} />
 			</div>
 		)
