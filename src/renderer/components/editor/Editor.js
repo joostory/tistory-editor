@@ -9,21 +9,15 @@ import Dropzone from 'react-dropzone'
 import { ipcRenderer, remote } from 'electron'
 import TextField from 'material-ui/TextField'
 import Dialog from 'material-ui/Dialog'
-import Popover, { PopoverAnimationVertical } from 'material-ui/Popover'
-import Menu from 'material-ui/Menu'
-import MenuItem from 'material-ui/MenuItem'
-import FloatingActionButton from 'material-ui/FloatingActionButton'
-import ActionSwapVert from 'material-ui/svg-icons/action/swap-vert'
 
 import { addPost, updatePost } from '../../actions'
 import * as ContentMode from '../../constants/ContentMode'
 import * as EditorMode from '../../constants/EditorMode'
 
-import MarkdownEditor from './MarkdownEditor'
-import QuillEditor from './QuillEditor'
-import TinymceEditor from './TinymceEditor'
+import EditorContent from './EditorContent'
 import EditorToolbar from './EditorToolbar'
 import EditorInfoDialog from './EditorInfoDialog'
+import EditorSwitch from './EditorSwich';
 import Loading from '../Loading'
 
 import { pageview } from '../../modules/AnalyticsHelper'
@@ -50,8 +44,6 @@ class Editor extends Component {
 			showInfoBox: false,
 			showLoading: false,
 			showPreview: false,
-			showEditorMode: false,
-			popoverParent: null,
 			uploadFileCount: 0,
 			uploadFinishedFileCount: 0
 		}, this.makePostState(props))
@@ -248,28 +240,12 @@ class Editor extends Component {
 	}
 
 	@autobind
-	handleOpenEditorMode(e) {
-		e.preventDefault()
-		this.setState({
-			showEditorMode: true,
-			popoverParent: e.currentTarget
-		})
-	}
-
-	@autobind
-	handleCloseEditorMode(e) {
-		this.setState({
-			showEditorMode: false
-		})
-	}
-
 	handleChangeEditorMode(selectedMode) {
 		const { editor } = this.refs
 
 		this.setState({
 			content: editor.getContent(),
-			editorMode: selectedMode,
-			showEditorMode: false
+			editorMode: selectedMode
 		})
 	}
 
@@ -287,7 +263,7 @@ class Editor extends Component {
 	}
 
 	@autobind
-	handleDropFile(files) {
+	handleUploadFiles(files) {
 		const { currentBlog } = this.props
 		files.map(file => {
 			ipcRenderer.send("add-file", currentBlog.name, file.path)
@@ -310,28 +286,9 @@ class Editor extends Component {
 		})
 	}
 
-	@autobind
-	handleOpenFile() {
-		const { dropzone } = this.refs
-		dropzone.open()
-	}
-
-	getEditor() {
-		const { currentBlog } = this.props
-		const { content, editorMode } = this.state
-
-		if (editorMode == EditorMode.QUILL) {
-			return <QuillEditor ref="editor" value={content} currentBlog={currentBlog} onImageHandler={this.handleDropFile} />
-		} else if (editorMode == EditorMode.TINYMCE) {
-			return <TinymceEditor ref="editor" value={content} currentBlog={currentBlog} onImageHandler={this.handleDropFile} onOpenFile={this.handleOpenFile} />
-		} else {
-			return <MarkdownEditor ref="editor" value={content} currentBlog={currentBlog} onOpenFile={this.handleOpenFile} />
-		}
-	}
-
 	render() {
-		const { onFinish, categories, post } = this.props
-		const { title, content, categoryId, tags, showInfoBox, showLoading, showPreview, showEditorMode, popoverParent, editorMode, uploadFileCount, uploadFinishedFileCount } = this.state
+		const { onFinish, currentBlog, categories, post } = this.props
+		const { title, content, categoryId, tags, showInfoBox, showLoading, showPreview, editorMode, uploadFileCount, uploadFinishedFileCount } = this.state
 
 		let uploadMessage = "파일을 넣어주세요."
 		let uploading = false
@@ -348,18 +305,13 @@ class Editor extends Component {
 					onSaveClick={this.handlePublishDialogOpen}
 					onCancelClick={this.handleCancel} />
 
-				<div className="editor">
-					<Dropzone ref='dropzone' disableClick={true} accept="image/*" className={classnames({droppable: uploading})} activeClassName="droppable" style={{width: "100%",height:"100%"}}
-						onDrop={this.handleDropFile}>
-
-						{this.getEditor()}
-
-						<div className="dropzone_box">
-							<b>{uploadMessage}</b>
-						</div>
-
-					</Dropzone>
-				</div>
+				<EditorContent ref="editor"
+					editorMode={editorMode}
+					currentBlog={currentBlog}
+					content={content}
+					uploading={uploading}
+					uploadMessage={uploadMessage}
+					onUpload={this.handleUploadFiles} />
 
 				<Dialog title={title} actions={[]} modal={false} open={showPreview} autoScrollBodyContent={true}
 					onRequestClose={this.handleClosePreview}>
@@ -373,24 +325,9 @@ class Editor extends Component {
 					onRequestSave={this.handleSave}
 					onRequestPublish={this.handlePublish} />
 
-				<FloatingActionButton className="btn_change_editor" mini={true} onClick={this.handleOpenEditorMode}>
-					<ActionSwapVert />
-				</FloatingActionButton>
-
-				<Popover open={this.state.showEditorMode}
-					anchorEl={this.state.popoverParent}
-					anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-					targetOrigin={{horizontal: 'right', vertical: 'bottom'}}
-					onRequestClose={this.handleCloseEditorMode}>
-					<Menu>
-						<MenuItem primaryText="Rich Editor (Quill)" checked={editorMode === EditorMode.QUILL}
-							onTouchTap={e => this.handleChangeEditorMode(EditorMode.QUILL)} />
-						<MenuItem primaryText="Rich Editor (Tinymce)" checked={editorMode === EditorMode.TINYMCE}
-							onTouchTap={e => this.handleChangeEditorMode(EditorMode.TINYMCE)} />
-						<MenuItem primaryText="Markdown Editor" checked={editorMode === EditorMode.MARKDOWN}
-							onTouchTap={e => this.handleChangeEditorMode(EditorMode.MARKDOWN)} />
-					</Menu>
-				</Popover>
+				<EditorSwitch
+					editorMode={editorMode}
+					onChange={this.handleChangeEditorMode} />
 
 				{showLoading && <Loading />}
 

@@ -3,7 +3,7 @@ import { render, unmountComponentAtNode } from 'react-dom'
 import autobind from 'autobind-decorator'
 import { ipcRenderer } from 'electron'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import GooglePhotosApp from '../../../../components/editor/plugins/google-photos/GooglePhotosApp'
+import GooglePhotosApp from '../../../plugins/google-photos/GooglePhotosApp'
 
 const plugin = (editor, pluginUrl) => {
 	const $ = editor.$

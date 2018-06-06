@@ -6,7 +6,7 @@ import Quill from 'quill'
 import hljs from 'highlightjs'
 import deltaToHtml from 'delta-to-html'
 import 'quill/dist/quill.snow.css'
-import '../../../css/quill-content.css'
+import '../../../../css/quill-content.css'
 
 let quillInstance;
 

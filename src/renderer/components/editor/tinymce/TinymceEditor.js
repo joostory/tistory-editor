@@ -4,8 +4,8 @@ import { ipcRenderer, clipboard } from 'electron'
 import autobind from 'autobind-decorator'
 import TinyMCE from 'react-tinymce'
 import OpengraphFetcher from 'opengraph-fetcher'
-import '../../modules/tinymce/plugins/google-photos'
-import '../../modules/tinymce/plugins/file-upload'
+import './plugins/google-photos'
+import './plugins/file-upload'
 
 class TinymceEditor extends Component {
 

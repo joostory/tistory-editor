@@ -15,7 +15,7 @@ import IconEditorFormatUnderlined from 'material-ui/svg-icons/editor/format-unde
 import IconFileAttachment from 'material-ui/svg-icons/file/attachment'
 
 import CodeMirrorHelper from './CodeMirrorHelper'
-import GooglePhotosDialog from './plugins/google-photos/GooglePhotosDialog'
+import GooglePhotosDialog from '../plugins/google-photos/GooglePhotosDialog'
 
 const MacKeymap = [
 	{ 'Cmd-2': (cm) => CodeMirrorHelper.header2(cm) },
