@@ -11,8 +11,8 @@ import MenuItem from 'material-ui/MenuItem'
 
 class EditorSwitch extends Component {
 
-  constructor(context, props) {
-    super(context, props)
+  constructor(props, context) {
+    super(props, context)
     this.state = {
       open: false,
       popoverParent: null

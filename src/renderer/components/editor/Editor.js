@@ -12,7 +12,6 @@ import Dialog from 'material-ui/Dialog'
 
 import { addPost, updatePost } from '../../actions'
 import * as ContentMode from '../../constants/ContentMode'
-import * as EditorMode from '../../constants/EditorMode'
 
 import EditorContent from './EditorContent'
 import EditorToolbar from './EditorToolbar'
@@ -40,10 +39,8 @@ class Editor extends Component {
 		super(props, context)
 
 		this.state = Object.assign({
-			editorMode: props.preferences.editor || EditorMode.MARKDOWN,
 			showInfoBox: false,
 			showLoading: false,
-			showPreview: false,
 			uploadFileCount: 0,
 			uploadFinishedFileCount: 0
 		}, this.makePostState(props))
@@ -148,10 +145,10 @@ class Editor extends Component {
 
 	requestSave(visibility) {
 		const { post, currentBlog, mode } = this.props
-		const { title, categoryId, tags, editorMode } = this.state
+		const { title, categoryId, tags } = this.state
 		const { editor } = this.refs
 
-		let content = editor.getContent()
+		let content = editor.getWrappedInstance().getContent()
 		let savePost = {
 			title: title,
 			visibility: visibility,
@@ -240,12 +237,9 @@ class Editor extends Component {
 	}
 
 	@autobind
-	handleChangeEditorMode(selectedMode) {
-		const { editor } = this.refs
-
+	handleChangeContent(content) {
 		this.setState({
-			content: editor.getContent(),
-			editorMode: selectedMode
+			content: content
 		})
 	}
 
@@ -270,25 +264,9 @@ class Editor extends Component {
 		})
 	}
 
-	@autobind
-	handlePreview() {
-		const { editor } = this.refs
-		this.setState({
-			content: editor.getContent(),
-			showPreview: true
-		})
-	}
-
-	@autobind
-	handleClosePreview() {
-		this.setState({
-			showPreview: false
-		})
-	}
-
 	render() {
 		const { onFinish, currentBlog, categories, post } = this.props
-		const { title, content, categoryId, tags, showInfoBox, showLoading, showPreview, editorMode, uploadFileCount, uploadFinishedFileCount } = this.state
+		const { title, content, categoryId, tags, showInfoBox, showLoading, uploadFileCount, uploadFinishedFileCount } = this.state
 
 		let uploadMessage = "파일을 넣어주세요."
 		let uploading = false
@@ -301,22 +279,16 @@ class Editor extends Component {
 			<div className="editor_wrap">
 				<EditorToolbar title={title}
 					onTitleChange={this.handleChangeTitle}
-					onPreviewClick={this.handlePreview}
 					onSaveClick={this.handlePublishDialogOpen}
 					onCancelClick={this.handleCancel} />
 
 				<EditorContent ref="editor"
-					editorMode={editorMode}
 					currentBlog={currentBlog}
 					content={content}
 					uploading={uploading}
 					uploadMessage={uploadMessage}
-					onUpload={this.handleUploadFiles} />
-
-				<Dialog title={title} actions={[]} modal={false} open={showPreview} autoScrollBodyContent={true}
-					onRequestClose={this.handleClosePreview}>
-					<div className="content preview_content" dangerouslySetInnerHTML={{__html: content}} />
-				</Dialog>
+					onUpload={this.handleUploadFiles}
+					onChange={this.handleChangeContent} />
 
 				<EditorInfoDialog open={showInfoBox} category={categoryId} categories={categories} tags={tags}
 					onTagsChange={this.handleChangeTags}
@@ -324,10 +296,6 @@ class Editor extends Component {
 					onRequestClose={this.handlePublishDialogClose}
 					onRequestSave={this.handleSave}
 					onRequestPublish={this.handlePublish} />
-
-				<EditorSwitch
-					editorMode={editorMode}
-					onChange={this.handleChangeEditorMode} />
 
 				{showLoading && <Loading />}
 

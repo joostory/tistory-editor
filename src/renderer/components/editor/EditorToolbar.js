@@ -9,7 +9,7 @@ import NavigationBack from 'material-ui/svg-icons/navigation/arrow-back'
 
 class EditorToolbar extends Component {
   render() {
-    const { title, onTitleChange, onPreviewClick, onSaveClick, onCancelClick } = this.props
+    const { title, onTitleChange, onSaveClick, onCancelClick } = this.props
 
     return (
       <Toolbar style={{background:"transparent"}}>
@@ -20,7 +20,6 @@ class EditorToolbar extends Component {
           <TextField hintText="Title" type="text" value={title} fullWidth={true} onChange={onTitleChange} />
         </ToolbarGroup>
         <ToolbarGroup lastChild={true}>
-          <IconButton onClick={onPreviewClick} tooltip="미리보기"><ActionVisibility /></IconButton>
           <FlatButton onClick={onSaveClick} label="저장" primary={true} disabled={title.length == 0} style={{margin:0}} />
         </ToolbarGroup>
       </Toolbar>
@@ -31,7 +30,6 @@ class EditorToolbar extends Component {
 EditorToolbar.propTypes = {
   title: PropTypes.string.isRequired,
   onTitleChange: PropTypes.func.isRequired,
-  onPreviewClick: PropTypes.func.isRequired,
   onSaveClick: PropTypes.func.isRequired,
   onCancelClick: PropTypes.func.isRequired
 }
