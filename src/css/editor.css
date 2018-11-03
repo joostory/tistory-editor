@@ -56,6 +56,8 @@ body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; bac
 .list .btn_add:hover { background: #263238; color: #ccc; }
 .list .btn_del { position: absolute; right: 3px; top: 3px; color: #ccc; cursor: pointer; border: 0; background: transparent; display: none; }
 
+.sidebar .list { position:absolute;}
+
 .content_wrap { position: absolute; left: 300px; right: 0; top:0; bottom: 0 }
 .content_empty_message { position:absolute; top:50%; left:0; right:0; margin-top:-30px; height:60px; text-align:center; font-size:24px; color:#ccc }
 

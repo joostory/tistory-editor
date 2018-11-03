@@ -5,13 +5,10 @@ import classnames from 'classnames'
 import { ipcRenderer } from 'electron'
 import autobind from 'autobind-decorator'
 
-import { List, makeSelectable } from 'material-ui/List'
-import CircularProgress from 'material-ui/CircularProgress'
+import { CircularProgress, List } from '@material-ui/core'
 
 import PostListItem from './PostListItem'
 import { selectPost, lockPostsLoad } from '../../actions'
-
-let SelectableList = makeSelectable(List)
 
 @connect(state => ({
 	posts: state.posts,

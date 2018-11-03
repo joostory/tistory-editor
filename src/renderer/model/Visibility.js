@@ -1,5 +1,5 @@
 import React from 'react'
-import ContentDrafts from 'material-ui/svg-icons/content/drafts'
+import { Drafts } from '@material-ui/icons'
 
 class Visibility {
 
@@ -24,7 +24,7 @@ class Visibility {
 			case 3:
 				return
 			default:
-				return <ContentDrafts />
+				return <Drafts />
 		}
 	}
 }

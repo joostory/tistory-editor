@@ -4,8 +4,7 @@ import { ipcRenderer } from 'electron'
 import autobind from 'autobind-decorator'
 
 import { withStyles } from '@material-ui/core/styles'
-import Avatar from '@material-ui/core/Avatar'
-import Button from '@material-ui/core/Button'
+import { Avatar, Button } from '@material-ui/core'
 
 import TistoryTheme from '../../styles/TistoryMuiTheme'
 

@@ -1,10 +1,8 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import dateformat from 'dateformat'
-import {ListItem} from 'material-ui/List'
-import {fade} from 'material-ui/utils/colorManipulator'
-import ContentDrafts from 'material-ui/svg-icons/content/drafts'
+
+import { ListItem, ListItemText } from '@material-ui/core'
 import Visibility from '../../model/Visibility'
 
 class PostListItem extends Component {
@@ -15,26 +13,22 @@ class PostListItem extends Component {
 			"item": true
 		})
 		let visibility = new Visibility(post.visibility)
-		let primaryText = <div className="item_title">{post.title}</div>
+		let primaryText = <span className="item_title">{post.title}</span>
 		let secondaryText = (
-			<div>
+			<Fragment>
 				{category && <span className="item_category">{category.label}</span>}
 				{post.date}
-			</div>
+			</Fragment>
 		)
 
-    const styles = {}
-		if (selected) {
-			styles.backgroundColor = fade("#333", 0.2)
-		}
-
 		return (
-			<ListItem className="item" style={styles}
-				onClick={() => {onSelect(post)}}
-				primaryText={primaryText}
-				secondaryText={secondaryText}
-				rightIcon={visibility.toMaterialIcon()}
-			/>
+			<ListItem button className="item" onClick={() => {onSelect(post)}}>
+
+        <ListItemText primary={primaryText} secondary={secondaryText} />
+
+        {visibility.toMaterialIcon()}
+
+      </ListItem>
 		)
 	}
 }

@@ -59,11 +59,11 @@ class Blog extends Component {
 			<div className="container">
 				<Sidebar onRequestAddPost={this.handleRequestAddPost} />
 
-				<Content onRequestEditPost={this.handleRequestEditPost}/>
+				{/* <Content onRequestEditPost={this.handleRequestEditPost}/> */}
 
-				{(mode === ContentMode.EDIT || mode === ContentMode.ADD) &&
+				{/* {(mode === ContentMode.EDIT || mode === ContentMode.ADD) &&
 					<Editor mode={mode} onFinish={this.handleFinishEditor} />
-				}
+				} */}
 			</div>
 		)
 	}

@@ -14,6 +14,19 @@ const styles = theme => ({
 
   blockCenter: {
     margin: "0 auto"
+  },
+
+  blockNoPadding: {
+    margin: "0",
+    padding: "0"
+  },
+
+  layoutRoot: {
+    flexGrow: 1
+  },
+
+  layoutGrow: {
+    flexGrow: 1
   }
 })
 
