@@ -3,10 +3,13 @@ import PropTypes from 'prop-types'
 import { ipcRenderer } from 'electron'
 import autobind from 'autobind-decorator'
 
-import Avatar from 'material-ui/Avatar'
-import RaisedButton from 'material-ui/RaisedButton'
+import { withStyles } from '@material-ui/core/styles'
+import Avatar from '@material-ui/core/Avatar'
+import Button from '@material-ui/core/Button'
 
+import TistoryTheme from '../../styles/TistoryMuiTheme'
 
+@withStyles(TistoryTheme)
 class IndexProfile extends Component {
 
   constructor(props, context) {
@@ -21,13 +24,13 @@ class IndexProfile extends Component {
 	}
 
   render() {
-    const { user } = this.props
+    const { user, classes } = this.props
 
     let profileImage
     if (user.image) {
-      profileImage = <Avatar size={50} src={user.image} />
+      profileImage = <Avatar className={classes.blockCenter} size={50} src={user.image} />
     } else {
-      profileImage = <Avatar size={50}>{user.name.slice(0, 1)}</Avatar>
+      profileImage = <Avatar className={classes.blockCenter} size={50}>{user.name.slice(0, 1)}</Avatar>
     }
 
     return (
@@ -36,12 +39,9 @@ class IndexProfile extends Component {
         <div>{user.name}</div>
         <div>({user.loginId})</div>
 
-        <RaisedButton
-          className="btn_disconnect"
-          label="연결해제"
-          labelStyle={{ color:"#fff" }}
-          backgroundColor="#f1631b"
-          onClick={this.handleDisconnectAuth} />
+        <Button className={classes.button} variant="contained" onClick={this.handleDisconnectAuth}>
+          연결해제
+        </Button>
       </div>
     )
   }

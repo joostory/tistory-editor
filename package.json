@@ -52,6 +52,8 @@
     "webpack-cli": "^3.1.2"
   },
   "dependencies": {
+    "@material-ui/core": "^3.3.2",
+    "@material-ui/icons": "^3.0.1",
     "autobind-decorator": "^2.1.0",
     "cheerio": "^1.0.0-rc.2",
     "classnames": "^2.2.6",

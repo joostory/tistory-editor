@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-import { ListItem } from 'material-ui/List'
-import Avatar from 'material-ui/Avatar'
-import Stars from 'material-ui/svg-icons/action/stars'
+import { Avatar, ListItem, ListItemText } from '@material-ui/core';
+import { Stars } from '@material-ui/icons'
 
 class BlogListItem extends Component {
   render() {
@@ -18,26 +17,22 @@ class BlogListItem extends Component {
 
     let url = (blog.secondaryUrl == 'http://')? blog.url : blog.secondaryUrl
     let info = (
-      <p>
+      <div>
         <span className="blog_url">{url}</span>
         {blog.description && <span> -- {blog.description}</span>}
-      </p>
+      </div>
     )
 
-		let defaultBlogIcon;
-		if (blog.default === 'Y') {
-			defaultBlogIcon = <Stars />
-		}
-
     return (
-      <ListItem
-        onClick={e => onSelect(blog)}
-        leftAvatar={avatar}
-				rightIcon={defaultBlogIcon}
-        primaryText={blog.title}
-        secondaryText={info}
-        secondaryTextLines={2}
-      />
+      <ListItem button onClick={e => onSelect(blog)}>
+        {avatar}
+
+        <ListItemText primary={blog.title} secondary={info} secondaryTextLines={2} />
+        {blog.default === 'Y' &&
+          <Stars />
+        }
+        
+      </ListItem>
     )
   }
 }

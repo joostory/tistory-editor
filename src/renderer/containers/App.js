@@ -50,16 +50,16 @@ class App extends Component {
 			<div>
 				<Main />
 
-				{messageOpen && message &&
+				{/* {messageOpen && message &&
 					<Snackbar
 						open={messageOpen}
 						message={message}
 						autoHideDuration={3000}
 						onRequestClose={this.handleMessageClose}
 					/>
-				}
+				} */}
 
-				<Preference />
+				{/* <Preference /> */}
 			</div>
 		)
 	}
