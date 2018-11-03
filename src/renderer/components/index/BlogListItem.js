@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 
 import { Avatar, ListItem, ListItemText } from '@material-ui/core';
@@ -17,21 +17,20 @@ class BlogListItem extends Component {
 
     let url = (blog.secondaryUrl == 'http://')? blog.url : blog.secondaryUrl
     let info = (
-      <div>
+      <Fragment>
         <span className="blog_url">{url}</span>
         {blog.description && <span> -- {blog.description}</span>}
-      </div>
+      </Fragment>
     )
 
     return (
       <ListItem button onClick={e => onSelect(blog)}>
         {avatar}
 
-        <ListItemText primary={blog.title} secondary={info} secondaryTextLines={2} />
+        <ListItemText primary={blog.title} secondary={info} />
         {blog.default === 'Y' &&
           <Stars />
         }
-        
       </ListItem>
     )
   }
