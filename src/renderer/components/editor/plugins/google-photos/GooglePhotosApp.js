@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { ipcRenderer } from 'electron'
 import autobind from 'autobind-decorator'
 import update from 'immutability-helper'
-import RaisedButton from 'material-ui/RaisedButton'
+import { Button } from '@material-ui/core'
 import Loading from '../../../Loading'
 import PhotoList from './PhotoList'
 import { toOriginalUrl } from '../../../../modules/GooglePhotosHelper'
@@ -119,7 +119,7 @@ class GooglePhotosApp extends Component {
 			return (
 				<div className="google-photos-wrap">
 					<div className="google-photos-cover">
-						<RaisedButton label="Google Photos 연결" primary={true} onClick={this.handleRequestAuth} />
+						<Button variant='contained' className='btn btn_tistory' onClick={this.handleRequestAuth}>Google Photos 연결</Button>
 					</div>
 				</div>	
 			)

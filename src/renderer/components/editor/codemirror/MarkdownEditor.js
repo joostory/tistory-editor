@@ -4,16 +4,10 @@ import classnames from 'classnames'
 import { ipcRenderer, clipboard } from 'electron'
 import autobind from 'autobind-decorator'
 import Codemirror from 'react-codemirror'
-import toMarkdown from 'to-markdown'
-import marked from 'marked'
 import MarkdownHelper from './MarkdownHelper'
 
-import FlatButton from 'material-ui/FlatButton'
-import IconButton from 'material-ui/IconButton'
-import IconEditorFormatBold from 'material-ui/svg-icons/editor/format-bold'
-import IconEditorFormatItalic from 'material-ui/svg-icons/editor/format-italic'
-import IconEditorFormatUnderlined from 'material-ui/svg-icons/editor/format-underlined'
-import IconFileAttachment from 'material-ui/svg-icons/file/attachment'
+import { Button } from '@material-ui/core'
+import { FormatBold, FormatItalic, FormatUnderlined, Attachment } from '@material-ui/icons'
 
 import CodeMirrorHelper from './CodeMirrorHelper'
 import GooglePhotosDialog from '../plugins/google-photos/GooglePhotosDialog'
@@ -185,15 +179,15 @@ class MarkdownEditor extends Component {
 			<div className={classnames({ 'preview-on':preview })}>
 				<div className="markdown-editor">
 					<div className="editor-toolbar">
-						<FlatButton onClick={this.handleHeader2} style={iconButtonStyle}>H2</FlatButton>
-						<FlatButton onClick={this.handleHeader3} style={iconButtonStyle}>H3</FlatButton>
-						<FlatButton onClick={this.handleBold} style={iconButtonStyle} icon={<IconEditorFormatBold />} />
-						<FlatButton onClick={this.handleItalic} style={iconButtonStyle} icon={<IconEditorFormatItalic />} />
-						<FlatButton onClick={this.handleUnderline} style={iconButtonStyle} icon={<IconEditorFormatUnderlined />} />
-						<FlatButton onClick={this.handleLink} style={iconButtonStyle}>Link</FlatButton>
-						<FlatButton onClick={this.handleGooglePhotos} style={iconButtonStyle} icon={<img src='../src/images/google-photos-logo.png' />} />
-						<FlatButton onClick={onOpenFile} style={iconButtonStyle} icon={<IconFileAttachment />} />
-						<FlatButton onClick={this.handleTogglePreview} style={iconButtonStyle}>Preview</FlatButton>
+						<Button variant='text' onClick={this.handleHeader2} style={iconButtonStyle}>H2</Button>
+						<Button variant='text' onClick={this.handleHeader3} style={iconButtonStyle}>H3</Button>
+						<Button variant='text' onClick={this.handleBold} style={iconButtonStyle}><FormatBold /></Button>
+						<Button variant='text' onClick={this.handleItalic} style={iconButtonStyle}><FormatItalic /></Button>
+						<Button variant='text' onClick={this.handleUnderline} style={iconButtonStyle}><FormatUnderlined /></Button>
+						<Button variant='text' onClick={this.handleLink} style={iconButtonStyle}>Link</Button>
+						<Button variant='text' onClick={this.handleGooglePhotos} style={iconButtonStyle}><img src='../src/images/google-photos-logo.png' /></Button>
+						<Button variant='text' onClick={onOpenFile} style={iconButtonStyle}><Attachment /></Button>
+						<Button variant='text' onClick={this.handleTogglePreview} style={iconButtonStyle}>Preview</Button>
 					</div>
 					<Codemirror ref="editor" options={options} value={value}
 						onChange={this.handleChangeContent} />

@@ -1,21 +1,23 @@
 import React, { Component } from 'react'
-import Dialog from 'material-ui/Dialog'
-import FlatButton from 'material-ui/FlatButton'
+
+import { Dialog, Button, DialogTitle, DialogContent, DialogActions } from '@material-ui/core'
 import GooglePhotosApp from './GooglePhotosApp'
 
 class GooglePhotosDialog extends Component {
 	render() {
 		const { open, onClose, onSelectImage } = this.props
 
-		const actions = [
-      <FlatButton label="닫기" primary={true} onClick={onClose} />,
-		]
-		
 		return(
-			<Dialog title="Google Photos" modal={true} open={open} actions={actions} onRequestClose={onClose}>
-				<div className='plugin-google-photos'>
-					<GooglePhotosApp onSelectImage={onSelectImage} />
-				</div>
+			<Dialog open={open} maxWidth='lg' onClose={onClose}>
+        <DialogTitle>Google Photos</DialogTitle>
+
+        <DialogContent className='plugin-google-photos'>
+          <GooglePhotosApp onSelectImage={onSelectImage} />
+        </DialogContent>
+
+        <DialogActions>
+          <Button variant='text' onClick={onClose}>닫기</Button>,
+        </DialogActions>
 			</Dialog>
 		)
 	}

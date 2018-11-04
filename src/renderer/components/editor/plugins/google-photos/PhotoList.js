@@ -1,12 +1,7 @@
 import React, { Component, Fragment } from 'react'
-import { ipcRenderer } from 'electron'
 import autobind from 'autobind-decorator'
-import IconButton from 'material-ui/IconButton'
-import RaisedButton from 'material-ui/RaisedButton'
-import NavigationBack from 'material-ui/svg-icons/navigation/arrow-back'
-import { GridList, GridTile } from 'material-ui/GridList'
-import Subheader from 'material-ui/Subheader'
-import update from 'immutability-helper'
+
+import { Button, Grid } from '@material-ui/core'
 
 import Loading from '../../../../components/Loading'
 import { timstampToDate } from '../../../../modules/ContentHelper'
@@ -46,7 +41,7 @@ class PhotoList extends Component {
 		return (
 			<div className="google-photos-wrap">
 				<div className="photos-header">
-					<RaisedButton label="연결해제" onClick={onDisconnect} />
+					<Button variant='contained' onClick={onDisconnect}>연결해제</Button>
 				</div>
 				<div ref="list" className="photos-list">
 					{images.length === 0 && fetching &&
@@ -54,19 +49,13 @@ class PhotoList extends Component {
 							<Loading />
 						</div>
 					}
-					{images &&
-						<GridList cols={3}>
-							{images.filter(item => !item.isVideo).map(item => {
-								return (
-									<Fragment>
-										<GridTile key={item.id} title={timstampToDate(item.timestamp)} subtitle={item.summary} onClick={e => onClick(item)}>
-											<img src={item.url} />
-										</GridTile>
-									</Fragment>
-								)
-							})}
-						</GridList>
-					}
+					{images.length > 0 && images.filter(item => !item.isVideo).map(item => {
+            return (
+              <Grid key={item.id} xs={12} sm={3} item={true} title={timstampToDate(item.timestamp)} subtitle={item.summary} onClick={e => onClick(item)}>
+                <img src={item.url} />
+              </Grid>
+            )
+          })}
 					{images.length > 0 && fetching &&
 						<div className="google-photos-footer">
 							<Loading />

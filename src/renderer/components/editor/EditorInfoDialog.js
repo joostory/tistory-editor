@@ -1,35 +1,41 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import Dialog from 'material-ui/Dialog'
-import SelectField from 'material-ui/SelectField'
-import MenuItem from 'material-ui/MenuItem'
+
+import { Dialog, Select, MenuItem, Button, DialogTitle, DialogContent, DialogActions } from '@material-ui/core'
+
 import ChipInput from 'material-ui-chip-input'
-import FlatButton from 'material-ui/FlatButton'
 
 class EditorInfoDialog extends Component {
   render() {
     const { onRequestClose, onRequestSave, onRequestPublish, onTagsChange, onCategoryChange, categories, category, tags, open } = this.props
 
-    let publishDialogActions = [
-			<FlatButton label="취소" primary={true} onClick={onRequestClose} />,
-			<FlatButton label="저장" primary={true} onClick={onRequestSave} />,
-			<FlatButton label="발행" primary={true} keyboardFocused={true} onClick={onRequestPublish} />
-		]
-
     return (
-      <Dialog title="글의 속성을 확인해주세요." modal={false} open={open} actions={publishDialogActions}
-        onRequestClose={onRequestClose}>
+      <Dialog className='post-info-dialog' open={open} maxWidth='md' onClose={onRequestClose}>
+        <DialogTitle>글의 속성을 확인해주세요.</DialogTitle>
+        <DialogContent className='post-info-dialog-content'>
+          <Select className='post-info-form-control' name="카테고리" value={category} fullWidth onChange={onCategoryChange}>
+            <MenuItem value="0">분류없음</MenuItem>
+            {categories.map((item, i) =>
+              <MenuItem key={i} value={item.id}>{item.label}</MenuItem>
+            )}
+          </Select>
 
-        <ChipInput floatingLabelText="태그" hintText="Tag" newChipKeyCodes={[13, 188]} defaultValue={tags} onChange={onTagsChange} />
+          <ChipInput className='post-info-form-control'
+            label="태그" placeholder="Tag"
+            newChipKeyCodes={[13, 188]}
+            defaultValue={tags}
+            blurBehavior='add'
+            onChange={onTagsChange}
+            fullWidth
+          />
+        </DialogContent>
 
-        <br />
-
-        <SelectField floatingLabelText="카테고리" value={category} autoWidth={true} onChange={onCategoryChange}>
-          <MenuItem value="0" primaryText="분류없음" />
-          {categories.map((item, i) =>
-            <MenuItem key={i} value={item.id} primaryText={item.label} />
-          )}
-        </SelectField>
+        <DialogActions>
+          <Button variant='text' onClick={onRequestClose}>취소</Button>
+          <Button variant='text' onClick={onRequestSave}>저장</Button>
+          <Button variant='text' className='btn btn_tistory' onClick={onRequestPublish}>발행</Button>
+        </DialogActions>
+        
       </Dialog>
     )
   }

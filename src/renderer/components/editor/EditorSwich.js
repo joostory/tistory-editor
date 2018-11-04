@@ -3,11 +3,8 @@ import autobind from 'autobind-decorator'
 
 import * as EditorMode from '../../constants/EditorMode'
 
-import Popover, { PopoverAnimationVertical } from 'material-ui/Popover'
-import FloatingActionButton from 'material-ui/FloatingActionButton'
-import ActionSwapVert from 'material-ui/svg-icons/action/swap-vert'
-import Menu from 'material-ui/Menu'
-import MenuItem from 'material-ui/MenuItem'
+import { Popover, Menu, MenuItem, Button } from '@material-ui/core'
+import { SwapVert } from '@material-ui/icons'
 
 class EditorSwitch extends Component {
 
@@ -49,9 +46,9 @@ class EditorSwitch extends Component {
 
     return (
       <Fragment>
-        <FloatingActionButton className="btn_change_editor" mini={true} onClick={this.handleOpenEditorMode}>
-					<ActionSwapVert />
-				</FloatingActionButton>
+        <Button variant='fab' className="btn_change_editor" mini={true} onClick={this.handleOpenEditorMode}>
+					<SwapVert />
+				</Button>
 
 				<Popover open={open}
 					anchorEl={popoverParent}

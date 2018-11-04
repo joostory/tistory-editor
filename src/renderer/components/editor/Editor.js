@@ -277,7 +277,7 @@ class Editor extends Component {
 					onSaveClick={this.handlePublishDialogOpen}
 					onCancelClick={this.handleCancel} />
 
-				{/* <EditorContent ref="editor"
+				<EditorContent ref="editor"
 					currentBlog={currentBlog}
 					content={content}
 					uploading={uploading}
@@ -290,7 +290,7 @@ class Editor extends Component {
 					onCategoryChange={this.handleChangeCategory}
 					onRequestClose={this.handlePublishDialogClose}
 					onRequestSave={this.handleSave}
-					onRequestPublish={this.handlePublish} /> */}
+					onRequestPublish={this.handlePublish} />
 
 				{showLoading && <Loading />}
 

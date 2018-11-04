@@ -10,6 +10,17 @@
     }
   }
 }
+
+.post-info-dialog {
+  .post-info-dialog-content {
+    width:480px;
+
+    .post-info-form-control {
+      margin: 10px 0;
+    }
+  }
+}
+
 .editor { position:absolute; left:0; right:0; top:56px; bottom:0; }
 .editor .mce-tinymce,
 .editor .Quill,
@@ -103,11 +114,17 @@
 /* photos plugin */
 .mce-ico.mce-i-google-photos { background:url('../../images/google-photos-logo.png') no-repeat; background-size:16px 16px }
 .mce-container .plugin-google-photos { min-width:640px }
-.plugin-google-photos { min-height:480px; position: relative; }
-.plugin-google-photos .google-photos-wrap { position:absolute; top:0; bottom:0; left:0; right:0; overflow:auto }
-.plugin-google-photos .google-photos-wrap .google-photos-cover { display: flex;justify-content: center;align-items: center; height: 100%;}
-.plugin-google-photos .google-photos-wrap .google-photos-footer { display: flex;justify-content: center;align-items: center; height: 100px; }
-.plugin-google-photos .google-photos-wrap div { color:#fff }
-.plugin-google-photos .google-photos-wrap * { vertical-align:middle; line-height:inherit }
-.plugin-google-photos .google-photos-wrap .photos-header { position:absolute; top:0; height:48px; left:0; right:0; padding: 6px; }
-.plugin-google-photos .google-photos-wrap .photos-list { position:absolute; top:48px; bottom:0; left:0; right:0; overflow:hidden; overflow-y:auto }
+
+.plugin-google-photos {
+  min-width: 640px; min-height:480px; position: relative;
+  .google-photos-wrap {
+    position:absolute; top:0; bottom:0; left:0; right:0; overflow:auto;
+    .google-photos-cover { display: flex;justify-content: center;align-items: center; height: 100%;}
+    .google-photos-footer { display: flex;justify-content: center;align-items: center; height: 100px; }
+    div { color:#fff }
+    * { vertical-align:middle; line-height:inherit }
+    .photos-header { position:absolute; top:0; height:48px; left:0; right:0; padding: 6px; }
+    .photos-list { position:absolute; top:48px; bottom:0; left:0; right:0; overflow:hidden; overflow-y:auto }
+  }
+
+}
