@@ -3,6 +3,7 @@ __snapshots__
 dist
 .vscode
 .idea
-app/editor.min.js
+app/*.min.js
+app/*.png
 .oauth2info.json
 package-lock.json
