@@ -1,62 +1,13 @@
-input, button, a { outline:none }
-
-body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; background-color:#fff }
-
-.container { position:absolute; left:0; right:0; top:0; bottom:0; overflow:hidden; }
-.btn { background:transparent; border:1px solid #ccc }
-.btn:hover { background:#eee }
-
-/* tistory */
-.tistory { color:#f1631b; }
-.btn_tistory { background:#f1631b; color:#fff; border:0; }
-.btn_tistory:hover { background: #eb531f}
+@import './common.scss';
 
 /* ready */
-.ready { position:absolute; top: 50%; left: 50%; margin-right: -50%; transform: translate(-50%, -50%); text-align:center }
-.btn_connect { width:300px; height:80px; font-size:16px }
+@import './components/ready.scss';
 
 /* index */
-.profile { text-align:center; margin:50px auto 20px }
-.profile .btn_disconnect { margin-top:10px; width:200px; font-size:14px }
-
-.blog_list { width: 400px; margin-left: -200px; overflow-y: auto; position: absolute; left: 50%; top: 273px; bottom:50px }
-.blog_list .blog_url { color:#aaa }
-
-.svg_profile { width:50px; height:50px }
-.svg_profile circle { stroke:#ccc; fill:#f4f4f4; stroke-width:0; cx:25px; cy:25px; r:23px }
-.svg_profile text { transform: translate(25px, 32px); text-anchor:middle; font-size:20px; stroke:#ccc; fill:#ccc; text-transform: uppercase; }
+@import './components/index.scss';
 
 /* sidebar */
-.sidebar { position: absolute; top: 0; bottom: 0; left: 0; width: 300px; background: #eee; }
-
-/* header */
-.header { height: 50px; background: #ddd; }
-.header .btn { position:absolute; top:10px; width:30px; height:30px; border:0; padding:0 }
-.header .btn:hover { background:transparent }
-.header .btn:hover svg g { stroke:#333 }
-.header .btn_back { left:5px }
-.header .btn_add { right:5px }
-.header .current_blog { overflow:hidden; height:30px; position:absolute; left:40px; right:40px; top:10px; padding-left:40px}
-.header .current_blog .blog_image { width:30px; height:30px; position:absolute; left:0; top:0 }
-.header .current_blog .blog_image img { width:30px; height:30px; border-radius:15px }
-.header .current_blog .blog_image .svg_profile { width:30px; height:30px; }
-.header .current_blog .blog_image .svg_profile circle { cx:15px; cy:15px; r:14px }
-.header .current_blog .blog_image .svg_profile text { transform: translate(15px, 18px); font-size:14px; }
-.header .current_blog .blog_title { line-height: 30px; font-size:16px; color:#333; font-weight:bold }
-.header .title { color: #eee; font-weight: bold; line-height: 40px; padding: 5px 20px; }
-
-.list { margin: 0; padding:0; position:absolute; left:0; width:300px; top:56px; bottom:0; overflow:auto }
-.list .item .item_date { color: #999; }
-.list .item .item_category { color:#f1631b; margin-right:5px }
-.list .item .item_visibility { color: #999; margin-left:5px }
-.list .item .item_title { overflow:hidden; text-overflow: ellipsis }
-.list .item .item_info { display:block; font-size:11px; }
-.list .item.selected { background:#fff }
-.list .btn_add { display: block; color: #aaa; cursor: pointer; font-size: 12px; text-align: center; padding: 10px; text-decoration: none; }
-.list .btn_add:hover { background: #263238; color: #ccc; }
-.list .btn_del { position: absolute; right: 3px; top: 3px; color: #ccc; cursor: pointer; border: 0; background: transparent; display: none; }
-
-.sidebar .list { position:absolute;}
+@import './components/sidebar.scss';
 
 .content_wrap { position: absolute; left: 300px; right: 0; top:0; bottom: 0 }
 .content_empty_message { position:absolute; top:50%; left:0; right:0; margin-top:-30px; height:60px; text-align:center; font-size:24px; color:#ccc }
@@ -171,7 +122,7 @@ body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; bac
 .Quill blockquote:after { content:'' }
 
 /* photos plugin */
-.mce-ico.mce-i-google-photos { background:url('../images/google-photos-logo.png') no-repeat; background-size:16px 16px }
+.mce-ico.mce-i-google-photos { background:url('../../images/google-photos-logo.png') no-repeat; background-size:16px 16px }
 .mce-container .plugin-google-photos { min-width:640px }
 .plugin-google-photos { min-height:480px; position: relative; }
 .plugin-google-photos .google-photos-wrap { position:absolute; top:0; bottom:0; left:0; right:0; overflow:auto }

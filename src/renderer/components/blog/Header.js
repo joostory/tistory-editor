@@ -4,14 +4,9 @@ import { connect } from 'react-redux'
 import classnames from 'classnames'
 import { goIndex } from '../../actions'
 
-import { withStyles } from '@material-ui/core/styles'
 import { Toolbar, IconButton, Avatar, Typography } from '@material-ui/core'
 import { NoteAdd, NavigateBefore } from '@material-ui/icons'
 
-import TistoryTheme from '../../styles/TistoryMuiTheme'
-
-
-@withStyles(TistoryTheme)
 @connect(state => ({
 	currentBlog: state.currentBlog
 }), dispatch => ({
@@ -27,14 +22,14 @@ class Header extends Component {
 		let avatar = currentBlog.profileImageUrl? <Avatar src={currentBlog.profileImageUrl} size={30} /> : <Avatar size={30}>{currentBlog.title.slice(0,1)}</Avatar>
 
 		return (
-			<Toolbar className={classnames(classes.layoutRoot, classes.blockNoPadding)}>
+			<Toolbar className='header'>
         <IconButton onClick={handleGoIndex}>
           <NavigateBefore />
         </IconButton>
 
         { avatar }
 
-        <Typography className={classes.layoutGrow}>
+        <Typography className='blog-title'>
           {currentBlog.title}
         </Typography>
 

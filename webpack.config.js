@@ -26,12 +26,20 @@ module.exports = {
 				include: __dirname
 			},
 			{
-				test: /\.css$/,
+				test: /\.s?css$/,
 				use: [
 					"style-loader",
-					"css-loader"
+          "css-loader",
+          "resolve-url-loader",
+          "sass-loader"
 				]
-			}
+      },
+      {
+        test: /\.(png|jpg|gif)$/,
+        use: [
+          "file-loader"
+        ]
+      }
 		]
 	},
 	target: "electron-renderer"

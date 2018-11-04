@@ -24,7 +24,7 @@ class BlogListItem extends Component {
     )
 
     return (
-      <ListItem button onClick={e => onSelect(blog)}>
+      <ListItem className="blog_item" button onClick={e => onSelect(blog)}>
         {avatar}
 
         <ListItemText primary={blog.title} secondary={info} />

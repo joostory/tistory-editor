@@ -2,11 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { ipcRenderer } from 'electron'
-import Chip from 'material-ui/Chip'
-import IconButton from 'material-ui/IconButton'
-import CircularProgress from 'material-ui/CircularProgress'
-import OpenInBrowser from 'material-ui/svg-icons/action/open-in-browser'
-import ModeEdit from 'material-ui/svg-icons/editor/mode-edit'
+import { Chip, CircularProgress, IconButton } from '@material-ui/core'
+import { OpenInBrowser, Edit } from '@material-ui/icons'
 import highlightjs from 'highlightjs'
 import * as ContentHelper from '../../modules/ContentHelper'
 import { pageview } from '../../modules/AnalyticsHelper'
@@ -80,7 +77,7 @@ class ContentViewer extends Component {
             <div className='viewer_info'>
               <span>{post.date}</span>
 							<IconButton href={post.postUrl} tooltip="브라우저에서 보기" style={buttonStyle}><OpenInBrowser /></IconButton>
-							<IconButton onClick={onRequestEditPost} tooltip="수정하기" style={buttonStyle}><ModeEdit /></IconButton>
+							<IconButton onClick={onRequestEditPost} tooltip="수정하기" style={buttonStyle}><Edit /></IconButton>
             </div>
           </div>
 
@@ -92,7 +89,9 @@ class ContentViewer extends Component {
 					<div ref="viewerContent" className="viewer_content content" dangerouslySetInnerHTML={{__html: ContentHelper.makeUrlBase(post.content)}} />
 
           <div className="viewer_tags">
-            {tags.map((item, i) => <Chip key={i} style={{marginRight:'4px'}}>{item}</Chip>)}
+            {tags.map((item, i) =>
+              <Chip key={i} variant='outlined' label={item} />
+            )}
           </div>
 
         </div>

@@ -1,11 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { ipcRenderer } from 'electron'
 
-import * as ContentMode from '../../constants/ContentMode'
 import ContentViewer from './ContentViewer'
-import Editor from '../editor/Editor'
 
 @connect(state => ({
 	post: state.currentPost
