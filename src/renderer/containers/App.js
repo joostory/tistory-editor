@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { ipcRenderer } from 'electron'
 import autobind from 'autobind-decorator'
-import Snackbar from 'material-ui/Snackbar'
+import { Snackbar } from '@material-ui/core'
 
 import { receiveLocalPost, removeLocalPost, updateLocalPost } from '../actions'
 
@@ -50,16 +50,16 @@ class App extends Component {
 			<div>
 				<Main />
 
-				{/* {messageOpen && message &&
+				{messageOpen && message &&
 					<Snackbar
 						open={messageOpen}
 						message={message}
 						autoHideDuration={3000}
-						onRequestClose={this.handleMessageClose}
+						onClose={this.handleMessageClose}
 					/>
-				} */}
+				}
 
-				{/* <Preference /> */}
+				<Preference />
 			</div>
 		)
 	}

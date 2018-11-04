@@ -3,10 +3,8 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { ipcRenderer } from 'electron'
 import autobind from 'autobind-decorator'
-import Dialog from 'material-ui/Dialog'
-import SelectField from 'material-ui/SelectField'
-import FlatButton from 'material-ui/FlatButton'
-import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton'
+
+import { Dialog, Button, DialogTitle, DialogContent, DialogActions, RadioGroup, Radio, FormControlLabel } from '@material-ui/core'
 
 import * as EditorMode from '../constants/EditorMode'
 
@@ -57,20 +55,24 @@ class Preference extends Component {
     const { open } = this.state
     const { preferences } = this.props
 
-    let actions = [
-      <FlatButton label="닫기" primary={true} onClick={this.handlePreferenceClose} />,
-    ]
-
     let defaultEditor = preferences.editor || EditorMode.MARKDOWN
 
     return (
-      <Dialog title="환경설정" modal={false} open={open} actions={actions} onRequestClose={this.handlePreferenceClose}>
-        기본 에디터
-        <RadioButtonGroup name="editor" defaultSelected={defaultEditor} onChange={this.handleChangeEditor}>
-          <RadioButton value={EditorMode.MARKDOWN} label="Markdown Editor" />
-          <RadioButton value={EditorMode.QUILL} label="Rich Editor (Quill)" />
-          <RadioButton value={EditorMode.TINYMCE} label="Rich Editor (TinyMCE)" />
-        </RadioButtonGroup>
+      <Dialog open={open} onClose={this.handlePreferenceClose}>
+        <DialogTitle>환경설정</DialogTitle>
+
+        <DialogContent>
+          기본 에디터
+          <RadioGroup name="editor" value={defaultEditor} onChange={this.handleChangeEditor}>
+            <FormControlLabel value={EditorMode.MARKDOWN} label="Markdown Editor" control={<Radio />} />
+            <FormControlLabel value={EditorMode.QUILL} label="Rich Editor (Quill)" control={<Radio />} />
+            <FormControlLabel value={EditorMode.TINYMCE} label="Rich Editor (TinyMCE)" control={<Radio />} />
+          </RadioGroup>
+        </DialogContent>
+
+        <DialogActions>
+          <Button variant='text' onClick={this.handlePreferenceClose}>닫기</Button>
+        </DialogActions>
       </Dialog>
     )
   }
