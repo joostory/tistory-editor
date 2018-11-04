@@ -5,7 +5,7 @@ import { Provider } from 'react-redux'
 import App from './containers/App'
 import configureStore from './store/configureStore'
 import { registIpcEvent } from './actions/ipc-event'
-import './styles/editor.scss'
+import './styles/index.scss'
 import '../css/content.css'
 
 const store = configureStore()

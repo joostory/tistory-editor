@@ -17,7 +17,7 @@ import { NoteAdd, NavigateBefore } from '@material-ui/icons'
 class Header extends Component {
 
 	render() {
-		const { currentBlog, handleGoIndex, onRequestAddPost, classes } = this.props
+		const { currentBlog, handleGoIndex, onRequestAddPost } = this.props
 
 		let avatar = currentBlog.profileImageUrl? <Avatar src={currentBlog.profileImageUrl} size={30} /> : <Avatar size={30}>{currentBlog.title.slice(0,1)}</Avatar>
 

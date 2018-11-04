@@ -4,11 +4,7 @@ import { connect } from 'react-redux'
 
 import autobind from 'autobind-decorator'
 import dateformat from 'dateformat'
-import classnames from 'classnames'
-import Dropzone from 'react-dropzone'
 import { ipcRenderer, remote } from 'electron'
-import TextField from 'material-ui/TextField'
-import Dialog from 'material-ui/Dialog'
 
 import { addPost, updatePost } from '../../actions'
 import * as ContentMode from '../../constants/ContentMode'
@@ -16,7 +12,6 @@ import * as ContentMode from '../../constants/ContentMode'
 import EditorContent from './EditorContent'
 import EditorToolbar from './EditorToolbar'
 import EditorInfoDialog from './EditorInfoDialog'
-import EditorSwitch from './EditorSwich';
 import Loading from '../Loading'
 
 import { pageview } from '../../modules/AnalyticsHelper'
@@ -282,7 +277,7 @@ class Editor extends Component {
 					onSaveClick={this.handlePublishDialogOpen}
 					onCancelClick={this.handleCancel} />
 
-				<EditorContent ref="editor"
+				{/* <EditorContent ref="editor"
 					currentBlog={currentBlog}
 					content={content}
 					uploading={uploading}
@@ -295,7 +290,7 @@ class Editor extends Component {
 					onCategoryChange={this.handleChangeCategory}
 					onRequestClose={this.handlePublishDialogClose}
 					onRequestSave={this.handleSave}
-					onRequestPublish={this.handlePublish} />
+					onRequestPublish={this.handlePublish} /> */}
 
 				{showLoading && <Loading />}
 

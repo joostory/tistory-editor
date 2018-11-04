@@ -1,36 +1,15 @@
-@import './common.scss';
+.editor_wrap {
+  position:absolute; z-index:2; top:0; bottom:0; left:0; right:0; overflow:hidden; background-color:#fff;
 
-/* ready */
-@import './components/ready.scss';
+  .editor-header {
+    background: transparent;
+    padding: 0;
 
-/* index */
-@import './components/index.scss';
-
-/* sidebar */
-@import './components/sidebar.scss';
-
-.content_wrap { position: absolute; left: 300px; right: 0; top:0; bottom: 0 }
-.content_empty_message { position:absolute; top:50%; left:0; right:0; margin-top:-30px; height:60px; text-align:center; font-size:24px; color:#ccc }
-
-.loading_area {position:fixed;left:0;right:0;top:0;bottom:0; background-color:#666; opacity: 0.7; z-index: 2000}
-.loading_inner {position:absolute; left:50%; top:50%; margin-left:-30px; margin-top: -30px }
-
-.viewer { position:absolute; top:0; bottom:0; left:0; right:0; overflow:auto }
-.viewer .viewer_header { margin:50px auto; padding-bottom:50px; border-bottom:1px solid #eee; text-align:center }
-.viewer .viewer_header .viewer_category { font-size:14px; color:#f1631b }
-.viewer .viewer_header .viewer_title { font-size:32px; margin: 16px auto; max-width:700px; word-wrap: break-word; line-height: 130%;font-family: "Yeon Sung", sans-serif; font-weight: 400; }
-.viewer .viewer_header .viewer_btn { position:absolute; right:20px; top:20px }
-.viewer .viewer_content { margin:20px auto 40px; word-wrap: break-word; max-width:700px }
-.viewer .viewer_tags { display: flex; flex-wrap: wrap; margin: 20px auto; max-width:700px }
-
-@media (max-width: 1040px) {
-	.viewer .viewer_header .viewer_title,
-	.viewer .viewer_content,
-	.viewer .viewer_tags { margin-left:20px; margin-right:20px }
+    .btn {
+      margin: 0;
+    }
+  }
 }
-
-/* editor */
-.editor_wrap { position:absolute; z-index:2; top:0; bottom:0; left:0; right:0; overflow:hidden; background-color:#fff }
 .editor { position:absolute; left:0; right:0; top:56px; bottom:0; }
 .editor .mce-tinymce,
 .editor .Quill,
