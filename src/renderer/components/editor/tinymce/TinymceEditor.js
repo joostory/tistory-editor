@@ -2,8 +2,13 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { ipcRenderer, clipboard } from 'electron'
 import autobind from 'autobind-decorator'
-import TinyMCE from 'react-tinymce'
 import OpengraphFetcher from 'opengraph-fetcher'
+
+import tinymce from 'tinymce'
+import { Editor } from '@tinymce/tinymce-react'
+
+import 'tinymce-plugin-opengraph'
+import 'tinymce-plugin-codeblock'
 import './plugins/google-photos'
 import './plugins/file-upload'
 
@@ -67,10 +72,10 @@ class TinymceEditor extends Component {
 		const { value, currentBlog, onOpenFile } = this.props
 
 		return (
-			<TinyMCE 
+			<Editor 
 				id='tinymce'
 				className='content'
-				config={{
+				init={{
           plugins: 'link table textcolor hr lists paste codeblock opengraph google-photos file-upload autoresize searchreplace',
 					toolbar: 'formatselect bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock google-photos file-upload opengraph hr removeformat',
 					resize: false,

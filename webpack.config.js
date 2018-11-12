@@ -7,15 +7,13 @@ module.exports = {
 	],
 	output: {
 		path: path.join(__dirname, 'app'),
-		publicPath: '/assets/',
 		filename: 'editor.min.js'
 	},
 	plugins: [],
 	externals: {
     "jsdom": {},
 		"codemirror": "CodeMirror",
-		"highlightjs": "hljs",
-		"tinymce": "tinymce"
+		"highlightjs": "hljs"
   },
 	module: {
 		rules: [

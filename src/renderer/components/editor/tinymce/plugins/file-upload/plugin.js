@@ -2,7 +2,7 @@ import React from 'react'
 import { render, unmountComponentAtNode } from 'react-dom'
 import autobind from 'autobind-decorator'
 
-const plugin = (editor, pluginUrl) => {
+const plugin = function (editor) {
 	const $ = editor.$
 	
 	const handleButtonClick = () => {
