@@ -29,7 +29,7 @@
   "bugs": {
     "url": "https://github.com/joostory/tistory-editor/issues"
   },
-  "homepage": "https://github.com/joostory/tistory-editor#readme",
+  "homepage": "https://tistory-editor.tistory.com",
   "devDependencies": {
     "@babel/core": "^7.1.5",
     "@babel/plugin-proposal-decorators": "^7.1.2",
@@ -74,7 +74,6 @@
     "immutability-helper": "^2.8.1",
     "isomorphic-fetch": "^2.2.1",
     "marked": "^0.5.1",
-    "material-ui": "^0.20.2",
     "material-ui-chip-input": "^1.0.0-beta.8",
     "node-fetch": "^2.2.1",
     "opengraph-fetcher": "^1.0.2",
