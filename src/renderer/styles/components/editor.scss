@@ -9,6 +9,8 @@
       margin: 0;
     }
   }
+
+  .btn_change_editor { position:absolute; right:40px; bottom:30px; z-index:10 }
 }
 
 .post-info-dialog {
@@ -36,7 +38,7 @@
 .editor .dropzone_box { position:absolute; top:0; bottom:0; left:0; right:0; border:3px dashed #999; border-radius:10px; background-color:#eee; display:none; align-items: center; justify-content: center; z-index:20; color:#999 }
 .editor .droppable .dropzone_box { display:flex }
 
-.btn_change_editor { position:absolute; right:40px; bottom:30px; z-index:10 }
+
 .preview_content { margin-top:25px }
 
 /* tinymce */

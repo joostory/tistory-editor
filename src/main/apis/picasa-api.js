@@ -1,4 +1,4 @@
-const oauth2 = require('electron-oauth2');
+const oauth2 = require('../oauth/ElectronOauth2');
 const path = require('path')
 const fs = require('fs')
 const fetch = require('isomorphic-fetch')
@@ -8,7 +8,7 @@ const FormData = require('form-data')
 const {clipboard, session} = require('electron')
 const stream = require('stream')
 const { parseString } = require('xml2js')
-const Oauth2infoReader = require('../Oauth2infoReader')
+const Oauth2infoReader = require('../oauth/Oauth2infoReader')
 const appInfo = require('../appInfo')
 
 const errorHandler = (res) => {
@@ -45,11 +45,7 @@ class GoogleAuthApi {
 
 	getAccessToken() {
 		return this.makeGoogleOAuth().getAccessToken({
-			'scope': ['https://picasaweb.google.com/data/'],
-			'response_type': 'code',
-			'access_type': 'offline',
-			'prompt': 'consent',
-			'include_granted_scopes': 'true'
+			scope: ['https://picasaweb.google.com/data/']
 		})
 	}
 	

@@ -1,4 +1,4 @@
-const oauth2 = require('electron-oauth2');
+const oauth2 = require('../oauth/ElectronOauth2');
 const path = require('path')
 const fs = require('fs')
 const fetch = require('isomorphic-fetch')
@@ -7,7 +7,7 @@ const ipc = require('../ipc-event')
 const FormData = require('form-data')
 const {clipboard, session} = require('electron')
 const stream = require('stream')
-const Oauth2infoReader = require('../Oauth2infoReader')
+const Oauth2infoReader = require('../oauth/Oauth2infoReader')
 const appInfo = require('../appInfo')
 
 const errorHandler = (res) => {

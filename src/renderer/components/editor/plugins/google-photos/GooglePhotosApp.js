@@ -119,7 +119,9 @@ class GooglePhotosApp extends Component {
 			return (
 				<div className="google-photos-wrap">
 					<div className="google-photos-cover">
-						<Button variant='contained' className='btn btn_tistory' onClick={this.handleRequestAuth}>Google Photos 연결</Button>
+						<Button variant='contained' className='btn btn_tistory' onClick={this.handleRequestAuth}>
+              Google Photos 연결
+            </Button>
 					</div>
 				</div>	
 			)

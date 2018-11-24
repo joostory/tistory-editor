@@ -5,10 +5,10 @@ class Oauth2infoReader {
 
   constructor() {
     let data = ''
-    if (fs.existsSync(path.join(__dirname, "../../.oauth2info.json"))) {
-      data = fs.readFileSync(path.join(__dirname, "../../.oauth2info.json"), 'utf8')
-    } else if (fs.existsSync(path.join(__dirname, "../../oauth2info.json"))) {
-      data = fs.readFileSync(path.join(__dirname, "../../oauth2info.json"), 'utf8')
+    if (fs.existsSync(path.join(__dirname, "../../../.oauth2info.json"))) {
+      data = fs.readFileSync(path.join(__dirname, "../../../.oauth2info.json"), 'utf8')
+    } else if (fs.existsSync(path.join(__dirname, "../../../oauth2info.json"))) {
+      data = fs.readFileSync(path.join(__dirname, "../../../oauth2info.json"), 'utf8')
     } else {
       throw new Exception('NO OAUTH2INFO')
     }

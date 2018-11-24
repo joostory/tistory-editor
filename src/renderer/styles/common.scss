@@ -15,7 +15,12 @@ body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; bac
     background-color:#000;
     color:#fff;
     border:0;
-    border-radius: 18px;
+    border-radius: 26px;
+    padding: 8px 16px;
+
+    span {
+      color:#fff;
+    }
 
     &:hover {
       background-color: #f54;

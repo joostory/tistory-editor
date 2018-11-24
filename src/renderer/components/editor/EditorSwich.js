@@ -46,24 +46,29 @@ class EditorSwitch extends Component {
 
     return (
       <Fragment>
-        <Button variant='fab' className="btn_change_editor" mini={true} onClick={this.handleOpenEditorMode}>
+        <Button variant='fab' color='primary' className="btn_change_editor" aria-owns={open? 'change-editor-menu':undefined} mini={true} onClick={this.handleOpenEditorMode}>
 					<SwapVert />
 				</Button>
 
-				<Popover open={open}
-					anchorEl={popoverParent}
-					anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-					targetOrigin={{horizontal: 'right', vertical: 'bottom'}}
-					onRequestClose={this.handleCloseEditorMode}>
-					<Menu>
-						<MenuItem primaryText="Rich Editor (Quill)" checked={editorMode === EditorMode.QUILL}
-							onClick={e => this.handleChangeEditorMode(EditorMode.QUILL)} />
-						<MenuItem primaryText="Rich Editor (Tinymce)" checked={editorMode === EditorMode.TINYMCE}
-							onClick={e => this.handleChangeEditorMode(EditorMode.TINYMCE)} />
-						<MenuItem primaryText="Markdown Editor" checked={editorMode === EditorMode.MARKDOWN}
-							onClick={e => this.handleChangeEditorMode(EditorMode.MARKDOWN)} />
-					</Menu>
-				</Popover>
+        <Menu
+          id='change-editor-menu'
+          open={open}
+          anchorEl={popoverParent}
+          onClose={this.handleCloseEditorMode}
+        >
+          <MenuItem selected={editorMode === EditorMode.QUILL}
+            onClick={e => this.handleChangeEditorMode(EditorMode.QUILL)}>
+            Rich Editor (Quill)
+          </MenuItem>
+          <MenuItem selected={editorMode === EditorMode.TINYMCE}
+            onClick={e => this.handleChangeEditorMode(EditorMode.TINYMCE)}>
+            Rich Editor (Tinymce)
+          </MenuItem>
+          <MenuItem selected={editorMode === EditorMode.MARKDOWN}
+            onClick={e => this.handleChangeEditorMode(EditorMode.MARKDOWN)}>
+            Markdown Editor
+          </MenuItem>
+        </Menu>
       </Fragment>
     )
   }

@@ -1,6 +1,5 @@
 const os = require('os')
 const settings = require('electron-settings')
-const oauth2 = require('electron-oauth2')
 const { app, BrowserWindow, Menu, shell, dialog } = require('electron')
 const path = require('path')
 const url = require('url')
