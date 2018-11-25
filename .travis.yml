@@ -1,7 +1,7 @@
 dist: trusty
 sudo: false
 language: node_js
-node_js: '8'
+node_js: 'lts/*'
 os:
 - osx
 if: tag IS present
