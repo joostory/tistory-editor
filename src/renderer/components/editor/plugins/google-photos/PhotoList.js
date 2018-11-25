@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from 'react'
 import autobind from 'autobind-decorator'
 
-import { Button, Grid } from '@material-ui/core'
+import { Button, IconButton, GridList, GridListTile, GridListTileBar, ListSubheader } from '@material-ui/core'
+import { PlusOne } from '@material-ui/icons'
 
 import Loading from '../../../../components/Loading'
 import { timstampToDate } from '../../../../modules/ContentHelper'
@@ -36,7 +37,8 @@ class PhotoList extends Component {
 	render() {
 		const { onClick, onDisconnect, images, fetching } = this.props
 
-		let lastDate = ''
+    let lastDate = ''
+    let currentDate = ''
 
 		return (
 			<div className="google-photos-wrap">
@@ -48,14 +50,31 @@ class PhotoList extends Component {
 						<div className="google-photos-cover">
 							<Loading />
 						</div>
-					}
-					{images.length > 0 && images.filter(item => !item.isVideo).map(item => {
-            return (
-              <Grid key={item.id} xs={12} sm={3} item={true} title={timstampToDate(item.timestamp)} subtitle={item.summary} onClick={e => onClick(item)}>
-                <img src={item.url} />
-              </Grid>
-            )
-          })}
+          }
+
+          {images.length > 0 &&
+            <div className='photos-item-wrap'>
+              {images.filter(item => !item.isVideo).map(item => {
+                let prevDate = currentDate
+                currentDate = timstampToDate(item.timestamp)
+                return (
+                  <Fragment key={item.id}>
+                    { prevDate != currentDate &&
+                      <div className='photos-sub-header'>
+                        {currentDate}
+                      </div>
+                    }
+                    <div className='photos-item'>
+                      <div className='photos-item-image-wrap'>
+                        <img className='photos-item-image' src={item.url} alt={item.title} onClick={e => onClick(item)} />
+                      </div>
+                    </div>
+                  </Fragment>
+                )  
+              })}
+            </div>
+          }
+
 					{images.length > 0 && fetching &&
 						<div className="google-photos-footer">
 							<Loading />
