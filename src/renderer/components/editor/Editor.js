@@ -122,9 +122,9 @@ class Editor extends Component {
 	}
 
 	@autobind
-	handleChangeCategory(e, index, value) {
+	handleChangeCategory(e) {
 		this.setState({
-			categoryId: value
+			categoryId: e.target.value
 		})
 	}
 
