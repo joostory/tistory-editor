@@ -9,7 +9,10 @@ const turndownService = new TurndownService({
   codeBlockStyle: 'fenced'
 })
 turndownService.use(gfm)
-turndownService.keep(['script'])
+turndownService.keep([
+  'script',
+  'iframe'
+])
 
 class MarkdownHelper {
 	static htmlToMarkdown(content) {
