@@ -1,22 +1,27 @@
-import toMarkdown from 'to-markdown'
+import TurndownService from 'turndown'
+import { gfm } from 'turndown-plugin-gfm'
 import marked from 'marked'
+
+const turndownService = new TurndownService({
+  headingStyle: 'atx',
+  hr: '---',
+  bulletListMarker: '-',
+  codeBlockStyle: 'fenced'
+})
+turndownService.use(gfm)
+turndownService.keep(['script'])
 
 class MarkdownHelper {
 	static htmlToMarkdown(content) {
-		return toMarkdown(content, {
-			converters: [
-				{
-					filter: "script",
-					replacement: (innerHTML, node) => {
-						return node.outerHTML
-					}
-				}
-			]
-		})
+    return turndownService.turndown(content)
 	}
 
 	static markdownToHtml(content) {
-		return marked(content)
+		return marked(content, {
+      gfm: true,
+      breaks: true,
+      headerIds: false
+    })
 	}
 }
 
