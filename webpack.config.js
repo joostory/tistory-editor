@@ -3,7 +3,7 @@ const webpack = require("webpack");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
-const webpackConfig = {
+const config = {
 	entry: [
 		path.join(__dirname, 'src', 'renderer', 'index')
 	],
@@ -52,10 +52,13 @@ const webpackConfig = {
 	target: "electron-renderer"
 }
 
-if (process.env.NODE_ENV === 'production') {
-  webpackConfig.plugins.push(new OptimizeCSSAssetsPlugin({}))
-}
 
 
-module.exports = webpackConfig;
+module.exports = (env, argv) => {
+  if (argv.mode === 'production') {
+    config.plugins.push(new OptimizeCSSAssetsPlugin({}))
+  }
+
+  return config
+};
 
