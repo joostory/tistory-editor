@@ -25,15 +25,11 @@
 
 .editor { position:absolute; left:0; right:0; top:56px; bottom:0; }
 .editor .mce-tinymce,
-.editor .Quill,
 .editor .ReactCodeMirror { position: absolute; top:0; bottom: 0; left: 0; right: 0; box-shadow:none; overflow:auto }
 
-.editor .Quill .ql-toolbar,
 .editor .editor-toolbar,
 .editor .mce-tinymce .mce-toolbar-grp { position:fixed; top:66px; width:700px; height:34px; background-color:#fff; left: 50%; transform: translate(-50%,0); z-index:10; box-shadow:rgba(0, 0, 0, 0.16) 0px 3px 10px, rgba(0, 0, 0, 0.23) 0px 3px 10px; padding:3px; border-radius:3px }
-.editor .Quill .ql-editor,
 .editor .mce-tinymce .mce-edit-area { border:0; margin: 46px auto; width:700px; overflow-y:inherit }
-.editor .Quill .ql-editor { width:700px; margin:0 auto; padding:46px auto; }
 
 .editor .dropzone_box { position:absolute; top:0; bottom:0; left:0; right:0; border:3px dashed #999; border-radius:10px; background-color:#eee; display:none; align-items: center; justify-content: center; z-index:20; color:#999 }
 .editor .droppable .dropzone_box { display:flex }
@@ -69,7 +65,8 @@
 .editor .markdown-editor {
 	position:absolute;
 	top:0; bottom:0;
-	left:0; right:0;
+  left:0; right:0;
+  overflow: auto;
 }
 .editor .preview-on .markdown-editor {
 	right: inherit;
@@ -105,13 +102,6 @@
 	transform: translate(0, 0);
 }
 
-
-/* quill editor */
-.editor .ql-container { font-size:16px }
-.Quill .ql-toolbar.ql-snow { border:0 }
-.Quill .ql-container.ql-snow { height:auto; position:absolute; top:40px; bottom:0; left:0; right:0; border:0 }
-.Quill blockquote:before,
-.Quill blockquote:after { content:'' }
 
 /* photos plugin */
 .mce-ico.mce-i-google-photos { background:url('../../images/google-photos-logo.png') no-repeat; background-size:16px 16px }

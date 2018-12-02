@@ -5,6 +5,7 @@ import { ipcRenderer } from 'electron'
 import { Chip, CircularProgress, IconButton } from '@material-ui/core'
 import { OpenInBrowser, Edit } from '@material-ui/icons'
 import highlightjs from 'highlightjs'
+import 'highlightjs/styles/atom-one-dark.css'
 import * as ContentHelper from '../../modules/ContentHelper'
 import { pageview } from '../../modules/AnalyticsHelper'
 

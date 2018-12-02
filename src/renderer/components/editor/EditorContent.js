@@ -7,7 +7,6 @@ import * as EditorMode from '../../constants/EditorMode'
 
 import Dropzone from 'react-dropzone'
 import MarkdownEditor from './codemirror/MarkdownEditor'
-import QuillEditor from './quill/QuillEditor'
 import TinymceEditor from './tinymce/TinymceEditor'
 import EditorSwitch from './EditorSwich'
 
@@ -56,9 +55,7 @@ class EditorContent extends Component {
     const { currentBlog, onUpload } = this.props
     const { editorMode, content } = this.state
 
-		if (editorMode == EditorMode.QUILL) {
-			return <QuillEditor ref="editor" value={content} currentBlog={currentBlog} onImageHandler={onUpload} />
-		} else if (editorMode == EditorMode.TINYMCE) {
+		if (editorMode == EditorMode.TINYMCE) {
 			return <TinymceEditor ref="editor" value={content} currentBlog={currentBlog} onImageHandler={onUpload} onOpenFile={this.handleOpenFile} />
 		} else {
 			return <MarkdownEditor ref="editor" value={content} currentBlog={currentBlog} onOpenFile={this.handleOpenFile} />

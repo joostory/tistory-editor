@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { ipcRenderer, clipboard } from 'electron'
 import autobind from 'autobind-decorator'
-import Codemirror from 'react-codemirror'
+import CodeMirrorComponent from 'react-codemirror-component'
 import MarkdownHelper from './MarkdownHelper'
 
 import { Button } from '@material-ui/core'
@@ -11,6 +11,15 @@ import { FormatBold, FormatItalic, FormatUnderlined, Attachment } from '@materia
 
 import CodeMirrorHelper from './CodeMirrorHelper'
 import GooglePhotosDialog from '../plugins/google-photos/GooglePhotosDialog'
+import "codemirror/lib/codemirror.css"
+import "codemirror/addon/dialog/dialog.css"
+import "codemirror/mode/javascript/javascript"
+import "codemirror/mode/xml/xml"
+import "codemirror/mode/markdown/markdown"
+import "codemirror/addon/dialog/dialog"
+import "codemirror/addon/search/search"
+import "codemirror/addon/search/searchcursor"
+import "codemirror/addon/search/jump-to-line"
 
 const MacKeymap = [
 	{ 'Cmd-2': (cm) => CodeMirrorHelper.header2(cm) },
@@ -189,7 +198,7 @@ class MarkdownEditor extends Component {
 						<Button variant='text' onClick={onOpenFile} style={iconButtonStyle}><Attachment /></Button>
 						<Button variant='text' onClick={this.handleTogglePreview} style={iconButtonStyle}>Preview</Button>
 					</div>
-					<Codemirror ref="editor" options={options} value={value}
+					<CodeMirrorComponent ref="editor" options={options} value={value}
 						onChange={this.handleChangeContent} />
 				</div>
 				<div className="markdown-preview">

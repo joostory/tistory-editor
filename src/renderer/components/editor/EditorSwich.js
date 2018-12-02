@@ -56,13 +56,9 @@ class EditorSwitch extends Component {
           anchorEl={popoverParent}
           onClose={this.handleCloseEditorMode}
         >
-          <MenuItem selected={editorMode === EditorMode.QUILL}
-            onClick={e => this.handleChangeEditorMode(EditorMode.QUILL)}>
-            Rich Editor (Quill)
-          </MenuItem>
           <MenuItem selected={editorMode === EditorMode.TINYMCE}
             onClick={e => this.handleChangeEditorMode(EditorMode.TINYMCE)}>
-            Rich Editor (Tinymce)
+            Rich Editor
           </MenuItem>
           <MenuItem selected={editorMode === EditorMode.MARKDOWN}
             onClick={e => this.handleChangeEditorMode(EditorMode.MARKDOWN)}>

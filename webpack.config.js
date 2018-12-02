@@ -1,7 +1,9 @@
-var path = require('path');
-var webpack = require("webpack");
+const path = require('path');
+const webpack = require("webpack");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
-module.exports = {
+const webpackConfig = {
 	entry: [
 		path.join(__dirname, 'src', 'renderer', 'index')
 	],
@@ -9,11 +11,16 @@ module.exports = {
 		path: path.join(__dirname, 'app'),
 		filename: 'editor.min.js'
 	},
-	plugins: [],
+  
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: "editor.min.css",
+      chunkFilename: "[id].css"
+    })
+  ],
+
 	externals: {
     "jsdom": {},
-		"codemirror": "CodeMirror",
-		"highlightjs": "hljs"
   },
 	module: {
 		rules: [
@@ -22,15 +29,17 @@ module.exports = {
 				use: ['babel-loader'],
 				exclude: /node_modules/,
 				include: __dirname
-			},
-			{
-				test: /\.s?css$/,
-				use: [
-					"style-loader",
-          "css-loader",
+      },
+      {
+        test: /\.s?css$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+          },
+          'css-loader',
           "resolve-url-loader",
-          "sass-loader"
-				]
+          'sass-loader'
+        ]
       },
       {
         test: /\.(png|jpg|gif)$/,
@@ -42,3 +51,11 @@ module.exports = {
 	},
 	target: "electron-renderer"
 }
+
+if (process.env.NODE_ENV === 'production') {
+  webpackConfig.plugins.push(new OptimizeCSSAssetsPlugin({}))
+}
+
+
+module.exports = webpackConfig;
+
