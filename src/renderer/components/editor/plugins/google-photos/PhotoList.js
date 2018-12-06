@@ -5,7 +5,7 @@ import { Button, IconButton, GridList, GridListTile, GridListTileBar, ListSubhea
 import { PlusOne } from '@material-ui/icons'
 
 import Loading from '../../../../components/Loading'
-import { timstampToDate } from '../../../../modules/ContentHelper'
+import { timestampsToDate } from '../../../../modules/ContentHelper'
 
 class PhotoList extends Component {
 	
@@ -30,7 +30,7 @@ class PhotoList extends Component {
 		}
 		
 		if (clientHeight + scrollTop + 200 > scrollHeight) {
-			onFetch(images.length + 1)
+			onFetch()
 		}
 	}
 
@@ -54,9 +54,9 @@ class PhotoList extends Component {
 
           {images.length > 0 &&
             <div className='photos-item-wrap'>
-              {images.filter(item => !item.isVideo).map(item => {
+              {images.map(item => {
                 let prevDate = currentDate
-                currentDate = timstampToDate(item.timestamp)
+                currentDate = timestampsToDate(item.timestamp)
                 return (
                   <Fragment key={item.id}>
                     { prevDate != currentDate &&
@@ -66,7 +66,7 @@ class PhotoList extends Component {
                     }
                     <div className='photos-item'>
                       <div className='photos-item-image-wrap'>
-                        <img className='photos-item-image' src={item.url} alt={item.title} onClick={e => onClick(item)} />
+                        <img className='photos-item-image' src={item.thumbnail} alt={item.title} onClick={e => onClick(item)} />
                       </div>
                     </div>
                   </Fragment>

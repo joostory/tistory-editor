@@ -14,7 +14,8 @@ class GooglePhotosApp extends Component {
 		this.state = {
 			initialized: false,
 			connected: false,
-			images: [],
+      images: [],
+      nextPageToken: null,
 			fetching: false
 		}
 	}
@@ -32,7 +33,7 @@ class GooglePhotosApp extends Component {
 	}
 
 	componentDidMount() {
-		this.handleRequestFetch(1)
+		this.handleRequestFetch()
 	}
 
 	@autobind
@@ -47,8 +48,9 @@ class GooglePhotosApp extends Component {
 			initialized: true,
 			connected: true,
 			images: update(images, {
-				$push: data
-			}),
+				$push: data.images
+      }),
+      nextPageToken: data.nextPageToken,
 			fetching: false
 		})
 	}
@@ -63,7 +65,8 @@ class GooglePhotosApp extends Component {
 		} else {
 			this.setState({
 				initialized: true,
-				images: [],
+        images: [],
+        nextPageToken: null,
 				connected: false
 			})
 		}
@@ -78,8 +81,9 @@ class GooglePhotosApp extends Component {
 	}
 
 	@autobind
-	handleRequestFetch(startIndex) {
-		ipcRenderer.send('fetch-google-photos-images', startIndex)
+	handleRequestFetch() {
+    const { nextPageToken } = this.state
+		ipcRenderer.send('fetch-google-photos-images', nextPageToken)
 	}
 
 	@autobind
@@ -96,9 +100,7 @@ class GooglePhotosApp extends Component {
 	handleImageSelect(image) {
 		const { onSelectImage } = this.props
 		if (confirm('이미지를 삽입하시겠습니까?')) {
-			const url = toOriginalUrl(image.url)
-			const filename = image.title
-			onSelectImage(url, filename)
+			onSelectImage(image.url, image.title)
 		}
 	}
 

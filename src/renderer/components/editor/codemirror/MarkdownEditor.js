@@ -153,9 +153,9 @@ class MarkdownEditor extends Component {
 	}
 
 	@autobind
-	handleInsertImage(url) {
-		const { editor } = this.refs
-		CodeMirrorHelper.insertImage(editor.getCodeMirror(), url)
+	handleInsertImage(url, filename) {
+    const { currentBlog } = this.props
+    ipcRenderer.send("add-image-url", currentBlog.name, url, filename)
 	}
 
 	@autobind

@@ -49,7 +49,7 @@ const config = {
       }
 		]
 	},
-	target: "electron-renderer"
+  target: "electron-renderer"
 }
 
 
