@@ -47,7 +47,7 @@ class MarkdownEditor extends Component {
 			value: MarkdownHelper.htmlToMarkdown(props.value),
 			openGooglePhotos: false,
 			preview: false
-		}
+    }
   }
 
   componentWillMount() {
@@ -65,7 +65,16 @@ class MarkdownEditor extends Component {
 
 		const keymap = navigator.userAgent.indexOf('Macintosh') > 0 ? MacKeymap : PcKeymap
 		keymap.map(map => cm.addKeyMap(map))
-	}
+  }
+  
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { preview } = this.state
+    const { editor } = this.refs
+
+    if (prevState.preview != preview) {
+      editor.getCodeMirror().refresh()
+    }
+  }
 
 	@autobind
   handleFinishUploadFile(e, fileUrl) {
