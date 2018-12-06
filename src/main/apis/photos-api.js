@@ -45,7 +45,7 @@ class PhotosApi {
 		this.auth = auth
 	}
 
-  fetchMediaItems(pageSize = 50, nextPageToken = null) {
+  fetchMediaItems(pageSize = 100, nextPageToken = null) {
     return fetch('https://photoslibrary.googleapis.com/v1/mediaItems:search', {
       method: 'post',
       headers: {

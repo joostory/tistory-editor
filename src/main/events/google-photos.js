@@ -14,7 +14,7 @@ module.exports = () => {
 			}
 			evt.sender.send('start-fetch-google-photos-images')
       const photosApi = new PhotosApi(auth)
-      const data = await photosApi.fetchMediaItems(50, nextPageToken)
+      const data = await photosApi.fetchMediaItems(100, nextPageToken)
       evt.sender.send('receive-google-photos-images', data)
 
 		} catch(e) {
