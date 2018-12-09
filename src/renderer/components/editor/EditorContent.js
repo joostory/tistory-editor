@@ -14,7 +14,7 @@ import EditorSwitch from './EditorSwich'
 	currentBlog: state.currentBlog,
 	preferences: state.preferences
 }), dispatch => ({}), null, {
-  withRef: true
+  forwardRef: true
 })
 class EditorContent extends Component {
 

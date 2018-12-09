@@ -143,7 +143,7 @@ class Editor extends Component {
 		const { title, categoryId, tags } = this.state
 		const { editor } = this.refs
 
-		let content = editor.getWrappedInstance().getContent()
+		let content = editor.getContent()
 		let savePost = {
 			title: title,
 			visibility: visibility,
