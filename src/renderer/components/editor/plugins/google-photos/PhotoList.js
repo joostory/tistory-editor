@@ -1,8 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import autobind from 'autobind-decorator'
 
-import { Button, IconButton, GridList, GridListTile, GridListTileBar, ListSubheader } from '@material-ui/core'
-import { PlusOne } from '@material-ui/icons'
+import { Button } from '@material-ui/core'
 
 import Loading from '../../../../components/Loading'
 import { timestampsToDate } from '../../../../modules/ContentHelper'

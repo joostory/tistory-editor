@@ -3,7 +3,7 @@ import autobind from 'autobind-decorator'
 
 import * as EditorMode from '../../constants/EditorMode'
 
-import { Popover, Menu, MenuItem, Button } from '@material-ui/core'
+import { Menu, MenuItem, Button, Fab } from '@material-ui/core'
 import { SwapVert } from '@material-ui/icons'
 
 class EditorSwitch extends Component {
@@ -46,9 +46,9 @@ class EditorSwitch extends Component {
 
     return (
       <Fragment>
-        <Button variant='fab' color='primary' className="btn_change_editor" aria-owns={open? 'change-editor-menu':undefined} mini={true} onClick={this.handleOpenEditorMode}>
+        <Fab color='primary' className="btn_change_editor" aria-owns={open? 'change-editor-menu':undefined} onClick={this.handleOpenEditorMode}>
 					<SwapVert />
-				</Button>
+				</Fab>
 
         <Menu
           id='change-editor-menu'
