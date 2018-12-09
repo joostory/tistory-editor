@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { ipcRenderer, clipboard } from 'electron'
 import autobind from 'autobind-decorator'
@@ -12,10 +12,15 @@ import 'tinymce-plugin-codeblock'
 import './plugins/google-photos'
 import './plugins/file-upload'
 
+import GooglePhotosDialog from '../plugins/google-photos/GooglePhotosDialog'
+
 class TinymceEditor extends Component {
 
   constructor(props, context) {
     super(props, context)
+    this.state = {
+      openGooglePhotos: false
+    }
   }
 
   componentWillMount() {
@@ -26,9 +31,9 @@ class TinymceEditor extends Component {
     ipcRenderer.removeListener("finish-add-file", this.handleFinishUploadFile)
   }
 
-	shouldComponentUpdate(nextProps, nextState) {
-		return false
-	}
+	// shouldComponentUpdate(nextProps, nextState) {
+	// 	return false
+	// }
 
 	@autobind
   handleFinishUploadFile(e, fileUrl) {
@@ -62,61 +67,82 @@ class TinymceEditor extends Component {
 	@autobind
 	handleFetchOpengraph(url, callback) {
 		OpengraphFetcher.fetch(url, callback)
-	}
+  }
+  
+  @autobind
+  handleInsertImage(url, filename) {
+    const { currentBlog } = this.props
+    ipcRenderer.send("add-image-url", currentBlog.name, url, filename)
+  }
+
+  @autobind
+  handleToggleGooglePhotos() {
+    const { openGooglePhotos } = this.state
+    this.setState({
+      openGooglePhotos: !openGooglePhotos
+    })
+  }
 
   getContent() {
 		return tinymce.activeEditor.getContent()
   }
 
 	render() {
-		const { value, currentBlog, onOpenFile } = this.props
+    const { value, currentBlog, onOpenFile } = this.props
+    const { openGooglePhotos } = this.state
 
 		return (
-			<Editor 
-				id='tinymce'
-				className='content'
-				init={{
-          plugins: 'link table textcolor hr lists paste codeblock opengraph google-photos file-upload autoresize searchreplace',
-					toolbar: 'formatselect bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock google-photos file-upload opengraph hr removeformat',
-					resize: false,
-					branding: false,
-					statusbar: false,
-					menubar: false,
-          paste_data_images: true,
-          extended_valid_elements : 'script[type|src]',
-					height: '100%',
-					file_picker_type: 'image',
-					block_formats: '문단=p;주제=h2;소주제=h3',
-					body_class: 'content',
-					content_css: [
-            '../src/css/content.css',
-            'https://fonts.googleapis.com/css?family=Nanum+Gothic|Yeon+Sung'
-          ],
-					paste_preprocess: (plugin, args) => {
-						let image = clipboard.readImage()
-						if (!image.isEmpty()) {
-							args.preventDefault()
-						}
-					},
-					codeblock: {
-						highlightStyle: '../node_modules/highlightjs/styles/atom-one-dark.css'
-					},
-					opengraph: {
-						fetch_handler: this.handleFetchOpengraph
-					},
-					google_photos: {
-						add_handler: (url, filename) => {
-							ipcRenderer.send("add-image-url", currentBlog.name, url, filename)
-						}
-					},
-					open_file_handler: onOpenFile,
-					init_instance_callback: (editor) => {
-						editor.on("paste", this.handlePaste)
-						editor.on("drop", this.handleDrop)
-						editor.setContent(value)
-					}
-        }}
-			/>
+      <Fragment>
+        <Editor 
+          id='tinymce'
+          className='content'
+          init={{
+            plugins: 'link table textcolor hr lists paste codeblock opengraph google-photos file-upload autoresize searchreplace',
+            toolbar: 'formatselect bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock google-photos file-upload opengraph hr removeformat',
+            resize: false,
+            branding: false,
+            statusbar: false,
+            menubar: false,
+            paste_data_images: true,
+            extended_valid_elements : 'script[type|src]',
+            height: '100%',
+            file_picker_type: 'image',
+            block_formats: '문단=p;주제=h2;소주제=h3',
+            body_class: 'content',
+            content_css: [
+              '../src/css/content.css',
+              'https://fonts.googleapis.com/css?family=Nanum+Gothic|Yeon+Sung'
+            ],
+            paste_preprocess: (plugin, args) => {
+              let image = clipboard.readImage()
+              if (!image.isEmpty()) {
+                args.preventDefault()
+              }
+            },
+            codeblock: {
+              highlightStyle: '../node_modules/highlightjs/styles/atom-one-dark.css'
+            },
+            opengraph: {
+              fetch_handler: this.handleFetchOpengraph
+            },
+            google_photos: {
+              open_handler: this.handleToggleGooglePhotos
+            },
+            open_file_handler: onOpenFile,
+            init_instance_callback: (editor) => {
+              editor.on("paste", this.handlePaste)
+              editor.on("drop", this.handleDrop)
+              editor.setContent(value)
+            }
+          }}
+        />
+        
+        <GooglePhotosDialog
+          open={openGooglePhotos}
+          onClose={this.handleToggleGooglePhotos}
+          onSelectImage={this.handleInsertImage}
+        />
+      </Fragment>
 		)
 	}
 }

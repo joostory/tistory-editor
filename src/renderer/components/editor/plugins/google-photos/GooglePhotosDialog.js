@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 import { Dialog, Button, DialogTitle, DialogContent, DialogActions } from '@material-ui/core'
-import GooglePhotosApp from './GooglePhotosApp'
+import GooglePhotos from './GooglePhotos'
 
 class GooglePhotosDialog extends Component {
 	render() {
@@ -12,7 +12,7 @@ class GooglePhotosDialog extends Component {
         <DialogTitle>Google Photos</DialogTitle>
 
         <DialogContent className='plugin-google-photos'>
-          <GooglePhotosApp onSelectImage={onSelectImage} />
+          <GooglePhotos onSelectImage={onSelectImage} />
         </DialogContent>
 
         <DialogActions>

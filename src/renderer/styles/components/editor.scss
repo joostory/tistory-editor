@@ -112,7 +112,7 @@
   .google-photos-wrap {
     position:absolute; top:0; bottom:0; left:0; right:0; overflow:auto;
     .google-photos-cover { display: flex;justify-content: center;align-items: center; height: 100%;}
-    .google-photos-footer { display: flex;justify-content: center;align-items: center; height: 100px; }
+    .google-photos-footer { display: flex;justify-content: center;align-items: center; height: 100px; width:100%; }
     
     .photos-header { position:absolute; top:0; height:48px; left:0; right:0; padding: 6px; }
     .photos-list {

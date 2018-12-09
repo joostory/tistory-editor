@@ -5,9 +5,8 @@ import update from 'immutability-helper'
 import { Button } from '@material-ui/core'
 import Loading from '../../../Loading'
 import PhotoList from './PhotoList'
-import { toOriginalUrl } from '../../../../modules/GooglePhotosHelper'
 
-class GooglePhotosApp extends Component {
+class GooglePhotos extends Component {
 
 	constructor(props, context) {
 		super(props, context)
@@ -111,7 +110,7 @@ class GooglePhotosApp extends Component {
 			return (
 				<div className="google-photos-wrap">
 					<div className="google-photos-cover">
-						<Loading />
+						<Loading position='absolute' />
 					</div>
 				</div>
 			)
@@ -138,4 +137,4 @@ class GooglePhotosApp extends Component {
 	}
 }
 
-export default GooglePhotosApp
+export default GooglePhotos

@@ -48,7 +48,7 @@ class PhotoList extends Component {
 				<div ref="list" className="photos-list">
 					{images.length === 0 && fetching &&
 						<div className="google-photos-cover">
-							<Loading />
+							<Loading position='relative' />
 						</div>
           }
 
@@ -77,7 +77,7 @@ class PhotoList extends Component {
 
 					{images.length > 0 && fetching &&
 						<div className="google-photos-footer">
-							<Loading />
+							<Loading position='relative' />
 						</div>
 					}
 				</div>
