@@ -24,6 +24,9 @@ class EditorContent extends Component {
       editorMode: props.preferences.editor || EditorMode.MARKDOWN,
       content: props.content
     }
+
+    this.editorRef = React.createRef()
+    this.dropzoneRef = React.createRef()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -34,8 +37,7 @@ class EditorContent extends Component {
 
   @autobind
 	handleOpenFile() {
-		const { dropzone } = this.refs
-		dropzone.open()
+		this.dropzoneRef.current.open()
   }
 
   @autobind
@@ -48,7 +50,7 @@ class EditorContent extends Component {
 	}
   
   getContent() {
-    return this.refs.editor.getContent()
+    return this.editorRef.current.getContent()
   }
 
   getEditor() {
@@ -56,27 +58,34 @@ class EditorContent extends Component {
     const { editorMode, content } = this.state
 
 		if (editorMode == EditorMode.TINYMCE) {
-			return <TinymceEditor ref="editor" value={content} currentBlog={currentBlog} onImageHandler={onUpload} onOpenFile={this.handleOpenFile} />
+			return <TinymceEditor ref={this.editorRef} value={content} currentBlog={currentBlog} onImageHandler={onUpload} onOpenFile={this.handleOpenFile} />
 		} else {
-			return <MarkdownEditor ref="editor" value={content} currentBlog={currentBlog} onOpenFile={this.handleOpenFile} />
+			return <MarkdownEditor ref={this.editorRef} value={content} currentBlog={currentBlog} onOpenFile={this.handleOpenFile} />
 		}
 	}
 
   render() {
-    const { uploading, onUpload, uploadMessage } = this.props
+    const { onUpload } = this.props
     const { editorMode } = this.state
     return (
       <Fragment>
         <div className="editor">
-          <Dropzone ref='dropzone' disableClick={true} accept="image/*" className={classnames({droppable: uploading})} activeClassName="droppable" style={{width: "100%",height:"100%"}}
+          <Dropzone ref={this.dropzoneRef}
+            disableClick={true} 
+            accept="image/*" 
             onDrop={onUpload}>
 
-            {this.getEditor()}
+            {({getRootProps, getInputProps, isDragActive}) =>
+              <div {...getRootProps()} className={classnames({droppable:isDragActive})} style={{width: "100%",height:"100%"}}>
+                {this.getEditor()}
 
-            <div className="dropzone_box">
-              <b>{uploadMessage}</b>
-            </div>
+                <input {...getInputProps()} />
 
+                <div className="dropzone_box">
+                  <b>파일을 넣어주세요.</b>
+                </div>
+              </div>
+            }
           </Dropzone>
         </div>
 

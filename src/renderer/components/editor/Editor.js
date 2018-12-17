@@ -9,6 +9,7 @@ import { ipcRenderer, remote } from 'electron'
 import { addPost, updatePost } from '../../actions'
 import * as ContentMode from '../../constants/ContentMode'
 
+import { Snackbar } from '@material-ui/core'
 import EditorContent from './EditorContent'
 import EditorToolbar from './EditorToolbar'
 import EditorInfoDialog from './EditorInfoDialog'
@@ -263,13 +264,6 @@ class Editor extends Component {
 		const { onFinish, currentBlog, categories, post } = this.props
 		const { title, content, categoryId, tags, showInfoBox, showLoading, uploadFileCount, uploadFinishedFileCount } = this.state
 
-		let uploadMessage = "파일을 넣어주세요."
-		let uploading = false
-		if (uploadFileCount > 0) {
-			uploading = true
-			uploadMessage = `업로드 중 (${uploadFinishedFileCount} / ${uploadFileCount})`
-		}
-
 		return (
 			<div className="editor_wrap">
 				<EditorToolbar title={title}
@@ -280,8 +274,6 @@ class Editor extends Component {
 				<EditorContent ref="editor"
 					currentBlog={currentBlog}
 					content={content}
-					uploading={uploading}
-					uploadMessage={uploadMessage}
 					onUpload={this.handleUploadFiles}
 					onChange={this.handleChangeContent} />
 
@@ -292,7 +284,12 @@ class Editor extends Component {
 					onRequestSave={this.handleSave}
 					onRequestPublish={this.handlePublish} />
 
-				{showLoading && <Loading />}
+        {showLoading && <Loading />}
+        
+        <Snackbar
+          open={uploadFileCount > 0}
+          message={`업로드 중 (${uploadFinishedFileCount} / ${uploadFileCount})`}
+        />
 
 			</div>
 		)
