@@ -34,16 +34,13 @@ class PhotoList extends Component {
 	}
 
 	render() {
-		const { onClick, onDisconnect, images, fetching } = this.props
+		const { onClick, images, fetching } = this.props
 
     let lastDate = ''
     let currentDate = ''
 
 		return (
 			<div className="google-photos-wrap">
-				<div className="photos-header">
-					<Button variant='contained' onClick={onDisconnect}>연결해제</Button>
-				</div>
 				<div ref="list" className="photos-list">
 					{images.length === 0 && fetching &&
 						<div className="google-photos-cover">

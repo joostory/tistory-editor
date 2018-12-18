@@ -12,7 +12,6 @@ class GooglePhotos extends Component {
 		super(props, context)
 		this.state = {
 			initialized: false,
-			connected: false,
       images: [],
       nextPageToken: null,
 			fetching: false
@@ -37,39 +36,40 @@ class GooglePhotos extends Component {
 
 	@autobind
 	handleReceiveImages(e, data) {
+    const { onConnect, onDisconnect } = this.props
 		const { images, fetching } = this.state
 		if (data === null) {
-			this.handleDisconnect()
+      onDisconnect()
 			return
 		}
 
 		this.setState({
 			initialized: true,
-			connected: true,
 			images: update(images, {
 				$push: data.images
       }),
       nextPageToken: data.nextPageToken,
 			fetching: false
-		})
+    })
+    onConnect(true)
 	}
 
 	@autobind
 	handleReceiveConnected(e, connected) {
+    const { onConnect, onDisconnect } = this.props
 		if (connected) {
 			this.setState({
 				initialized: true,
-				connected: true
-			})
+      })
+      onConnect()
 		} else {
 			this.setState({
 				initialized: true,
         images: [],
         nextPageToken: null,
-				connected: false
-			})
-		}
-		
+      })
+      onDisconnect()
+    }
 	}
 
 	@autobind
@@ -90,10 +90,6 @@ class GooglePhotos extends Component {
 		ipcRenderer.send("request-google-photos-auth")
 	}
 
-	@autobind
-	handleDisconnect() {
-		ipcRenderer.send("disconnect-google-photos-auth")
-	}
 
 	@autobind
 	handleImageSelect(image) {
@@ -104,7 +100,8 @@ class GooglePhotos extends Component {
 	}
 
 	render() {
-		const { initialized, connected, images, fetching } = this.state
+    const { connected } = this.props
+		const { initialized, images, fetching } = this.state
 
 		if (!initialized) {
 			return (
@@ -131,8 +128,7 @@ class GooglePhotos extends Component {
 		return (
 			<PhotoList images={images} fetching={fetching}
 				onFetch={this.handleRequestFetch}
-				onClick={this.handleImageSelect}
-				onDisconnect={this.handleDisconnect} />
+				onClick={this.handleImageSelect} />
 		)
 	}
 }
