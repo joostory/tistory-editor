@@ -1,7 +1,15 @@
 import React, { Component, Fragment } from 'react'
 import autobind from 'autobind-decorator'
 
-import { Button } from '@material-ui/core'
+import {
+  GridList,
+  GridListTile,
+  GridListTileBar,
+  ListSubheader,
+  IconButton
+} from '@material-ui/core'
+
+import { Info } from '@material-ui/icons'
 
 import Loading from '../../../../components/Loading'
 import { timestampsToDate } from '../../../../modules/ContentHelper'
@@ -49,26 +57,33 @@ class PhotoList extends Component {
           }
 
           {images.length > 0 &&
-            <div className='photos-item-wrap'>
+            <GridList>
               {images.map(item => {
                 let prevDate = currentDate
                 currentDate = timestampsToDate(item.timestamp)
                 return (
                   <Fragment key={item.id}>
                     { prevDate != currentDate &&
-                      <div className='photos-sub-header'>
-                        {currentDate}
-                      </div>
+                      <GridListTile>
+                        <ListSubheader>{currentDate}</ListSubheader>
+                      </GridListTile>
                     }
-                    <div className='photos-item'>
-                      <div className='photos-item-image-wrap'>
-                        <img className='photos-item-image' src={item.thumbnail} alt={item.title} onClick={e => onClick(item)} />
-                      </div>
-                    </div>
+
+                    <GridListTile key={item.thumbnail}>
+                      <img src={item.thumbnail} alt={item.title} />
+                      <GridListTileBar
+                        title={item.title}
+                        actionIcon={
+                          <IconButton onClick={e => onClick(item)}>
+                            <Info />
+                          </IconButton>
+                        }
+                      />
+                    </GridListTile>
                   </Fragment>
                 )  
               })}
-            </div>
+            </GridList>
           }
 
 					{images.length > 0 && fetching &&
