@@ -9,10 +9,19 @@ import {
   IconButton
 } from '@material-ui/core'
 
-import { Info } from '@material-ui/icons'
+import { AddCircleOutline } from '@material-ui/icons'
 
 import Loading from '../../../../components/Loading'
 import { timestampsToDate } from '../../../../modules/ContentHelper'
+
+const styles = {
+  buttonIcon: {
+    color: 'rgba(255, 255, 255, 0.54)'
+  },
+  gridTitleBar: {
+    background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)'
+  }
+}
 
 class PhotoList extends Component {
 	
@@ -57,31 +66,34 @@ class PhotoList extends Component {
           }
 
           {images.length > 0 &&
-            <GridList>
+            <GridList cols={2} cellHeight={180}>
               {images.map(item => {
                 let prevDate = currentDate
                 currentDate = timestampsToDate(item.timestamp)
-                return (
-                  <Fragment key={item.id}>
-                    { prevDate != currentDate &&
-                      <GridListTile>
-                        <ListSubheader>{currentDate}</ListSubheader>
-                      </GridListTile>
-                    }
 
-                    <GridListTile key={item.thumbnail}>
-                      <img src={item.thumbnail} alt={item.title} />
-                      <GridListTileBar
-                        title={item.title}
-                        actionIcon={
-                          <IconButton onClick={e => onClick(item)}>
-                            <Info />
-                          </IconButton>
-                        }
-                      />
+                let tile = [
+                  <GridListTile key={item.thumbnail}>
+                    <img src={item.thumbnail} alt={item.title} />
+                    <GridListTileBar
+                      style={styles.gridTitleBar}
+                      actionIcon={
+                        <IconButton onClick={e => onClick(item)}>
+                          <AddCircleOutline style={styles.buttonIcon} />
+                        </IconButton>
+                      }
+                    />
+                  </GridListTile>
+                ]
+
+                if (prevDate != currentDate) {
+                  tile.unshift(
+                    <GridListTile key={currentDate} cols={2} style={{ height: 'auto' }}>
+                      <ListSubheader component='div'>{currentDate}</ListSubheader>
                     </GridListTile>
-                  </Fragment>
-                )  
+                  )
+                }
+
+                return tile
               })}
             </GridList>
           }

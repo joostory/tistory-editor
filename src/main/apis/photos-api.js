@@ -87,9 +87,6 @@ class PhotosApi {
       }
       
     })
-    .catch(e => {
-      console.error(e)
-    })
   }
 }
 module.exports.PhotosApi = PhotosApi
