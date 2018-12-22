@@ -11,6 +11,7 @@ import { FormatBold, FormatItalic, FormatUnderlined, Attachment } from '@materia
 
 import CodeMirrorHelper from './CodeMirrorHelper'
 import GooglePhotosDialog from '../plugins/google-photos/GooglePhotosDialog'
+import "../../../styles/lib/codemirror/tistory-markdown-theme.scss"
 import "codemirror/lib/codemirror.css"
 import "codemirror/addon/dialog/dialog.css"
 import "codemirror/mode/javascript/javascript"
@@ -48,6 +49,8 @@ class MarkdownEditor extends Component {
 			openGooglePhotos: false,
 			preview: false
     }
+
+    this.editor = React.createRef()
   }
 
   componentWillMount() {
@@ -59,8 +62,7 @@ class MarkdownEditor extends Component {
 	}
 
 	componentDidMount() {
-		const { editor } = this.refs
-		let cm = editor.getCodeMirror()
+		let cm = this.editor.current.getCodeMirror()
 		cm.on("paste", this.handlePaste)
 
 		const keymap = navigator.userAgent.indexOf('Macintosh') > 0 ? MacKeymap : PcKeymap
@@ -69,18 +71,16 @@ class MarkdownEditor extends Component {
   
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { preview } = this.state
-    const { editor } = this.refs
 
     if (prevState.preview != preview) {
-      editor.getCodeMirror().refresh()
+      this.editor.current.getCodeMirror().refresh()
     }
   }
 
 	@autobind
   handleFinishUploadFile(e, fileUrl) {
-		const { editor } = this.refs
 		console.log("finishUploadFile", fileUrl)
-		CodeMirrorHelper.insertImage(editor.getCodeMirror(), fileUrl)
+		CodeMirrorHelper.insertImage(this.editor.current.getCodeMirror(), fileUrl)
 	}
 
 	@autobind
@@ -107,44 +107,38 @@ class MarkdownEditor extends Component {
 
 	@autobind
 	handleHeader2(e) {
-		const { editor } = this.refs
 		e.preventDefault()
-		CodeMirrorHelper.header2(editor.getCodeMirror())
+		CodeMirrorHelper.header2(this.editor.current.getCodeMirror())
 	}
 
 	@autobind
 	handleHeader3(e) {
-		const { editor } = this.refs
 		e.preventDefault()
-		CodeMirrorHelper.header3(editor.getCodeMirror())
+		CodeMirrorHelper.header3(this.editor.current.getCodeMirror())
 	}
 	
 	@autobind
 	handleBold(e) {
-		const { editor } = this.refs
 		e.preventDefault()
-		CodeMirrorHelper.bold(editor.getCodeMirror())
+		CodeMirrorHelper.bold(this.editor.current.getCodeMirror())
 	}
 
 	@autobind
 	handleItalic(e) {
-		const { editor } = this.refs
 		e.preventDefault()
-		CodeMirrorHelper.italic(editor.getCodeMirror())
+		CodeMirrorHelper.italic(this.editor.current.getCodeMirror())
 	}
 
 	@autobind
 	handleUnderline(e) {
-		const { editor } = this.refs
 		e.preventDefault()
-		CodeMirrorHelper.underline(editor.getCodeMirror())
+		CodeMirrorHelper.underline(this.editor.current.getCodeMirror())
 	}
 
 	@autobind
 	handleLink(e) {
-		const { editor } = this.refs
 		e.preventDefault()
-		CodeMirrorHelper.link(editor.getCodeMirror())
+		CodeMirrorHelper.link(this.editor.current.getCodeMirror())
 	}
 
 	@autobind
@@ -183,7 +177,7 @@ class MarkdownEditor extends Component {
 			lineNumbers: false,
 			lineWrapping: true,
 			mode: 'markdown',
-			theme:'default'
+			theme:'tistory-markdown'
 		}
 		
 		const iconButtonStyle = {
@@ -207,8 +201,11 @@ class MarkdownEditor extends Component {
 						<Button variant='text' onClick={onOpenFile} style={iconButtonStyle}><Attachment /></Button>
 						<Button variant='text' onClick={this.handleTogglePreview} style={iconButtonStyle}>Preview</Button>
 					</div>
-					<CodeMirrorComponent ref="editor" options={options} value={value}
-						onChange={this.handleChangeContent} />
+          <CodeMirrorComponent ref={this.editor}
+            options={options}
+            value={value}
+						onChange={this.handleChangeContent}
+          />
 				</div>
 				<div className="markdown-preview">
 					<div className="markdown-preview-content content" dangerouslySetInnerHTML={{__html: MarkdownHelper.markdownToHtml(value)}} />
