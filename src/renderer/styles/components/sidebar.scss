@@ -1,9 +1,10 @@
 .sidebar {
-  position: absolute; top: 0; bottom: 0; left: 0; width: 300px; background: #eee;
+  position: absolute; top: 0; bottom: 0; left: 0; width: 300px;
+  background: #fafafa;
+  border-right: 1px solid #eee;
 
   /* header */
   .header {
-    background: #ddd;
     padding: 0;
 
     .blog-title {

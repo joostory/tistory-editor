@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
-import classnames from 'classnames'
 
 import { ListItem, ListItemText } from '@material-ui/core'
 import Visibility from '../../model/Visibility'
@@ -9,9 +8,6 @@ class PostListItem extends Component {
 	render() {
 		const { post, category, selected, onSelect } = this.props
 
-		let itemClassName = classnames({
-			"item": true
-		})
 		let visibility = new Visibility(post.visibility)
 		let primaryText = <span className="item_title">{post.title}</span>
 		let secondaryText = (
@@ -22,7 +18,7 @@ class PostListItem extends Component {
 		)
 
 		return (
-			<ListItem button className="item" onClick={() => {onSelect(post)}}>
+			<ListItem button selected={selected} className="item" onClick={() => {onSelect(post)}}>
 
         <ListItemText primary={primaryText} secondary={secondaryText} />
 

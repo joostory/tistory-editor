@@ -65,7 +65,7 @@ class PostList extends Component {
 					<PostListItem key={i}
 						post={item}
 						category={categories.find(category => item.categoryId == category.id)}
-						selected={currentPost && item.id == currentPost.id}
+						selected={!!currentPost && item.id == currentPost.id}
 						onSelect={this.handleSelectPost} />
 				)}
 
