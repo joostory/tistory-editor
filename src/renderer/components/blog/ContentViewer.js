@@ -91,7 +91,7 @@ class ContentViewer extends Component {
 
           <div className="viewer_tags">
             {tags.map((item, i) =>
-              <Chip key={i} variant='outlined' label={item} />
+              <Chip key={i} variant='outlined' label={item} className={'tag'} />
             )}
           </div>
 
