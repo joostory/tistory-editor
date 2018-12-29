@@ -7,8 +7,7 @@
 
 		<title>Tistory Editor</title>
 		<meta name="description" content="Tistory Editor">
-		<link rel="stylesheet" href="../src/css/editor.css">
-		<link rel="stylesheet" href="../src/css/content.css">
+		<link rel="stylesheet" href="./editor.min.css">
 	</head>
 
   <body>
@@ -16,18 +15,20 @@
 			<div class='ready'>
 				<h1><span class="tistory">Tistory</span> Editor</h1>
 				<div>버전: <span id="version"></span></div>
-				<div id="needUpgrade" style="display:none; margin-top:10px; padding:15px; border-radius:5px; background-color:#f4f4f4">새로운 버전 <a href="https://joostory.github.io/tistory-editor" id="lastVersion"></a>이 준비되었습니다.</div>
+        <div id="needUpgrade" style="display:none; margin-top:10px; padding:15px; border-radius:5px; background-color:#f4f4f4">
+          새로운 버전 <a href="https://joostory.github.io/tistory-editor" id="latestVersion"></a>이 준비되었습니다.
+        </div>
 			</div>
 		</div>
 
 		<script>
-			const appInfo = require('electron').remote.require('./appInfo')
+      const appInfo = require('electron').remote.require('./appInfo')
+      const latestVersion = appInfo.latestVersion()
 			document.getElementById("version").innerHTML = appInfo.version
-			if (appInfo.version != appInfo.lastVersion) {
-				document.getElementById("lastVersion").innerHTML = appInfo.lastVersion
+			if (appInfo.version != latestVersion) {
+				document.getElementById("latestVersion").innerHTML = latestVersion
 				document.getElementById("needUpgrade").style.display = "block"
 			}
-
 		</script>
   </body>
 

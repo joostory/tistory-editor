@@ -5,19 +5,23 @@ const url = require('url')
 const electronLocalshortcut = require('electron-localshortcut')
 const fetch = require('isomorphic-fetch')
 
-let infoWindow
+const APP_VERSION = `v${app.getVersion()}`
 
-const fetchLastVersion = () => {
+let infoWindow
+let latestVersion = APP_VERSION
+
+const fetchLatestVersion = () => {
   fetch("https://api.github.com/repos/joostory/tistory-editor/releases/latest")
     .then(res => {
       if (!res.ok) {
         throw res
       }
+      return res
     })
     .then(res => res.json())
     .then(json => {
-      appInfo.lastVersion = json.tag_name
-      if (appInfo.version != appInfo.lastVersion) {
+      latestVersion = json.tag_name
+      if (appInfo.version != latestVersion) {
         openWindow()
       }
     })
@@ -79,16 +83,15 @@ const makePlatformString = () => {
   }
 }
 
-const APP_VERSION = `v${app.getVersion()}`
 const USER_AGENT = `Tistory Editor ${APP_VERSION}`
 const USER_AGENT_FULL = `${USER_AGENT} (With Chrome in ${makePlatformString()} Electron)`
 
 module.exports = {
   version: APP_VERSION,
-	lastVersion: APP_VERSION,
+  latestVersion: () => latestVersion,
   openWindow: openWindow,
   closeWindow: closeWindow,
-  fetchLastVersion: fetchLastVersion,
+  fetchLatestVersion: fetchLatestVersion,
   userAgent: USER_AGENT,
   userAgentFull: USER_AGENT_FULL
 }

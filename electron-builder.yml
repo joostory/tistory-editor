@@ -23,6 +23,7 @@ files:
 mac:
   target: zip
   category: public.app-category.utilities
+  darkModeSupport: true
 
 win:
   target: nsis
