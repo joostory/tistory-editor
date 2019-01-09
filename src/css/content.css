@@ -40,3 +40,12 @@ pre { font-size:14px; padding:15px; border-radius:3px; margin-bottom:10px; font-
 .content figure { margin:0 }
 .content img { max-width:100%; height:auto }
 .content hr { margin: 3em 5em 3em; border: 0; border-bottom: 1px solid #ccc; }
+.content table {
+  border-spacing:0;
+  border-collapse: collapse;
+}
+.content table th,
+.content table td {
+  border: 1px solid #999;
+  padding: 5px 10px;
+}

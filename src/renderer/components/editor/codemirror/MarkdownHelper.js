@@ -21,7 +21,6 @@ class MarkdownHelper {
 
 	static markdownToHtml(content) {
 		return marked(content, {
-      gfm: true,
       breaks: true,
       headerIds: false
     })
