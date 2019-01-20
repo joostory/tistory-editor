@@ -83,7 +83,7 @@ const makePlatformString = () => {
   }
 }
 
-const USER_AGENT = `Tistory Editor ${APP_VERSION}`
+const USER_AGENT = `Editor for Tistory ${APP_VERSION}`
 const USER_AGENT_FULL = `${USER_AGENT} (With Chrome in ${makePlatformString()} Electron)`
 
 module.exports = {
