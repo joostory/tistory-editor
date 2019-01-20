@@ -7,4 +7,3 @@ app/*.min.js
 app/*.min.css
 app/*.png
 .oauth2info.json
-package-lock.json
