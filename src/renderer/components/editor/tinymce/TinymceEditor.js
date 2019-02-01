@@ -60,8 +60,10 @@ class TinymceEditor extends Component {
 
 	@autobind
 	handleDrop(e) {
-		const { onImageHandler } = this.props
-		onImageHandler(Array.prototype.slice.call(e.dataTransfer.files))
+    const { onImageHandler } = this.props
+    if (e.dataTransfer && e.dataTransfer.files) {
+      onImageHandler(Array.prototype.slice.call(e.dataTransfer.files))  
+    }
 	}
 
 	@autobind
