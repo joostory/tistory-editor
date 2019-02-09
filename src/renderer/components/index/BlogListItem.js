@@ -1,44 +1,34 @@
-import React, { Component, Fragment } from 'react'
-import PropTypes from 'prop-types'
+import React from 'react'
 
 import { Avatar, ListItem, ListItemText } from '@material-ui/core';
 import { Stars } from '@material-ui/icons'
 
-class BlogListItem extends Component {
-  render() {
-    const { blog, onSelect } = this.props
+export default function BlogListItem({blog, onSelect}) {
 
-    let avatar
+  function makeProfileImage(blog) {
     if (blog.profileImageUrl) {
-      avatar = <Avatar size={40} src={blog.profileImageUrl} />
+      return <Avatar size={40} src={blog.profileImageUrl} />
     } else {
-      avatar = <Avatar size={40}>{blog.title.slice(0,1)}</Avatar>
+      return <Avatar size={40}>{blog.title.slice(0,1)}</Avatar>
     }
-
-    let url = (blog.secondaryUrl == 'http://')? blog.url : blog.secondaryUrl
-    let info = (
-      <Fragment>
-        <span className="blog_url">{url}</span>
-        {blog.description && <span> -- {blog.description}</span>}
-      </Fragment>
-    )
-
-    return (
-      <ListItem className="blog_item" button onClick={e => onSelect(blog)}>
-        {avatar}
-
-        <ListItemText primary={blog.title} secondary={info} />
-        {blog.default === 'Y' &&
-          <Stars />
-        }
-      </ListItem>
-    )
   }
-}
 
-BlogListItem.propTypes = {
-  blog: PropTypes.object.isRequired,
-  onSelect: PropTypes.func.isRequired
-}
+  return (
+    <ListItem className="blog_item" button onClick={e => onSelect(blog)}>
+      {makeProfileImage(blog)}
 
-export default BlogListItem
+      <ListItemText
+        primary={blog.title}
+        secondary={(
+          <>
+            <span className="blog_url">{(blog.secondaryUrl == 'http://')? blog.url : blog.secondaryUrl}</span>
+            {blog.description && <span> -- {blog.description}</span>}
+          </>
+        )}
+      />
+      {blog.default === 'Y' &&
+        <Stars />
+      }
+    </ListItem>
+  );
+}
