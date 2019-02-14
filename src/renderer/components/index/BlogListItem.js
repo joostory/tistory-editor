@@ -21,7 +21,7 @@ export default function BlogListItem({blog, onSelect}) {
         primary={blog.title}
         secondary={(
           <>
-            <span className="blog_url">{(blog.secondaryUrl == 'http://')? blog.url : blog.secondaryUrl}</span>
+            <span className="blog_url">{(blog.secondaryUrl == '')? blog.url : blog.secondaryUrl}</span>
             {blog.description && <span> -- {blog.description}</span>}
           </>
         )}
