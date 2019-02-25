@@ -12,10 +12,12 @@ const plugin = function (editor) {
 	}
 	
 	editor.addCommand('file-upload', handleButtonClick)
-	editor.addButton('file-upload', {
-		cmd: 'file-upload',
+	editor.ui.registry.addButton('file-upload', {
 		icon: 'image',
-		tooltip: '업로드'
+    tooltip: '업로드',
+    onAction: () => {
+      editor.execCommand('file-upload')
+    }
 	})
 }
 

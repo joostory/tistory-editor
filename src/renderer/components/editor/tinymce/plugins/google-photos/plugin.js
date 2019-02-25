@@ -5,11 +5,15 @@ const plugin = function(editor) {
     return
   }
 	
-	editor.addCommand('google-photos', settings.open_handler)
-	editor.addButton('google-photos', {
-		cmd: 'google-photos',
+  editor.addCommand('google-photos', settings.open_handler)
+  editor.ui.registry.addIcon('google-photos', '<img src="../src/images/google-photos-logo.png">')
+  
+	editor.ui.registry.addButton('google-photos', {
 		icon: 'google-photos',
-		tooltip: 'Google Photos'
+    tooltip: 'Google Photos',
+    onAction: () => {
+      editor.execCommand('google-photos')
+    }
 	})
 }
 
