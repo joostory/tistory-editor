@@ -99,15 +99,15 @@ class TinymceEditor extends Component {
           id='tinymce'
           className='content'
           init={{
-            plugins: 'link table textcolor hr lists paste codeblock opengraph google-photos file-upload autoresize searchreplace',
+            plugins: 'link table textcolor hr lists paste google-photos file-upload autoresize searchreplace',
             toolbar: 'formatselect bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock google-photos file-upload opengraph hr removeformat',
-            resize: false,
             branding: false,
             statusbar: false,
             menubar: false,
             paste_data_images: true,
             extended_valid_elements : 'script[type|src]',
-            height: '100%',
+            width: 700,
+            min_height: 500,
             file_picker_type: 'image',
             block_formats: '문단=p;주제=h2;소주제=h3',
             body_class: 'content',

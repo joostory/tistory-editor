@@ -71,12 +71,13 @@ class EditorContent extends Component {
       <Fragment>
         <div className="editor">
           <Dropzone ref={this.dropzoneRef}
-            disableClick={true} 
             accept="image/*" 
             onDrop={onUpload}>
 
             {({getRootProps, getInputProps, isDragActive}) =>
-              <div {...getRootProps()} className={classnames({droppable:isDragActive})} style={{width: "100%",height:"100%"}}>
+              <div className={classnames('editor_inner', {droppable:isDragActive})} {...getRootProps({
+                onClick: e => e.preventDefault()
+              })}>
                 {this.getEditor()}
 
                 <input {...getInputProps()} />
