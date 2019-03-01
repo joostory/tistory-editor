@@ -99,7 +99,7 @@ class TinymceEditor extends Component {
           id='tinymce'
           className='content'
           init={{
-            plugins: 'link table textcolor hr lists paste google-photos file-upload autoresize searchreplace',
+            plugins: 'link table textcolor hr lists paste codeblock opengraph google-photos file-upload autoresize searchreplace',
             toolbar: 'formatselect bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock google-photos file-upload opengraph hr removeformat',
             branding: false,
             statusbar: false,
@@ -113,7 +113,7 @@ class TinymceEditor extends Component {
             body_class: 'content',
             content_css: [
               '../src/css/content.css',
-              'https://fonts.googleapis.com/css?family=Nanum+Gothic|Yeon+Sung'
+              'https://fonts.googleapis.com/css?family=Nanum+Gothic'
             ],
             paste_preprocess: (plugin, args) => {
               let image = clipboard.readImage()
@@ -132,6 +132,7 @@ class TinymceEditor extends Component {
             },
             open_file_handler: onOpenFile,
             init_instance_callback: (editor) => {
+              editor.ui.registry.addIcon('media', 'M')
               editor.on("paste", this.handlePaste)
               editor.on("drop", this.handleDrop)
               editor.setContent(value)

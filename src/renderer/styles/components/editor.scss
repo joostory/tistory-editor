@@ -39,6 +39,12 @@
   .tox-tinymce {
     border:0; background-color:#fff; margin:0 auto;
 
+    .tox-toolbar {
+      .tox-toolbar__group {
+        padding: 0 2px;
+      }
+    }
+
     .tox-edit-area {
       border:0; margin: 46px auto;
     }
