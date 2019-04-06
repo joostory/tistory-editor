@@ -3,7 +3,7 @@ sudo: false
 language: node_js
 node_js: 'lts/*'
 os:
-- osx
+- linux
 if: tag IS present
 env:
   global:
