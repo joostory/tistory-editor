@@ -119,16 +119,21 @@ module.exports = () => {
 		})
 	})
 
-	ipcMain.on("add-file", async (evt, blogName, filepath) => {
+	ipcMain.on("add-file", async (evt, blogName, filedata, options) => {
 		let auth = settings.get('auth')
 		evt.sender.send('start-add-file')
 		
 		try {
 			if (!auth || !auth.access_token) {
 				throw new Error("NO_AUTH")
-			}
-
-			const res = await tistory.uploadFile(auth, blogName, filepath)
+      }
+      
+      const filebuffer = Buffer.from(filedata.split('base64,')[1], 'base64');
+			const res = await tistory.uploadFileWithBuffer(auth, blogName, filebuffer, {
+        filename: options.name,
+        contentType: options.type,
+        knownLength: options.size
+      })
 			evt.sender.send('finish-add-file', res.tistory.url)
 			evt.sender.send('receive-message', '이미지 업로드 완료')
 		} catch (e) {

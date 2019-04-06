@@ -156,7 +156,7 @@ module.exports.uploadFile = (auth, blogName, filepath) => {
 }
 
 module.exports.uploadFileWithBuffer = (auth, blogName, buffer, options) => {
-	console.log("uploadFileWithClipboard", blogName)
+  console.log("uploadFileWithClipboard", blogName)
 	var imageStream = new stream.PassThrough()
 	imageStream.end(buffer)
 	return uploadFile(auth.access_token, blogName, imageStream, options)

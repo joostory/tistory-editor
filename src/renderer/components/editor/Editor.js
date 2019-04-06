@@ -254,9 +254,17 @@ class Editor extends Component {
 
 	@autobind
 	handleUploadFiles(files) {
-		const { currentBlog } = this.props
+    const { currentBlog } = this.props
 		files.map(file => {
-			ipcRenderer.send("add-file", currentBlog.name, file.path)
+      const fileReader = new FileReader();
+      fileReader.addEventListener("load", e => {
+        ipcRenderer.send("add-file", currentBlog.name, e.target.result, {
+          name: file.name,
+          type: file.type,
+          size: file.size
+        })
+      });
+      fileReader.readAsDataURL(file);
 		})
 	}
 
