@@ -4,6 +4,7 @@ language: node_js
 node_js: 'lts/*'
 os:
 - osx
+- linux
 if: tag IS present
 env:
   global:
@@ -20,7 +21,8 @@ before_install:
 install:
 - npm install
 script:
-- npm run build; npm run dist -- -mwl;
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run build; npm run dist -- -l; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run build; npm run dist -- -mw; fi
 before_cache:
 - rm -rf $HOME/.cache/electron-builder/wine
 notifications:
