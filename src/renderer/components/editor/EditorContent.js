@@ -76,7 +76,7 @@ class EditorContent extends Component {
 
             {({getRootProps, getInputProps, isDragActive}) =>
               <div className={classnames('editor_inner', {droppable:isDragActive})} {...getRootProps({
-                onClick: e => e.preventDefault()
+                onClick: e => e.stopPropagation()
               })}>
                 {this.getEditor()}
 
