@@ -7,6 +7,7 @@ import configureStore from './store/configureStore'
 import { registIpcEvent } from './actions/ipc-event'
 import './styles/index.scss'
 import '../css/content.css'
+import '../css/tistory-content.css'
 
 const store = configureStore()
 registIpcEvent(store)
