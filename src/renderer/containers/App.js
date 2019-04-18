@@ -1,68 +1,41 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import React, { Component, useState, useEffect } from 'react'
 import { ipcRenderer } from 'electron'
-import autobind from 'autobind-decorator'
 import { Snackbar } from '@material-ui/core'
-
-import { receiveLocalPost, removeLocalPost, updateLocalPost } from '../actions'
 
 import Main from './Main'
 import Preference from '../components/Preference'
 
-class App extends Component {
+export default function App(props) {
 
-	constructor(props, context) {
-		super(props, context)
-		this.state = {
-			message: "",
-			messageOpen: false
+	const [message, setMessage] = useState("");
+
+	function handleReceiveMessage(e, message) {
+		setMsssage(message);
+	}
+
+	useEffect(() => {
+		ipcRenderer.on("receive-message", handleReceiveMessage)
+		
+		return () => {
+			ipcRenderer.removeListener("receive-message", handleReceiveMessage)
 		}
-	}
+	});
+	//
+	return (
+		<>
+			<Main />
 
-	componentWillMount() {
-		ipcRenderer.on("receive-message", this.handleReceiveMessage)
-	}
+			{message &&
+				<Snackbar
+					open={true}
+					message={message}
+					autoHideDuration={3000}
+					onClose={e => setMessage('')}
+				/>
+			}
 
-	componentWillUnmount() {
-		ipcRenderer.removeListener("receive-message", this.handleReceiveMessage)
-	}
-
-	@autobind
-	handleReceiveMessage(e, message) {
-		this.setState({
-			message: message,
-			messageOpen: true
-		})
-	}
-
-	@autobind
-	handleMessageClose() {
-		this.setState({
-			message: "",
-			messageOpen: false
-		})
-	}
-
-	render() {
-		const { message, messageOpen, preferenceOpen } = this.state
-
-		return (
-			<div>
-				<Main />
-
-				{messageOpen && message &&
-					<Snackbar
-						open={messageOpen}
-						message={message}
-						autoHideDuration={3000}
-						onClose={this.handleMessageClose}
-					/>
-				}
-
-				<Preference />
-			</div>
-		)
-	}
+			<Preference />
+		</>
+	);
 }
 
-export default App
