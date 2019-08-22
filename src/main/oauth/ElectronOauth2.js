@@ -87,8 +87,7 @@ module.exports = function (config, windowParams) {
 
   function tokenRequest(data) {
     const header = {
-      'Accept': 'application/json',
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Accept': 'application/json'
     };
 
     if (config.useBasicAuthorizationHeader) {
@@ -100,10 +99,9 @@ module.exports = function (config, windowParams) {
       });
     }
 
-    return fetch(config.tokenUrl, {
-      method: 'POST',
+    return fetch(`${config.tokenUrl}?${queryString.stringify(data)}`, {
+      method: 'GET',
       headers: header,
-      body: queryString.stringify(data)
     }).then(res => {
       return res.json();
     });
