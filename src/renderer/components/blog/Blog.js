@@ -1,76 +1,31 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { ipcRenderer } from 'electron'
-import autobind from 'autobind-decorator'
+import React, { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 
 import Sidebar from './Sidebar'
 import Content from './Content'
 import Editor from '../editor/Editor'
 import * as ContentMode from '../../constants/ContentMode'
-import Visibility from '../../model/Visibility'
 
 import { pageview } from '../../modules/AnalyticsHelper'
 
-@connect(state => ({
-	currentBlog: state.currentBlog
-}), dispatch => ({}))
-class Blog extends Component {
+export default function Blog() {
+	const currentBlog = useSelector(state => state.currentBlog)
+	const [mode, setMode] = useState(ContentMode.VIEW)
 
-	constructor(props, context) {
-		super(props, context)
-		this.state = {
-			mode: ContentMode.VIEW
-		}
-	}
 
-	componentDidMount() {
-		const { currentBlog } = this.props
-		if (currentBlog) {
-			pageview(`/blog/${currentBlog.blogId}`, `${currentBlog.name}`)
-		}
-	}
+	useEffect(() => {
+		pageview(`/blog/${currentBlog.blogId}`, `${currentBlog.name}`)
+	}, [])
 
-	@autobind
-	handleRequestAddPost() {
-		this.setState({
-			mode: ContentMode.ADD
-		})
-	}
+	return (
+		<div className="container">
+			<Sidebar onRequestAddPost={() => setMode(ContentMode.ADD)} />
 
-	@autobind
-	handleRequestEditPost() {
-		this.setState({
-			mode: ContentMode.EDIT
-		})
-	}
+			<Content onRequestEditPost={() => setMode(ContentMode.EDIT)}/>
 
-	@autobind
-	handleFinishEditor() {
-		this.setState({
-			mode: ContentMode.VIEW
-		})
-	}
-
-	render() {
-		const { mode } = this.state
-
-		return (
-			<div className="container">
-				<Sidebar onRequestAddPost={this.handleRequestAddPost} />
-
-				<Content onRequestEditPost={this.handleRequestEditPost}/>
-
-				{(mode === ContentMode.EDIT || mode === ContentMode.ADD) &&
-					<Editor mode={mode} onFinish={this.handleFinishEditor} />
-				}
-			</div>
-		)
-	}
+			{(mode === ContentMode.EDIT || mode === ContentMode.ADD) &&
+				<Editor mode={mode} onFinish={() => setMode(ContentMode.VIEW)} />
+			}
+		</div>
+	)
 }
-
-Blog.propTypes = {
-	currentBlog: PropTypes.object
-}
-
-export default Blog

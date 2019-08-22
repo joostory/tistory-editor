@@ -1,49 +1,38 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import classnames from 'classnames'
+import React from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { goIndex } from '../../actions'
 
 import { Toolbar, IconButton, Avatar, Typography } from '@material-ui/core'
 import { NoteAdd, NavigateBefore } from '@material-ui/icons'
 
-@connect(state => ({
-	currentBlog: state.currentBlog
-}), dispatch => ({
-	handleGoIndex(e) {
-		dispatch(goIndex())
-	}
-}))
-class Header extends Component {
-
-	render() {
-		const { currentBlog, handleGoIndex, onRequestAddPost } = this.props
-
-		let avatar = currentBlog.profileImageUrl? <Avatar src={currentBlog.profileImageUrl} size={30} /> : <Avatar size={30}>{currentBlog.title.slice(0,1)}</Avatar>
-
-		return (
-			<Toolbar className='header'>
-        <IconButton onClick={handleGoIndex}>
-          <NavigateBefore />
-        </IconButton>
-
-        { avatar }
-
-        <Typography className='blog-title'>
-          {currentBlog.title}
-        </Typography>
-
-        <IconButton onClick={onRequestAddPost} tooltip="새글쓰기">
-          <NoteAdd />
-        </IconButton>
-			</Toolbar>
-		)
+function ProfileAvatar({blog}) {
+	if (blog.profileImageUrl) {
+		return <Avatar src={blog.profileImageUrl} size={30} />
+	} else {
+		return <Avatar size={30}>{blog.title.slice(0,1)}</Avatar>
 	}
 }
 
-Header.propTypes = {
-	currentBlog: PropTypes.object,
-	onRequestAddPost: PropTypes.func.isRequired
-}
+export default function Header({onRequestAddPost}) {
+	const currentBlog = useSelector(state => state.currentBlog)
+	const dispatch = useDispatch()
 
-export default Header
+
+	return (
+		<Toolbar className='header'>
+			<IconButton onClick={() => dispatch(goIndex())}>
+				<NavigateBefore />
+			</IconButton>
+
+			<ProfileAvatar blog={currentBlog} />
+
+			<Typography className='blog-title'>
+				{currentBlog.title}
+			</Typography>
+
+			<IconButton onClick={onRequestAddPost} tooltip="새글쓰기">
+				<NoteAdd />
+			</IconButton>
+		</Toolbar>
+	)
+}
