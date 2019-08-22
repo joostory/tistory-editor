@@ -3,7 +3,13 @@ module.exports = (api) => {
 
   return {
     presets: [
-      "@babel/env",
+      [
+        "@babel/env",
+        {
+          targets: { electron: require('electron/package.json').version },
+          useBuiltIns: 'usage'
+        }
+      ],
       "@babel/react"
     ],
     plugins: [

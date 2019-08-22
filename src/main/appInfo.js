@@ -41,7 +41,10 @@ const openWindow = () => {
 		width:640,
 		height:480,
 		frame:false,
-		titleBarStyle: 'hidden',
+    titleBarStyle: 'hidden',
+    webPreferences: {
+      nodeIntegration: true
+    },
 		alwaysOnTop: true
 	})
 

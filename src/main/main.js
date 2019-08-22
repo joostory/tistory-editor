@@ -31,6 +31,9 @@ const createWindow = (config) => {
     width: config.width,
     height: config.height,
     autoHideMenuBar: true,
+    webPreferences: {
+      nodeIntegration: true
+    },
     icon: `${__dirname}/../../build/icons/256x256.png`
   })
 
