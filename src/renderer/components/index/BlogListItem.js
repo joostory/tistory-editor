@@ -1,21 +1,23 @@
 import React from 'react'
 
-import { Avatar, ListItem, ListItemText } from '@material-ui/core';
+import { Avatar, ListItem, ListItemText, ListItemAvatar } from '@material-ui/core';
 import { Stars } from '@material-ui/icons'
+
+function ProfileAvatar({blog}) {
+  if (blog.profileImageUrl) {
+    return <Avatar size={40} src={blog.profileImageUrl} />
+  } else {
+    return <Avatar size={40}>{blog.title.slice(0,1)}</Avatar>
+  }
+}
 
 export default function BlogListItem({blog, onSelect}) {
 
-  function makeProfileImage(blog) {
-    if (blog.profileImageUrl) {
-      return <Avatar size={40} src={blog.profileImageUrl} />
-    } else {
-      return <Avatar size={40}>{blog.title.slice(0,1)}</Avatar>
-    }
-  }
-
   return (
-    <ListItem className="blog_item" button onClick={e => onSelect(blog)}>
-      {makeProfileImage(blog)}
+    <ListItem alignItems='flex-start' className="blog_item" button onClick={e => onSelect(blog)}>
+      <ListItemAvatar>
+        <ProfileAvatar blog={blog} />
+      </ListItemAvatar>
 
       <ListItemText
         primary={blog.title}

@@ -1,13 +1,16 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import Loading from '../components/Loading'
 import Ready from '../components/Ready'
 import Index from '../components/index/Index'
 import Blog from '../components/blog/Blog'
 
-function Main(props) {
-	const { status, user, currentBlog } = props
+export default function Main() {
+	const status = useSelector(state => state.status)
+	const user = useSelector(state => state.user)
+	const currentBlog = useSelector(state => state.currentBlog)
+
 
 	if (!status.initialized) {
 		return <Loading />
@@ -23,10 +26,3 @@ function Main(props) {
 		return <Ready />
 	}
 }
-
-export default connect(state => ({
-	status: state.status,
-	user: state.user,
-	blogs: state.blogs,
-	currentBlog: state.currentBlog
-}), dispatch => ({}))(Main);

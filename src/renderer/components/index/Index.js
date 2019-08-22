@@ -1,50 +1,32 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import React, { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { ipcRenderer } from 'electron'
-import autobind from 'autobind-decorator'
 
-import { disconnectAuth, selectBlog } from '../../actions'
+import { selectBlog } from '../../actions'
 import IndexProfile from './IndexProfile'
 import BlogList from './BlogList'
 
 import { pageview } from '../../modules/AnalyticsHelper'
 
-@connect(state => ({
-	user: state.user,
-	blogs: state.blogs
-}), dispatch => ({
-	onSelectBlog(blog) {
+export default function Index() {
+
+	const user = useSelector(state => state.user)
+	const blogs = useSelector(state => state.blogs)
+	const dispatch = useDispatch()
+
+	function handleSelectBlog(blog) {
+		ipcRenderer.send("fetch-categories", blog.name)
 		dispatch(selectBlog(blog))
 	}
-}))
-class Index extends Component {
 
-	constructor(props, context) {
-		super(props, context)
-	}
-
-	componentDidMount() {
+	useEffect(() => {
 		pageview('/index', 'Index')
-	}
+	}, [])
 
-	@autobind
-	handleSelectBlog(blog) {
-		const { onSelectBlog } = this.props
-		ipcRenderer.send("fetch-categories", blog.name)
-		onSelectBlog(blog)
-	}
-
-	render() {
-		const { user, blogs } = this.props
-
-		return (
-			<div className="container">
-				<IndexProfile user={user} />
-				<BlogList blogs={blogs} onSelect={this.handleSelectBlog} />
-			</div>
-		)
-	}
+	return (
+		<div className="container">
+			<IndexProfile user={user} />
+			<BlogList blogs={blogs} onSelect={handleSelectBlog} />
+		</div>
+	)
 }
-
-export default Index
