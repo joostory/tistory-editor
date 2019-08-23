@@ -7,7 +7,8 @@ module.exports = (api) => {
         "@babel/env",
         {
           targets: { electron: require('electron/package.json').version },
-          useBuiltIns: 'usage'
+          useBuiltIns: 'usage',
+          corejs: "core-js@3"
         }
       ],
       "@babel/react"
