@@ -10,7 +10,7 @@
     "app": "cross-env NODE_ENV=development electron .",
     "start": "npm-run-all --parallel watch app",
     "test": "jest",
-    "dist": "build --x64"
+    "dist": "electron-builder --x64"
   },
   "repository": {
     "type": "git",
