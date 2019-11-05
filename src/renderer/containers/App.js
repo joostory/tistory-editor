@@ -10,7 +10,7 @@ export default function App(props) {
 	const [message, setMessage] = useState("");
 
 	function handleReceiveMessage(e, message) {
-		setMsssage(message);
+		setMessage(message);
 	}
 
 	useEffect(() => {

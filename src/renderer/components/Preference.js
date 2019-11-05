@@ -1,84 +1,55 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import React, { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import { ipcRenderer } from 'electron'
-import autobind from 'autobind-decorator'
 
 import { Dialog, Button, DialogTitle, DialogContent, DialogActions, RadioGroup, Radio, FormControlLabel } from '@material-ui/core'
 
 import * as EditorMode from '../constants/EditorMode'
 
-@connect(state => ({
-	preferences: state.preferences
-}), dispatch => ({}))
-class Preference extends Component {
 
-  constructor(props, context) {
-    super(props, context)
-    this.state = {
-      open: false
-    }
-	}
-	
-  componentWillMount() {
-    ipcRenderer.on("open-preference", this.handlePreferenceOpen)
+export default function Preference() {
+  const [open, setOpen] = useState(false)
+  const preferences = useSelector(state => state.preferences)
+  const defaultEditor = preferences.editor || EditorMode.MARKDOWN
+
+  function handlePreferenceOpen() {
+    setOpen(true)
   }
 
-  componentWillUnmount() {
-    ipcRenderer.removeListener("open-preference", this.handlePreferenceOpen)
+  function handlePreferenceClose() {
+    setOpen(false)
   }
 
-	@autobind
-  handlePreferenceOpen() {
-    this.setState({
-      open: true
-    })
-  }
-
-	@autobind
-  handlePreferenceClose() {
-    this.setState({
-      open: false
-    })
-  }
-
-	@autobind
-  handleChangeEditor(e, value) {
-    const { preferences } = this.props
-    let savePreferences = Object.assign({}, preferences, {
+  function handleChangeEditor(e, value) {
+    ipcRenderer.send("save-preferences", Object.assign({}, preferences, {
       editor: value
-    })
-    ipcRenderer.send("save-preferences", savePreferences)
+    }))
   }
 
-  render() {
-    const { open } = this.state
-    const { preferences } = this.props
+  useEffect(() => {
+    ipcRenderer.on("open-preference", handlePreferenceOpen)
 
-    let defaultEditor = preferences.editor || EditorMode.MARKDOWN
+    return () => {
+      ipcRenderer.removeListener("open-preference", handlePreferenceOpen)  
+    }
+  }, [])
 
-    return (
-      <Dialog open={open} onClose={this.handlePreferenceClose}>
-        <DialogTitle>환경설정</DialogTitle>
 
-        <DialogContent>
-          기본 에디터
-          <RadioGroup name="editor" value={defaultEditor} onChange={this.handleChangeEditor}>
-            <FormControlLabel value={EditorMode.MARKDOWN} label="Markdown Editor" control={<Radio />} />
-            <FormControlLabel value={EditorMode.TINYMCE} label="Rich Editor" control={<Radio />} />
-          </RadioGroup>
-        </DialogContent>
+  return (
+    <Dialog open={open} onClose={handlePreferenceClose}>
+      <DialogTitle>환경설정</DialogTitle>
 
-        <DialogActions>
-          <Button variant='text' onClick={this.handlePreferenceClose}>닫기</Button>
-        </DialogActions>
-      </Dialog>
-    )
-  }
+      <DialogContent>
+        기본 에디터
+        <RadioGroup name="editor" value={defaultEditor} onChange={handleChangeEditor}>
+          <FormControlLabel value={EditorMode.MARKDOWN} label="Markdown Editor" control={<Radio />} />
+          <FormControlLabel value={EditorMode.TINYMCE} label="Rich Editor" control={<Radio />} />
+        </RadioGroup>
+      </DialogContent>
+
+      <DialogActions>
+        <Button variant='text' onClick={handlePreferenceClose}>닫기</Button>
+      </DialogActions>
+    </Dialog>
+  )
 }
-
-Preference.propTypes = {
-  preferences: PropTypes.object
-}
-
-export default Preference

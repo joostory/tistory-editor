@@ -1,9 +1,7 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-
-import autobind from 'autobind-decorator'
+import React, { useEffect, useState, useRef } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import dateformat from 'dateformat'
+import update from 'immutability-helper'
 import { ipcRenderer, remote } from 'electron'
 
 import { addPost, updatePost } from '../../actions'
@@ -17,39 +15,30 @@ import Loading from '../Loading'
 
 import { pageview } from '../../modules/AnalyticsHelper'
 
-@connect(state => ({
-	currentBlog: state.currentBlog,
-	post: state.currentPost,
-	categories: state.categories,
-	preferences: state.preferences
-}), dispatch => ({
-	onUpdate: (post) => {
-		dispatch(updatePost(post))
-	},
-	onAdd: (post) => {
-		dispatch(addPost(post))
-	}
-}))
-class Editor extends Component {
-	constructor(props, context) {
-		super(props, context)
 
-		this.state = Object.assign({
-			showInfoBox: false,
-			showLoading: false,
-			uploadFileCount: 0,
-			uploadFinishedFileCount: 0
-		}, this.makePostState(props))
-	}
+export default function Editor({mode, onFinish}) {
+  const currentBlog = useSelector(state => state.currentBlog)
+  const post = useSelector(state => state.currentPost)
+  const categories = useSelector(state => state.categories)
+  const dispatch = useDispatch()
 
-	makePostState(props) {
-		if (props.mode == ContentMode.EDIT && props.post) {
+  const editorRef = useRef(null)
+
+  const [showInfoBox, setShowInfoBox] = useState(false)
+  const [showLoading, setShowLoading] = useState(false)
+  const [uploadFileCount, setUploadFileCount] = useState(0)
+  const [uploadFinishedFileCount, setUploadFinishedFileCount] = useState(0)
+
+  const [postData, setPostData] = useState(makePostState())
+
+  function makePostState() {
+		if (mode == ContentMode.EDIT && post) {
 			return {
-				title: props.post.title,
-				content: props.post.content,
-				categoryId: props.post.categoryId,
-				visibility: props.post.visibility,
-				tags: props.post.tags && props.post.tags.tag? props.post.tags.tag: []
+				title: post.title,
+				content: post.content,
+				categoryId: post.categoryId,
+				visibility: post.visibility,
+				tags: post.tags && post.tags.tag? post.tags.tag: []
 			}
 		} else {
 			return {
@@ -60,106 +49,61 @@ class Editor extends Component {
 				tags: []
 			}
 		}
-
 	}
 
-	componentDidMount() {
-		const { currentBlog, post } = this.props
-		if (post) {
-			pageview(`/blog/${currentBlog.blogId}/post/${post.id}/edit`, `${post.title}`)
-		} else {
-			pageview(`/blog/${currentBlog.blogId}/post`, '새 글 작성')
-		}
+	function handleChangeTitle(e) {
+    setPostData(update(postData, {
+      title: {
+        $set: e.target.value
+      }
+    }))
 	}
 
-	componentWillMount() {
-		document.body.addEventListener("keydown", this.handleKeyDown, false)
-
-		ipcRenderer.on("start-add-file", this.handleStartAddFile)
-		ipcRenderer.on("finish-add-file", this.handleFinishAddFile)
-		ipcRenderer.on("finish-add-content", this.handleFinishSaveContent)
-		ipcRenderer.on("finish-save-content", this.handleFinishSaveContent)
-
-		remote.app.showExitPrompt = true
+	function handleChangeTags(tags) {
+    setPostData(update(postData, {
+      tags: {
+        $set: tags
+      }
+    }))
 	}
 
-	componentWillUnmount() {
-		document.body.removeEventListener("keydown", this.handleKeyDown, false)
-
-		ipcRenderer.removeListener("start-add-file", this.handleStartAddFile)
-		ipcRenderer.removeListener("finish-add-file", this.handleFinishAddFile)
-		ipcRenderer.removeListener("finish-add-content", this.handleFinishSaveContent)
-		ipcRenderer.removeListener("finish-save-content", this.handleFinishSaveContent)
-
-		remote.app.showExitPrompt = false
+	function handleChangeCategory(e) {
+    setPostData(update(postData, {
+      categoryId: {
+        $set: e.target.value
+      }
+    }))
 	}
 
-	@autobind
-	handlePublishDialogClose() {
-		this.setState({
-			showInfoBox: false
-		})
+	function handleSave() {
+		requestSave("0")
 	}
 
-	@autobind
-	handlePublishDialogOpen() {
-		this.setState({
-			showInfoBox: true
-		})
+	function handlePublish() {
+		requestSave("3")
 	}
 
-	@autobind
-	handleChangeTitle(e) {
-		this.setState({
-			title: e.target.value
-		})
-	}
-
-	@autobind
-	handleChangeTags(tags) {
-		this.setState({
-			tags: tags
-		})
-	}
-
-	@autobind
-	handleChangeCategory(e) {
-		this.setState({
-			categoryId: e.target.value
-		})
-	}
-
-	@autobind
-	handleSave() {
-		this.requestSave("0")
-	}
-
-	@autobind
-	handlePublish() {
-		this.requestSave("3")
-	}
-
-	requestSave(visibility) {
-		const { post, currentBlog, mode } = this.props
-		const { title, categoryId, tags } = this.state
-		const { editor } = this.refs
-
-		let content = editor.getContent()
+	function requestSave(visibility) {
+    let content = editorRef.current.getContent()
 		let savePost = {
-			title: title,
-			visibility: visibility,
+			title: postData.title,
+			visibility: postData.visibility,
 			content: content,
-			categoryId: categoryId,
+			categoryId: postData.categoryId,
 			tags: {
-				tag: tags.join(",")
+				tag: postData.tags.join(",")
 			}
 		}
 
-		this.setState({
-			content: content,
-			visibility: visibility,
-			showLoading: true
-		})
+    setShowLoading(true)
+    setPostData(update(postData, {
+      content: {
+        $set: content
+      },
+			visibility: {
+        $set: visibility
+      },
+    }))
 
 		if (mode == ContentMode.EDIT) {
 			savePost = Object.assign({}, post, savePost)
@@ -169,38 +113,22 @@ class Editor extends Component {
 		}
 	}
 
-	@autobind
-	handleStartAddFile(e) {
-		const { uploadFileCount, uploadFinishedFileCount } = this.state
-		this.setState({
-			uploadFileCount: uploadFileCount + 1
-		})
+	function handleStartAddFile(e) {
+    setUploadFileCount(uploadFileCount + 1)
 	}
 
-	@autobind
-	handleFinishAddFile(e) {
-		const { uploadFileCount, uploadFinishedFileCount } = this.state
+	function handleFinishAddFile(e) {
 		if (uploadFileCount == uploadFinishedFileCount + 1) {
-			this.setState({
-				uploadFileCount: 0,
-				uploadFinishedFileCount: 0
-			})
+      setUploadFileCount(0)
+      setUploadFinishedFileCount(0)
 		} else {
-			this.setState({
-				uploadFinishedFileCount: uploadFinishedFileCount + 1
-			})
+      setUploadFinishedFileCount(uploadFinishedFileCount + 1)
 		}
-		
 	}
 
-	@autobind
-	handleFinishSaveContent(e, postId, url) {
-		const { onFinish, post, mode, onUpdate, onAdd } = this.props
-		const { title, visibility, content, categoryId, tags } = this.state
-
-		this.setState({
-			showLoading: false
-		})
+	function handleFinishSaveContent(e, postId, url) {
+		const { title, visibility, content, categoryId, tags } = postData
+    setShowLoading(false)
 
 		if (!postId) {
 			return
@@ -223,38 +151,41 @@ class Editor extends Component {
 		onFinish()
 	}
 
-	@autobind
-	handleCancel() {
-		const { onFinish } = this.props
-
+	function handleCancel() {
 		if (confirm("저장하지 않은 내용은 사라집니다. 계속하시겠습니까?")) {
 			onFinish()
 		}
 	}
 
-	@autobind
-	handleChangeContent(content) {
-		this.setState({
-			content: content
-		})
+  function onUpdate(post) {
+    dispatch(updatePost(post))
+  }
+  function onAdd(post) {
+    dispatch(addPost(post))
+  }
+
+
+	function handleChangeContent(content) {
+    setPostData(update(postData, {
+      content: {
+        $set: content
+      }
+    }))
 	}
 
-	@autobind
-	handleKeyDown(e) {
+	function handleKeyDown(e) {
 		let isMac = navigator.platform.indexOf("Mac") === 0
 		let commandKey = isMac? e.metaKey : e.ctrlKey
 
 		if (commandKey) {
 			if (e.keyCode == 83) {
-				e.preventDefault()
-				this.handlePublishDialogOpen()
+        e.preventDefault()
+        setShowInfoBox(true)
 			}
 		}
 	}
 
-	@autobind
-	handleUploadFiles(files) {
-    const { currentBlog } = this.props
+  function handleUploadFiles(files) {
 		files.map(file => {
       const fileReader = new FileReader();
       fileReader.addEventListener("load", e => {
@@ -266,50 +197,63 @@ class Editor extends Component {
       });
       fileReader.readAsDataURL(file);
 		})
-	}
+  }
+  
+  useEffect(() => {
+    document.body.addEventListener("keydown", handleKeyDown, false)
 
-	render() {
-		const { onFinish, currentBlog, categories, post } = this.props
-		const { title, content, categoryId, tags, showInfoBox, showLoading, uploadFileCount, uploadFinishedFileCount } = this.state
+		ipcRenderer.on("start-add-file", handleStartAddFile)
+		ipcRenderer.on("finish-add-file", handleFinishAddFile)
+		ipcRenderer.on("finish-add-content", handleFinishSaveContent)
+		ipcRenderer.on("finish-save-content", handleFinishSaveContent)
 
-		return (
-			<div className="editor_wrap">
-				<EditorToolbar title={title}
-					onTitleChange={this.handleChangeTitle}
-					onSaveClick={this.handlePublishDialogOpen}
-					onCancelClick={this.handleCancel} />
+    remote.app.showExitPrompt = true
 
-				<EditorContent ref="editor"
-					currentBlog={currentBlog}
-					content={content}
-					onUpload={this.handleUploadFiles}
-					onChange={this.handleChangeContent} />
+    if (post) {
+			pageview(`/blog/${currentBlog.blogId}/post/${post.id}/edit`, `${post.title}`)
+		} else {
+			pageview(`/blog/${currentBlog.blogId}/post`, '새 글 작성')
+		}
+    
+    return () => {
+      document.body.removeEventListener("keydown", handleKeyDown, false)
 
-				<EditorInfoDialog open={showInfoBox} category={categoryId} categories={categories} tags={tags}
-					onTagsChange={this.handleChangeTags}
-					onCategoryChange={this.handleChangeCategory}
-					onRequestClose={this.handlePublishDialogClose}
-					onRequestSave={this.handleSave}
-					onRequestPublish={this.handlePublish} />
+      ipcRenderer.removeListener("start-add-file", handleStartAddFile)
+      ipcRenderer.removeListener("finish-add-file", handleFinishAddFile)
+      ipcRenderer.removeListener("finish-add-content", handleFinishSaveContent)
+      ipcRenderer.removeListener("finish-save-content", handleFinishSaveContent)
 
-        {showLoading && <Loading />}
-        
-        <Snackbar
-          open={uploadFileCount > 0}
-          message={`업로드 중 (${uploadFinishedFileCount} / ${uploadFileCount})`}
-        />
+      remote.app.showExitPrompt = false
+    }
+  })
 
-			</div>
-		)
-	}
+  return (
+    <div className="editor_wrap">
+      <EditorToolbar title={postData.title}
+        onTitleChange={handleChangeTitle}
+        onSaveClick={e => setShowInfoBox(true)}
+        onCancelClick={handleCancel} />
+
+      <EditorContent ref={editorRef}
+        currentBlog={currentBlog}
+        content={postData.content}
+        onUpload={handleUploadFiles}
+        onChange={handleChangeContent} />
+
+      <EditorInfoDialog open={showInfoBox} category={postData.categoryId} categories={categories} tags={postData.tags}
+        onTagsChange={handleChangeTags}
+        onCategoryChange={handleChangeCategory}
+        onRequestClose={e => setShowInfoBox(false)}
+        onRequestSave={handleSave}
+        onRequestPublish={handlePublish} />
+
+      {showLoading && <Loading />}
+      
+      <Snackbar
+        open={uploadFileCount > 0}
+        message={`업로드 중 (${uploadFinishedFileCount} / ${uploadFileCount})`}
+      />
+
+    </div>
+  )
 }
-
-Editor.propTypes = {
-	currentBlog: PropTypes.object,
-	post: PropTypes.object,
-	categories: PropTypes.array,
-	mode: PropTypes.string.isRequired,
-	onFinish: PropTypes.func.isRequired
-}
-
-export default Editor
