@@ -125,7 +125,7 @@ class TinymceEditor extends Component {
               }
             },
             codeblock: {
-              highlightStyle: '../node_modules/highlightjs/styles/atom-one-dark.css'
+              highlightStyle: '../node_modules/highlight.js/styles/atom-one-dark.css'
             },
             opengraph: {
               fetch_handler: this.handleFetchOpengraph

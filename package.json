@@ -89,7 +89,7 @@
     "redux": "^4.0.4",
     "redux-logger": "^3.0.6",
     "tinymce": "^5.1.2",
-    "tinymce-plugin-codeblock": "^2.0.1",
+    "tinymce-plugin-codeblock": "^2.0.2",
     "tinymce-plugin-opengraph": "^2.0.2",
     "turndown": "^5.0.3",
     "turndown-plugin-gfm": "^1.0.2",
