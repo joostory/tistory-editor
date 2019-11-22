@@ -31,7 +31,7 @@
   }
 
   .editor-toolbar,
-  .tox-toolbar {
+  .tox-toolbar-overlord {
     position:fixed; top:66px; width:700px; height:34px; left: 50%; transform: translate(-50%,0); z-index:10;
     background:#fff; box-shadow:rgba(0, 0, 0, 0.16) 0px 3px 10px, rgba(0, 0, 0, 0.23) 0px 3px 10px; padding:3px; border-radius:3px
   }
@@ -39,7 +39,7 @@
   .tox-tinymce {
     border:0; background-color:#fff; margin:0 auto;
 
-    .tox-toolbar {
+    .tox-toolbar-overlord {
       .tox-toolbar__group {
         padding: 0 2px;
       }
