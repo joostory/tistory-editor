@@ -27,9 +27,12 @@ module.exports = () => {
           return
 				} catch (authError) {
           settings.set('google-auth', null)
+          evt.sender.send('receive-google-connected', false)
 				}
+      } else {
+        evt.sender.send('receive-google-connected', false)
       }
-      evt.sender.send('receive-google-connected', false)
+      evt.sender.send('receive-google-photos-images', [])
 		}
 	}
 

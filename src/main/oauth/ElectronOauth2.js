@@ -19,18 +19,18 @@ var generateRandomString = function (length) {
   return text;
 };
 
-module.exports = function (config, windowParams) {
+module.exports = function (oauthInfo, windowParams, tokenMethod = 'POST') {
   function getAuthorizationCode(opts) {
     opts = opts || {};
 
-    if (!config.redirectUri) {
-      config.redirectUri = 'urn:ietf:wg:oauth:2.0:oob';
+    if (!oauthInfo.redirectUri) {
+      oauthInfo.redirectUri = 'urn:ietf:wg:oauth:2.0:oob';
     }
 
     var urlParams = {
       response_type: 'code',
-      redirect_uri: config.redirectUri,
-      client_id: config.clientId,
+      redirect_uri: oauthInfo.redirectUri,
+      client_id: oauthInfo.clientId,
       state: generateRandomString(16)
     };
 
@@ -42,7 +42,7 @@ module.exports = function (config, windowParams) {
       urlParams.access_type = opts.accessType;
     }
 
-    var url = config.authorizationUrl + '?' + queryString.stringify(urlParams);
+    var url = oauthInfo.authorizationUrl + '?' + queryString.stringify(urlParams);
 
     return new Promise(function (resolve, reject) {
       const authWindow = new BrowserWindow(windowParams || {'use-content-size': true});
@@ -86,25 +86,33 @@ module.exports = function (config, windowParams) {
   }
 
   function tokenRequest(data) {
-    const header = {
+    let header = {
       'Accept': 'application/json'
     };
+    let url = oauthInfo.tokenUrl;
+    let fetchOptions = {
+      method: tokenMethod
+    };
 
-    if (config.useBasicAuthorizationHeader) {
-      header.Authorization = 'Basic ' + new Buffer(config.clientId + ':' + config.clientSecret).toString('base64');
+    if (oauthInfo.useBasicAuthorizationHeader) {
+      header.Authorization = 'Basic ' + new Buffer(oauthInfo.clientId + ':' + oauthInfo.clientSecret).toString('base64');
     } else {
       objectAssign(data, {
-        client_id: config.clientId,
-        client_secret: config.clientSecret
+        client_id: oauthInfo.clientId,
+        client_secret: oauthInfo.clientSecret
       });
     }
+    fetchOptions['headers'] = header;
 
-    return fetch(`${config.tokenUrl}?${queryString.stringify(data)}`, {
-      method: 'GET',
-      headers: header,
-    }).then(res => {
-      return res.json();
-    });
+    if (tokenMethod == 'GET') {
+      url = `${oauthInfo.tokenUrl}?${queryString.stringify(data)}`
+    } else {
+      header['Content-Type'] = 'application/x-www-form-urlencoded';
+      fetchOptions['body'] = queryString.stringify(data);
+    }
+
+    return fetch(url, fetchOptions)
+      .then(res => res.json());
   }
 
   function getAccessToken(opts) {
@@ -113,7 +121,7 @@ module.exports = function (config, windowParams) {
         var tokenRequestData = {
           code: authorizationCode,
           grant_type: 'authorization_code',
-          redirect_uri: config.redirectUri
+          redirect_uri: oauthInfo.redirectUri
         };
         tokenRequestData = Object.assign(tokenRequestData, opts.additionalTokenRequestData);
         return tokenRequest(tokenRequestData);
@@ -124,7 +132,7 @@ module.exports = function (config, windowParams) {
     return tokenRequest({
       refresh_token: refreshToken,
       grant_type: 'refresh_token',
-      redirect_uri: config.redirectUri
+      redirect_uri: oauthInfo.redirectUri
     });
   }
 

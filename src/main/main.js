@@ -37,7 +37,6 @@ const createWindow = (config) => {
     icon: `${__dirname}/../../build/icons/256x256.png`
   })
 
-  mainWindow.setFullScreenable(true)
   mainWindow.setMenu(null)
 
   mainWindow.on("close", (e) => {
@@ -66,9 +65,9 @@ const createWindow = (config) => {
     pathname: path.join(__dirname, '../../app/index.html'),
     protocol: 'file:',
     slashes: true
-  }))
-
-  mainWindow.webContents.setUserAgent(appInfo.userAgentFull)
+  }), {
+    userAgent: appInfo.userAgentFull
+  })
 
   if (process.env.NODE_ENV == "development") {
     mainWindow.webContents.openDevTools()

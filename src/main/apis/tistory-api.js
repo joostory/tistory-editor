@@ -31,7 +31,7 @@ module.exports.getAccessToken = () => {
 			nodeIntegration: false,
 			session: session.fromPartition("tistory:oauth2:" + new Date())
     }
-  })
+  }, 'GET')
 
   return tistoryOAuth.getAccessToken({})
 }
