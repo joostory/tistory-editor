@@ -26,6 +26,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 10.x
+      - name: Decrypt secret
+        run: ./.github/scripts/decrypt_secret.sh
+        env:
+          BUILD_PASSPHRASE: ${{ BUILD_PASSPHRASE }}
       - name: npm install
         run: |
           npm install
