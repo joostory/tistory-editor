@@ -2,11 +2,17 @@
   position:absolute; z-index:2; top:0; bottom:0; left:0; right:0; overflow:hidden; background-color:#fff;
 
   .editor-header {
-    background: transparent;
-    padding: 0;
+    background: rgba(255, 255, 255, 0.9);
+    z-index: 10;
+    padding: 0 5px;
+    border-bottom: 1px solid #e5e5e5;
 
     .btn {
       margin: 0;
+    }
+
+    .header-empty-space {
+      flex-grow: 1;
     }
   }
 
@@ -24,21 +30,39 @@
 }
 
 .editor {
-  position:absolute; left:0; right:0; top:56px; bottom:0;
+  position:absolute; left:0; right:0; top:0; bottom:0;
+  padding-top: 96px;
+  overflow:auto;
+
+  .editor-title {
+    width: 690px;
+    margin: 0 auto;
+    display: block;
+    border: 0;
+    border-bottom: 1px solid #e5e5e5;
+    font-size: 24px;
+    padding: 10px 5px;
+    outline: none;
+    resize:none;
+  }
 
   .editor_inner {
-    width: 100%; height:100%; overflow:auto; outline:none;
+    // width: 100%; height:100%; overflow:auto;
+    outline:none;
   }
 
   .editor-toolbar,
-  .tox-toolbar-overlord {
-    position:fixed; top:66px; width:700px; height:34px; left: 50%; transform: translate(-50%,0); z-index:10;
-    background:#fff; box-shadow:rgba(0, 0, 0, 0.16) 0px 3px 10px, rgba(0, 0, 0, 0.23) 0px 3px 10px; padding:3px; border-radius:3px
+  .tox .tox-editor-header {
+    position:fixed; top:11px; width:700px; height:34px; left: 50%; transform: translate(-50%,0); z-index:10;
+    background:transparent; padding:3px;
   }
 
   .tox-tinymce {
     border:0; background-color:#fff; margin:0 auto;
 
+    .tox-toolbar__primary {
+      background: none;
+    }
     .tox-toolbar-overlord {
       .tox-toolbar__group {
         padding: 0 2px;
@@ -46,34 +70,19 @@
     }
 
     .tox-edit-area {
-      border:0; margin: 46px auto;
+      border:0; margin: 0 auto;
     }
   }
 
   .dropzone_box { position:absolute; top:0; bottom:0; left:0; right:0; border:3px dashed #999; border-radius:10px; background-color:#eee; display:none; align-items: center; justify-content: center; z-index:20; color:#999 }
   .droppable .dropzone_box { display:flex }
-}
 
-
-.preview_content { margin-top:25px }
-
-/* tinymce */
-
-
-/* codemirror */
-.editor {
-  .markdown-editor {
-    position:absolute;
-    top:0; bottom:0;
-    left:0; right:0;
-    overflow: auto;
-  }
 
   .CodeMirror {
     width:700px;
     height:auto;
     margin:0 auto;
-    padding:66px 0 15px;
+    padding:15px 0;
     font-family:Menlo, Consolas, 'DejaVu Sans Mono', monospace;
     background:transparent;
 
@@ -88,6 +97,14 @@
       box-shadow:rgba(0, 0, 0, 0.16) 0px 3px 10px, rgba(0, 0, 0, 0.23) 0px 3px 10px;
       padding:3px;
       border-radius:3px;
+    }
+
+    .CodeMirror-scroll {
+      min-height: 640px;
+    }
+
+    .CodeMirror-placeholder {
+      color: #ccc;
     }
   }
   
@@ -131,6 +148,7 @@
   
 }
 
+.preview_content { margin-top:25px }
 
 /* photos plugin */
 .ico-google-photos {

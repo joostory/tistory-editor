@@ -21,6 +21,7 @@ import "codemirror/addon/dialog/dialog"
 import "codemirror/addon/search/search"
 import "codemirror/addon/search/searchcursor"
 import "codemirror/addon/search/jump-to-line"
+import "codemirror/addon/display/placeholder"
 
 const MacKeymap = [
 	{ 'Cmd-2': (cm) => CodeMirrorHelper.header2(cm) },
@@ -100,9 +101,11 @@ class MarkdownEditor extends Component {
 
 	@autobind
   handleChangeContent(value) {
+    const { onChange } = this.props
     this.setState({
       value: value
     })
+    onChange(value)
 	}
 
 	@autobind
@@ -177,7 +180,8 @@ class MarkdownEditor extends Component {
 			lineNumbers: false,
 			lineWrapping: true,
 			mode: 'markdown',
-			theme:'tistory-markdown'
+      theme:'tistory-markdown',
+      placeholder: '내용을 입력하세요.'
 		}
 		
 		const iconButtonStyle = {

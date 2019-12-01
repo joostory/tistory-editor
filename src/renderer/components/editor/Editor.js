@@ -22,8 +22,6 @@ export default function Editor({mode, onFinish}) {
   const categories = useSelector(state => state.categories)
   const dispatch = useDispatch()
 
-  const editorRef = useRef(null)
-
   const [showInfoBox, setShowInfoBox] = useState(false)
   const [showLoading, setShowLoading] = useState(false)
   const [uploadFileCount, setUploadFileCount] = useState(0)
@@ -54,7 +52,7 @@ export default function Editor({mode, onFinish}) {
 	function handleChangeTitle(e) {
     setPostData(update(postData, {
       title: {
-        $set: e.target.value
+        $set: e.target.value.replace(/\n/g, '')
       }
     }))
 	}
@@ -84,11 +82,10 @@ export default function Editor({mode, onFinish}) {
 	}
 
 	function requestSave(visibility) {
-    let content = editorRef.current.getContent()
 		let savePost = {
 			title: postData.title,
 			visibility: postData.visibility,
-			content: content,
+			content: postData.content,
 			categoryId: postData.categoryId,
 			tags: {
 				tag: postData.tags.join(",")
@@ -97,9 +94,6 @@ export default function Editor({mode, onFinish}) {
 
     setShowLoading(true)
     setPostData(update(postData, {
-      content: {
-        $set: content
-      },
 			visibility: {
         $set: visibility
       },
@@ -230,22 +224,25 @@ export default function Editor({mode, onFinish}) {
   return (
     <div className="editor_wrap">
       <EditorToolbar title={postData.title}
-        onTitleChange={handleChangeTitle}
         onSaveClick={e => setShowInfoBox(true)}
-        onCancelClick={handleCancel} />
+        onCancelClick={handleCancel}
+      />
 
-      <EditorContent ref={editorRef}
-        currentBlog={currentBlog}
+      <EditorContent
         content={postData.content}
         onUpload={handleUploadFiles}
-        onChange={handleChangeContent} />
+        onChange={handleChangeContent}
+        title={postData.title}
+        onTitleChange={handleChangeTitle}
+      />
 
       <EditorInfoDialog open={showInfoBox} category={postData.categoryId} categories={categories} tags={postData.tags}
         onTagsChange={handleChangeTags}
         onCategoryChange={handleChangeCategory}
         onRequestClose={e => setShowInfoBox(false)}
         onRequestSave={handleSave}
-        onRequestPublish={handlePublish} />
+        onRequestPublish={handlePublish}
+      />
 
       {showLoading && <Loading />}
       

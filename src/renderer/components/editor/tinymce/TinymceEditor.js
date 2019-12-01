@@ -90,7 +90,7 @@ class TinymceEditor extends Component {
   }
 
 	render() {
-    const { value, currentBlog, onOpenFile } = this.props
+    const { value, currentBlog, onOpenFile, onChange } = this.props
     const { openGooglePhotos } = this.state
 
 		return (
@@ -98,6 +98,7 @@ class TinymceEditor extends Component {
         <Editor 
           id='tinymce'
           className='content'
+          onChange={e => onChange(e.target.getContent())}
           init={{
             plugins: 'link table textcolor hr lists paste codeblock opengraph google-photos file-upload autoresize searchreplace',
             toolbar: 'formatselect bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock google-photos file-upload opengraph hr removeformat',

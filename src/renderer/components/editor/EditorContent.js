@@ -1,101 +1,96 @@
-import React, { Component, Fragment } from 'react'
-import { connect } from 'react-redux'
-import autobind from 'autobind-decorator'
+import React, { Component, Fragment, useRef, useState, useEffect, forwardRef } from 'react'
+import { connect, useSelector } from 'react-redux'
 import classnames from 'classnames'
 
 import * as EditorMode from '../../constants/EditorMode'
 
+import TextareaAutosize from 'react-textarea-autosize'
 import Dropzone from 'react-dropzone'
 import MarkdownEditor from './codemirror/MarkdownEditor'
 import TinymceEditor from './tinymce/TinymceEditor'
 import EditorSwitch from './EditorSwich'
 
-@connect(state => ({
-	currentBlog: state.currentBlog,
-	preferences: state.preferences
-}), dispatch => ({}), null, {
-  forwardRef: true
-})
-class EditorContent extends Component {
+function Editor({editorMode, content, currentBlog, onUpload, onOpenFile, onChange}) {
 
-  constructor(props, context) {
-    super(props, context)
-    this.state = {
-      editorMode: props.preferences.editor || EditorMode.MARKDOWN,
-      content: props.content
-    }
-
-    this.editorRef = React.createRef()
-    this.dropzoneRef = React.createRef()
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      content: nextProps.content
-    })
-  }
-
-  @autobind
-	handleOpenFile() {
-		this.dropzoneRef.current.open()
-  }
-
-  @autobind
-	handleChangeEditorMode(selectedMode) {
-    const { onChange } = this.props
-		this.setState({
-			editorMode: selectedMode
-    })
-    onChange(this.getContent())
-	}
-  
-  getContent() {
-    return this.editorRef.current.getContent()
-  }
-
-  getEditor() {
-    const { currentBlog, onUpload } = this.props
-    const { editorMode, content } = this.state
-
-		if (editorMode == EditorMode.TINYMCE) {
-			return <TinymceEditor ref={this.editorRef} value={content} currentBlog={currentBlog} onImageHandler={onUpload} onOpenFile={this.handleOpenFile} />
-		} else {
-			return <MarkdownEditor ref={this.editorRef} value={content} currentBlog={currentBlog} onOpenFile={this.handleOpenFile} />
-		}
-	}
-
-  render() {
-    const { onUpload } = this.props
-    const { editorMode } = this.state
+  if (editorMode == EditorMode.TINYMCE) {
     return (
-      <Fragment>
-        <div className="editor">
-          <Dropzone ref={this.dropzoneRef}
-            accept="image/*" 
-            onDrop={onUpload}>
-
-            {({getRootProps, getInputProps, isDragActive}) =>
-              <div className={classnames('editor_inner', {droppable:isDragActive})} {...getRootProps({
-                onClick: e => e.stopPropagation()
-              })}>
-                {this.getEditor()}
-
-                <input {...getInputProps()} />
-
-                <div className="dropzone_box">
-                  <b>파일을 넣어주세요.</b>
-                </div>
-              </div>
-            }
-          </Dropzone>
-        </div>
-
-        <EditorSwitch
-					editorMode={editorMode}
-					onChange={this.handleChangeEditorMode} />
-      </Fragment>
+      <TinymceEditor
+        value={content}
+        currentBlog={currentBlog}
+        onImageHandler={onUpload}
+        onOpenFile={onOpenFile}
+        onChange={onChange}
+      />
+    )
+  } else {
+    return (
+      <MarkdownEditor
+        value={content}
+        currentBlog={currentBlog}
+        onOpenFile={onOpenFile}
+        onChange={onChange}
+      />
     )
   }
 }
 
-export default EditorContent
+export default function EditorContent({content, onChange, onUpload, title, onTitleChange}) {
+
+  const currentBlog = useSelector(state => state.currentBlog)
+	const preferences = useSelector(state => state.preferences)
+
+  const [editorMode, setEditorMode] = useState(preferences.editor || EditorMode.MARKDOWN)
+
+  const dropzoneRef = useRef(null)
+
+	function handleOpenFile() {
+		dropzoneRef.current.open()
+  }
+
+	function handleChangeEditorMode(selectedMode) {
+    setEditorMode(selectedMode)
+  }
+
+  return (
+    <>
+      <div className="editor">
+        <TextareaAutosize
+          className='editor-title'
+          placeholder='제목을 입력하세요.'
+          value={title}
+          onChange={onTitleChange}
+        />
+
+        <Dropzone ref={dropzoneRef}
+          accept="image/*" 
+          onDrop={onUpload}>
+
+          {({getRootProps, getInputProps, isDragActive}) =>
+            <div className={classnames('editor_inner', {droppable:isDragActive})} {...getRootProps({
+              onClick: e => e.stopPropagation()
+            })}>
+              <Editor
+                editorMode={editorMode}
+                content={content}
+                currentBlog={currentBlog}
+                onChange={onChange}
+                onUpload={onUpload}
+                onOpenFile={handleOpenFile}
+              />
+
+              <input {...getInputProps()} />
+
+              <div className="dropzone_box">
+                <b>파일을 넣어주세요.</b>
+              </div>
+            </div>
+          }
+        </Dropzone>
+      </div>
+
+      <EditorSwitch
+        editorMode={editorMode}
+        onChange={handleChangeEditorMode} />
+    </>
+  )
+}
