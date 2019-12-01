@@ -1,4 +1,4 @@
 #!/bin/sh
 
-gpg --quiet --batch --yes --decrypt --passphrase="$BUILD_PASSPHRASE" \
---output $HOME/oauth2info.json oauth2info.json.gpg
+openssl aes-256-cbc -k "$BUILD_PASSPHRASE" \
+  -in $HOME/oauth2info.json.enc -out $HOME/oauth2info.json -d
