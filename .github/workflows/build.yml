@@ -29,7 +29,8 @@ jobs:
       - name: Decrypt secret
         run: ./.github/scripts/decrypt_secret.sh
         env:
-          BUILD_PASSPHRASE: ${{ secrets.BUILD_PASSPHRASE }}
+          BUILD_KEY: ${{ secrets.BUILD_KEY }}
+          BUILD_IV: ${{ secrets.BUILD_IV }}
       - name: npm install
         run: |
           npm install
