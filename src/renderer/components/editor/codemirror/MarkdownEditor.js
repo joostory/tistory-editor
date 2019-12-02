@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
-import classnames from 'classnames'
 import { ipcRenderer, clipboard } from 'electron'
 import autobind from 'autobind-decorator'
 import CodeMirrorComponent from 'react-codemirror-component'
@@ -48,7 +47,6 @@ class MarkdownEditor extends Component {
     this.state = {
 			value: MarkdownHelper.htmlToMarkdown(props.value),
 			openGooglePhotos: false,
-			preview: false
     }
 
     this.editor = React.createRef()
@@ -70,14 +68,6 @@ class MarkdownEditor extends Component {
 		keymap.map(map => cm.addKeyMap(map))
   }
   
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    const { preview } = this.state
-
-    if (prevState.preview != preview) {
-      this.editor.current.getCodeMirror().refresh()
-    }
-  }
-
 	@autobind
   handleFinishUploadFile(e, fileUrl) {
 		console.log("finishUploadFile", fileUrl)
@@ -164,17 +154,9 @@ class MarkdownEditor extends Component {
     ipcRenderer.send("add-image-url", currentBlog.name, url, filename)
 	}
 
-	@autobind
-	handleTogglePreview() {
-		const { preview } = this.state
-		this.setState({
-			preview: !preview
-		})
-	}
-
   render() {
 		const { onOpenFile } = this.props
-    const { value, openGooglePhotos, preview } = this.state
+    const { value, openGooglePhotos } = this.state
 
     const options = {
 			lineNumbers: false,
@@ -192,7 +174,7 @@ class MarkdownEditor extends Component {
 		}
 
 		return (
-			<div className={classnames({ 'preview-on':preview })}>
+			<div>
 				<div className="markdown-editor">
 					<div className="editor-toolbar">
 						<Button variant='text' onClick={this.handleHeader2} style={iconButtonStyle}>H2</Button>
@@ -203,16 +185,12 @@ class MarkdownEditor extends Component {
 						<Button variant='text' onClick={this.handleLink} style={iconButtonStyle}>Link</Button>
 						<Button variant='text' onClick={this.handleGooglePhotos} style={iconButtonStyle}><img src='../src/images/google-photos-logo.png' /></Button>
 						<Button variant='text' onClick={onOpenFile} style={iconButtonStyle}><Attachment /></Button>
-						<Button variant='text' onClick={this.handleTogglePreview} style={iconButtonStyle}>Preview</Button>
 					</div>
           <CodeMirrorComponent ref={this.editor}
             options={options}
             value={value}
 						onChange={this.handleChangeContent}
           />
-				</div>
-				<div className="markdown-preview">
-					<div className="markdown-preview-content content" dangerouslySetInnerHTML={{__html: MarkdownHelper.markdownToHtml(value)}} />
 				</div>
 				<GooglePhotosDialog open={openGooglePhotos} onClose={this.handleCloseGooglePhotos} onSelectImage={this.handleInsertImage} />
 			</div>
