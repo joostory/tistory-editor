@@ -34,7 +34,10 @@ jobs:
       - name: npm install
         run: |
           npm install
-      - name: Build
+      - name: npm build
+        run: |
+          npm run build
+      - name: electron build
         run: |
           npm run dist
       - name: Release
