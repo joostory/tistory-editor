@@ -21,7 +21,7 @@ files:
   - node_modules/
 
 mac:
-  target: zip
+  target: dmg
   category: public.app-category.utilities
   darkModeSupport: true
 
