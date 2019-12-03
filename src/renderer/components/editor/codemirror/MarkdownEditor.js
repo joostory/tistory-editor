@@ -84,18 +84,13 @@ class MarkdownEditor extends Component {
 		}
 	}
 
-  getContent() {
-    const { value } = this.state
-    return MarkdownHelper.markdownToHtml(value)
-  }
-
 	@autobind
   handleChangeContent(value) {
     const { onChange } = this.props
     this.setState({
       value: value
     })
-    onChange(value)
+    onChange(MarkdownHelper.markdownToHtml(value))
 	}
 
 	@autobind
