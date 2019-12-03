@@ -78,13 +78,13 @@ export default function Editor({mode, onFinish}) {
 	}
 
 	function handlePublish() {
-		requestSave("3")
+		requestSave("20")
 	}
 
 	function requestSave(visibility) {
 		let savePost = {
 			title: postData.title,
-			visibility: postData.visibility,
+			visibility: visibility,
 			content: postData.content,
 			categoryId: postData.categoryId,
 			tags: {
