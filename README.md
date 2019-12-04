@@ -7,14 +7,13 @@
 
 ![](https://joostory.github.io/tistory-editor/image/screenshot_mac.png)
 
-## Run
+## Run (개발용)
 
 ```
+$ npm install
+
 # react build (development)
 $ npm run watch
-
-# react build (production)
-$ npm run build
 
 # electron start
 $ npm run app
@@ -23,8 +22,17 @@ $ npm run app
 # npm start
 ```
 
-## 앱 생성
+## 배포용 앱 생성
 
 ```
-$ npm run dist -- -mwl
+$ npm install
+
+# react build (production)
+$ npm run build
+
+# 현재 OS 앱 생성
+$ npm run dist
+
+# 모든 OS 앱 생성
+$ npm run dist -- -wml
 ```
