@@ -13,6 +13,7 @@ import './plugins/google-photos'
 import './plugins/file-upload'
 
 import GooglePhotosDialog from '../plugins/google-photos/GooglePhotosDialog'
+import { makeThumbnail } from '../../../modules/ThumbnailHelper'
 
 class TinymceEditor extends Component {
 
@@ -68,7 +69,10 @@ class TinymceEditor extends Component {
 
 	@autobind
 	handleFetchOpengraph(url, callback) {
-		OpengraphFetcher.fetch(url, callback)
+		OpengraphFetcher.fetch(url, og => {
+      og.image = makeThumbnail('S200x200', og.image)
+      callback(og)
+    })
   }
   
   @autobind
