@@ -47,8 +47,8 @@ const createWindow = (config) => {
         buttons: ['Yes', 'No'],
         title: 'Confirm',
         message: '지금 앱을 종료하면 저장하지 않는 내용이 사라집니다. 종료하시겠습니까?'
-      }, function (response) {
-        if (response === 0) {
+      }).then(result => {
+        if (result.response === 0) {
           app.showExitPrompt = false
           mainWindow.close()
         }
