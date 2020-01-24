@@ -33,8 +33,8 @@ export const registIpcEvent = (store) => {
   	store.dispatch(receiveUser(user))
   })
 
-  ipcRenderer.on("receive-blogs", (e, user) => {
-  	store.dispatch(receiveBlogs(user))
+  ipcRenderer.on("receive-blogs", (e, blogs) => {
+  	store.dispatch(receiveBlogs(blogs))
   })
 
   ipcRenderer.on("receive-posts-failed", (e, res) => {

@@ -1,32 +1,22 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-
+import React, { } from 'react'
+import { useSelector } from 'react-redux'
 import ContentViewer from './ContentViewer'
 
-@connect(state => ({
-	post: state.currentPost
-}), dispatch => ({}))
-class Content extends Component {
-
-	render() {
-		const { post, onRequestEditPost } = this.props
-
-		if (!post) {
-			return (
-				<div className="content_wrap">
-					<div className="content_empty_message">Editor for Tistory</div>
-				</div>
-			)
-		} else {
-			return <ContentViewer onRequestEditPost={onRequestEditPost} />
-		}
-	}
+function EmptyContent() {
+  return (
+    <div className="content_wrap">
+      <div className="content_empty_message">Editor for Tumblr</div>
+    </div>
+  )
 }
 
-Content.propTypes = {
-	post: PropTypes.object,
-	onRequestEditPost: PropTypes.func.isRequired
-}
 
-export default Content
+export default function Content({onRequestEditPost}) {
+  const post = useSelector(state => state.currentPost)
+
+  if (!post) {
+    return <EmptyContent />
+  } else {
+    return <ContentViewer onRequestEditPost={onRequestEditPost} />
+  }
+}

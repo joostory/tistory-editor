@@ -10,6 +10,7 @@ body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; bac
 
 /* tistory */
 .tistory { color:#f1631b; }
+.tumblr { color:#001935; }
 .btn {
   &.btn_tistory {
     background-color:#000;
@@ -24,6 +25,24 @@ body { font-size:16px; line-height:1.6em; font-family: "Roboto", sans-serif; bac
 
     &:hover {
       background-color: #f54;
+    }
+    &:disabled {
+      background-color: #b9b9b9;
+    }
+  }
+  &.btn_tumblr {
+    background-color:#000;
+    color:#fff;
+    border:0;
+    border-radius: 26px;
+    padding: 8px 16px;
+
+    span {
+      color:#fff;
+    }
+
+    &:hover {
+      background-color: #001935;
     }
     &:disabled {
       background-color: #b9b9b9;

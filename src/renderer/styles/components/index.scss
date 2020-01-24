@@ -1,3 +1,52 @@
+.container { position:absolute; left:0; right:0; top:0; bottom:0; overflow:hidden; }
+.btn {
+  background:transparent; border:1px solid #ccc;
+  &:hover { background:#eee; }
+}
+
+/* tistory */
+.tistory { color:#f1631b; }
+.tumblr { color:#001935; }
+.btn {
+  &.btn_tistory {
+    background-color:#000;
+    color:#fff;
+    border:0;
+    border-radius: 26px;
+    padding: 8px 16px;
+
+    span {
+      color:#fff;
+    }
+
+    &:hover {
+      background-color: #f54;
+    }
+    &:disabled {
+      background-color: #b9b9b9;
+    }
+  }
+  &.btn_tumblr {
+    background-color:#000;
+    color:#fff;
+    border:0;
+    border-radius: 26px;
+    padding: 8px 16px;
+
+    span {
+      color:#fff;
+    }
+
+    &:hover {
+      background-color: #001935;
+    }
+    &:disabled {
+      background-color: #b9b9b9;
+    }
+  }
+}
+
+
 .profile {
   text-align:center;
   margin:50px auto 20px;

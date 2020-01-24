@@ -18,7 +18,7 @@ export default function PostList() {
 	function requestNextPage() {
 		if (!posts.lock && posts.hasNext) {
 			dispatch(lockPostsLoad())
-			ipcRenderer.send('fetch-posts', currentBlog.name, parseInt(posts.page) + 1)
+			ipcRenderer.send('fetch-posts', currentBlog.name, posts.list.length)
 		}
 	}
 

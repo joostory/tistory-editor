@@ -1,19 +1,22 @@
 const settings = require('electron-settings')
-const { ipcMain, clipboard } = require('electron')
-const dateformat = require('dateformat')
+const { ipcMain } = require('electron')
 const tistory = require('../apis/tistory-api')
+const tumblr = require("../apis/tumblr-api")
 
 const fetchUser = (evt, auth) => {
-	evt.sender.send('start-fetch-user', {})
-	tistory.fetchUser(auth).then(res => {
-		evt.sender.send('initialized', [])
-		evt.sender.send('receive-user', res.tistory.item)
-	}).catch(err => {
-		console.error(err)
-		evt.sender.send('initialized', [])
-		evt.sender.send('end-fetch-user', {})
-		evt.sender.send('receive-message', '사용자 정보를 불러오지 못했습니다.')
-	})
+  evt.sender.send('start-fetch-user', {})
+  tumblr.fetchUser(auth)
+    .then(res => {
+      console.log("fetchUser", res)
+      evt.sender.send('initialized', [])
+      evt.sender.send('receive-user', res.user)
+      evt.sender.send('receive-blogs', [].concat(res.user.blogs))
+    })
+    .catch(err => {
+      evt.sender.send('initialized', [])
+      evt.sender.send('end-fetch-user', {})
+      evt.sender.send('receive-message', '사용자 정보를 불러오지 못했습니다.')
+    })
 }
 
 const fetchBlogs = (evt, auth) => {
@@ -28,10 +31,10 @@ const fetchBlogs = (evt, auth) => {
 
 module.exports = () => {
 	ipcMain.on('fetch-initial-data', (evt) => {
-		let auth = settings.get('auth')
-		if (auth && auth.access_token) {
+    let auth = settings.get('auth')
+    console.log("initial", auth)
+		if (auth && auth.token) {
 			fetchUser(evt, auth)
-			fetchBlogs(evt, auth)
 		} else {
 			evt.sender.send('initialized', [])
 		}
@@ -39,7 +42,7 @@ module.exports = () => {
 
 	ipcMain.on("fetch-user", (evt) => {
 		let auth = settings.get('auth')
-		if (!auth || !auth.access_token) {
+		if (!auth || !auth.token) {
 			return
 		}
 
@@ -48,7 +51,7 @@ module.exports = () => {
 	
 	ipcMain.on("fetch-blogs", (evt) => {
 		let auth = settings.get('auth')
-		if (!auth || !auth.access_token) {
+		if (!auth || !auth.toekn) {
 			return
 		}
 
@@ -56,13 +59,12 @@ module.exports = () => {
 	})
 	
 	ipcMain.on("request-auth", (evt, arg) => {
-		tistory.getAccessToken().then(auth => {
-			settings.set('auth', auth)
-			fetchUser(evt, auth)
-			fetchBlogs(evt, auth)
-		}).catch(e => {
-			console.error(e)
-		})
+    tumblr.getAccessToken()
+      .then(auth => {
+        console.log("tumblr auth", auth)
+        settings.set('auth', auth)
+        fetchUser(evt, auth)
+      })
 	})
 	
 	ipcMain.on("disconnect-auth", (evt, arg) => {

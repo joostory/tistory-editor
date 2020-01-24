@@ -24,7 +24,6 @@ export default function IndexProfile({user}) {
     <div className="profile">
       {makeProfileImage(user)}
       <div>{user.name}</div>
-      <div>({user.loginId})</div>
 
       <Button className='btn btn_tistory btn_disconnect' variant="contained" onClick={handleDisconnectAuth}>
         연결해제

@@ -29,6 +29,13 @@ class Oauth2infoReader {
     }
     return this.oauth2info.tistory
   }
+
+  getTumblr() {
+    if (!this.oauth2info.tumblr) {
+      throw new Exception('NO TUMBLR OAUTH2INFO')
+    }
+    return this.oauth2info.tumblr
+  }
 }
 
 module.exports = Oauth2infoReader

@@ -1,11 +1,12 @@
 {
-  "tistory": {
-    "clientId": "CLIENT_ID",
+  "tumblr": {
+    "clientKey": "CLIENT_KEY",
     "clientSecret": "CLIENT_SECRET",
-    "authorizationUrl": "https://www.tistory.com/oauth/authorize",
-    "tokenUrl": "https://www.tistory.com/oauth/access_token",
+    "requestTokenUrl": "https://www.tumblr.com/oauth/request_token",
+    "authorizeUrl": "https://www.tumblr.com/oauth/authorize",
+    "tokenUrl": "https://www.tumblr.com/oauth/access_token",
     "redirectUri": "http://localhost"
-	},
+  },
 	"google": {
     "clientId": "CLIENT_ID",
     "clientSecret": "CLIENT_SECRET",

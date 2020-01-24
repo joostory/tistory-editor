@@ -1,0 +1,11 @@
+.auth-button {
+  border-radius: 18px;
+  color: #fff;
+  background-color: #000;
+  &:hover {
+    background-color: #f54;
+  }
+  :disabled {
+    background-color: #b9b9b9;
+  }
+}

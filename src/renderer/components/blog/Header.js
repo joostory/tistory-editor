@@ -6,8 +6,8 @@ import { Toolbar, IconButton, Avatar, Typography } from '@material-ui/core'
 import { NoteAdd, NavigateBefore } from '@material-ui/icons'
 
 function ProfileAvatar({blog}) {
-	if (blog.profileImageUrl) {
-		return <Avatar src={blog.profileImageUrl} size={30} />
+	if (blog.avatar) {
+		return <Avatar src={blog.avatar[1].url} size={30} />
 	} else {
 		return <Avatar size={30}>{blog.title.slice(0,1)}</Avatar>
 	}

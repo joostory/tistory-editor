@@ -4,8 +4,8 @@ import { Avatar, ListItem, ListItemText, ListItemAvatar } from '@material-ui/cor
 import { Stars } from '@material-ui/icons'
 
 function ProfileAvatar({blog}) {
-  if (blog.profileImageUrl) {
-    return <Avatar size={40} src={blog.profileImageUrl} />
+  if (blog.avatar) {
+    return <Avatar size={40} src={blog.avatar[1].url} />
   } else {
     return <Avatar size={40}>{blog.title.slice(0,1)}</Avatar>
   }
@@ -23,12 +23,12 @@ export default function BlogListItem({blog, onSelect}) {
         primary={blog.title}
         secondary={(
           <>
-            <span className="blog_url">{(blog.secondaryUrl == '')? blog.url : blog.secondaryUrl}</span>
+            <span className="blog_url">{blog.url}</span>
             {blog.description && <span> -- {blog.description}</span>}
           </>
         )}
       />
-      {blog.default === 'Y' &&
+      {blog.primary &&
         <Stars />
       }
     </ListItem>

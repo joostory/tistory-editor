@@ -11,7 +11,7 @@ let infoWindow
 let latestVersion = APP_VERSION
 
 const fetchLatestVersion = () => {
-  fetch("https://api.github.com/repos/joostory/tistory-editor/releases/latest")
+  fetch("https://api.github.com/repos/joostory/tumblr-editor/releases/latest")
     .then(res => {
       if (!res.ok) {
         throw res

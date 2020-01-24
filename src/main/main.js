@@ -119,7 +119,7 @@ const createWindow = (config) => {
 app.on('ready', () => {
   initWindow()
   ipc.init()
-	appInfo.fetchLatestVersion()
+	// appInfo.fetchLatestVersion()
 })
 
 app.on('activate', () => {

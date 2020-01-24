@@ -1,15 +1,19 @@
 @import './common.scss';
 
-/* ready */
-@import './components/ready.scss';
-
-/* index */
-@import './components/index.scss';
-
-/* sidebar */
-@import './components/sidebar.scss';
-
-@import './components/content.scss';
-
-/* editor */
-@import './components/editor.scss';
+.app {
+  @import './components/button.scss';
+  
+  /* ready */
+  @import './components/ready.scss';
+  
+  /* index */
+  @import './components/index.scss';
+  
+  /* sidebar */
+  @import './components/sidebar.scss';
+  
+  @import './components/content.scss';
+  
+  /* editor */
+  @import './components/editor.scss';  
+}

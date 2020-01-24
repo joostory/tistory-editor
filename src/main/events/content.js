@@ -3,26 +3,28 @@ const { ipcMain, clipboard } = require('electron')
 const dateformat = require('dateformat')
 const fetch = require('node-fetch')
 const tistory = require('../apis/tistory-api')
+const tumblr = require("../apis/tumblr-api")
 
 module.exports = () => {
-	ipcMain.on("fetch-posts", (evt, blogName, page) => {
+	ipcMain.on("fetch-posts", (evt, blogName, offset) => {
 		let auth = settings.get('auth')
-		if (!auth || !auth.access_token) {
+		if (!auth || !auth.token) {
 			console.log("fetch-posts auth error")
 			return
-		}
-
-		tistory.fetchPosts(auth, blogName, page).then(res => {
-			evt.sender.send('receive-posts', {
-				page: res.tistory.item.page,
-				posts: res.tistory.item.posts? [].concat(res.tistory.item.posts) : [],
-				hasNext: res.tistory.item.totalCount > res.tistory.item.page * res.tistory.item.count
-			})
-		}).catch(err => {
-			console.error("fetch-posts error", err)
-			evt.sender.send('receive-message', '글 목록을 불러오지 못했습니다.')
-			evt.sender.send('receive-posts-failed')
-		})
+    }
+    
+    tumblr.fetchPosts(auth, blogName, offset)
+      .then(res => {
+        evt.sender.send('receive-posts', {
+          posts: res.posts? [].concat(res.posts) : [],
+          hasNext: res.blog.posts > offset + res.posts.length
+        })
+      })
+      .catch(err => {
+        console.error("fetch-posts error", err)
+        evt.sender.send('receive-message', '글 목록을 불러오지 못했습니다.')
+        evt.sender.send('receive-posts-failed')
+      })
 	})
 	
 	ipcMain.on("fetch-categories", (evt, blogName) => {
