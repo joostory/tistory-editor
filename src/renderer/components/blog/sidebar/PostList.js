@@ -5,14 +5,13 @@ import { ipcRenderer } from 'electron'
 import { CircularProgress, List } from '@material-ui/core'
 
 import PostListItem from './PostListItem'
-import { selectPost, lockPostsLoad } from '../../actions'
+import { selectPost, lockPostsLoad } from '../../../actions'
 
 export default function PostList() {
 
 	const posts = useSelector(state => state.posts)
 	const currentPost = useSelector(state => state.currentPost)
 	const currentBlog = useSelector(state => state.currentBlog)
-	const categories = useSelector(state => state.categories)
 	const dispatch = useDispatch()
 
 	function requestNextPage() {
@@ -47,7 +46,6 @@ export default function PostList() {
 			{posts.list.map((item, i) =>
 				<PostListItem key={i}
 					post={item}
-					category={categories.find(category => item.categoryId == category.id)}
 					selected={!!currentPost && item.id == currentPost.id}
 					onSelect={handleSelectPost} />
 			)}

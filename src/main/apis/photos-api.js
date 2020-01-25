@@ -1,7 +1,7 @@
 const oauth2 = require('../oauth/ElectronOauth2');
 const fetch = require('isomorphic-fetch')
 const {clipboard, session} = require('electron')
-const Oauth2infoReader = require('../oauth/Oauth2infoReader')
+const OauthInfoReader = require('../oauth/OauthInfoReader')
 const appInfo = require('../appInfo')
 
 class GoogleAuthApi {
@@ -11,10 +11,10 @@ class GoogleAuthApi {
 
 	makeGoogleOAuth() {
 		if (!this.googleOAuth) {
-			const oauth2infoReader = new Oauth2infoReader()
-			const oauth2info = oauth2infoReader.getGoogle()
+			const oauthInfoReader = new OauthInfoReader()
+			const oauthInfo = oauthInfoReader.getGoogle()
 
-			this.googleOAuth = oauth2(oauth2info, {
+			this.googleOAuth = oauth2(oauthInfo, {
 				alwaysOnTop: true,
 				autoHideMenuBar: true,
 				webPreferences: {

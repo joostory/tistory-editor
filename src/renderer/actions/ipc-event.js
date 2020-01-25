@@ -7,7 +7,6 @@ import {
 	receiveBlogs,
 	receivePosts,
 	receivePostsFailed,
-	receiveCategories,
 	selectPost,
 	disconnectAuth,
 	receivePreferences, receivePostContent
@@ -42,10 +41,6 @@ export const registIpcEvent = (store) => {
   })
   ipcRenderer.on("receive-posts", (e, res) => {
   	store.dispatch(receivePosts(res.page, res.posts, res.hasNext))
-  })
-
-  ipcRenderer.on("receive-categories", (e, categories) => {
-  	store.dispatch(receiveCategories(categories))
   })
 
   ipcRenderer.on("receive-content", (e, post) => {

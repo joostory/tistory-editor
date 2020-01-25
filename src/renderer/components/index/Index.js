@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { ipcRenderer } from 'electron'
 
 import { selectBlog } from '../../actions'
 import IndexProfile from './IndexProfile'
@@ -15,7 +14,6 @@ export default function Index() {
 	const dispatch = useDispatch()
 
 	function handleSelectBlog(blog) {
-		ipcRenderer.send("fetch-categories", blog.name)
 		dispatch(selectBlog(blog))
 	}
 

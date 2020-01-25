@@ -27,32 +27,6 @@ module.exports = () => {
       })
 	})
 	
-	ipcMain.on("fetch-categories", (evt, blogName) => {
-		let auth = settings.get('auth')
-			if (!auth || !auth.access_token) {
-			evt.sender.send('receive-categories', [])
-			return
-		}
-
-		tistory.fetchCategories(auth, blogName).then(res => {
-			let categories = []
-			if (res.tistory.item.categories) {
-				categories = [].concat(res.tistory.item.categories).map(category => {
-					return {
-						'id': category.id,
-						'parent': category.parent,
-						'label': category.label
-					}
-				})
-			}
-
-			evt.sender.send('receive-categories', categories)
-		}).catch(err => {
-			console.error(err)
-			evt.sender.send('receive-categories', [])
-		})
-	})
-
 	ipcMain.on("fetch-content", (evt, blogName, postId) => {
 		let auth = settings.get('auth')
 		if (!auth || !auth.access_token) {

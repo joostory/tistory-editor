@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
-import Sidebar from './Sidebar'
-import Content from './Content'
+import Sidebar from './sidebar/Sidebar'
+import Content from './content/Content'
 import Editor from '../editor/Editor'
 import * as ContentMode from '../../constants/ContentMode'
 

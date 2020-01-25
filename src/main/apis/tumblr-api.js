@@ -1,4 +1,4 @@
-const Oauth2infoReader = require('../oauth/Oauth2infoReader')
+const OauthInfoReader = require('../oauth/OauthInfoReader')
 const oauth = require("../oauth/ElectronOauth1")
 const {session, BrowserWindow} = require('electron')
 const tumblr = require("tumblr.js")
@@ -16,7 +16,7 @@ module.exports.getAccessToken = () => {
     }
   })
 
-  const oauthReader = new Oauth2infoReader()
+  const oauthReader = new OauthInfoReader()
   const tumblrInfo = oauthReader.getTumblr()
   const config = {
     key: tumblrInfo.clientKey,
@@ -39,7 +39,7 @@ module.exports.getAccessToken = () => {
 }
 
 function createTumblrClient(auth) {
-  const oauthReader = new Oauth2infoReader()
+  const oauthReader = new OauthInfoReader()
   const tumblrInfo = oauthReader.getTumblr()
 
   return tumblr.createClient({

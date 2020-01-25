@@ -29,10 +29,6 @@ export const receivePosts = (page, posts, hasNext) => ({
 	 type: types.RECEIVE_POSTS, page, posts, hasNext
 })
 
-export const receiveCategories = (categories) => ({
-	 type: types.RECEIVE_CATEGORIES, categories
-})
-
 export const disconnectAuth = () => ({
 	 type: types.DISCONNECT_AUTH
 })

@@ -14,11 +14,23 @@
     }
   }
 
-  .list { margin: 0; padding:0; position:absolute; left:0; width:300px; top:64px; bottom:0; overflow:auto }
-  .list .item .item_date { color: #999; }
-  .list .item .item_category { color:#f1631b; margin-right:5px }
-  .list .item .item_visibility { color: #999; margin-left:5px }
-  .list .item .item_title { overflow:hidden; text-overflow: ellipsis }
-  .list .item .item_info { display:block; font-size:11px; }
-  .list .item.selected { background:#fff }
+  .list {
+    margin: 0; padding:0; position:absolute; left:0; width:300px; top:64px; bottom:0; overflow:auto;
+
+    .item {
+      .item_date { color: #999; }
+      .item_category { color:#f1631b; margin-right:5px }
+      .item_visibility { color: #999; margin-left:5px }
+      .item_title {
+        overflow:hidden; text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+      }
+      .item_info { display:block; font-size:11px; }
+      &.selected { background:#fff }
+    }
+    
+  }
+  
 }

@@ -10,8 +10,7 @@ directories:
 
 files:
   - package.json
-  - oauth2info.json
-  - .oauth2info.json
+  - oauthInfo.json
   - src/lib/
   - src/main/
   - src/css/

@@ -7,7 +7,7 @@ const ipc = require('../ipc-event')
 const FormData = require('form-data')
 const {clipboard, session} = require('electron')
 const stream = require('stream')
-const Oauth2infoReader = require('../oauth/Oauth2infoReader')
+const OauthInfoReader = require('../oauth/OauthInfoReader')
 const appInfo = require('../appInfo')
 
 const errorHandler = (res) => {
@@ -23,8 +23,8 @@ const errorHandler = (res) => {
 const BASE_URL = 'https://www.tistory.com/apis'
 
 module.exports.getAccessToken = () => {
-  const oauth2infoReader = new Oauth2infoReader()
-  const tistoryOAuth = oauth2(oauth2infoReader.getTistory(), {
+  const oauthInfoReader = new OauthInfoReader()
+  const tistoryOAuth = oauth2(oauthInfoReader.getTistory(), {
     alwaysOnTop: true,
     autoHideMenuBar: true,
     webPreferences: {

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { goIndex } from '../../actions'
+import { goIndex } from '../../../actions'
 
 import { Toolbar, IconButton, Avatar, Typography } from '@material-ui/core'
 import { NoteAdd, NavigateBefore } from '@material-ui/icons'
