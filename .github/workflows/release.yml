@@ -41,9 +41,9 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            dist/TistoryEditor-*.exe
-            dist/TistoryEditor-*.deb
-            dist/TistoryEditor-*.dmg
+            dist/TumblrEditor-*.exe
+            dist/TumblrEditor-*.deb
+            dist/TumblrEditor-*.dmg
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
