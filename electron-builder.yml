@@ -1,6 +1,6 @@
-appId: net.joostory.tistory-editor
+appId: net.joostory.tumblr-editor
 copyright: Joo
-productName: TistoryEditor
+productName: TumblrEditor
 artifactName: ${productName}-${version}-${os}.${ext}
 
 asar: true
