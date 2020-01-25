@@ -12,17 +12,18 @@ import EditorSwitch from './EditorSwich'
 
 function Editor({editorMode, content, currentBlog, onUpload, onOpenFile, onChange}) {
 
-  if (editorMode == EditorMode.TINYMCE) {
-    return (
-      <TinymceEditor
-        value={content}
-        currentBlog={currentBlog}
-        onImageHandler={onUpload}
-        onOpenFile={onOpenFile}
-        onChange={onChange}
-      />
-    )
-  } else {
+  // TODO 임시로 markdown만 허용
+  // if (editorMode == EditorMode.TINYMCE) {
+  //   return (
+  //     <TinymceEditor
+  //       value={content}
+  //       currentBlog={currentBlog}
+  //       onImageHandler={onUpload}
+  //       onOpenFile={onOpenFile}
+  //       onChange={onChange}
+  //     />
+  //   )
+  // } else {
     return (
       <MarkdownEditor
         value={content}
@@ -31,7 +32,7 @@ function Editor({editorMode, content, currentBlog, onUpload, onOpenFile, onChang
         onChange={onChange}
       />
     )
-  }
+  // }
 }
 
 export default function EditorContent({content, onChange, onUpload, title, onTitleChange}) {
@@ -88,9 +89,9 @@ export default function EditorContent({content, onChange, onUpload, title, onTit
         </Dropzone>
       </div>
 
-      <EditorSwitch
+      {/* <EditorSwitch
         editorMode={editorMode}
-        onChange={handleChangeEditorMode} />
+        onChange={handleChangeEditorMode} /> */}
     </>
   )
 }

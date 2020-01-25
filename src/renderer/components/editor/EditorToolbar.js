@@ -10,7 +10,7 @@ export default function EditorToolbar({ title, onTitleChange, onSaveClick, onCan
       <IconButton onClick={onCancelClick}><NavigateBefore /></IconButton>
       <div className='header-empty-space' />
       <Button className='btn' variant='text' onClick={onSaveClick} disabled={title.length == 0}>
-        저장
+        완료
       </Button>
     </Toolbar>
   )

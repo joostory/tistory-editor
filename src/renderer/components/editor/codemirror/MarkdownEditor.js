@@ -178,8 +178,8 @@ class MarkdownEditor extends Component {
 						<Button variant='text' onClick={this.handleItalic} style={iconButtonStyle}><FormatItalic /></Button>
 						<Button variant='text' onClick={this.handleUnderline} style={iconButtonStyle}><FormatUnderlined /></Button>
 						<Button variant='text' onClick={this.handleLink} style={iconButtonStyle}>Link</Button>
-						<Button variant='text' onClick={this.handleGooglePhotos} style={iconButtonStyle}><img src='../src/images/google-photos-logo.png' /></Button>
-						<Button variant='text' onClick={onOpenFile} style={iconButtonStyle}><Attachment /></Button>
+						{/* <Button variant='text' onClick={this.handleGooglePhotos} style={iconButtonStyle}><img src='../src/images/google-photos-logo.png' /></Button>
+						<Button variant='text' onClick={onOpenFile} style={iconButtonStyle}><Attachment /></Button> */}
 					</div>
           <CodeMirrorComponent ref={this.editor}
             options={options}
