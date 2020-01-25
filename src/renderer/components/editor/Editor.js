@@ -19,7 +19,6 @@ import { pageview } from '../../modules/AnalyticsHelper'
 export default function Editor({mode, onFinish}) {
   const currentBlog = useSelector(state => state.currentBlog)
   const post = useSelector(state => state.currentPost)
-  const categories = useSelector(state => state.categories)
   const dispatch = useDispatch()
 
   const [showInfoBox, setShowInfoBox] = useState(false)
@@ -33,17 +32,13 @@ export default function Editor({mode, onFinish}) {
 		if (mode == ContentMode.EDIT && post) {
 			return {
 				title: post.title,
-				content: post.content,
-				categoryId: post.categoryId,
-				visibility: post.visibility,
-				tags: post.tags && post.tags.tag? post.tags.tag: []
+				body: post.body,
+				tags: post.tags? post.tags: []
 			}
 		} else {
 			return {
 				title: "",
-				content: "",
-				categoryId: '0',
-				visibility: 0,
+				body: "",
 				tags: []
 			}
 		}
@@ -65,42 +60,16 @@ export default function Editor({mode, onFinish}) {
     }))
 	}
 
-	function handleChangeCategory(e) {
-    setPostData(update(postData, {
-      categoryId: {
-        $set: e.target.value
-      }
-    }))
-	}
-
-	function handleSave() {
-		requestSave("0")
-	}
-
 	function handlePublish() {
-		requestSave("20")
-	}
-
-	function requestSave(visibility) {
 		let savePost = {
 			title: postData.title,
-			visibility: visibility,
-			content: postData.content,
-			categoryId: postData.categoryId,
-			tags: {
-				tag: postData.tags.join(",")
-			}
+			body: postData.body,
+			tags: postData.tags.join(",")
 		}
 
     setShowLoading(true)
-    setPostData(update(postData, {
-			visibility: {
-        $set: visibility
-      },
-    }))
-
 		if (mode == ContentMode.EDIT) {
-			savePost = Object.assign({}, post, savePost)
+			savePost.id = post.id
 			ipcRenderer.send("save-content", currentBlog.name, savePost)
 		} else {
 			ipcRenderer.send("add-content", currentBlog.name, savePost)
@@ -120,8 +89,8 @@ export default function Editor({mode, onFinish}) {
 		}
 	}
 
-	function handleFinishSaveContent(e, postId, url) {
-		const { title, visibility, content, categoryId, tags } = postData
+	function handleFinishSaveContent(e, postId) {
+		const { title, body, tags } = postData
     setShowLoading(false)
 
 		if (!postId) {
@@ -131,17 +100,17 @@ export default function Editor({mode, onFinish}) {
 		let savedPost = {
 			id: postId,
 			title: title,
-			visibility: visibility,
-			content: content,
-			categoryId: categoryId,
-			tags: {
-				tag: tags
-			},
-			postUrl: url,
-			date: dateformat(new Date(), 'yyyy-mm-dd HH:MM:ss'),
-		}
+			body: body,
+      tags: tags,
+      state: 'published',
+    }
+    
+    if (ContentMode.ADD) {
+      savedPost.date = new Date().toUTCString()
+      savedPost.type = 'text'
+    }
 
-		mode == ContentMode.EDIT ? onUpdate(Object.assign(savedPost, {date: post.date})) : onAdd(savedPost)
+		mode == ContentMode.EDIT ? onUpdate(savedPost) : onAdd(savedPost)
 		onFinish()
 	}
 
@@ -159,10 +128,10 @@ export default function Editor({mode, onFinish}) {
   }
 
 
-	function handleChangeContent(content) {
+	function handleChangeBody(body) {
     setPostData(update(postData, {
-      content: {
-        $set: content
+      body: {
+        $set: body
       }
     }))
 	}
@@ -180,17 +149,19 @@ export default function Editor({mode, onFinish}) {
 	}
 
   function handleUploadFiles(files) {
-		files.map(file => {
-      const fileReader = new FileReader();
-      fileReader.addEventListener("load", e => {
-        ipcRenderer.send("add-file", currentBlog.name, e.target.result, {
-          name: file.name,
-          type: file.type,
-          size: file.size
-        })
-      });
-      fileReader.readAsDataURL(file);
-		})
+    // TODO 이미지 업로드는 new format만 가능
+
+		// files.map(file => {
+    //   const fileReader = new FileReader();
+    //   fileReader.addEventListener("load", e => {
+    //     ipcRenderer.send("add-file", currentBlog.name, e.target.result, {
+    //       name: file.name,
+    //       type: file.type,
+    //       size: file.size
+    //     })
+    //   });
+    //   fileReader.readAsDataURL(file);
+		// })
   }
   
   useEffect(() => {
@@ -229,18 +200,16 @@ export default function Editor({mode, onFinish}) {
       />
 
       <EditorContent
-        content={postData.content}
+        content={postData.body}
         onUpload={handleUploadFiles}
-        onChange={handleChangeContent}
+        onChange={handleChangeBody}
         title={postData.title}
         onTitleChange={handleChangeTitle}
       />
 
-      <EditorInfoDialog open={showInfoBox} category={postData.categoryId} categories={categories} tags={postData.tags}
+      <EditorInfoDialog open={showInfoBox} tags={postData.tags}
         onTagsChange={handleChangeTags}
-        onCategoryChange={handleChangeCategory}
         onRequestClose={e => setShowInfoBox(false)}
-        onRequestSave={handleSave}
         onRequestPublish={handlePublish}
       />
 

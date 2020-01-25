@@ -61,8 +61,20 @@ module.exports.fetchUser = (auth) => {
 
 module.exports.fetchPosts = (auth, blogName, offset) => {
   const client = createTumblrClient(auth)
-  console.log('fetchPosts', blogName, offset)
   return client.blogPosts(blogName, {
     offset: offset
   })
+}
+
+
+module.exports.addPost = (auth, blogName, post) => {
+  const client = createTumblrClient(auth)
+  console.log('addPost', post)
+  return client.createTextPost(blogName, post)
+}
+
+module.exports.savePost = (auth, blogName, post) => {
+  const client = createTumblrClient(auth)
+  console.log('savePost', post)
+  return client.editPost(blogName, post)
 }
