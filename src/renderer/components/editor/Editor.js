@@ -102,15 +102,18 @@ export default function Editor({mode, onFinish}) {
 			title: title,
 			body: body,
       tags: tags,
+      summary: title? title : body,
       state: 'published',
     }
     
-    if (ContentMode.ADD) {
+    if (mode == ContentMode.ADD) {
       savedPost.date = new Date().toUTCString()
       savedPost.type = 'text'
+      savedPost.post_url = `${currentBlog.url}post/${postId}`
+      dispatch(addPost(savedPost))
+    } else {
+      dispatch(updatePost(Object.assign({}, post, savedPost)))
     }
-
-		mode == ContentMode.EDIT ? onUpdate(savedPost) : onAdd(savedPost)
 		onFinish()
 	}
 
@@ -119,14 +122,6 @@ export default function Editor({mode, onFinish}) {
 			onFinish()
 		}
 	}
-
-  function onUpdate(post) {
-    dispatch(updatePost(post))
-  }
-  function onAdd(post) {
-    dispatch(addPost(post))
-  }
-
 
 	function handleChangeBody(body) {
     setPostData(update(postData, {
