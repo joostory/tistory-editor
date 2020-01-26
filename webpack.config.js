@@ -9,13 +9,14 @@ const config = {
 	],
 	output: {
 		path: path.join(__dirname, 'app'),
-		filename: 'editor.min.js'
+    filename: 'editor.min.js',
+    chunkFilename: '[name].min.js'
 	},
   
   plugins: [
     new MiniCssExtractPlugin({
       filename: "editor.min.css",
-      chunkFilename: "[id].css"
+      chunkFilename: "[id].min.css"
     })
   ],
 
@@ -49,7 +50,12 @@ const config = {
       }
 		]
 	},
-  target: "electron-renderer"
+  target: "electron-renderer",
+  optimization: {
+    splitChunks: {
+      chunks: 'all'
+    }
+  }
 }
 
 
