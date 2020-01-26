@@ -7,7 +7,6 @@ const fetchUser = (evt, auth) => {
   evt.sender.send('start-fetch-user', {})
   tumblr.fetchUser(auth)
     .then(res => {
-      console.log("fetchUser", res)
       evt.sender.send('initialized', [])
       evt.sender.send('receive-user', res.user)
       evt.sender.send('receive-blogs', [].concat(res.user.blogs))
@@ -32,7 +31,6 @@ const fetchBlogs = (evt, auth) => {
 module.exports = () => {
 	ipcMain.on('fetch-initial-data', (evt) => {
     let auth = settings.get('auth')
-    console.log("initial", auth)
 		if (auth && auth.token) {
 			fetchUser(evt, auth)
 		} else {
@@ -61,7 +59,6 @@ module.exports = () => {
 	ipcMain.on("request-auth", (evt, arg) => {
     tumblr.getAccessToken()
       .then(auth => {
-        console.log("tumblr auth", auth)
         settings.set('auth', auth)
         fetchUser(evt, auth)
       })

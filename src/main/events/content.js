@@ -36,8 +36,9 @@ module.exports = () => {
 		}
 
     tumblr.savePost(auth, blogName, post)
-      .then(res => {
-        evt.sender.send('finish-save-content', res.id)
+      .then(async res => {
+        let postResponse = await tumblr.fetchPost(auth, blogName, res.id)
+        evt.sender.send('finish-save-content', postResponse.posts[0])
         evt.sender.send('receive-message', messagePrefix + ' 수정완료')
       })
       .catch(err => {
@@ -58,8 +59,9 @@ module.exports = () => {
     }
     
     tumblr.addPost(auth, blogName, post)
-      .then(res => {
-        evt.sender.send('finish-add-content', res.id)
+      .then(async res => {
+        let postResponse = await tumblr.fetchPost(auth, blogName, res.id)
+        evt.sender.send('finish-add-content', postResponse.posts[0])
         evt.sender.send('receive-message', messagePrefix + '발행 완료')
       })
       .catch(err => {

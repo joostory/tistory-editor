@@ -89,30 +89,18 @@ export default function Editor({mode, onFinish}) {
 		}
 	}
 
-	function handleFinishSaveContent(e, postId) {
-		const { title, body, tags } = postData
+	function handleFinishSaveContent(e, post) {
     setShowLoading(false)
 
-		if (!postId) {
+    console.log("handleFinishSaveContent", post)
+		if (!post) {
 			return
-		}
-
-		let savedPost = {
-			id: postId,
-			title: title,
-			body: body,
-      tags: tags,
-      summary: title? title : body,
-      state: 'published',
     }
     
     if (mode == ContentMode.ADD) {
-      savedPost.date = new Date().toUTCString()
-      savedPost.type = 'text'
-      savedPost.post_url = `${currentBlog.url}post/${postId}`
-      dispatch(addPost(savedPost))
+      dispatch(addPost(post))
     } else {
-      dispatch(updatePost(Object.assign({}, post, savedPost)))
+      dispatch(updatePost(post))
     }
 		onFinish()
 	}
@@ -165,7 +153,7 @@ export default function Editor({mode, onFinish}) {
 		ipcRenderer.on("start-add-file", handleStartAddFile)
 		ipcRenderer.on("finish-add-file", handleFinishAddFile)
 		ipcRenderer.on("finish-add-content", handleFinishSaveContent)
-		ipcRenderer.on("finish-save-content", handleFinishSaveContent)
+    ipcRenderer.on("finish-save-content", handleFinishSaveContent)
 
     remote.app.showExitPrompt = true
 
