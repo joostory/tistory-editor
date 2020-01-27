@@ -34,9 +34,9 @@ class CodeMirrorHelper {
 		doc.replaceRange(`${coverText} `, pos, pos)
 	}
 
-	static insertImage(cm, url) {
+	static insertImage(cm, url, title = '') {
 		if (url) {
-			cm.replaceRange("![](" + url + ")\n\n", cm.getCursor())
+      cm.replaceRange(`![${title}](${url})\n\n`, cm.getCursor())
 		}
 	}
 

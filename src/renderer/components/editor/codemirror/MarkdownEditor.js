@@ -1,7 +1,4 @@
-import React, { Component, Fragment } from 'react'
-import PropTypes from 'prop-types'
-import { ipcRenderer, clipboard } from 'electron'
-import autobind from 'autobind-decorator'
+import React, { useState, useRef, useEffect } from 'react'
 import CodeMirrorComponent from 'react-codemirror-component'
 import MarkdownHelper from './MarkdownHelper'
 
@@ -40,162 +37,120 @@ const PcKeymap = [
 	{ 'Ctrl-K': (cm) => CodeMirrorHelper.link(cm) }
 ]
 
-class MarkdownEditor extends Component {
 
-  constructor(props, context) {
-    super(props, context)
-    this.state = {
-			value: MarkdownHelper.htmlToMarkdown(props.value),
-			openGooglePhotos: false,
-    }
-
-    this.editor = React.createRef()
+function ToolbarButton({ onClick, children }) {
+  const iconButtonStyle = {
+    padding: '5px',
+    minWidth: '34px',
+    height: '34px',
+    lineHeight: '24px'
   }
 
-  componentWillMount() {
-		ipcRenderer.on("finish-add-file", this.handleFinishUploadFile)
+  return (
+    <Button variant='text' onClick={onClick} style={iconButtonStyle}>
+      {children}
+    </Button>
+  )
+}
+
+export default function MarkdownEditor({ currentBlog, value, onChange }) {
+  const [markdownValue, setMarkdownValue] = useState(MarkdownHelper.htmlToMarkdown(value))
+  const [openGooglePhotos, setOpenGooglePhotos] = useState(false)
+  const editorRef = useRef(null)
+
+	function handlePaste(e) {
+		// let image = clipboard.readImage()
+		// if (!image.isEmpty()) {
+		// 	ipcRenderer.send("add-clipboard-image", currentBlog.name)
+		// }
 	}
 
-	componentWillUnmount() {
-		ipcRenderer.removeListener("finish-add-file", this.handleFinishUploadFile)
-	}
-
-	componentDidMount() {
-		let cm = this.editor.current.getCodeMirror()
-		cm.on("paste", this.handlePaste)
-
-		const keymap = navigator.userAgent.indexOf('Macintosh') > 0 ? MacKeymap : PcKeymap
-		keymap.map(map => cm.addKeyMap(map))
-  }
-  
-	@autobind
-  handleFinishUploadFile(e, fileUrl) {
-		console.log("finishUploadFile", fileUrl)
-		CodeMirrorHelper.insertImage(this.editor.current.getCodeMirror(), fileUrl)
-	}
-
-	@autobind
-	handlePaste(e) {
-		const { currentBlog } = this.props
-
-		let image = clipboard.readImage()
-		if (!image.isEmpty()) {
-			ipcRenderer.send("add-clipboard-image", currentBlog.name)
-		}
-	}
-
-	@autobind
-  handleChangeContent(value) {
-    const { onChange } = this.props
-    this.setState({
-      value: value
-    })
+  function handleChangeContent(value) {
+    setMarkdownValue(value)
     onChange(MarkdownHelper.markdownToHtml(value))
 	}
 
-	@autobind
-	handleHeader2(e) {
+	function handleHeader2(e) {
 		e.preventDefault()
-		CodeMirrorHelper.header2(this.editor.current.getCodeMirror())
+		CodeMirrorHelper.header2(editorRef.current.getCodeMirror())
 	}
 
-	@autobind
-	handleHeader3(e) {
+	function handleHeader3(e) {
 		e.preventDefault()
-		CodeMirrorHelper.header3(this.editor.current.getCodeMirror())
+		CodeMirrorHelper.header3(editorRef.current.getCodeMirror())
 	}
 	
-	@autobind
-	handleBold(e) {
+	function handleBold(e) {
 		e.preventDefault()
-		CodeMirrorHelper.bold(this.editor.current.getCodeMirror())
+		CodeMirrorHelper.bold(editorRef.current.getCodeMirror())
 	}
 
-	@autobind
-	handleItalic(e) {
+	function handleItalic(e) {
 		e.preventDefault()
-		CodeMirrorHelper.italic(this.editor.current.getCodeMirror())
+		CodeMirrorHelper.italic(editorRef.current.getCodeMirror())
 	}
 
-	@autobind
-	handleUnderline(e) {
+	function handleUnderline(e) {
 		e.preventDefault()
-		CodeMirrorHelper.underline(this.editor.current.getCodeMirror())
+		CodeMirrorHelper.underline(editorRef.current.getCodeMirror())
 	}
 
-	@autobind
-	handleLink(e) {
+	function handleLink(e) {
 		e.preventDefault()
-		CodeMirrorHelper.link(this.editor.current.getCodeMirror())
+		CodeMirrorHelper.link(editorRef.current.getCodeMirror())
 	}
 
-	@autobind
-	handleGooglePhotos(e) {
-		this.setState({
-			openGooglePhotos: true
-		})
+	function handleGooglePhotos(e) {
+    setOpenGooglePhotos(true)
 	}
 
-	@autobind
-	handleCloseGooglePhotos() {
-		this.setState({
-			openGooglePhotos: false
-		})
+	function handleCloseGooglePhotos() {
+    setOpenGooglePhotos(false)
 	}
 
-	@autobind
-	handleInsertImage(url, filename) {
-    const { currentBlog } = this.props
-    ipcRenderer.send("add-image-url", currentBlog.name, url, filename)
+	function handleInsertImage(url, title) {
+    CodeMirrorHelper.insertImage(editorRef.current.getCodeMirror(), url, title)
 	}
 
-  render() {
-		const { onOpenFile } = this.props
-    const { value, openGooglePhotos } = this.state
+  useEffect(() => {
+    let cm = editorRef.current.getCodeMirror()
+		cm.on("paste", handlePaste)
 
-    const options = {
-			lineNumbers: false,
-			lineWrapping: true,
-			mode: 'markdown',
-      theme:'tistory-markdown',
-      placeholder: '내용을 입력하세요.'
-		}
-		
-		const iconButtonStyle = {
-			padding: '5px',
-			minWidth: '34px',
-			height: '34px',
-			lineHeight: '24px'
-		}
+		const keymap = navigator.userAgent.indexOf('Macintosh') > 0 ? MacKeymap : PcKeymap
+    keymap.map(map => cm.addKeyMap(map))
+  })
 
-		return (
-			<div>
-				<div className="markdown-editor">
-					<div className="editor-toolbar">
-						<Button variant='text' onClick={this.handleHeader2} style={iconButtonStyle}>H2</Button>
-						<Button variant='text' onClick={this.handleHeader3} style={iconButtonStyle}>H3</Button>
-						<Button variant='text' onClick={this.handleBold} style={iconButtonStyle}><FormatBold /></Button>
-						<Button variant='text' onClick={this.handleItalic} style={iconButtonStyle}><FormatItalic /></Button>
-						<Button variant='text' onClick={this.handleUnderline} style={iconButtonStyle}><FormatUnderlined /></Button>
-						<Button variant='text' onClick={this.handleLink} style={iconButtonStyle}>Link</Button>
-						{/* <Button variant='text' onClick={this.handleGooglePhotos} style={iconButtonStyle}><img src='../src/images/google-photos-logo.png' /></Button>
-						<Button variant='text' onClick={onOpenFile} style={iconButtonStyle}><Attachment /></Button> */}
-					</div>
-          <CodeMirrorComponent ref={this.editor}
-            options={options}
-            value={value}
-						onChange={this.handleChangeContent}
-          />
-				</div>
-				<GooglePhotosDialog open={openGooglePhotos} onClose={this.handleCloseGooglePhotos} onSelectImage={this.handleInsertImage} />
-			</div>
-		)
-  }
+  return (
+    <div>
+      <div className="markdown-editor">
+        <div className="editor-toolbar">
+          <ToolbarButton onClick={handleHeader2}>H2</ToolbarButton>
+          <ToolbarButton onClick={handleHeader3}>H3</ToolbarButton>
+          <ToolbarButton onClick={handleBold}><FormatBold /></ToolbarButton>
+          <ToolbarButton onClick={handleItalic}><FormatItalic /></ToolbarButton>
+          <ToolbarButton onClick={handleUnderline}><FormatUnderlined /></ToolbarButton>
+          <ToolbarButton onClick={handleLink}>Link</ToolbarButton>
+          {/* <ToolbarButton onClick={handleGooglePhotos}><img src='../src/images/google-photos-logo.png' /></ToolbarButton> */}
+        </div>
+        <CodeMirrorComponent ref={editorRef}
+          options={{
+            lineNumbers: false,
+            lineWrapping: true,
+            mode: 'markdown',
+            theme:'tistory-markdown',
+            placeholder: '내용을 입력하세요.'
+          }}
+          value={markdownValue}
+          onChange={handleChangeContent}
+        />
+      </div>
+
+      <GooglePhotosDialog
+        open={openGooglePhotos}
+        onClose={handleCloseGooglePhotos}
+        onSelectImage={handleInsertImage}
+      />
+    </div>
+  )
 }
 
-MarkdownEditor.propTypes = {
-  value: PropTypes.string.isRequired,
-	currentBlog: PropTypes.object.isRequired
-}
-
-export default MarkdownEditor

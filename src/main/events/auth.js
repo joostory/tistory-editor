@@ -1,6 +1,5 @@
 const settings = require('electron-settings')
 const { ipcMain } = require('electron')
-const tistory = require('../apis/tistory-api')
 const tumblr = require("../apis/tumblr-api")
 
 const fetchUser = (evt, auth) => {
@@ -16,16 +15,6 @@ const fetchUser = (evt, auth) => {
       evt.sender.send('end-fetch-user', {})
       evt.sender.send('receive-message', '사용자 정보를 불러오지 못했습니다.')
     })
-}
-
-const fetchBlogs = (evt, auth) => {
-	tistory.fetchBlogInfo(auth).then(res => {
-		evt.sender.send('receive-blogs', [].concat(res.tistory.item.blogs))
-	}).catch(err => {
-		console.error(err)
-		evt.sender.send('receive-blogs', [])
-		evt.sender.send('receive-message', '블로그 리스트를 불러오지 못했습니다.')
-	})
 }
 
 module.exports = () => {
