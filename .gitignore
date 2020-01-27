@@ -6,4 +6,5 @@ dist
 app/*.min.js
 app/*.min.css
 app/*.png
+app/index.html
 .oauthInfo.json

@@ -2,18 +2,25 @@ const path = require('path');
 const webpack = require("webpack");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackInjector = require('html-webpack-injector')
 
 const config = {
-	entry: [
-		path.join(__dirname, 'src', 'renderer', 'index')
-	],
+	entry: {
+		'editor': path.join(__dirname, 'src', 'renderer', 'index')
+  },
 	output: {
 		path: path.join(__dirname, 'app'),
-    filename: 'editor.min.js',
+    filename: '[name].min.js',
     chunkFilename: '[name].min.js'
 	},
   
   plugins: [
+    new HtmlWebpackPlugin({
+      template: './src/template/index.html',
+      filename: './index.html'
+    }),
+    new HtmlWebpackInjector(),
     new MiniCssExtractPlugin({
       filename: "editor.min.css",
       chunkFilename: "[id].min.css"
