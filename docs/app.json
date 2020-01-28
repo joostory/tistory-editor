@@ -1,5 +1,0 @@
----
----
-{
-  "version": "{{ site.data.app.version }}"
-}
