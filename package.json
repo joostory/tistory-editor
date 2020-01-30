@@ -92,7 +92,7 @@
     "react-textarea-autosize": "^7.1.2",
     "redux": "^4.0.4",
     "redux-logger": "^3.0.6",
-    "tinymce": "^5.1.3",
+    "tinymce": "^5.1.4",
     "tinymce-plugin-codeblock": "^2.0.3",
     "tinymce-plugin-opengraph": "^2.0.6",
     "turndown": "^5.0.3",
