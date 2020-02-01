@@ -3,10 +3,10 @@ import Header from './Header'
 import PostList from './PostList'
 
 
-export default function Sidebar({onRequestAddPost}) {
+export default function Sidebar() {
 	return (
 		<div className="sidebar">
-			<Header onRequestAddPost={onRequestAddPost} />
+			<Header />
 			<PostList />
 		</div>
 	)

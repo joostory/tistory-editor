@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { goIndex } from '../../../actions'
 
 import { Toolbar, IconButton, Avatar, Typography } from '@material-ui/core'
-import { NoteAdd, NavigateBefore } from '@material-ui/icons'
+import { NavigateBefore } from '@material-ui/icons'
 
 function ProfileAvatar({blog}) {
 	if (blog.avatar) {
@@ -13,10 +13,9 @@ function ProfileAvatar({blog}) {
 	}
 }
 
-export default function Header({onRequestAddPost}) {
+export default function Header() {
 	const currentBlog = useSelector(state => state.currentBlog)
 	const dispatch = useDispatch()
-
 
 	return (
 		<Toolbar className='header'>
@@ -29,10 +28,6 @@ export default function Header({onRequestAddPost}) {
 			<Typography className='blog-title'>
 				{currentBlog.title}
 			</Typography>
-
-			<IconButton onClick={onRequestAddPost} tooltip="새글쓰기">
-				<NoteAdd />
-			</IconButton>
 		</Toolbar>
 	)
 }
