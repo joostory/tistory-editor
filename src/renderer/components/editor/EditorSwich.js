@@ -4,7 +4,7 @@ import { Menu, MenuItem, Fab } from '@material-ui/core'
 import { SwapVert } from '@material-ui/icons'
 
 
-export default function EditorSwitch({ onChange }) {
+export default function EditorSwitch({ editorMode, onChange }) {
 
   const [open, setOpen] = useState(false)
   const [popoverParent, setPopoverParent] = useState(null)

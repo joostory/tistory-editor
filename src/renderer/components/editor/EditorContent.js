@@ -1,5 +1,5 @@
-import React, { Component, Fragment, useRef, useState, useEffect, forwardRef } from 'react'
-import { connect, useSelector } from 'react-redux'
+import React, { useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
 import classnames from 'classnames'
 
 import * as EditorMode from '../../constants/EditorMode'
@@ -11,19 +11,17 @@ import TinymceEditor from './tinymce/TinymceEditor'
 import EditorSwitch from './EditorSwich'
 
 function Editor({editorMode, content, currentBlog, onUpload, onOpenFile, onChange}) {
-
-  // TODO 임시로 markdown만 허용
-  // if (editorMode == EditorMode.TINYMCE) {
-  //   return (
-  //     <TinymceEditor
-  //       value={content}
-  //       currentBlog={currentBlog}
-  //       onImageHandler={onUpload}
-  //       onOpenFile={onOpenFile}
-  //       onChange={onChange}
-  //     />
-  //   )
-  // } else {
+  if (editorMode == EditorMode.TINYMCE) {
+    return (
+      <TinymceEditor
+        value={content}
+        currentBlog={currentBlog}
+        onImageHandler={onUpload}
+        onOpenFile={onOpenFile}
+        onChange={onChange}
+      />
+    )
+  } else {
     return (
       <MarkdownEditor
         value={content}
@@ -32,7 +30,7 @@ function Editor({editorMode, content, currentBlog, onUpload, onOpenFile, onChang
         onChange={onChange}
       />
     )
-  // }
+  }
 }
 
 export default function EditorContent({content, onChange, onUpload, title, onTitleChange}) {
@@ -89,9 +87,9 @@ export default function EditorContent({content, onChange, onUpload, title, onTit
         </Dropzone>
       </div>
 
-      {/* <EditorSwitch
+      <EditorSwitch
         editorMode={editorMode}
-        onChange={handleChangeEditorMode} /> */}
+        onChange={handleChangeEditorMode} />
     </>
   )
 }

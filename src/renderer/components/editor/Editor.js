@@ -1,6 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import dateformat from 'dateformat'
 import update from 'immutability-helper'
 import { ipcRenderer, remote } from 'electron'
 

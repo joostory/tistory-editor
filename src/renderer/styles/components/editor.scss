@@ -39,9 +39,8 @@
     margin: 0 auto;
     display: block;
     border: 0;
-    border-bottom: 1px solid #e5e5e5;
     font-size: 24px;
-    padding: 10px 5px;
+    padding: 20px 5px;
     outline: none;
     resize:none;
   }
@@ -82,7 +81,7 @@
     width:700px;
     height:auto;
     margin:0 auto;
-    padding:15px 0;
+    padding:30px 0;
     font-family:Menlo, Consolas, 'DejaVu Sans Mono', monospace;
     background:transparent;
 
@@ -101,6 +100,7 @@
 
     .CodeMirror-scroll {
       min-height: 640px;
+      overflow: hidden !important;
     }
 
     .CodeMirror-placeholder {
