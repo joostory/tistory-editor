@@ -1,7 +1,7 @@
 {
   "name": "tumblr-editor",
   "productName": "TumblrEditor",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Editor for tumblr",
   "main": "src/main/main.js",
   "scripts": {
