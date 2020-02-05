@@ -78,7 +78,7 @@ const openWindow = () => {
 const makePlatformString = () => {
   const platform = os.platform()
   if (platform == 'darwin') {
-    return 'Mac'
+    return 'Mac OS X'
   } else if (platform.indexOf('win') >= 0) {
     return 'Windows'
   } else {
