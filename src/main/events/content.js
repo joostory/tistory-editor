@@ -1,22 +1,24 @@
-const settings = require('electron-settings')
+const AuthenticationManager = require('../AuthenticationManager')
 const { ipcMain } = require('electron')
 const dateformat = require('dateformat')
+const ProviderApiManager = require('../ProviderApiManager')
 const tumblr = require("../apis/tumblr-api")
 
 module.exports = () => {
-	ipcMain.on("fetch-posts", (evt, blogName, offset) => {
-		let auth = settings.get('auth')
-		if (!auth || !auth.token) {
-			console.log("fetch-posts auth error")
+	ipcMain.on("fetch-posts", (evt, authUUID, blogName, options) => {
+    let auth = AuthenticationManager.findByUUID(authUUID)
+    let api = ProviderApiManager.getApi(auth.provider)
+    console.log(options)
+		if (!api.validateAuthInfo(auth.authInfo)) {
+      console.log("fetch-posts auth error")
+      evt.sender.send('receive-message', '글 목록을 불러오지 못했습니다.')
+      evt.sender.send('receive-posts-failed')
 			return
     }
     
-    tumblr.fetchPosts(auth, blogName, offset)
-      .then(res => {
-        evt.sender.send('receive-posts', {
-          posts: res.posts? [].concat(res.posts) : [],
-          hasNext: res.blog.posts > offset + res.posts.length
-        })
+    api.fetchPosts(auth.authInfo, blogName, options)
+      .then(posts => {
+        evt.sender.send('receive-posts', posts)
       })
       .catch(err => {
         console.error("fetch-posts error", err)
@@ -25,8 +27,8 @@ module.exports = () => {
       })
 	})
 	
-	ipcMain.on("save-content", (evt, blogName, post) => {
-		let auth = settings.get('auth')
+	ipcMain.on("save-content", (evt, authUUID, blogName, post) => {
+		let auth = AuthenticationManager.findByUUID(authUUID)
 		let messagePrefix = dateformat(new Date(), 'HH:MM:ss : ')
 
 		if (!auth || !auth.token) {
@@ -48,8 +50,8 @@ module.exports = () => {
       })
 	})
 
-	ipcMain.on("add-content", (evt, blogName, post) => {
-		let auth = settings.get('auth')
+	ipcMain.on("add-content", (evt, authUUID, blogName, post) => {
+		let auth = AuthenticationManager.findByUUID(authUUID)
 		let messagePrefix = dateformat(new Date(), 'HH:MM:ss : ')
 
 		if (!auth || !auth.token) {

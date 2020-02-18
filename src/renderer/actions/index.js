@@ -1,8 +1,7 @@
 import * as types from '../constants/ActionTypes'
-import { ipcRenderer } from 'electron'
 
-export const initialized = () => ({
-	 type: types.INITIALIZED
+export const initialized = (accounts) => ({
+	 type: types.INITIALIZED, accounts
 })
 
 export const startFetchUser = () => ({
@@ -21,6 +20,10 @@ export const receiveBlogs = (blogs) => ({
 	 type: types.RECEIVE_BLOGS, blogs
 })
 
+export const receiveAccount = (account) => ({
+  type: types.RECEIVE_ACCOUNT, account
+})
+
 export const receivePostsFailed = () => ({
 	 type: types.RECEIVE_POSTS_FAILED
 })
@@ -33,12 +36,8 @@ export const disconnectAuth = () => ({
 	 type: types.DISCONNECT_AUTH
 })
 
-export const selectBlog = (blog) => ({
-	 type: types.SELECT_BLOG, blog
-})
-
-export const goIndex = () => ({
-	 type: types.GO_INDEX
+export const selectBlog = (auth, blog) => ({
+	 type: types.SELECT_BLOG, auth, blog
 })
 
 export const lockPostsLoad = () => ({

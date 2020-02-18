@@ -3,10 +3,10 @@ import Header from './Header'
 import PostList from './PostList'
 
 
-export default function Sidebar() {
+export default function Sidebar({onSelectBlog}) {
 	return (
 		<div className="sidebar">
-			<Header />
+			<Header onSelectBlog={onSelectBlog} />
 			<PostList />
 		</div>
 	)

@@ -40,7 +40,7 @@
     "babel-loader": "^8.0.6",
     "cross-env": "^7.0.0",
     "css-loader": "^3.4.2",
-    "electron": "^8.0.0",
+    "electron": "^8.0.1",
     "electron-builder": "^22.3.2",
     "electron-devtools-installer": "^2.2.4",
     "file-loader": "^5.0.2",

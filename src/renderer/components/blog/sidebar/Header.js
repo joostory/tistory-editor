@@ -1,9 +1,20 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { goIndex } from '../../../actions'
+import {
+  Toolbar, IconButton, Avatar, Typography, Button,
+  makeStyles
+} from '@material-ui/core'
 
-import { Toolbar, IconButton, Avatar, Typography } from '@material-ui/core'
-import { NavigateBefore } from '@material-ui/icons'
+const useStyle = makeStyles(theme => ({
+  root: {
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2)
+  },
+  title: {
+    flexGrow: 1,
+    paddingLeft: theme.spacing(2)
+  }
+}))
 
 function ProfileAvatar({blog}) {
 	if (blog.avatar) {
@@ -13,21 +24,18 @@ function ProfileAvatar({blog}) {
 	}
 }
 
-export default function Header() {
-	const currentBlog = useSelector(state => state.currentBlog)
-	const dispatch = useDispatch()
+export default function Header({onSelectBlog}) {
+  const classes = useStyle()
+  const currentBlog = useSelector(state => state.currentBlog)
 
 	return (
-		<Toolbar className='header'>
-			<IconButton onClick={() => dispatch(goIndex())}>
-				<NavigateBefore />
-			</IconButton>
-
+		<Toolbar className={classes.root}>
 			<ProfileAvatar blog={currentBlog} />
 
-			<Typography className='blog-title'>
+			<Typography className={classes.title}>
 				{currentBlog.title}
 			</Typography>
+      <Button onClick={onSelectBlog}>선택</Button>
 		</Toolbar>
 	)
 }

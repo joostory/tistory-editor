@@ -1,6 +1,6 @@
 import React, { Component, useState, useEffect } from 'react'
 import { ipcRenderer } from 'electron'
-import { Snackbar } from '@material-ui/core'
+import { Snackbar, CssBaseline } from '@material-ui/core'
 
 import Main from './Main'
 import Preference from '../components/Preference'
@@ -19,10 +19,12 @@ export default function App(props) {
 		return () => {
 			ipcRenderer.removeListener("receive-message", handleReceiveMessage)
 		}
-	});
+	}, []);
 	//
 	return (
 		<>
+      <CssBaseline />
+      
 			<Main />
 
 			{message &&

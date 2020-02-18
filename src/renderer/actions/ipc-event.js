@@ -4,7 +4,8 @@ import {
 	startFetchUser,
 	endFetchUser,
 	receiveUser,
-	receiveBlogs,
+  receiveBlogs,
+  receiveAccount,
 	receivePosts,
 	receivePostsFailed,
 	selectPost,
@@ -16,8 +17,8 @@ export const registIpcEvent = (store) => {
 	ipcRenderer.send('fetch-initial-data')
   ipcRenderer.send("fetch-preferences")
 
-	ipcRenderer.on('initialized', (e) => {
-		store.dispatch(initialized())
+	ipcRenderer.on('initialized', (e, accounts) => {
+		store.dispatch(initialized(accounts))
 	})
 
 	ipcRenderer.on("start-fetch-user", (e, user) => {
@@ -34,6 +35,10 @@ export const registIpcEvent = (store) => {
 
   ipcRenderer.on("receive-blogs", (e, blogs) => {
   	store.dispatch(receiveBlogs(blogs))
+  })
+
+  ipcRenderer.on("receive-account", (e, account) => {
+    store.dispatch(receiveAccount(account))
   })
 
   ipcRenderer.on("receive-posts-failed", (e, res) => {

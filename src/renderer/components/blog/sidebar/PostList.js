@@ -2,22 +2,33 @@ import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { ipcRenderer } from 'electron'
 
-import { CircularProgress, List } from '@material-ui/core'
+import { CircularProgress, List, Typography } from '@material-ui/core'
 
 import PostListItem from './PostListItem'
 import { selectPost, lockPostsLoad } from '../../../actions'
 
 export default function PostList() {
 
-	const posts = useSelector(state => state.posts)
-	const currentPost = useSelector(state => state.currentPost)
+  const posts = useSelector(state => state.posts)
+  const currentPost = useSelector(state => state.currentPost)
+  const currentAuth = useSelector(state => state.currentAuth)
 	const currentBlog = useSelector(state => state.currentBlog)
 	const dispatch = useDispatch()
 
 	function requestNextPage() {
 		if (!posts.lock && posts.hasNext) {
-			dispatch(lockPostsLoad())
-			ipcRenderer.send('fetch-posts', currentBlog.name, posts.list.length)
+      dispatch(lockPostsLoad())
+      let options
+      if (currentAuth.provider == 'tistory') {
+        options = {
+          page: posts.page + 1
+        }
+      } else if (currentAuth.provider == 'tumblr') {
+        options = {
+          offset: posts.list.length
+        }
+      }
+			ipcRenderer.send('fetch-posts', currentAuth.uuid, currentBlog.name, options)
 		}
 	}
 
@@ -38,9 +49,11 @@ export default function PostList() {
 	}
 
 	useEffect(() => {
-		requestNextPage()
-	}, [])
-
+    if (!posts.initialized) {
+      requestNextPage()
+    }
+  }, [posts])
+  
 	return (
 		<List className="list" style={{padding:0}} onScroll={handleScroll}>
 			{posts.list.map((item, i) =>
@@ -64,4 +77,3 @@ export default function PostList() {
 		</List>
 	)
 }
-

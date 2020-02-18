@@ -1,61 +1,56 @@
-const settings = require('electron-settings')
+const uuid = require('uuid/v4')
+const AuthenticationManager = require('../AuthenticationManager')
 const { ipcMain } = require('electron')
-const tumblr = require("../apis/tumblr-api")
+const ProviderApiManager = require('../ProviderApiManager')
 
-const fetchUser = (evt, auth) => {
-  evt.sender.send('start-fetch-user', {})
-  tumblr.fetchUser(auth)
-    .then(res => {
-      evt.sender.send('initialized', [])
-      evt.sender.send('receive-user', res.user)
-      evt.sender.send('receive-blogs', [].concat(res.user.blogs))
-    })
-    .catch(err => {
-      evt.sender.send('initialized', [])
-      evt.sender.send('end-fetch-user', {})
-      evt.sender.send('receive-message', '사용자 정보를 불러오지 못했습니다.')
-    })
+async function fetchAccount(auth) {
+  const api = ProviderApiManager.getApi(auth.provider)
+  return await api.fetchAccount(auth)
+}
+
+function fetchAccounts(authList) {
+  return Promise.all(authList.map(auth => {
+    return fetchAccount(auth)
+  }))
+}
+
+function saveAuth(auth) {
+  AuthenticationManager.add(auth)
+  return auth
 }
 
 module.exports = () => {
-	ipcMain.on('fetch-initial-data', (evt) => {
-    let auth = settings.get('auth')
-		if (auth && auth.token) {
-			fetchUser(evt, auth)
-		} else {
-			evt.sender.send('initialized', [])
-		}
-	})
-
-	ipcMain.on("fetch-user", (evt) => {
-		let auth = settings.get('auth')
-		if (!auth || !auth.token) {
-			return
-		}
-
-		fetchUser(evt, auth)
-	})
-	
-	ipcMain.on("fetch-blogs", (evt) => {
-		let auth = settings.get('auth')
-		if (!auth || !auth.toekn) {
-			return
-		}
-
-		fetchBlogs(evt, auth)
-	})
-	
-	ipcMain.on("request-auth", (evt, arg) => {
-    tumblr.getAccessToken()
-      .then(auth => {
-        settings.set('auth', auth)
-        fetchUser(evt, auth)
+  ipcMain.on('fetch-initial-data', (evt) => {
+    let authList = AuthenticationManager.getAll()
+    if (Array.isArray(authList) && authList.length > 0) {
+      fetchAccounts(authList).then(data => {
+        evt.sender.send('initialized', data)
       })
-	})
-	
-	ipcMain.on("disconnect-auth", (evt, arg) => {
-		settings.set("auth", {})
-		evt.sender.send('complete-disconnect-auth')
-		evt.sender.send('receive-message', '인증해제 했습니다.')
-	})	
+    } else {
+      evt.sender.send('initialized', [])
+    }
+  })
+
+  ipcMain.on("request-auth", (evt, provider) => {
+    let providerApi = ProviderApiManager.getApi(provider)
+    providerApi.getAccessToken()
+      .then(authInfo => ({
+        uuid: uuid(),
+        provider: provider,
+        authInfo: authInfo
+      }))
+      .then(auth => saveAuth(auth))
+      .then(auth => {
+        fetchAccount(auth)
+          .then(account => {
+            evt.sender.send('receive-account', account)
+          })
+      })
+  })
+
+  ipcMain.on("disconnect-auth", (evt, uuid) => {
+    AuthenticationManager.removeByUUID(uuid)
+    evt.sender.send('complete-disconnect-auth')
+    evt.sender.send('receive-message', '인증해제 했습니다.')
+  })
 }
