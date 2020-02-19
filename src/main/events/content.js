@@ -1,7 +1,7 @@
-const AuthenticationManager = require('../AuthenticationManager')
+const AuthenticationManager = require('../lib/AuthenticationManager')
 const { ipcMain } = require('electron')
 const dateformat = require('dateformat')
-const ProviderApiManager = require('../ProviderApiManager')
+const ProviderApiManager = require('../lib/ProviderApiManager')
 const tumblr = require("../apis/tumblr-api")
 
 module.exports = () => {
