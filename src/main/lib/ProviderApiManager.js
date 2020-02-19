@@ -1,5 +1,5 @@
-const tistory = require('./apis/tistory-api')
-const tumblr = require('./apis/tumblr-api')
+const tistory = require('../apis/tistory-api')
+const tumblr = require('../apis/tumblr-api')
 
 
 function getApi(provider) {

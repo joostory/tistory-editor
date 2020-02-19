@@ -58,6 +58,19 @@ const fetchUser = (auth) => {
   .then(errorHandler)
 }
 
+function tistoryPostToEditorPost(tistoryPosts) {
+  let posts = tistoryPosts? [].concat(tistoryPosts) : []
+
+  return posts.map(post => ({
+    id: post.id,
+    url: post.postUrl,
+    title: post.title,
+    date: post.date,
+    categoryId: post.categoryId,
+    state: post.visibility > 0? 'published' : 'draft'
+  }))
+}
+
 const fetchPosts = (auth, blogName, options) => {
   return fetch(BASE_URL + "/post/list?" + querystring.stringify({
     access_token: auth.access_token,
@@ -73,7 +86,7 @@ const fetchPosts = (auth, blogName, options) => {
   .then(errorHandler)
   .then(res => ({
     page: res.tistory.item.page,
-    posts: res.tistory.item.posts? [].concat(res.tistory.item.posts) : [],
+    posts: tistoryPostToEditorPost(res.tistory.item.posts),
     hasNext: res.tistory.item.totalCount > res.tistory.item.page * res.tistory.item.count
   }))
 }

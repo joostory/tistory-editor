@@ -58,12 +58,26 @@ const fetchUser = (auth) => {
   return client.userInfo()
 }
 
+function tumblrPostToEditorPost(tumblrPosts) {
+  let posts = tumblrPosts? [].concat(tumblrPosts) : []
+
+  return posts.map(post => ({
+    id: post.id,
+    url: post.post_url,
+    title: post.summary,
+    content: post.body,
+    tags: post.tags,
+    date: post.date,
+    type: post.type,
+    state: post.state
+  }))
+}
 
 const fetchPosts = (auth, blogName, options) => {
   const client = createTumblrClient(auth)
   return client.blogPosts(blogName, options)
     .then(res => ({
-      posts: res.posts? [].concat(res.posts) : [],
+      posts: tumblrPostToEditorPost(res.posts),
       hasNext: res.blog.posts > options.offset + res.posts.length
     }))
 }

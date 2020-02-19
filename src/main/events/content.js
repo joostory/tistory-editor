@@ -8,9 +8,7 @@ module.exports = () => {
 	ipcMain.on("fetch-posts", (evt, authUUID, blogName, options) => {
     let auth = AuthenticationManager.findByUUID(authUUID)
     let api = ProviderApiManager.getApi(auth.provider)
-    console.log(options)
 		if (!api.validateAuthInfo(auth.authInfo)) {
-      console.log("fetch-posts auth error")
       evt.sender.send('receive-message', '글 목록을 불러오지 못했습니다.')
       evt.sender.send('receive-posts-failed')
 			return
@@ -21,7 +19,6 @@ module.exports = () => {
         evt.sender.send('receive-posts', posts)
       })
       .catch(err => {
-        console.error("fetch-posts error", err)
         evt.sender.send('receive-message', '글 목록을 불러오지 못했습니다.')
         evt.sender.send('receive-posts-failed')
       })
