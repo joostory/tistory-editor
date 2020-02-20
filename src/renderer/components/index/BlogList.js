@@ -81,8 +81,10 @@ export default function BlogList({afterSelect}) {
       </>
     )
   } else {
-    <Paper className={classes.paper} variant='outlined' square>
-      연결된 블로그가 없습니다.
-    </Paper>
+    return (
+      <Paper className={classes.paper} variant='outlined' square>
+        연결된 블로그가 없습니다.
+      </Paper>
+    )
   }
 }
