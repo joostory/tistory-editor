@@ -58,17 +58,22 @@ const fetchUser = (auth) => {
   .then(errorHandler)
 }
 
-function tistoryPostToEditorPost(tistoryPosts) {
-  let posts = tistoryPosts? [].concat(tistoryPosts) : []
-
-  return posts.map(post => ({
+function _tistoryPostToEditorPost(post) {
+  return {
     id: post.id,
     url: post.postUrl,
     title: post.title,
     date: post.date,
     categoryId: post.categoryId,
-    state: post.visibility > 0? 'published' : 'draft'
-  }))
+    state: post.visibility > 0? 'published' : 'draft',
+    tags: post.tags && post.tags.tag? [].concat(post.tags.tag) : [],
+    content: post.content? post.content : ''
+  }
+}
+
+function _tistoryPostsToEditorPosts(tistoryPosts) {
+  let posts = tistoryPosts? [].concat(tistoryPosts) : []
+  return posts.map(_tistoryPostToEditorPost)
 }
 
 const fetchPosts = (auth, blogName, options) => {
@@ -86,7 +91,7 @@ const fetchPosts = (auth, blogName, options) => {
   .then(errorHandler)
   .then(res => ({
     page: res.tistory.item.page,
-    posts: tistoryPostToEditorPost(res.tistory.item.posts),
+    posts: _tistoryPostsToEditorPosts(res.tistory.item.posts),
     hasNext: res.tistory.item.totalCount > res.tistory.item.page * res.tistory.item.count
   }))
 }
@@ -103,6 +108,9 @@ const fetchContent = (auth, blogName, postId) => {
     }
   })
   .then(errorHandler)
+  .then(res => ({
+    post: _tistoryPostToEditorPost(res.tistory.item)
+  }))
 }
 
 const fetchCategories = (auth, blogName) => {

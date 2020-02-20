@@ -22,6 +22,22 @@ module.exports = () => {
         evt.sender.send('receive-message', '글 목록을 불러오지 못했습니다.')
         evt.sender.send('receive-posts-failed')
       })
+  })
+  
+  ipcMain.on("fetch-content", (evt, authUUID, blogName, postId) => {
+    let auth = AuthenticationManager.findByUUID(authUUID)
+    if (auth.provider != 'tistory') {
+      evt.sender.send('receive-message', '글 정보를 불러오지 못했습니다.')
+      return
+    }
+
+    let api = ProviderApiManager.getApi(auth.provider)
+		api.fetchContent(auth.authInfo, blogName, postId).then(res => {
+			evt.sender.send('receive-content', res.post)
+		}).catch(err => {
+			console.error(err)
+			evt.sender.send('receive-message', '글 정보를 불러오지 못했습니다.')
+		})
 	})
 	
 	ipcMain.on("save-content", (evt, authUUID, blogName, post) => {

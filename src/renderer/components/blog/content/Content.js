@@ -1,6 +1,7 @@
 import React, { } from 'react'
 import { useSelector } from 'react-redux'
-import ContentViewer from './ContentViewer'
+import TumblrContentViewer from './TumblrContentViewer'
+import TistoryContentViewer from './TistoryContentViewer'
 
 function EmptyContent() {
   return (
@@ -10,6 +11,18 @@ function EmptyContent() {
   )
 }
 
+
+function ContentViewer({onRequestEditPost}) {
+  const currentAuth = useSelector(state => state.currentAuth)
+
+  if (currentAuth.provider == 'tistory') {
+    return <TistoryContentViewer onRequestEditPost={onRequestEditPost} />
+  } else if (currentAuth.provider == 'tumblr') {
+    return <TumblrContentViewer onRequestEditPost={onRequestEditPost} />
+  } else {
+    return <EmptyContent />
+  }
+}
 
 export default function Content({onRequestEditPost}) {
   const post = useSelector(state => state.currentPost)

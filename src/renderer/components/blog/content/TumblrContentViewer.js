@@ -16,13 +16,13 @@ function UnknownTypeContentViewer() {
 }
 
 
-export default function ContentViewer({ onRequestEditPost }) {
+export default function TumblrContentViewer({ onRequestEditPost }) {
   const currentBlog = useSelector(state => state.currentBlog)
   const post = useSelector(state => state.currentPost)
 
   useEffect(() => {
     if (post) {
-      pageview(`/blog/${currentBlog.name}/post/${post.id}`, `${post.summary}`)
+      pageview(`/blog/${currentBlog.name}/post/${post.id}`, `${post.title}`)
     }
   }, [post])
 
