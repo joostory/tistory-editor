@@ -7,6 +7,7 @@ import { FormatBold, FormatItalic, FormatUnderlined, Attachment } from '@materia
 
 import CodeMirrorHelper from './CodeMirrorHelper'
 import GooglePhotosDialog from '../plugins/google-photos/GooglePhotosDialog'
+import googlePhotosLogo from '../../../images/google-photos-logo.png'
 import "../../../styles/lib/codemirror/tistory-markdown-theme.scss"
 import "codemirror/lib/codemirror.css"
 import "codemirror/addon/dialog/dialog.css"
@@ -130,7 +131,7 @@ export default function MarkdownEditor({ currentBlog, value, onChange }) {
           <ToolbarButton onClick={handleItalic}><FormatItalic /></ToolbarButton>
           <ToolbarButton onClick={handleUnderline}><FormatUnderlined /></ToolbarButton>
           <ToolbarButton onClick={handleLink}>Link</ToolbarButton>
-          {/* <ToolbarButton onClick={handleGooglePhotos}><img src='../src/images/google-photos-logo.png' /></ToolbarButton> */}
+          <ToolbarButton onClick={handleGooglePhotos}><img src={googlePhotosLogo} /></ToolbarButton>
         </div>
         <CodeMirrorComponent ref={editorRef}
           options={{

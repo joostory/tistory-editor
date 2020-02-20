@@ -1,3 +1,5 @@
+import googlePhotosLogo from '../../../../../images/google-photos-logo.png'
+
 const plugin = function(editor) {
 	const $ = editor.$
   const settings = editor.settings.google_photos
@@ -6,7 +8,7 @@ const plugin = function(editor) {
   }
 	
   editor.addCommand('google-photos', settings.open_handler)
-  editor.ui.registry.addIcon('google-photos', '<img src="../src/images/google-photos-logo.png">')
+  editor.ui.registry.addIcon('google-photos', `<img src="${googlePhotosLogo}">`)
   
 	editor.ui.registry.addButton('google-photos', {
 		icon: 'google-photos',
