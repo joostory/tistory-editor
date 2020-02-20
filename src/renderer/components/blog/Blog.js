@@ -29,7 +29,7 @@ function BlogListDialog({open, onClose}) {
 
 function EditorDialog({open, mode, onClose}) {
   return (
-    <Dialog fullscreen open={open} onClose={onClose} TransitionComponent={Transition}>
+    <Dialog fullScreen={true} open={open} onClose={onClose} TransitionComponent={Transition}>
       <Editor
         mode={mode}
         onFinish={onClose}

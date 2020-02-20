@@ -31,13 +31,13 @@ export default function Editor({mode, onFinish}) {
 		if (mode == ContentMode.EDIT && post) {
 			return {
 				title: post.title,
-				body: post.body,
-				tags: post.tags? post.tags: []
+				content: post.content,
+				tags: post.tags
 			}
 		} else {
 			return {
 				title: "",
-				body: "",
+				content: "",
 				tags: []
 			}
 		}
@@ -62,7 +62,7 @@ export default function Editor({mode, onFinish}) {
 	function handlePublish() {
 		let savePost = {
 			title: postData.title,
-			body: postData.body,
+			content: postData.content,
 			tags: postData.tags.join(",")
 		}
 
@@ -182,7 +182,7 @@ export default function Editor({mode, onFinish}) {
       />
 
       <EditorContent
-        content={postData.body}
+        content={postData.content}
         onUpload={handleUploadFiles}
         onChange={handleChangeBody}
         title={postData.title}
