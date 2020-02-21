@@ -6,7 +6,9 @@ import { ipcRenderer, remote } from 'electron'
 import { addPost, updatePost } from '../../actions'
 import * as ContentMode from '../../constants/ContentMode'
 
-import { Snackbar } from '@material-ui/core'
+import {
+  Box, Snackbar, makeStyles
+} from '@material-ui/core'
 import EditorContent from './EditorContent'
 import EditorToolbar from './EditorToolbar'
 import EditorInfoDialog from './EditorInfoDialog'
@@ -14,8 +16,19 @@ import Loading from '../Loading'
 
 import { pageview } from '../../modules/AnalyticsHelper'
 
+const useStyles = makeStyles(theme => ({
+  root: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingTop: theme.spacing(8)
+  }
+}))
 
 export default function Editor({mode, onFinish}) {
+  const classes = useStyles()
   const currentBlog = useSelector(state => state.currentBlog)
   const post = useSelector(state => state.currentPost)
   const dispatch = useDispatch()
@@ -175,7 +188,7 @@ export default function Editor({mode, onFinish}) {
   })
 
   return (
-    <div className="editor_wrap">
+    <Box className={classes.root}>
       <EditorToolbar title={postData.title}
         onSaveClick={e => setShowInfoBox(true)}
         onCancelClick={handleCancel}
@@ -202,6 +215,6 @@ export default function Editor({mode, onFinish}) {
         message={`업로드 중 (${uploadFinishedFileCount} / ${uploadFileCount})`}
       />
 
-    </div>
+    </Box>
   )
 }

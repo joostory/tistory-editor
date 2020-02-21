@@ -40,7 +40,7 @@ function BlogListDialog({open, onClose}) {
 
 function EditorDialog({open, mode, onClose}) {
   return (
-    <Dialog fullScreen={true} open={open} onClose={onClose} TransitionComponent={Transition}>
+    <Dialog fullScreen={true} open={open} onClose={onClose} disableEscapeKeyDown={true} TransitionComponent={Transition}>
       <Editor
         mode={mode}
         onFinish={onClose}

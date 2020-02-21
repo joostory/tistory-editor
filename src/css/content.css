@@ -1,6 +1,6 @@
 @charset "utf-8";
 
-.content { padding:20px 0;word-wrap:break-word; color:#333; font-size:14px; margin:0 5px; }
+.content { padding:20px 0;word-wrap:break-word; color:#333; font-size:14px; margin:0;}
 .content h1 { font-size:2em; margin:2em 0 1em }
 .content h2 { font-size:1.8em; margin:2em 0 1em }
 .content h3 { font-size:1.5em; margin:2em 0 1em }

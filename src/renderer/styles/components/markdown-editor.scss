@@ -1,0 +1,39 @@
+.editor_inner {
+  .CodeMirror {
+    width:100%;
+    height:auto;
+    margin:0 auto;
+    padding:30px 0;
+    font-family:Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+    background:transparent;
+
+    .CodeMirror-dialog {
+      position:fixed;
+      top:64px;
+      width:600px;
+      background-color:#fff;
+      left: 50%;
+      transform: translate(-50%,0);
+      z-index:10;
+      box-shadow:rgba(0, 0, 0, 0.16) 0px 3px 10px;
+      padding:3px;
+      border-radius:3px;
+    }
+
+    .CodeMirror-scroll {
+      min-height: 640px;
+      overflow: hidden !important;
+    }
+
+    .CodeMirror-placeholder {
+      color: #ccc;
+    }
+
+    pre {
+      &.CodeMirror-line,
+      &.CodeMirror-line-like {
+        padding:0;
+      }
+    }
+  }
+}

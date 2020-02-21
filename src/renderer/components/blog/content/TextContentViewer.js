@@ -46,7 +46,7 @@ export default function TextContentViewer({ onRequestEditPost }) {
 
   return (
     <Box className={classes.root}>
-      <Container maxWidth='sm'>
+      <Container maxWidth='sm' disableGutters={true}>
         <Typography variant='h4' component='h1' align='center' className={classes.title}>
           {post.title}
         </Typography>
@@ -66,7 +66,7 @@ export default function TextContentViewer({ onRequestEditPost }) {
 
       <Divider />
 
-      <Container maxWidth='sm' className={classes.contentContainer}>
+      <Container maxWidth='sm' disableGutters={true} className={classes.contentContainer}>
         <div ref={viewerContent}
           className="content"
           dangerouslySetInnerHTML={{__html: ContentHelper.makeUrlBase(post.content)}}

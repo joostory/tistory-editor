@@ -11,7 +11,8 @@
   
   /* sidebar */
   @import './components/blog.scss';
-  
-  /* editor */
-  @import './components/editor.scss';  
 }
+
+@import './components/editor.scss';
+@import './components/markdown-editor.scss';
+@import './components/rich-editor.scss';

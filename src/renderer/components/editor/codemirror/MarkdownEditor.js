@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import CodeMirrorComponent from 'react-codemirror-component'
 import MarkdownHelper from './MarkdownHelper'
 
-import { Button } from '@material-ui/core'
+import { Button, Box, makeStyles } from '@material-ui/core'
 import { FormatBold, FormatItalic, FormatUnderlined, Attachment } from '@material-ui/icons'
 
 import CodeMirrorHelper from './CodeMirrorHelper'
@@ -38,23 +38,36 @@ const PcKeymap = [
 	{ 'Ctrl-K': (cm) => CodeMirrorHelper.link(cm) }
 ]
 
+const useStyles = makeStyles(theme => ({
+  toolbar: {
+    position: 'fixed',
+    top:15,
+    width:600,
+    height:34,
+    left: '50%',
+    transform: 'translate(-50%,0)',
+    zIndex:10,
+    background: 'transparent'
+  },
+  toolbarBtn: {
+    padding: 5,
+    minWidth: 34,
+    height: 34
+  }
+}))
 
 function ToolbarButton({ onClick, children }) {
-  const iconButtonStyle = {
-    padding: '5px',
-    minWidth: '34px',
-    height: '34px',
-    lineHeight: '24px'
-  }
+  const classes = useStyles()
 
   return (
-    <Button variant='text' onClick={onClick} style={iconButtonStyle}>
+    <Button variant='text' onClick={onClick} className={classes.toolbarBtn}>
       {children}
     </Button>
   )
 }
 
 export default function MarkdownEditor({ currentBlog, value, onChange }) {
+  const classes = useStyles()
   const [markdownValue, setMarkdownValue] = useState(MarkdownHelper.htmlToMarkdown(value))
   const [openGooglePhotos, setOpenGooglePhotos] = useState(false)
   const editorRef = useRef(null)
@@ -122,36 +135,35 @@ export default function MarkdownEditor({ currentBlog, value, onChange }) {
   })
 
   return (
-    <div>
-      <div className="markdown-editor">
-        <div className="editor-toolbar">
-          <ToolbarButton onClick={handleHeader2}>H2</ToolbarButton>
-          <ToolbarButton onClick={handleHeader3}>H3</ToolbarButton>
-          <ToolbarButton onClick={handleBold}><FormatBold /></ToolbarButton>
-          <ToolbarButton onClick={handleItalic}><FormatItalic /></ToolbarButton>
-          <ToolbarButton onClick={handleUnderline}><FormatUnderlined /></ToolbarButton>
-          <ToolbarButton onClick={handleLink}>Link</ToolbarButton>
-          <ToolbarButton onClick={handleGooglePhotos}><img src={googlePhotosLogo} /></ToolbarButton>
-        </div>
-        <CodeMirrorComponent ref={editorRef}
-          options={{
-            lineNumbers: false,
-            lineWrapping: true,
-            mode: 'markdown',
-            theme:'tistory-markdown',
-            placeholder: '내용을 입력하세요.'
-          }}
-          value={markdownValue}
-          onChange={handleChangeContent}
-        />
-      </div>
+    <Box>
+      <Box className={classes.toolbar}>
+        <ToolbarButton onClick={handleHeader2}>H2</ToolbarButton>
+        <ToolbarButton onClick={handleHeader3}>H3</ToolbarButton>
+        <ToolbarButton onClick={handleBold}><FormatBold /></ToolbarButton>
+        <ToolbarButton onClick={handleItalic}><FormatItalic /></ToolbarButton>
+        <ToolbarButton onClick={handleUnderline}><FormatUnderlined /></ToolbarButton>
+        <ToolbarButton onClick={handleLink}>Link</ToolbarButton>
+        <ToolbarButton onClick={handleGooglePhotos}><img src={googlePhotosLogo} /></ToolbarButton>
+      </Box>
+
+      <CodeMirrorComponent ref={editorRef}
+        options={{
+          lineNumbers: false,
+          lineWrapping: true,
+          mode: 'markdown',
+          theme:'tistory-markdown',
+          placeholder: '내용을 입력하세요.'
+        }}
+        value={markdownValue}
+        onChange={handleChangeContent}
+      />
 
       <GooglePhotosDialog
         open={openGooglePhotos}
         onClose={handleCloseGooglePhotos}
         onSelectImage={handleInsertImage}
       />
-    </div>
+    </Box>
   )
 }
 

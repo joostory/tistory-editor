@@ -4,11 +4,18 @@ import classnames from 'classnames'
 
 import * as EditorMode from '../../constants/EditorMode'
 
-import TextareaAutosize from 'react-textarea-autosize'
 import Dropzone from 'react-dropzone'
 import MarkdownEditor from './codemirror/MarkdownEditor'
 import TinymceEditor from './tinymce/TinymceEditor'
 import EditorSwitch from './EditorSwich'
+import { Container, InputBase, makeStyles } from '@material-ui/core'
+
+const useStyles = makeStyles(theme => ({
+  titleInput: {
+    marginTop: theme.spacing(4),
+    fontSize: theme.spacing(4)
+  }
+}))
 
 function Editor({editorMode, content, currentBlog, onUpload, onOpenFile, onChange}) {
   if (editorMode == EditorMode.TINYMCE) {
@@ -34,7 +41,7 @@ function Editor({editorMode, content, currentBlog, onUpload, onOpenFile, onChang
 }
 
 export default function EditorContent({content, onChange, onUpload, title, onTitleChange}) {
-
+  const classes = useStyles()
   const currentBlog = useSelector(state => state.currentBlog)
 	const preferences = useSelector(state => state.preferences)
 
@@ -52,9 +59,12 @@ export default function EditorContent({content, onChange, onUpload, title, onTit
 
   return (
     <>
-      <div className="editor">
-        <TextareaAutosize
-          className='editor-title'
+      <Container maxWidth='sm' disableGutters={true}>
+        <InputBase
+          className={classes.titleInput}
+          autoFocus={true}
+          fullWidth={true}
+          multiline={true}
           placeholder='제목을 입력하세요.'
           value={title}
           onChange={onTitleChange}
@@ -85,7 +95,7 @@ export default function EditorContent({content, onChange, onUpload, title, onTit
             </div>
           }
         </Dropzone>
-      </div>
+      </Container>
 
       <EditorSwitch
         editorMode={editorMode}
