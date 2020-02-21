@@ -32,7 +32,7 @@ module.exports = () => {
     }
 
     let api = ProviderApiManager.getApi(auth.provider)
-		api.fetchContent(auth.authInfo, blogName, postId).then(res => {
+		api.fetchPost(auth.authInfo, blogName, postId).then(res => {
 			evt.sender.send('receive-content', res.post)
 		}).catch(err => {
 			console.error(err)
@@ -41,19 +41,19 @@ module.exports = () => {
 	})
 	
 	ipcMain.on("save-content", (evt, authUUID, blogName, post) => {
-		let auth = AuthenticationManager.findByUUID(authUUID)
+    let auth = AuthenticationManager.findByUUID(authUUID)
+    let api = ProviderApiManager.getApi(auth.provider)
 		let messagePrefix = dateformat(new Date(), 'HH:MM:ss : ')
 
-		if (!auth || !auth.token) {
+		if (!api.validateAuthInfo(auth.authInfo)) {
 			evt.sender.send('finish-save-content')
 			evt.sender.send('receive-message', messagePrefix + '글을 수정하지 못했습니다.')
 			return
-		}
-
-    tumblr.savePost(auth, blogName, post)
-      .then(async res => {
-        let postResponse = await tumblr.fetchPost(auth, blogName, res.id)
-        evt.sender.send('finish-save-content', postResponse.posts[0])
+    }
+    
+    api.savePost(auth.authInfo, blogName, post)
+      .then(res => {
+        evt.sender.send('finish-save-content', res.post)
         evt.sender.send('receive-message', messagePrefix + ' 수정완료')
       })
       .catch(err => {
@@ -64,19 +64,19 @@ module.exports = () => {
 	})
 
 	ipcMain.on("add-content", (evt, authUUID, blogName, post) => {
-		let auth = AuthenticationManager.findByUUID(authUUID)
-		let messagePrefix = dateformat(new Date(), 'HH:MM:ss : ')
-
-		if (!auth || !auth.token) {
+    let auth = AuthenticationManager.findByUUID(authUUID)
+    let api = ProviderApiManager.getApi(auth.provider)
+    let messagePrefix = dateformat(new Date(), 'HH:MM:ss : ')
+    
+		if (!api.validateAuthInfo(auth.authInfo)) {
 			evt.sender.send('finish-add-content')
 			evt.sender.send('receive-message', messagePrefix + '글을 발행하지 못했습니다.')
 			return
     }
     
-    tumblr.addPost(auth, blogName, post)
-      .then(async res => {
-        let postResponse = await tumblr.fetchPost(auth, blogName, res.id)
-        evt.sender.send('finish-add-content', postResponse.posts[0])
+    api.addPost(auth.authInfo, blogName, post)
+      .then(res => {
+        evt.sender.send('finish-add-content', res.post)
         evt.sender.send('receive-message', messagePrefix + '발행 완료')
       })
       .catch(err => {

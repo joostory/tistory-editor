@@ -96,7 +96,7 @@ const fetchPosts = (auth, blogName, options) => {
   }))
 }
 
-const fetchContent = (auth, blogName, postId) => {
+const fetchPost = (auth, blogName, postId) => {
   return fetch(BASE_URL + "/post/read?" + querystring.stringify({
     access_token: auth.access_token,
     output: "json",
@@ -126,7 +126,7 @@ const fetchCategories = (auth, blogName) => {
   .then(errorHandler)
 }
 
-const saveContent = (auth, blogName, post) => {
+const savePost = (auth, blogName, post) => {
   let formdata = makePostFormData(auth, blogName, post)
   formdata.append("postId", post.id)
 
@@ -141,7 +141,7 @@ const saveContent = (auth, blogName, post) => {
   .then(errorHandler)
 }
 
-const addContent = (auth, blogName, post) => {
+const addPost = (auth, blogName, post) => {
   let formdata = makePostFormData(auth, blogName, post)
 
   return fetch(BASE_URL + "/post/write", {
@@ -168,8 +168,8 @@ const makePostFormData = (auth, blogName, post) => {
   if (post.visibility) {
     formdata.append("visibility", post.visibility)
   }
-  if (post.tags.tag) {
-    formdata.append("tag", post.tags.tag)
+  if (post.tags) {
+    formdata.append("tag", post.tags)
   }
   return formdata
 }
@@ -243,11 +243,11 @@ module.exports = {
   fetchUser: fetchUser,
   fetchPosts: fetchPosts,
   fetchCategories: fetchCategories,
-  fetchContent: fetchContent,
+  fetchPost: fetchPost,
   fetchAccount: fetchAccount,
   uploadFileWithBuffer: uploadFileWithBuffer,
   uploadFileWithBlob: uploadFileWithBlob,
-  saveContent: saveContent,
-  addContent: addContent,
+  savePost: savePost,
+  addPost: addPost,
   validateAuthInfo: validateAuthInfo
 }

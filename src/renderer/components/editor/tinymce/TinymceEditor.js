@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import { ipcRenderer, clipboard } from 'electron'
 import OpengraphFetcher from 'opengraph-fetcher'
 
@@ -13,7 +14,9 @@ import './plugins/file-upload'
 import GooglePhotosDialog from '../plugins/google-photos/GooglePhotosDialog'
 import { makeThumbnail } from '../../../modules/ThumbnailHelper'
 
-export default function TinymceEditor({ value, currentBlog, onImageHandler, onOpenFile, onChange }) {
+export default function TinymceEditor({ value, onImageHandler, onOpenFile, onChange }) {
+  const currentAuth = useSelector(state => state.currentAuth)
+  const currentBlog = useSelector(state => state.currentBlog)
   const [openGooglePhotos, setOpenGooglePhotos] = useState(false)
 
   function handleFinishUploadFile(e, fileUrl) {
@@ -29,9 +32,13 @@ export default function TinymceEditor({ value, currentBlog, onImageHandler, onOp
   }
   
   function handlePaste(e) {
+    if (currentAuth.provider != 'tistory') {
+      return
+    }
+
 		let image = clipboard.readImage()
 		if (!image.isEmpty()) {
-			ipcRenderer.send("add-clipboard-image", currentBlog.name)
+			ipcRenderer.send("add-clipboard-image", currentAuth.uuid, currentBlog.name)
 		}
 	}
 
@@ -49,7 +56,10 @@ export default function TinymceEditor({ value, currentBlog, onImageHandler, onOp
   }
   
   function handleInsertImage(url, filename) {
-    ipcRenderer.send("add-image-url", currentBlog.name, url, filename)
+    if (currentAuth.provider != 'tistory') {
+      return
+    }
+    ipcRenderer.send("add-image-url", currentAuth.uuid, currentBlog.name, url, filename)
   }
 
   function handleToggleGooglePhotos() {

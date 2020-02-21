@@ -17,12 +17,11 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-function Editor({editorMode, content, currentBlog, onUpload, onOpenFile, onChange}) {
+function Editor({editorMode, content, onUpload, onOpenFile, onChange}) {
   if (editorMode == EditorMode.TINYMCE) {
     return (
       <TinymceEditor
         value={content}
-        currentBlog={currentBlog}
         onImageHandler={onUpload}
         onOpenFile={onOpenFile}
         onChange={onChange}
@@ -32,7 +31,6 @@ function Editor({editorMode, content, currentBlog, onUpload, onOpenFile, onChang
     return (
       <MarkdownEditor
         value={content}
-        currentBlog={currentBlog}
         onOpenFile={onOpenFile}
         onChange={onChange}
       />

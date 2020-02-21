@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import CodeMirrorComponent from 'react-codemirror-component'
 import MarkdownHelper from './MarkdownHelper'
 
@@ -66,17 +67,21 @@ function ToolbarButton({ onClick, children }) {
   )
 }
 
-export default function MarkdownEditor({ currentBlog, value, onChange }) {
+export default function MarkdownEditor({ value, onChange }) {
   const classes = useStyles()
+  const currentAuth = useSelector(state => state.currentAuth)
+  const currentBlog = useSelector(state => state.currentBlog)
   const [markdownValue, setMarkdownValue] = useState(MarkdownHelper.htmlToMarkdown(value))
   const [openGooglePhotos, setOpenGooglePhotos] = useState(false)
   const editorRef = useRef(null)
 
 	function handlePaste(e) {
-		// let image = clipboard.readImage()
-		// if (!image.isEmpty()) {
-		// 	ipcRenderer.send("add-clipboard-image", currentBlog.name)
-		// }
+    if (currentAuth.provider == 'tistory') {
+      let image = clipboard.readImage()
+      if (!image.isEmpty()) {
+        ipcRenderer.send("add-clipboard-image", currentAuth.uuid, currentBlog.name)
+      }
+    }
 	}
 
   function handleChangeContent(value) {

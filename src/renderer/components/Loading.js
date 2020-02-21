@@ -1,27 +1,17 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import CircularProgress from '@material-ui/core/CircularProgress'
+import React from 'react'
+import { CircularProgress, Backdrop, makeStyles } from '@material-ui/core'
 
-class Loading extends Component {
-	render() {
-    const { position } = this.props
-    let loadingPosition = position
-    if (position != 'fixed' && position != 'absolute' && position != 'relative') {
-      loadingPosition = 'fixed'
-    }
+const useStyles = makeStyles(theme => ({
+  root: {
+    zIndex: 15
+  }
+}))
 
-		return (
-			<div className={`loading_area ${loadingPosition}`}>
-				<div className="loading_inner">
-					<CircularProgress size={60} thickness={7} />
-				</div>
-			</div>
-		)
-	}
+export default function Loading() {
+  const classes = useStyles()
+  return (
+    <Backdrop open={true} className={classes.root}>
+      <CircularProgress size={60} thickness={7} />
+    </Backdrop>
+  )
 }
-
-Loading.propTypes = {
-  position: PropTypes.string
-}
-
-export default Loading

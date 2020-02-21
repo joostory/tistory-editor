@@ -18,17 +18,14 @@ import { pageview } from '../../modules/AnalyticsHelper'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    paddingTop: theme.spacing(8)
+    paddingTop: theme.spacing(8),
+    paddingBottom: theme.spacing(8)
   }
 }))
 
 export default function Editor({mode, onFinish}) {
   const classes = useStyles()
+  const currentAuth = useSelector(state => state.currentAuth)
   const currentBlog = useSelector(state => state.currentBlog)
   const post = useSelector(state => state.currentPost)
   const dispatch = useDispatch()
@@ -80,11 +77,12 @@ export default function Editor({mode, onFinish}) {
 		}
 
     setShowLoading(true)
+    setShowInfoBox(false)
 		if (mode == ContentMode.EDIT) {
 			savePost.id = post.id
-			ipcRenderer.send("save-content", currentBlog.name, savePost)
+			ipcRenderer.send("save-content", currentAuth.uuid, currentBlog.name, savePost)
 		} else {
-			ipcRenderer.send("add-content", currentBlog.name, savePost)
+			ipcRenderer.send("add-content", currentAuth.uuid, currentBlog.name, savePost)
 		}
 	}
 
@@ -123,10 +121,10 @@ export default function Editor({mode, onFinish}) {
 		}
 	}
 
-	function handleChangeBody(body) {
+	function handleChangeContent(value) {
     setPostData(update(postData, {
-      body: {
-        $set: body
+      content: {
+        $set: value
       }
     }))
 	}
@@ -144,19 +142,21 @@ export default function Editor({mode, onFinish}) {
 	}
 
   function handleUploadFiles(files) {
-    // TODO 이미지 업로드는 new format만 가능
+    if (currentAuth.provider != 'tistory') {
+      return
+    }
 
-		// files.map(file => {
-    //   const fileReader = new FileReader();
-    //   fileReader.addEventListener("load", e => {
-    //     ipcRenderer.send("add-file", currentBlog.name, e.target.result, {
-    //       name: file.name,
-    //       type: file.type,
-    //       size: file.size
-    //     })
-    //   });
-    //   fileReader.readAsDataURL(file);
-		// })
+		files.map(file => {
+      const fileReader = new FileReader();
+      fileReader.addEventListener("load", e => {
+        ipcRenderer.send("add-file", currentAuth.uuid, currentBlog.name, e.target.result, {
+          name: file.name,
+          type: file.type,
+          size: file.size
+        })
+      });
+      fileReader.readAsDataURL(file);
+		})
   }
   
   useEffect(() => {
@@ -197,7 +197,7 @@ export default function Editor({mode, onFinish}) {
       <EditorContent
         content={postData.content}
         onUpload={handleUploadFiles}
-        onChange={handleChangeBody}
+        onChange={handleChangeContent}
         title={postData.title}
         onTitleChange={handleChangeTitle}
       />

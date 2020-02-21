@@ -58,10 +58,8 @@ const fetchUser = (auth) => {
   return client.userInfo()
 }
 
-function tumblrPostToEditorPost(tumblrPosts) {
-  let posts = tumblrPosts? [].concat(tumblrPosts) : []
-
-  return posts.map(post => ({
+function _tumblrPostToEditorPost(post) {
+  return ({
     id: post.id,
     url: post.post_url,
     title: post.summary,
@@ -70,33 +68,56 @@ function tumblrPostToEditorPost(tumblrPosts) {
     date: post.date,
     type: post.type,
     state: post.state
-  }))
+  })
+}
+
+function _tumblrPostsToEditorPosts(tumblrPosts) {
+  let posts = tumblrPosts? [].concat(tumblrPosts) : []
+
+  return posts.map(_tumblrPostToEditorPost)
+}
+
+function _editorPostToTumblrPost(editorPost) {
+  let tumblrPost = {
+    title: editorPost.title,
+    body: editorPost.content,
+    tags: editorPost.tags
+  }
+
+  if (editorPost.id) {
+    tumblrPost.id = editorPost.id
+  }
+
+  return tumblrPost
 }
 
 const fetchPosts = (auth, blogName, options) => {
   const client = createTumblrClient(auth)
   return client.blogPosts(blogName, options)
     .then(res => ({
-      posts: tumblrPostToEditorPost(res.posts),
+      posts: _tumblrPostsToEditorPosts(res.posts),
       hasNext: res.blog.posts > options.offset + res.posts.length
     }))
 }
 
 const fetchPost = (auth, blogName, postId) => {
   const client = createTumblrClient(auth)
-  return client.blogPosts(blogName, {
-    id: postId
-  })
+  return client.blogPosts(blogName, {id: postId})
+    .then(res => ({
+      post: _tumblrPostToEditorPost(res.posts[0])
+    }))
 }
 
-const addPost = (auth, blogName, post) => {
+const addPost = async (auth, blogName, post) => {
   const client = createTumblrClient(auth)
-  return client.createTextPost(blogName, post)
+  const res = await client.createTextPost(blogName, _editorPostToTumblrPost(post))
+  return await fetchPost(auth.authInfo, blogName, res.id)
 }
 
-const savePost = (auth, blogName, post) => {
+const savePost = async (auth, blogName, post) => {
   const client = createTumblrClient(auth)
-  return client.editPost(blogName, post)
+  const res = await client.editPost(blogName, _editorPostToTumblrPost(post))
+  return await fetchPost(auth.authInfo, blogName, res.id)
 }
 
 const validateAuthInfo = (auth) => auth && auth.token
@@ -128,6 +149,7 @@ module.exports = {
   getAccessToken: getAccessToken,
   fetchUser: fetchUser,
   fetchPosts: fetchPosts,
+  fetchPost: fetchPost,
   addPost: addPost,
   savePost: savePost,
   validateAuthInfo: validateAuthInfo,
