@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { Fab, Dialog, DialogTitle, DialogContent, Slide, List, ListItem } from '@material-ui/core'
+import { Fab, Dialog, DialogTitle, DialogContent, Slide, List, ListItem, Box, makeStyles } from '@material-ui/core'
 import { Add } from '@material-ui/icons'
 import Sidebar from './sidebar/Sidebar'
 import Content from './content/Content'
@@ -9,6 +9,17 @@ import * as ContentMode from '../../constants/ContentMode'
 import { pageview } from '../../modules/AnalyticsHelper'
 import BlogList from '../index/BlogList'
 
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    overflow: 'hidden'
+  }
+}))
 
 const Transition = React.forwardRef((props, ref) =>
   <Slide direction="up" ref={ref} {...props} />
@@ -39,6 +50,7 @@ function EditorDialog({open, mode, onClose}) {
 }
 
 export default function Blog() {
+  const classes = useStyles()
 	const currentBlog = useSelector(state => state.currentBlog)
   const [contentMode, setContentMode] = useState(ContentMode.VIEW)
   const [openEditor, setOpenEditor] = useState(false)
@@ -55,7 +67,7 @@ export default function Blog() {
   }, [contentMode])
 
   return (
-    <div className="container">
+    <Box className={classes.root}>
       <Sidebar onSelectBlog={() => setOpenBlogSelector(true)} />
       <Content onRequestEditPost={() => setContentMode(ContentMode.EDIT)} />
       
@@ -75,6 +87,6 @@ export default function Blog() {
         mode={contentMode}
         onClose={() => setContentMode(ContentMode.VIEW)}
       />
-    </div>
+    </Box>
   )
 }

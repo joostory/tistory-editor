@@ -2,16 +2,23 @@ import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { pageview } from '../../../modules/AnalyticsHelper'
 import TextContentViewer from './TextContentViewer'
+import { Typography, makeStyles } from '@material-ui/core'
+
+const useStyles = makeStyles(theme => ({
+  emtpyMessage: {
+    height: '100vh',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
+}))
 
 function UnknownTypeContentViewer() {
+  const classes = useStyles()
   return (
-    <div className='content_wrap'>
-      <div className='viewer'>
-        <div className="viewer_content content">
-          죄송합니다. 아직 이런 형식의 글은 보여드릴 수 없습니다.
-        </div>
-      </div>
-    </div>
+    <Typography className={classes.emtpyMessage} color='textSecondary'>
+      죄송합니다. 아직 이런 형식의 글은 보여드릴 수 없습니다.
+    </Typography>
   )
 }
 
@@ -32,6 +39,5 @@ export default function TumblrContentViewer({ onRequestEditPost }) {
     default:
       return <UnknownTypeContentViewer />
   }
-
 }
 

@@ -1,20 +1,21 @@
 import React, { Fragment } from 'react'
-import { useSelector } from 'react-redux'
 import dateformat from 'dateformat'
-import { ListItem, ListItemText } from '@material-ui/core'
+import { ListItem, ListItemText, Typography } from '@material-ui/core'
 import { Drafts } from '@material-ui/icons'
 
 function PostTitle({post}) {
   return (
-    <span className="item_title">
+    <Typography noWrap={true}>
       {post.title}
-    </span>
+    </Typography>
   )
 }
 
 function PostInfo({post}) {
   return (
-    <span>{dateformat(new Date(post.date), 'yyyy-mm-dd HH:MM')}</span>
+    <Typography component='span'>
+      {dateformat(new Date(post.date), 'yyyy-mm-dd HH:MM')}
+    </Typography>
   )
 }
 

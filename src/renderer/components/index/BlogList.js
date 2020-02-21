@@ -61,30 +61,30 @@ export default function BlogList({afterSelect}) {
     }
   }
 
-  if (accounts && accounts.length > 0) {
-    return (
-      <>
-        {accounts.map(account =>
-          <List key={account.auth.uuid} subheader={<ServiceListHeader service={account} />}>
-            {account.blogs.sort((a,b) =>
-              a.primary? -1 : b.primary? 1 : 0
-            ).map(blog =>
-              <li key={blog.url}>
-                <BlogListItem
-                  blog={blog}
-                  onSelect={e => handleSelectBlog(account.auth, blog)}
-                />
-              </li>
-            )}
-          </List>
-        )}
-      </>
-    )
-  } else {
+  if (!accounts || accounts.length == 0) {
     return (
       <Paper className={classes.paper} variant='outlined' square>
         연결된 블로그가 없습니다.
       </Paper>
     )
   }
+
+  return (
+    <>
+      {accounts.map(account =>
+        <List key={account.auth.uuid} subheader={<ServiceListHeader service={account} />}>
+          {account.blogs.sort((a,b) =>
+            a.primary? -1 : b.primary? 1 : 0
+          ).map(blog =>
+            <li key={blog.url}>
+              <BlogListItem
+                blog={blog}
+                onSelect={e => handleSelectBlog(account.auth, blog)}
+              />
+            </li>
+          )}
+        </List>
+      )}
+    </>
+  )
 }

@@ -2,13 +2,31 @@ import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { ipcRenderer } from 'electron'
 
-import { CircularProgress, List, Typography } from '@material-ui/core'
+import { CircularProgress, List, Typography, makeStyles, Box } from '@material-ui/core'
 
 import PostListItem from './PostListItem'
 import { selectPost, lockPostsLoad } from '../../../actions'
 
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    position: 'absolute',
+    top: 64,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    overflow: 'auto'
+  },
+  message: {
+    textAlign: 'center',
+    padding: theme.spacing(2),
+    color: '#aaa'
+  }
+}))
+
 export default function PostList() {
 
+  const classes = useStyles()
   const posts = useSelector(state => state.posts)
   const currentPost = useSelector(state => state.currentPost)
   const currentAuth = useSelector(state => state.currentAuth)
@@ -55,7 +73,7 @@ export default function PostList() {
   }, [posts])
   
 	return (
-		<List className="list" style={{padding:0}} onScroll={handleScroll}>
+		<List component='div' onScroll={handleScroll} disablePadding={true} className={classes.root}>
 			{posts.list.map((item, i) =>
 				<PostListItem key={i}
 					post={item}
@@ -64,15 +82,15 @@ export default function PostList() {
 			)}
 
 			{!posts.hasNext && posts.list.length === 0 &&
-				<div style={{textAlign:'center', padding:'10px', color:'#aaa'}}>
+				<Typography className={classes.message}>
 					No contents
-				</div>
+				</Typography>
 			}
 
 			{posts.hasNext &&
-				<div style={{textAlign:'center', padding:'10px'}}>
+				<Box className={classes.message}>
 					<CircularProgress size={30} thickness={3} />
-				</div>
+				</Box>
 			}
 		</List>
 	)
