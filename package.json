@@ -1,8 +1,8 @@
 {
-  "name": "tumblr-editor",
-  "productName": "TumblrEditor",
-  "version": "0.1.8",
-  "description": "Editor for tumblr",
+  "name": "tistory-editor",
+  "productName": "TistoryEditor",
+  "version": "0.11.18",
+  "description": "Editor for Tistory",
   "main": "src/main/main.js",
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --mode production",
@@ -28,9 +28,9 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/joostory/tumblr-editor/issues"
+    "url": "https://github.com/joostory/tistory-editor/issues"
   },
-  "homepage": "https://tumblr-editor.tumblr.com",
+  "homepage": "https://tistory-editor.tistory.com",
   "devDependencies": {
     "@babel/core": "^7.8.4",
     "@babel/plugin-proposal-decorators": "^7.8.3",
