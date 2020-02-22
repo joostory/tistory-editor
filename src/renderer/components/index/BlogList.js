@@ -1,9 +1,12 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { List, ListSubheader, Button, Avatar, Typography } from '@material-ui/core'
+import { ipcRenderer } from 'electron'
+import {
+  List, ListSubheader, Button, Avatar,
+  Typography, Paper, makeStyles
+} from '@material-ui/core'
 import BlogListItem from './BlogListItem'
 import { selectBlog } from '../../actions'
-import { Paper, makeStyles } from '@material-ui/core'
 import Providers from '../../constants/Providers'
 
 const useStyles = makeStyles(theme => ({
@@ -36,13 +39,19 @@ function ServiceListHeader({service}) {
   const classes = useStyles()
   const provider = Providers.find(p => p.name == service.auth.provider)
 
+  function handleDisconnect() {
+    if (confirm(`${provider.label} 서비스에 연결된 ${service.user.name} 계정을 제거하시겠습니까?`)) {
+      ipcRenderer.send('disconnect-auth', service.auth.uuid)
+    }
+  }
+
   return (
     <ListSubheader className={classes.header}>
       <Avatar src={provider.logo} className={classes.logo} />
       <Typography component='div' className={classes.title}>
         {service.user.name}
       </Typography>
-      <Button variant='text' color='secondary' size='small'>
+      <Button variant='text' color='secondary' size='small' onClick={handleDisconnect}>
         연결해제
       </Button>
     </ListSubheader>

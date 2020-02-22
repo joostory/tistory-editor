@@ -10,7 +10,8 @@ import Providers from '../../constants/Providers'
 const useStyle = makeStyles(theme => ({
   btnAdd: {
     width: '100%',
-    marginTop: theme.spacing(3)
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(2)
   }
 }))
 
@@ -22,8 +23,6 @@ export default function AuthButton() {
     setOpen(false)
     ipcRenderer.send('request-auth', provider.name)
   }
-
-  console.log("providers", Providers)
 
   return (
     <>

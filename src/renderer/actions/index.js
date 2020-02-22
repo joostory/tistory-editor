@@ -32,8 +32,8 @@ export const receivePosts = (page, posts, hasNext) => ({
 	 type: types.RECEIVE_POSTS, page, posts, hasNext
 })
 
-export const disconnectAuth = () => ({
-	 type: types.DISCONNECT_AUTH
+export const disconnectAuth = (uuid) => ({
+	 type: types.DISCONNECT_AUTH, uuid
 })
 
 export const selectBlog = (auth, blog) => ({

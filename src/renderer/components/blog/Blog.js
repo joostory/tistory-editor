@@ -8,6 +8,7 @@ import Editor from '../editor/Editor'
 import * as ContentMode from '../../constants/ContentMode'
 import { pageview } from '../../modules/AnalyticsHelper'
 import BlogList from '../index/BlogList'
+import AuthButton from '../index/AuthButton'
 
 
 const useStyles = makeStyles(theme => ({
@@ -38,6 +39,7 @@ function BlogListDialog({open, onClose}) {
       </DialogTitle>
       <DialogContent>
         <BlogList afterSelect={onClose} />
+        <AuthButton />
       </DialogContent>
     </Dialog>
   )

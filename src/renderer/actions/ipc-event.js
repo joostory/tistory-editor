@@ -52,8 +52,8 @@ export const registIpcEvent = (store) => {
   	store.dispatch(receivePostContent(post))
   })
 
-  ipcRenderer.on("complete-disconnect-auth", (e) => {
-  	store.dispatch(disconnectAuth())
+  ipcRenderer.on("complete-disconnect-auth", (e, uuid) => {
+  	store.dispatch(disconnectAuth(uuid))
   })
 
   ipcRenderer.on("receive-preferences", (e, preferences) => {

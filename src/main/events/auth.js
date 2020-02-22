@@ -50,7 +50,7 @@ module.exports = () => {
 
   ipcMain.on("disconnect-auth", (evt, uuid) => {
     AuthenticationManager.removeByUUID(uuid)
-    evt.sender.send('complete-disconnect-auth')
+    evt.sender.send('complete-disconnect-auth', uuid)
     evt.sender.send('receive-message', '인증해제 했습니다.')
   })
 }
