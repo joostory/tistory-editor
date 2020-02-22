@@ -1,23 +1,41 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { Dialog, Button, DialogTitle, DialogContent, DialogActions, makeStyles } from '@material-ui/core'
+import { Dialog, Button, DialogTitle, DialogContent, DialogActions, makeStyles, Select, MenuItem, FormControl, InputLabel } from '@material-ui/core'
 import ChipInput from 'material-ui-chip-input'
 
 const useStyles = makeStyles(theme => ({
   grow: {
     flexGrow: 1
+  },
+  category: {
+    marginBottom: theme.spacing(2)
   }
 }))
 
-export default function EditorInfoDialog({ onRequestClose, onRequestDraft, onRequestPublish, onTagsChange, tags, open }) {
+export default function EditorInfoDialog({ onRequestClose, onRequestDraft, onRequestPublish, onCategoryChange, onTagsChange, categoryId, tags, open }) {
   const classes = useStyles()
   const currentAuth = useSelector(state => state.currentAuth)
+  const currentBlog = useSelector(state => state.currentBlog)
+
+  console.log(categoryId, currentBlog.categories)
 
   return (
-    <Dialog className='post-info-dialog' open={open} maxWidth='md' onClose={onRequestClose}>
+    <Dialog open={open} maxWidth='md' onClose={onRequestClose}>
       <DialogTitle>글의 속성을 확인해주세요.</DialogTitle>
-      <DialogContent className='post-info-dialog-content'>
-        <ChipInput className='post-info-form-control'
+      <DialogContent>
+        {currentAuth.provider == 'tistory' && currentBlog.categories &&
+          <FormControl fullWidth={true}>
+            <InputLabel>카테고리</InputLabel>
+            <Select className={classes.category} label='카테고리' value={categoryId} onChange={onCategoryChange}>
+              <MenuItem value='0'>분류없음</MenuItem>
+              {currentBlog.categories.map(item =>
+                <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
+              )}
+            </Select>
+          </FormControl>
+        }
+
+        <ChipInput
           label="태그" placeholder="Tag"
           newChipKeyCodes={[13, 188]}
           defaultValue={tags}

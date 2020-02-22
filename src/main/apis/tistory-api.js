@@ -124,6 +124,7 @@ const fetchCategories = (auth, blogName) => {
     }
   })
   .then(errorHandler)
+  .then(res => res.tistory.item.categories)
 }
 
 const savePost = (auth, blogName, post) => {

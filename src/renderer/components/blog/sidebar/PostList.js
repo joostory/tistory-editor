@@ -39,7 +39,7 @@ export default function PostList() {
       let options
       if (currentAuth.provider == 'tistory') {
         options = {
-          page: posts.page + 1
+          page: Number(posts.page) + 1
         }
       } else if (currentAuth.provider == 'tumblr') {
         options = {

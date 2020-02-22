@@ -42,13 +42,15 @@ export default function Editor({mode, onFinish}) {
 		if (mode == ContentMode.EDIT && post) {
 			return {
 				title: post.title,
-				content: post.content,
+        content: post.content,
+        categoryId: post.categoryId,
 				tags: post.tags
 			}
 		} else {
 			return {
 				title: "",
-				content: "",
+        content: "",
+        categoryId: '0',
 				tags: []
 			}
 		}
@@ -60,7 +62,15 @@ export default function Editor({mode, onFinish}) {
         $set: e.target.value.replace(/\n/g, '')
       }
     }))
-	}
+  }
+  
+  function handleChangeCategory(e) {
+    setPostData(update(postData, {
+      categoryId: {
+        $set: e.target.value
+      }
+    }))
+  }
 
 	function handleChangeTags(tags) {
     setPostData(update(postData, {
@@ -73,7 +83,8 @@ export default function Editor({mode, onFinish}) {
 	function handlePublish(state) {
 		let savePost = {
 			title: postData.title,
-			content: postData.content,
+      content: postData.content,
+      categoryId: postData.categoryId,
       tags: postData.tags.join(","),
       state: state,
       visibility: isPublished(state)? '20' : '0'
@@ -204,7 +215,8 @@ export default function Editor({mode, onFinish}) {
         onTitleChange={handleChangeTitle}
       />
 
-      <EditorInfoDialog open={showInfoBox} tags={postData.tags}
+      <EditorInfoDialog open={showInfoBox} categoryId={postData.categoryId} tags={postData.tags}
+        onCategoryChange={handleChangeCategory}
         onTagsChange={handleChangeTags}
         onRequestClose={e => setShowInfoBox(false)}
         onRequestDraft={e => handlePublish(DRAFT)}

@@ -1,3 +1,4 @@
+import update from 'immutability-helper'
 import * as types from '../constants/ActionTypes'
 
 const initialState = null
@@ -7,7 +8,13 @@ export default (state = initialState, action) => {
 		case types.DISCONNECT_AUTH:
 			return initialState
 		case types.SELECT_BLOG:
-			return action.blog
+      return action.blog
+    case types.RECEIVE_CATEGORIES:
+      return update(state, {
+        categories: {
+          $set: action.categories
+        }
+      })
 		default:
 			return state
 	}

@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react'
+import { ipcRenderer } from 'electron'
 import { useSelector } from 'react-redux'
-import { Fab, Dialog, DialogTitle, DialogContent, Slide, List, ListItem, Box, makeStyles } from '@material-ui/core'
+import {
+  Fab, Dialog, DialogTitle, DialogContent, Slide, Box,
+  makeStyles
+} from '@material-ui/core'
 import { Add } from '@material-ui/icons'
 import Sidebar from './sidebar/Sidebar'
 import Content from './content/Content'
@@ -58,16 +62,16 @@ function EditorDialog({open, mode, onClose}) {
 
 export default function Blog() {
   const classes = useStyles()
+  const currentAuth = useSelector(state => state.currentAuth)
 	const currentBlog = useSelector(state => state.currentBlog)
   const [contentMode, setContentMode] = useState(ContentMode.VIEW)
   const [openEditor, setOpenEditor] = useState(false)
   const [openBlogSelector, setOpenBlogSelector] = useState(!currentBlog)
 
 	useEffect(() => {
-    if (currentBlog) {
-      pageview(`/blog/${currentBlog.blogId}`, `${currentBlog.name}`)
-    }
-  }, [])
+    pageview(`/blog/${currentBlog.blogId}`, `${currentBlog.name}`)
+    ipcRenderer.send('fetch-categories', currentAuth.uuid, currentBlog.name)
+  }, [currentBlog.name])
   
   useEffect(() => {
     setOpenEditor(contentMode === ContentMode.EDIT || contentMode === ContentMode.ADD)

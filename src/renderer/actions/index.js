@@ -24,6 +24,10 @@ export const receiveAccount = (account) => ({
   type: types.RECEIVE_ACCOUNT, account
 })
 
+export const receiveCategories = (categories) => ({
+  type: types.RECEIVE_CATEGORIES, categories
+})
+
 export const receivePostsFailed = () => ({
 	 type: types.RECEIVE_POSTS_FAILED
 })
