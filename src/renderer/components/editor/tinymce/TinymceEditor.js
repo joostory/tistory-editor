@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { ipcRenderer, clipboard } from 'electron'
 import OpengraphFetcher from 'opengraph-fetcher'
@@ -18,6 +18,22 @@ export default function TinymceEditor({ value, onImageHandler, onOpenFile, onCha
   const currentAuth = useSelector(state => state.currentAuth)
   const currentBlog = useSelector(state => state.currentBlog)
   const [openGooglePhotos, setOpenGooglePhotos] = useState(false)
+  const imageUploadEnabled = useMemo(() => currentAuth.provider == 'tistory', [currentAuth])
+
+  const tinymcePlugins = useMemo(() => {
+    if (imageUploadEnabled) {
+      return 'link table textcolor hr lists paste codeblock opengraph google-photos file-upload autoresize searchreplace'
+    } else {
+      return 'link table textcolor hr lists paste codeblock opengraph autoresize searchreplace'
+    }
+  }, [imageUploadEnabled])
+  const tinymceToolbar = useMemo(() => {
+    if (imageUploadEnabled) {
+      return 'formatselect bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock google-photos file-upload opengraph hr removeformat'
+    } else {
+      return 'formatselect bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock opengraph hr removeformat'
+    }
+  }, [imageUploadEnabled])
 
   function handleFinishUploadFile(e, fileUrl) {
 		console.log("finishUploadFile", fileUrl)
@@ -32,7 +48,7 @@ export default function TinymceEditor({ value, onImageHandler, onOpenFile, onCha
   }
   
   function handlePaste(e) {
-    if (currentAuth.provider != 'tistory') {
+    if (!imageUploadEnabled) {
       return
     }
 
@@ -56,7 +72,7 @@ export default function TinymceEditor({ value, onImageHandler, onOpenFile, onCha
   }
   
   function handleInsertImage(url, filename) {
-    if (currentAuth.provider != 'tistory') {
+    if (!imageUploadEnabled) {
       return
     }
     ipcRenderer.send("add-image-url", currentAuth.uuid, currentBlog.name, url, filename)
@@ -74,7 +90,6 @@ export default function TinymceEditor({ value, onImageHandler, onOpenFile, onCha
     }
   }, [])
 
-
   return (
     <>
       <Editor 
@@ -82,8 +97,8 @@ export default function TinymceEditor({ value, onImageHandler, onOpenFile, onCha
         className='content'
         onChange={e => onChange(e.target.getContent())}
         init={{
-          plugins: 'link table textcolor hr lists paste codeblock opengraph google-photos file-upload autoresize searchreplace',
-          toolbar: 'formatselect bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock google-photos file-upload opengraph hr removeformat',
+          plugins: tinymcePlugins,
+          toolbar: tinymceToolbar,
           branding: false,
           statusbar: false,
           menubar: false,

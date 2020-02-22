@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { ipcRenderer, clipboard } from 'electron'
 import CodeMirrorComponent from 'react-codemirror-component'
@@ -76,8 +76,10 @@ export default function MarkdownEditor({ value, onOpenFile, onChange }) {
   const [openGooglePhotos, setOpenGooglePhotos] = useState(false)
   const editorRef = useRef(null)
 
+  const imageUploadEnabled = useMemo(() => currentAuth.provider == 'tistory', [currentAuth])
+
 	function handlePaste(e) {
-    if (currentAuth.provider == 'tistory') {
+    if (imageUploadEnabled) {
       let image = clipboard.readImage()
       if (!image.isEmpty()) {
         ipcRenderer.send("add-clipboard-image", currentAuth.uuid, currentBlog.name)
@@ -159,8 +161,8 @@ export default function MarkdownEditor({ value, onOpenFile, onChange }) {
         <ToolbarButton onClick={handleItalic}><FormatItalic /></ToolbarButton>
         <ToolbarButton onClick={handleUnderline}><FormatUnderlined /></ToolbarButton>
         <ToolbarButton onClick={handleLink}>Link</ToolbarButton>
-        <ToolbarButton onClick={handleGooglePhotos}><img src={googlePhotosLogo} /></ToolbarButton>
-        <ToolbarButton onClick={onOpenFile}><Attachment /></ToolbarButton>
+        {imageUploadEnabled && <ToolbarButton onClick={handleGooglePhotos}><img src={googlePhotosLogo} /></ToolbarButton>}
+        {imageUploadEnabled && <ToolbarButton onClick={onOpenFile}><Attachment /></ToolbarButton>}
       </Box>
 
       <CodeMirrorComponent ref={editorRef}
