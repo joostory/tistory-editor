@@ -21,7 +21,7 @@ function PostInfo({post}) {
 
 export default function PostListItem({ post, selected, onSelect }) {
 	return (
-		<ListItem button selected={selected} className="item" onClick={() => {onSelect(post)}}>
+		<ListItem button selected={selected} onClick={() => {onSelect(post)}}>
 			<ListItemText
 				primary={<PostTitle post={post} />}
 				secondary={<PostInfo post={post} />}

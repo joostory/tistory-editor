@@ -18,6 +18,11 @@ const useStyles = makeStyles(theme => ({
     top: 0,
     bottom: 0,
     overflow: 'hidden'
+  },
+  btnAdd: {
+    position: 'fixed',
+    right: theme.spacing(3),
+    bottom: theme.spacing(3)
   }
 }))
 
@@ -72,7 +77,7 @@ export default function Blog() {
       <Content onRequestEditPost={() => setContentMode(ContentMode.EDIT)} />
       
       {currentBlog && !openEditor &&
-        <Fab color='primary' className="btn_add" onClick={() => setContentMode(ContentMode.ADD)}>
+        <Fab color='primary' className={classes.btnAdd} onClick={() => setContentMode(ContentMode.ADD)}>
           <Add />
         </Fab>
       }

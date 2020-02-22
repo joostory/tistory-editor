@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Avatar, ListItem, ListItemText, ListItemAvatar } from '@material-ui/core';
+import { Avatar, ListItem, ListItemText, ListItemAvatar, Typography } from '@material-ui/core';
 import { Stars } from '@material-ui/icons'
 
 function ProfileAvatar({blog}) {
@@ -14,7 +14,7 @@ function ProfileAvatar({blog}) {
 export default function BlogListItem({blog, onSelect}) {
 
   return (
-    <ListItem alignItems='flex-start' className="blog_item" button onClick={onSelect}>
+    <ListItem alignItems='flex-start' button onClick={onSelect}>
       <ListItemAvatar>
         <ProfileAvatar blog={blog} />
       </ListItemAvatar>
@@ -23,8 +23,10 @@ export default function BlogListItem({blog, onSelect}) {
         primary={blog.title}
         secondary={(
           <>
-            <span className="blog_url">{blog.url}</span>
-            {blog.description && <span> -- {blog.description}</span>}
+            <Typography component='span'>{blog.url}</Typography>
+            {blog.description &&
+              <Typography component='span'> -- {blog.description}</Typography>
+            }
           </>
         )}
       />

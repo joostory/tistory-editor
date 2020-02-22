@@ -139,6 +139,7 @@ const savePost = (auth, blogName, post) => {
     }
   })
   .then(errorHandler)
+  .then(res => fetchPost(auth, blogName, res.tistory.postId))
 }
 
 const addPost = (auth, blogName, post) => {
@@ -153,6 +154,7 @@ const addPost = (auth, blogName, post) => {
     }
   })
   .then(errorHandler)
+  .then(res => fetchPost(auth, blogName, res.tistory.postId))
 }
 
 const makePostFormData = (auth, blogName, post) => {

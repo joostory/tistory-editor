@@ -69,12 +69,14 @@ export default function Editor({mode, onFinish}) {
     }))
 	}
 
-	function handlePublish() {
+	function handlePublish(state) {
 		let savePost = {
 			title: postData.title,
 			content: postData.content,
-			tags: postData.tags.join(",")
-		}
+      tags: postData.tags.join(","),
+      state: state,
+      visibility: state != 'published'? '0' : '20'
+    }
 
     setShowLoading(true)
     setShowInfoBox(false)
@@ -84,7 +86,7 @@ export default function Editor({mode, onFinish}) {
 		} else {
 			ipcRenderer.send("add-content", currentAuth.uuid, currentBlog.name, savePost)
 		}
-	}
+  }
 
 	function handleStartAddFile(e) {
     setUploadFileCount(uploadFileCount + 1)
@@ -102,7 +104,6 @@ export default function Editor({mode, onFinish}) {
 	function handleFinishSaveContent(e, post) {
     setShowLoading(false)
 
-    console.log("handleFinishSaveContent", post)
 		if (!post) {
 			return
     }
@@ -205,7 +206,8 @@ export default function Editor({mode, onFinish}) {
       <EditorInfoDialog open={showInfoBox} tags={postData.tags}
         onTagsChange={handleChangeTags}
         onRequestClose={e => setShowInfoBox(false)}
-        onRequestPublish={handlePublish}
+        onRequestDraft={e => handlePublish('draft')}
+        onRequestPublish={e => handlePublish('published')}
       />
 
       {showLoading && <Loading />}

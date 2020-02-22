@@ -1,16 +1,16 @@
-@import './common.scss';
+// @import './common.scss';
 
 .app {
-  @import './components/button.scss';
+  // @import './components/button.scss';
   
   /* ready */
-  @import './components/ready.scss';
+  // @import './components/ready.scss';
   
   /* index */
-  @import './components/index.scss';
+  // @import './components/index.scss';
   
   /* sidebar */
-  @import './components/blog.scss';
+  // @import './components/blog.scss';
 }
 
 @import './components/editor.scss';

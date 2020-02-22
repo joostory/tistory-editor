@@ -1,11 +1,18 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-
-import { Dialog, Button, DialogTitle, DialogContent, DialogActions } from '@material-ui/core'
-
+import React from 'react'
+import { useSelector } from 'react-redux'
+import { Dialog, Button, DialogTitle, DialogContent, DialogActions, makeStyles } from '@material-ui/core'
 import ChipInput from 'material-ui-chip-input'
 
-export default function EditorInfoDialog({ onRequestClose, onRequestPublish, onTagsChange, tags, open }) {
+const useStyles = makeStyles(theme => ({
+  grow: {
+    flexGrow: 1
+  }
+}))
+
+export default function EditorInfoDialog({ onRequestClose, onRequestDraft, onRequestPublish, onTagsChange, tags, open }) {
+  const classes = useStyles()
+  const currentAuth = useSelector(state => state.currentAuth)
+
   return (
     <Dialog className='post-info-dialog' open={open} maxWidth='md' onClose={onRequestClose}>
       <DialogTitle>글의 속성을 확인해주세요.</DialogTitle>
@@ -21,10 +28,13 @@ export default function EditorInfoDialog({ onRequestClose, onRequestPublish, onT
       </DialogContent>
 
       <DialogActions>
-        <Button variant='text' onClick={onRequestClose}>취소</Button>
-        <Button variant='text' className='btn btn_tistory' onClick={onRequestPublish}>발행</Button>
+        <Button onClick={onRequestClose}>취소</Button>
+        <div className={classes.grow} />
+        {currentAuth.provider == 'tistory' &&
+          <Button onClick={onRequestDraft}>저장</Button>
+        }
+        <Button color='primary' onClick={onRequestPublish}>발행</Button>
       </DialogActions>
-      
     </Dialog>
   )
 }
