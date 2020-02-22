@@ -211,6 +211,7 @@ const _uploadFile = (accessToken, blogName, fileBlob, fileOption) => {
     body: formdata
   })
   .then(errorHandler)
+  .then(res => res.tistory.url)
 }
 
 const validateAuthInfo = (auth) => auth && auth.access_token

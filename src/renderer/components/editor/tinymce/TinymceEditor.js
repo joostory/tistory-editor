@@ -72,7 +72,7 @@ export default function TinymceEditor({ value, onImageHandler, onOpenFile, onCha
     return () => {
       ipcRenderer.removeListener("finish-add-file", handleFinishUploadFile)  
     }
-  })
+  }, [])
 
 
   return (
@@ -82,8 +82,8 @@ export default function TinymceEditor({ value, onImageHandler, onOpenFile, onCha
         className='content'
         onChange={e => onChange(e.target.getContent())}
         init={{
-          plugins: 'link table textcolor hr lists paste codeblock opengraph autoresize searchreplace',
-          toolbar: 'formatselect bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock opengraph hr removeformat',
+          plugins: 'link table textcolor hr lists paste codeblock opengraph google-photos file-upload autoresize searchreplace',
+          toolbar: 'formatselect bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock google-photos file-upload opengraph hr removeformat',
           branding: false,
           statusbar: false,
           menubar: false,

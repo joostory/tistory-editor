@@ -59,7 +59,7 @@ class GooglePhotosDialog extends Component {
               연결끊기
             </Button>
           }
-          <Button variant='text' onClick={onClose}>닫기</Button>,
+          <Button variant='text' onClick={onClose}>닫기</Button>
         </DialogActions>
 			</Dialog>
 		)

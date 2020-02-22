@@ -67,7 +67,7 @@
     "autobind-decorator": "^2.4.0",
     "cheerio": "^1.0.0-rc.3",
     "classnames": "^2.2.6",
-    "codemirror": "^5.51.0",
+    "codemirror": "^5.52.0",
     "core-js": "^3.6.4",
     "dateformat": "^3.0.3",
     "debug": "^4.1.1",

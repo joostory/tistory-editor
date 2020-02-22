@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useSelector } from 'react-redux'
+import { ipcRenderer, clipboard } from 'electron'
 import CodeMirrorComponent from 'react-codemirror-component'
 import MarkdownHelper from './MarkdownHelper'
 
@@ -67,7 +68,7 @@ function ToolbarButton({ onClick, children }) {
   )
 }
 
-export default function MarkdownEditor({ value, onChange }) {
+export default function MarkdownEditor({ value, onOpenFile, onChange }) {
   const classes = useStyles()
   const currentAuth = useSelector(state => state.currentAuth)
   const currentBlog = useSelector(state => state.currentBlog)
@@ -127,9 +128,13 @@ export default function MarkdownEditor({ value, onChange }) {
     setOpenGooglePhotos(false)
 	}
 
-	function handleInsertImage(url, title) {
-    CodeMirrorHelper.insertImage(editorRef.current.getCodeMirror(), url, title)
-	}
+	function handleInsertImage(url, fileName) {
+    ipcRenderer.send("add-image-url", currentAuth.uuid, currentBlog.name, url, fileName)
+  }
+  
+  function handleFinishUploadFile(e, fileUrl) {
+    CodeMirrorHelper.insertImage(editorRef.current.getCodeMirror(), fileUrl)
+  }
 
   useEffect(() => {
     let cm = editorRef.current.getCodeMirror()
@@ -137,7 +142,13 @@ export default function MarkdownEditor({ value, onChange }) {
 
 		const keymap = navigator.userAgent.indexOf('Macintosh') > 0 ? MacKeymap : PcKeymap
     keymap.map(map => cm.addKeyMap(map))
-  })
+
+    ipcRenderer.on("finish-add-file", handleFinishUploadFile)
+
+    return () => {
+      ipcRenderer.removeListener("finish-add-file", handleFinishUploadFile)
+    }
+  }, [])
 
   return (
     <Box>
@@ -149,6 +160,7 @@ export default function MarkdownEditor({ value, onChange }) {
         <ToolbarButton onClick={handleUnderline}><FormatUnderlined /></ToolbarButton>
         <ToolbarButton onClick={handleLink}>Link</ToolbarButton>
         <ToolbarButton onClick={handleGooglePhotos}><img src={googlePhotosLogo} /></ToolbarButton>
+        <ToolbarButton onClick={onOpenFile}><Attachment /></ToolbarButton>
       </Box>
 
       <CodeMirrorComponent ref={editorRef}
