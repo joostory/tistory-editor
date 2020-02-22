@@ -15,6 +15,7 @@ import EditorInfoDialog from './EditorInfoDialog'
 import Loading from '../Loading'
 
 import { pageview } from '../../modules/AnalyticsHelper'
+import { isPublished, DRAFT, PUBLISHED } from '../../constants/PostState'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -75,7 +76,7 @@ export default function Editor({mode, onFinish}) {
 			content: postData.content,
       tags: postData.tags.join(","),
       state: state,
-      visibility: state != 'published'? '0' : '20'
+      visibility: isPublished(state)? '20' : '0'
     }
 
     setShowLoading(true)
@@ -206,8 +207,8 @@ export default function Editor({mode, onFinish}) {
       <EditorInfoDialog open={showInfoBox} tags={postData.tags}
         onTagsChange={handleChangeTags}
         onRequestClose={e => setShowInfoBox(false)}
-        onRequestDraft={e => handlePublish('draft')}
-        onRequestPublish={e => handlePublish('published')}
+        onRequestDraft={e => handlePublish(DRAFT)}
+        onRequestPublish={e => handlePublish(PUBLISHED)}
       />
 
       {showLoading && <Loading />}

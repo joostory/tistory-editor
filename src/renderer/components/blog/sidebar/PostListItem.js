@@ -2,6 +2,7 @@ import React, { Fragment } from 'react'
 import dateformat from 'dateformat'
 import { ListItem, ListItemText, Typography } from '@material-ui/core'
 import { Drafts } from '@material-ui/icons'
+import { isPublished } from '../../../constants/PostState'
 
 function PostTitle({post}) {
   return (
@@ -27,7 +28,7 @@ export default function PostListItem({ post, selected, onSelect }) {
 				secondary={<PostInfo post={post} />}
 			/>
 
-			{post.state != 'published' && <Drafts />}
+			{!isPublished(post.state) && <Drafts />}
 		</ListItem>
 	)
 }
