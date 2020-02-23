@@ -28,6 +28,15 @@ const useStyles = makeStyles(theme => ({
     position: 'fixed',
     right: theme.spacing(3),
     bottom: theme.spacing(3)
+  },
+  editor: {
+    position: 'fixed',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    zIndex: 1300,
+    backgroundColor: '#fff'
   }
 }))
 
@@ -50,13 +59,14 @@ function BlogListDialog({open, onClose}) {
 }
 
 function EditorDialog({open, mode, onClose}) {
+  const classes = useStyles()
   return (
-    <Dialog fullScreen={true} open={open} onClose={onClose} disableEscapeKeyDown={true} TransitionComponent={Transition}>
+    <Box className={classes.editor}>
       <Editor
         mode={mode}
         onFinish={onClose}
       />
-    </Dialog>
+    </Box>
   )
 }
 
@@ -93,11 +103,14 @@ export default function Blog() {
         onClose={() => setOpenBlogSelector(false)}
       />
 
-      <EditorDialog
-        open={openEditor}
-        mode={contentMode}
-        onClose={() => setContentMode(ContentMode.VIEW)}
-      />
+      {openEditor &&
+        <EditorDialog
+          open={openEditor}
+          mode={contentMode}
+          onClose={() => setContentMode(ContentMode.VIEW)}
+        />
+      }
+      
     </Box>
   )
 }

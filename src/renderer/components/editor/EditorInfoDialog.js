@@ -17,8 +17,6 @@ export default function EditorInfoDialog({ onRequestClose, onRequestDraft, onReq
   const currentAuth = useSelector(state => state.currentAuth)
   const currentBlog = useSelector(state => state.currentBlog)
 
-  console.log(categoryId, currentBlog.categories)
-
   return (
     <Dialog open={open} maxWidth='md' onClose={onRequestClose}>
       <DialogTitle>글의 속성을 확인해주세요.</DialogTitle>
