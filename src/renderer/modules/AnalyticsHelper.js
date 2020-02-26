@@ -1,7 +1,7 @@
 import Analytics from 'electron-ga'
-import uuidV4 from 'uuid/v4'
+import { v4 as uuid } from 'uuid'
 
-const clientID = uuidV4()
+const clientID = uuid()
 const analytics = new Analytics('UA-26767980-11', {
   userId: clientID
 })

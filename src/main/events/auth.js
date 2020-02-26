@@ -1,4 +1,4 @@
-const uuid = require('uuid/v4')
+const uuid = require('uuid').v4
 const { ipcMain } = require('electron')
 const AuthenticationManager = require('../lib/AuthenticationManager')
 const ProviderApiManager = require('../lib/ProviderApiManager')
