@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import update from 'immutability-helper'
-import { ipcRenderer, remote } from 'electron'
+import { ipcRenderer } from 'electron'
 
 import { addPost, updatePost } from '../../actions'
 import * as ContentMode from '../../constants/ContentMode'
@@ -179,8 +179,9 @@ export default function Editor({mode, onFinish}) {
 		ipcRenderer.on("finish-add-file", handleFinishAddFile)
 		ipcRenderer.on("finish-add-content", handleFinishSaveContent)
     ipcRenderer.on("finish-save-content", handleFinishSaveContent)
+    ipcRenderer.on("enable-exist-prompt")
 
-    remote.app.showExitPrompt = true
+    ipcRenderer.send("enable-exist-prompt")
 
     if (post) {
 			pageview(`/blog/${currentBlog.blogId}/post/${post.id}/edit`, `${post.title}`)
@@ -196,7 +197,7 @@ export default function Editor({mode, onFinish}) {
       ipcRenderer.removeListener("finish-add-content", handleFinishSaveContent)
       ipcRenderer.removeListener("finish-save-content", handleFinishSaveContent)
 
-      remote.app.showExitPrompt = false
+      ipcRenderer.send("disable-exist-prompt")
     }
   })
 
