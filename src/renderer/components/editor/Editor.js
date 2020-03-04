@@ -179,7 +179,6 @@ export default function Editor({mode, onFinish}) {
 		ipcRenderer.on("finish-add-file", handleFinishAddFile)
 		ipcRenderer.on("finish-add-content", handleFinishSaveContent)
     ipcRenderer.on("finish-save-content", handleFinishSaveContent)
-    ipcRenderer.on("enable-exist-prompt")
 
     ipcRenderer.send("enable-exist-prompt")
 
