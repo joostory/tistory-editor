@@ -111,13 +111,14 @@ const fetchPost = (auth, blogName, postId) => {
 const addPost = async (auth, blogName, post) => {
   const client = createTumblrClient(auth)
   const res = await client.createTextPost(blogName, _editorPostToTumblrPost(post))
-  return await fetchPost(auth, blogName, res.id)
+  const fetchRes = await fetchPosts(auth, blogName, {offset:0, limit:1})
+  return { post: fetchRes.posts[0] }
 }
 
 const savePost = async (auth, blogName, post) => {
   const client = createTumblrClient(auth)
   const res = await client.editPost(blogName, _editorPostToTumblrPost(post))
-  return await fetchPost(auth, blogName, res.id)
+  return await fetchPost(auth, blogName, post.id)
 }
 
 const validateAuthInfo = (auth) => auth && auth.token
