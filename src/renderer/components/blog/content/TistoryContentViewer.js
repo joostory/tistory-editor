@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import 'highlight.js/styles/atom-one-dark.css'
 import { ipcRenderer } from 'electron'
-import TextContentViewer from './TextContentViewer'
+import TextContentViewer from './type/TextContentViewer'
 
 
 export default function TistoryContentViewer({onRequestEditPost}) {

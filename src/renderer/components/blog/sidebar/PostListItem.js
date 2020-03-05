@@ -1,14 +1,17 @@
 import React, { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import dateformat from 'dateformat'
-import { ListItem, ListItemText, Typography, makeStyles } from '@material-ui/core'
-import { Drafts } from '@material-ui/icons'
+import { ListItem, ListItemText, Typography, Box, makeStyles } from '@material-ui/core'
+import { DraftsOutlined, PhotoOutlined, CommentOutlined } from '@material-ui/icons'
 import { isPublished } from '../../../constants/PostState'
 
 const useStyles = makeStyles(theme => ({
   info: {
     display: 'block',
     fontSize: '0.9em'
+  },
+  icon: {
+    marginLeft: theme.spacing(1)
   }
 }))
 
@@ -44,7 +47,23 @@ function PostInfo({post}) {
   )
 }
 
+function PostIcon({post}) {
+  if (!isPublished(post.state)) {
+    return <DraftsOutlined />
+  }
+
+  switch(post.type) {
+    case 'photo':
+      return <PhotoOutlined />
+    case 'link':
+      return <CommentOutlined />
+    default:
+      return null
+  }
+}
+
 export default function PostListItem({ post, selected, onSelect }) {
+  const classes = useStyles()
 	return (
 		<ListItem button selected={selected} onClick={() => {onSelect(post)}}>
 			<ListItemText
@@ -52,7 +71,9 @@ export default function PostListItem({ post, selected, onSelect }) {
 				secondary={<PostInfo post={post} />}
 			/>
 
-			{!isPublished(post.state) && <Drafts />}
+      <Box className={classes.icon}>
+        <PostIcon post={post} />
+      </Box>
 		</ListItem>
 	)
 }

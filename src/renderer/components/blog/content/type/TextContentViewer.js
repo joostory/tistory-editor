@@ -5,8 +5,8 @@ import { Chip, IconButton, Box, Divider, Typography, makeStyles, Container } fro
 import { OpenInBrowser, Edit } from '@material-ui/icons'
 import highlightjs from 'highlight.js'
 import 'highlight.js/styles/atom-one-dark.css'
-import * as ContentHelper from '../../../modules/ContentHelper'
-import { pageview } from '../../../modules/AnalyticsHelper'
+import * as ContentHelper from '../../../../modules/ContentHelper'
+import { pageview } from '../../../../modules/AnalyticsHelper'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -24,6 +24,9 @@ const useStyles = makeStyles(theme => ({
   contentContainer: {
     paddingTop: theme.spacing(3),
     paddingBottom: theme.spacing(5)
+  },
+  tag: {
+    marginRight: theme.spacing(1)
   }
 }))
 
@@ -74,7 +77,7 @@ export default function TextContentViewer({ onRequestEditPost }) {
 
         <Box>
           {post.tags.map((item, i) =>
-            <Chip key={i} variant='outlined' label={item} className={'tag'} />
+            <Chip key={i} variant='outlined' label={item} className={classes.tag} />
           )}
         </Box>
       </Container>

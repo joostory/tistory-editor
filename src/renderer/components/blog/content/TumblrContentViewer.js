@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { pageview } from '../../../modules/AnalyticsHelper'
-import TextContentViewer from './TextContentViewer'
+import TextContentViewer from './type/TextContentViewer'
+import PhotoContentViewer from './type/PhotoContentViewer'
 import { Typography, makeStyles } from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({
@@ -36,6 +37,8 @@ export default function TumblrContentViewer({ onRequestEditPost }) {
   switch(post.type) {
     case 'text':
       return <TextContentViewer onRequestEditPost={onRequestEditPost} />
+    case 'photo':
+      return <PhotoContentViewer />
     default:
       return <UnknownTypeContentViewer />
   }

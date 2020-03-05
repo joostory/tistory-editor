@@ -64,6 +64,7 @@ function _tumblrPostToEditorPost(post) {
     url: post.post_url,
     title: post.summary,
     content: post.body,
+    photos: post.photos,
     tags: post.tags,
     date: post.date,
     type: post.type,
