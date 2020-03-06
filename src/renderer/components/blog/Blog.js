@@ -41,10 +41,6 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const Transition = React.forwardRef((props, ref) =>
-  <Slide direction="up" ref={ref} {...props} />
-)
-
 function BlogListDialog({open, onClose}) {
   return (
     <Dialog open={open} scroll="paper" onClose={onClose}>
@@ -59,7 +55,7 @@ function BlogListDialog({open, onClose}) {
   )
 }
 
-function EditorDialog({open, mode, onClose}) {
+function EditorDialog({mode, onClose}) {
   const classes = useStyles()
   return (
     <Box className={classes.editor}>
@@ -82,7 +78,7 @@ export default function Blog() {
 	useEffect(() => {
     pageview(`/blog/${currentBlog.blogId}`, `${currentBlog.name}`)
     ipcRenderer.send('fetch-categories', currentAuth.uuid, currentBlog.name)
-  }, [currentBlog.name])
+  }, [currentBlog])
   
   useEffect(() => {
     setOpenEditor(contentMode === ContentMode.EDIT || contentMode === ContentMode.ADD)
@@ -106,7 +102,6 @@ export default function Blog() {
 
       {openEditor &&
         <EditorDialog
-          open={openEditor}
           mode={contentMode}
           onClose={() => setContentMode(ContentMode.VIEW)}
         />
