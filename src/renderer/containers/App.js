@@ -1,11 +1,11 @@
-import React, { Component, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ipcRenderer } from 'electron'
 import { Snackbar, CssBaseline } from '@material-ui/core'
 
 import Main from './Main'
 import Preference from '../components/Preference'
 
-export default function App(props) {
+export default function App() {
 
 	const [message, setMessage] = useState("");
 
