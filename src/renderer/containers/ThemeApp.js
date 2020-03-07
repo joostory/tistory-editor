@@ -1,5 +1,8 @@
 import React, { useMemo } from 'react'
+import { remote } from 'electron'
+import { useSelector } from 'react-redux'
 import { ThemeProvider, createMuiTheme, useMediaQuery } from '@material-ui/core'
+import * as AppTheme from '../constants/AppTheme'
 import App from './App'
 
 const CONTENT_PALETTE = {
@@ -33,10 +36,15 @@ const LIGHT_PALETTE = {
 }
 
 export default function ThemeApp({}) {
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
-  const theme = useMemo(() => createMuiTheme({
-    palette: prefersDarkMode? DARK_PALETTE : LIGHT_PALETTE,
-  }), [prefersDarkMode])
+  const preferences = useSelector(state => state.preferences)
+  const theme = useMemo(() => {
+    const appTheme = preferences.appTheme || AppTheme.SYSTEM
+    const prefersDarkMode = appTheme == AppTheme.SYSTEM?
+      remote.nativeTheme.shouldUseDarkColors : appTheme == AppTheme.DARK
+    return createMuiTheme({
+      palette: prefersDarkMode? DARK_PALETTE : LIGHT_PALETTE,
+    })    
+  }, [preferences])
 
   return (
     <ThemeProvider theme={theme}>

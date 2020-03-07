@@ -2,15 +2,28 @@ import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { ipcRenderer } from 'electron'
 
-import { Dialog, Button, DialogTitle, DialogContent, DialogActions, RadioGroup, Radio, FormControlLabel } from '@material-ui/core'
+import {
+  Dialog, Button, DialogTitle, DialogContent, DialogActions,
+  RadioGroup, Radio, FormControl, InputLabel,
+  FormControlLabel, FormLabel, Select, MenuItem, makeStyles
+} from '@material-ui/core'
 
 import * as EditorMode from '../constants/EditorMode'
+import * as AppTheme from '../constants/AppTheme'
+
+const useStyles = makeStyles(theme => ({
+  formcontrol: {
+    marginBottom: theme.spacing(3)
+  }
+}))
 
 
 export default function Preference() {
+  const classes = useStyles()
   const [open, setOpen] = useState(false)
   const preferences = useSelector(state => state.preferences)
   const defaultEditor = preferences.editor || EditorMode.MARKDOWN
+  const appTheme = preferences.appTheme || AppTheme.SYSTEM
 
   function handlePreferenceOpen() {
     setOpen(true)
@@ -20,9 +33,15 @@ export default function Preference() {
     setOpen(false)
   }
 
-  function handleChangeEditor(e, value) {
+  function handleChangeAppTheme(e) {
     ipcRenderer.send("save-preferences", Object.assign({}, preferences, {
-      editor: value
+      appTheme: e.target.value
+    }))
+  }
+
+  function handleChangeEditor(e) {
+    ipcRenderer.send("save-preferences", Object.assign({}, preferences, {
+      editor: e.target.value
     }))
   }
 
@@ -40,11 +59,23 @@ export default function Preference() {
       <DialogTitle>환경설정</DialogTitle>
 
       <DialogContent>
-        기본 에디터
-        <RadioGroup name="editor" value={defaultEditor} onChange={handleChangeEditor}>
-          <FormControlLabel value={EditorMode.MARKDOWN} label="Markdown Editor" control={<Radio />} />
-          <FormControlLabel value={EditorMode.TINYMCE} label="Rich Editor" control={<Radio />} />
-        </RadioGroup>
+        <FormControl fullWidth className={classes.formcontrol}>
+          <InputLabel>테마</InputLabel>
+          <Select value={appTheme} onChange={handleChangeAppTheme}>
+            <MenuItem value={AppTheme.SYSTEM}>시스템 설정</MenuItem>
+            <MenuItem value={AppTheme.LIGHT}>밝음</MenuItem>
+            <MenuItem value={AppTheme.DARK}>어두움</MenuItem>
+          </Select>
+        </FormControl>
+        
+        <FormControl fullWidth>
+          <FormLabel>기본 에디터</FormLabel>
+          <RadioGroup name="editor" value={defaultEditor} onChange={handleChangeEditor}>
+            <FormControlLabel value={EditorMode.MARKDOWN} label="Markdown Editor" control={<Radio />} />
+            <FormControlLabel value={EditorMode.TINYMCE} label="Rich Editor" control={<Radio />} />
+          </RadioGroup>
+        </FormControl>
+        
       </DialogContent>
 
       <DialogActions>
