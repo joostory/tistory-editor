@@ -10,23 +10,37 @@ import { pageview } from '../../../../modules/AnalyticsHelper'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    backgroundColor: '#fff',
-    minHeight: '100vh'
+    margin: theme.spacing(3),
+    marginTop: theme.spacing(5),
+    marginBottom: theme.spacing(5),
+    background: theme.palette.content.background,
+    boxShadow: theme.shadows[1],
+    borderRadius: theme.spacing(0.5)
   },
   title: {
     paddingTop: theme.spacing(5),
-    paddingBottom: theme.spacing(2)
+    paddingBottom: theme.spacing(2),
+    color: theme.palette.content.text
   },
   postInfo: {
     paddingBottom: theme.spacing(3),
-    textAlign: 'center'
+    textAlign: 'center',
+    color: theme.palette.content.text
+  },
+  postInfoButton: {
+    color: theme.palette.content.text
+  },
+  divider: {
+    backgroundColor: theme.palette.content.divider
   },
   contentContainer: {
-    paddingTop: theme.spacing(3),
+    padding: theme.spacing(3),
     paddingBottom: theme.spacing(5)
   },
   tag: {
-    marginRight: theme.spacing(1)
+    marginRight: theme.spacing(1),
+    color: theme.palette.content.text,
+    borderColor: theme.palette.content.tagBorder
   }
 }))
 
@@ -58,16 +72,16 @@ export default function TextContentViewer({ onRequestEditPost }) {
           <Typography component='span'>
             {dateformat(new Date(post.date), 'yyyy-mm-dd HH:MM')}
           </Typography>
-          <IconButton href={post.url} tooltip="브라우저에서 보기" size='small'>
+          <IconButton className={classes.postInfoButton} href={post.url} tooltip="브라우저에서 보기" size='small'>
             <OpenInBrowser />
           </IconButton>
-          <IconButton onClick={onRequestEditPost} tooltip="수정하기" size='small'>
+          <IconButton className={classes.postInfoButton} onClick={onRequestEditPost} tooltip="수정하기" size='small'>
             <Edit />
           </IconButton>
         </Box>
       </Container>
 
-      <Divider />
+      <Divider className={classes.divider} />
 
       <Container maxWidth='sm' disableGutters={true} className={classes.contentContainer}>
         <div ref={viewerContent}

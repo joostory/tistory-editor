@@ -11,7 +11,10 @@ const useStyles = makeStyles(theme => ({
     right: 0,
     top: 0,
     bottom: 0,
-    overflow: 'auto'
+    overflow: 'auto',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'start'
   },
   emtpyMessage: {
     height: '100vh',

@@ -2,6 +2,13 @@ import React, { useMemo } from 'react'
 import { ThemeProvider, createMuiTheme, useMediaQuery } from '@material-ui/core'
 import App from './App'
 
+const CONTENT_PALETTE = {
+  background: '#fff',
+  text: '#333',
+  divider: 'rgba(0, 0, 0, 0.12)',
+  tagBorder: 'rgba(0, 0, 0, 0.23)'
+}
+
 const DARK_PALETTE = {
   type: 'dark',
   primary: {
@@ -10,7 +17,8 @@ const DARK_PALETTE = {
   secondary: {
     main: '#ff5544'
   },
-  listHeaderBackground: 'rgba(64,64,64,0.9)'
+  listHeaderBackground: 'rgba(64,64,64,0.9)',
+  content: CONTENT_PALETTE
 }
 const LIGHT_PALETTE = {
   type: 'light',
@@ -20,7 +28,8 @@ const LIGHT_PALETTE = {
   secondary: {
     main: '#ff5544'
   },
-  listHeaderBackground: 'rgba(255,255,255,0.9)'
+  listHeaderBackground: 'rgba(255,255,255,0.9)',
+  content: CONTENT_PALETTE
 }
 
 export default function ThemeApp({}) {

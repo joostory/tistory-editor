@@ -8,7 +8,6 @@ import { pageview } from '../../../../modules/AnalyticsHelper'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    backgroundColor: '#fff',
     minHeight: '100vh'
   },
   container: {
