@@ -26,7 +26,7 @@ export default function AuthButton() {
 
   return (
     <>
-      <Button onClick={() => setOpen(!open)} className={classes.btnAdd} startIcon={<Add />}>
+      <Button onClick={() => setOpen(!open)} className={classes.btnAdd} color='primary' startIcon={<Add />}>
         새로운 블로그 연결
       </Button>
 
