@@ -19,7 +19,7 @@ import { isPublished, DRAFT, PUBLISHED } from '../../constants/PostState'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    paddingTop: theme.spacing(8),
+    paddingTop: theme.spacing(9),
     paddingBottom: theme.spacing(8)
   }
 }))

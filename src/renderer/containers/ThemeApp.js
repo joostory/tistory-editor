@@ -12,6 +12,12 @@ const CONTENT_PALETTE = {
   tagBorder: 'rgba(0, 0, 0, 0.23)'
 }
 
+const EDITOR_PALETTE = {
+  toolbar: {
+    background: 'rgba(200,200,200,0.9)'
+  }
+}
+
 const DARK_PALETTE = {
   type: 'dark',
   primary: {
@@ -20,8 +26,9 @@ const DARK_PALETTE = {
   secondary: {
     main: '#ff5544'
   },
-  listHeaderBackground: 'rgba(64,64,64,0.9)',
-  content: CONTENT_PALETTE
+  headerBackground: 'rgba(64,64,64,0.9)',
+  content: CONTENT_PALETTE,
+  editor: EDITOR_PALETTE,
 }
 const LIGHT_PALETTE = {
   type: 'light',
@@ -31,8 +38,9 @@ const LIGHT_PALETTE = {
   secondary: {
     main: '#ff5544'
   },
-  listHeaderBackground: 'rgba(255,255,255,0.9)',
-  content: CONTENT_PALETTE
+  headerBackground: 'rgba(255,255,255,0.9)',
+  content: CONTENT_PALETTE,
+  editor: EDITOR_PALETTE,
 }
 
 export default function ThemeApp({}) {

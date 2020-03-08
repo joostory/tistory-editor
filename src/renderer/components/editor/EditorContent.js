@@ -11,9 +11,17 @@ import EditorSwitch from './EditorSwich'
 import { Container, InputBase, makeStyles } from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({
+  container: {
+    width: 700,
+    padding: '0 50px',
+    backgroundColor: '#fff',
+    boxShadow: theme.shadows[1],
+    borderRadius: theme.spacing(0.5)
+  },
   titleInput: {
     marginTop: theme.spacing(4),
-    fontSize: theme.spacing(4)
+    fontSize: theme.spacing(4),
+    color: '#333'
   }
 }))
 
@@ -57,7 +65,7 @@ export default function EditorContent({content, onChange, onUpload, title, onTit
 
   return (
     <>
-      <Container maxWidth='sm' disableGutters={true}>
+      <Container className={classes.container} disableGutters={true}>
         <InputBase
           className={classes.titleInput}
           autoFocus={true}

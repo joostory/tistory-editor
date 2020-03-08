@@ -1,14 +1,16 @@
 .editor_inner {
   .tox .tox-editor-header {
-    position:fixed; top:11px; width:700px; height:34px; left: 50%; transform: translate(-50%,0); z-index:10;
-    background:transparent; padding:3px;
+    position:fixed; top:13px; width:700px; height:34px; left: 50%; transform: translate(-50%,0); z-index:10;
+    background:transparent;
   }
 
   .tox-tinymce {
     border:0; background-color:#fff; margin:0 auto;
 
     .tox-toolbar__primary {
-      background: none;
+      background: #fffd;
+      border-radius: 4px;
+      box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
     }
     .tox-toolbar-overlord {
       background: transparent;

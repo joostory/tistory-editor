@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     top: 0,
     bottom: 0,
     zIndex: 1300,
-    backgroundColor: '#fff',
+    backgroundColor: theme.palette.background.default,
     overflow: 'auto'
   }
 }))

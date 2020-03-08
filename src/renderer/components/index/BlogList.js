@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
-    backgroundColor: theme.palette.listHeaderBackground,
+    backgroundColor: theme.palette.headerBackground,
   },
   logo: {
     display: 'flex',

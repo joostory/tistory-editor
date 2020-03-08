@@ -44,12 +44,17 @@ const useStyles = makeStyles(theme => ({
   toolbar: {
     position: 'fixed',
     top:15,
-    width:600,
-    height:34,
+    width:700,
+    display: 'flex',
+    alignItems: 'center',
+    borderRadius: theme.shape.borderRadius,
+    paddingLeft: theme.spacing(0.5),
+    height:theme.spacing(5),
     left: '50%',
     transform: 'translate(-50%,0)',
     zIndex:10,
-    background: 'transparent'
+    background: theme.palette.headerBackground,
+    boxShadow: theme.shadows[1]
   },
   toolbarBtn: {
     padding: 5,
