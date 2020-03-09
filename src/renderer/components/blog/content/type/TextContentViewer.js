@@ -14,6 +14,7 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(5),
     marginBottom: theme.spacing(5),
     background: theme.palette.content.background,
+    maxWidth: theme.palette.content.maxWidth,
     boxShadow: theme.shadows[1],
     borderRadius: theme.spacing(0.5)
   },
@@ -35,6 +36,8 @@ const useStyles = makeStyles(theme => ({
   },
   contentContainer: {
     padding: theme.spacing(3),
+    paddingLeft: theme.spacing(5),
+    paddingRight: theme.spacing(5),
     paddingBottom: theme.spacing(5)
   },
   tag: {
@@ -63,7 +66,7 @@ export default function TextContentViewer({ onRequestEditPost }) {
 
   return (
     <Box className={classes.root}>
-      <Container maxWidth='sm' disableGutters={true}>
+      <Container disableGutters={true}>
         <Typography variant='h4' component='h1' align='center' className={classes.title}>
           {post.title}
         </Typography>
@@ -83,7 +86,7 @@ export default function TextContentViewer({ onRequestEditPost }) {
 
       <Divider className={classes.divider} />
 
-      <Container maxWidth='sm' disableGutters={true} className={classes.contentContainer}>
+      <Container disableGutters={true} className={classes.contentContainer}>
         <div ref={viewerContent}
           className="content"
           dangerouslySetInnerHTML={{__html: ContentHelper.makeUrlBase(post.content)}}

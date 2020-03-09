@@ -9,7 +9,8 @@ const CONTENT_PALETTE = {
   background: '#fff',
   text: '#333',
   divider: 'rgba(0, 0, 0, 0.12)',
-  tagBorder: 'rgba(0, 0, 0, 0.23)'
+  tagBorder: 'rgba(0, 0, 0, 0.23)',
+  maxWidth: 700
 }
 
 const EDITOR_PALETTE = {

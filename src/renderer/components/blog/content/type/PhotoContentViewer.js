@@ -8,7 +8,8 @@ import { pageview } from '../../../../modules/AnalyticsHelper'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    minHeight: '100vh'
+    minHeight: '100vh',
+    maxWidth: theme.palette.content.maxWidth,
   },
   container: {
     paddingTop: theme.spacing(5),
@@ -21,8 +22,13 @@ const useStyles = makeStyles(theme => ({
     marginBottom: theme.spacing(3),
     textAlign: 'center'
   },
+  cardContent: {
+    paddingLeft: theme.spacing(5),
+    paddingRight: theme.spacing(5),
+    paddingBottom: theme.spacing(3)
+  },
   contentContainer: {
-    marginBottom: theme.spacing(5)
+    marginBottom: theme.spacing(5),
   },
   tag: {
     marginRight: theme.spacing(1)
@@ -32,7 +38,7 @@ const useStyles = makeStyles(theme => ({
 
 function Photo({photo}) {
   const classes = useStyles()
-  const displayPhoto = photo.alt_sizes[1]
+  const displayPhoto = photo.alt_sizes[0]
   return (
     <CardMedia className={classes.photo}>
       <img src={displayPhoto.url}
@@ -56,12 +62,12 @@ export default function PhotoContentViewer() {
 
   return (
     <Box className={classes.root}>
-      <Container maxWidth='sm' disableGutters={true} className={classes.container}>
+      <Container disableGutters={true} className={classes.container}>
         <Card>
           {post.photos.map((photo, index) =>
             <Photo key={index} photo={photo}/>
           )}
-          <CardContent>
+          <CardContent className={classes.cardContent}>
             <Box className={classes.postInfo}>
               <Typography component='span'>
                 {dateformat(new Date(post.date), 'yyyy-mm-dd HH:MM')}
