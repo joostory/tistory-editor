@@ -1,18 +1,4 @@
-// @import './common.scss';
-
-.app {
-  // @import './components/button.scss';
-  
-  /* ready */
-  // @import './components/ready.scss';
-  
-  /* index */
-  // @import './components/index.scss';
-  
-  /* sidebar */
-  // @import './components/blog.scss';
-}
-
+@import './common.scss';
 @import './components/editor.scss';
 @import './components/markdown-editor.scss';
 @import './components/rich-editor.scss';

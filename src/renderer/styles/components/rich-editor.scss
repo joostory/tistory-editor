@@ -1,6 +1,8 @@
 .editor_inner {
   .tox .tox-editor-header {
-    position:fixed; top:13px; width:700px; height:34px; left: 50%; transform: translate(-50%,0); z-index:10;
+    position:fixed; top:13px; width:700px; height:34px;
+    left: 50%; transform: translate(calc(-50% - 2px),0);
+    z-index:10;
     background:transparent;
   }
 
