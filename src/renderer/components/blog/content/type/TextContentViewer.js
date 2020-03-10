@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(5),
     marginBottom: theme.spacing(5),
     background: theme.palette.content.background,
-    maxWidth: theme.palette.content.maxWidth,
+    width: theme.palette.content.maxWidth,
     boxShadow: theme.shadows[1],
     borderRadius: theme.spacing(0.5)
   },
