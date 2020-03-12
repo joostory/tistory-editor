@@ -103,7 +103,7 @@ export default function TinymceEditor({ value, onImageHandler, onOpenFile, onCha
           statusbar: false,
           menubar: false,
           paste_data_images: true,
-          valid_children : 'p[s|strike|span|b|u|i|a|#text|br|code|em|sup|sub],-h2[img|div|figure|b],figcaption[#text],figure[img|figcaption|br|a|div|span|p|iframe],-span[img],+a[div],-li[blockquote|h2|h3]',
+          valid_children : 'p[s|strike|span|b|u|i|a|#text|br|code|em|sup|sub|q],-h2[img|div|figure|b],figcaption[#text],figure[img|figcaption|br|a|div|span|p|iframe],-span[img],+a[div],-li[blockquote|h2|h3]',
           extended_valid_elements: 'span/font[style],i/em,b/strong,iframe[mapdata|src|id|width|height|frameborder|scrolling|data-*|allowfullscreen],script[type|src]',
           text_inline_elements: 'span strong b em i font s u var cite dfn code mark q sup sub samp',
           width: 600,
