@@ -78,7 +78,7 @@ export default function Blog() {
 	useEffect(() => {
     pageview(`/blog/${currentBlog.blogId}`, `${currentBlog.name}`)
     ipcRenderer.send('fetch-categories', currentAuth.uuid, currentBlog.name)
-  }, [currentBlog])
+  }, [currentAuth.uuid, currentBlog.name])
   
   useEffect(() => {
     setOpenEditor(contentMode === ContentMode.EDIT || contentMode === ContentMode.ADD)
