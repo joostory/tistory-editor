@@ -47,16 +47,19 @@ export default function TinymceEditor({ value, onImageHandler, onOpenFile, onCha
 		})
   }
   
-  function handlePaste(e) {
-    if (!imageUploadEnabled) {
-      return
-    }
-
-		let image = clipboard.readImage()
+  function handlePastePreprocess(plugin, args) {
+    let image = clipboard.readImage()
 		if (!image.isEmpty()) {
-			ipcRenderer.send("add-clipboard-image", currentAuth.uuid, currentBlog.name)
-		}
-	}
+      if (imageUploadEnabled) {
+        ipcRenderer.send("add-clipboard-image", currentAuth.uuid, currentBlog.name)
+      }
+      args.preventDefault()
+    } else {
+      if (args.content.indexOf("<img") == 0 && args.content.indexOf("blob:file://") > 0) {
+        args.preventDefault()
+      }
+    }
+  }
 
 	function handleDrop(e) {
     if (e.dataTransfer && e.dataTransfer.files) {
@@ -116,12 +119,7 @@ export default function TinymceEditor({ value, onImageHandler, onOpenFile, onCha
             '../src/css/tistory-content.css',
             'https://fonts.googleapis.com/css?family=Nanum+Gothic'
           ],
-          paste_preprocess: (plugin, args) => {
-            let image = clipboard.readImage()
-            if (!image.isEmpty()) {
-              args.preventDefault()
-            }
-          },
+          paste_preprocess: handlePastePreprocess,
           codeblock: {
             highlightStyle: '../node_modules/highlight.js/styles/atom-one-dark.css'
           },
@@ -134,7 +132,6 @@ export default function TinymceEditor({ value, onImageHandler, onOpenFile, onCha
           open_file_handler: onOpenFile,
           init_instance_callback: (editor) => {
             editor.ui.registry.addIcon('media', 'M')
-            editor.on("paste", handlePaste)
             editor.on("drop", handleDrop)
             editor.setContent(value)
           }
