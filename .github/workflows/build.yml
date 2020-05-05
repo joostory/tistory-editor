@@ -40,4 +40,6 @@ jobs:
       - name: electron build
         run: |
           npm run dist
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
