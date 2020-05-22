@@ -14,7 +14,7 @@ function createWindow(config) {
     webPreferences: {
       nodeIntegration: true
     },
-    icon: `${__dirname}/../../build/icons/256x256.png`
+    icon: `${__dirname}/../../build/icons/512x512.png`
   })
 
   mainWindow.setMenu(null)
