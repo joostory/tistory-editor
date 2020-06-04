@@ -12,7 +12,8 @@ function createWindow(config) {
     height: config.height,
     autoHideMenuBar: true,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      enableRemoteModule: true
     },
     icon: `${__dirname}/../../build/icons/512x512.png`
   })
