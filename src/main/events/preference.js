@@ -3,6 +3,7 @@ const { app, ipcMain } = require('electron')
 
 module.exports = () => {
 	ipcMain.on("fetch-preferences", (evt) => {
+    console.log('Main.receive: fetch-preferences')
 		let data = settings.get('preferences')
 		if (!data) {
 			data = {}
@@ -11,15 +12,18 @@ module.exports = () => {
 	})
 
 	ipcMain.on("save-preferences", (evt, preferences) => {
+    console.log('Main.receive: save-preferences', preferences)
 		settings.set("preferences", preferences)
 		evt.sender.send("receive-preferences", preferences)
   })
   
   ipcMain.on("enable-exist-prompt", (evt) => {
+    console.log('Main.receive: enable-exist-prompt')
     app.showExitPrompt = true
   })
 
   ipcMain.on("disable-exist-prompt", (evt) => {
+    console.log('Main.receive: disable-exist-prompt')
     app.showExitPrompt = false
   })
 }
