@@ -11,6 +11,12 @@ import 'tinymce-plugin-codeblock'
 import './plugins/google-photos'
 import './plugins/file-upload'
 
+import 'codemirror/mode/clojure/clojure'
+import 'codemirror/mode/python/python'
+import 'codemirror/mode/clike/clike'
+import 'codemirror/mode/go/go'
+import 'codemirror/mode/xml/xml'
+
 import GooglePhotosDialog from '../plugins/google-photos/GooglePhotosDialog'
 import { makeThumbnail } from '../../../modules/ThumbnailHelper'
 
@@ -121,7 +127,17 @@ export default function TinymceEditor({ value, onImageHandler, onOpenFile, onCha
           ],
           paste_preprocess: handlePastePreprocess,
           codeblock: {
-            highlightStyle: '../node_modules/highlight.js/styles/atom-one-dark.css'
+            highlightStyle: '../node_modules/highlight.js/styles/atom-one-dark.css',
+            langs: [
+              { value: 'javascript', mode: 'javascript', label: 'Javascript' },
+              { value: 'typescript', mode: 'javascript', label: 'Typescript' },
+              { value: 'html', mode: 'xml', label: 'HTML' },
+              { value: 'python', mode: 'python', label: 'Python' },
+              { value: 'java', mode: 'clike', label: 'Java' },
+              { value: 'go', mode: 'go', label: 'Go' },
+              { value: 'Kotlin', mode: 'clike', label: 'Kotlin' },
+              { value: 'clojure', mode: 'clojure', label: 'Clojure' },
+            ]
           },
           opengraph: {
             fetch_handler: handleFetchOpengraph

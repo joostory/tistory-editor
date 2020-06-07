@@ -34,7 +34,8 @@
 .content code { font-family: Menlo,Consolas,Monaco,monospace; }
 .content li code,
 .content p code { padding:2px 5px; border-radius:3px; background:#efefef; color:#333; margin:0 2px; border:1px solid #e0e0e0 }
-pre { font-size:14px; padding:15px; border-radius:3px; margin-bottom:10px; font-family: Menlo,Consolas,Monaco,monospace; border:1px solid #ddd; background-color:#F6F7F8; margin:28px auto;  overflow:auto }
+.content pre { padding:0; margin:28px auto; overflow:auto; font-family: Menlo,Consolas,Monaco,monospace; border:1px solid #ddd; background-color:#F6F7F8; }
+.content pre code { font-size:14px; padding:15px; border-radius:3px; }
 
 .content iframe { max-width:100%; display:block; margin:0 auto 20px }
 .content figure { margin:0 }
