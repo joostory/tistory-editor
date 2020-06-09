@@ -5,6 +5,7 @@ const ProviderApiManager = require('../lib/ProviderApiManager')
 
 module.exports = () => {
   ipcMain.on("fetch-categories", (evt, authUUID, blogName) => {
+    console.log('Main.receive: fetch-categories', authUUID, blogName)
     let auth = AuthenticationManager.findByUUID(authUUID)
     let api = ProviderApiManager.getApi(auth.provider)
 		if (auth.provider != 'tistory' || !api.validateAuthInfo(auth.authInfo)) {
@@ -18,6 +19,7 @@ module.exports = () => {
   })
 
 	ipcMain.on("fetch-posts", (evt, authUUID, blogName, options) => {
+    console.log('Main.receive: fetch-posts', authUUID, blogName, options)
     let auth = AuthenticationManager.findByUUID(authUUID)
     let api = ProviderApiManager.getApi(auth.provider)
 		if (!api.validateAuthInfo(auth.authInfo)) {
@@ -37,6 +39,7 @@ module.exports = () => {
   })
   
   ipcMain.on("fetch-content", (evt, authUUID, blogName, postId) => {
+    console.log('Main.receive: fetch-content', authUUID, blogName, postId)
     let auth = AuthenticationManager.findByUUID(authUUID)
     if (auth.provider != 'tistory') {
       evt.sender.send('receive-message', '글 정보를 불러오지 못했습니다.')
@@ -53,6 +56,7 @@ module.exports = () => {
 	})
 	
 	ipcMain.on("save-content", (evt, authUUID, blogName, post) => {
+    console.log('Main.receive: save-content', authUUID, blogName, post)
     let auth = AuthenticationManager.findByUUID(authUUID)
     let api = ProviderApiManager.getApi(auth.provider)
 		let messagePrefix = dateformat(new Date(), 'HH:MM:ss : ')
@@ -76,6 +80,7 @@ module.exports = () => {
 	})
 
 	ipcMain.on("add-content", (evt, authUUID, blogName, post) => {
+    console.log('Main.receive: add-content', authUUID, blogName, post)
     let auth = AuthenticationManager.findByUUID(authUUID)
     let api = ProviderApiManager.getApi(auth.provider)
     let messagePrefix = dateformat(new Date(), 'HH:MM:ss : ')
@@ -99,6 +104,7 @@ module.exports = () => {
   })
   
   ipcMain.on("add-file", async (evt, authUUID, blogName, filedata, options) => {
+    console.log('Main.receive: add-file', authUUID, blogName, filedata, options)
 		let auth = AuthenticationManager.findByUUID(authUUID)
     let api = ProviderApiManager.getApi(auth.provider)
 
@@ -124,6 +130,7 @@ module.exports = () => {
 	})
 
 	ipcMain.on("add-clipboard-image", async (evt, authUUID, blogName) => {
+    console.log('Main.receive: add-clipboard-image', authUUID, blogName)
     let auth = AuthenticationManager.findByUUID(authUUID)
     let api = ProviderApiManager.getApi(auth.provider)
 
@@ -154,6 +161,7 @@ module.exports = () => {
 	})
 
 	ipcMain.on("add-image-url", async (evt, authUUID, blogName, url, filename) => {
+    console.log('Main.receive: add-image-url', authUUID, blogName, url, filename)
 		let auth = AuthenticationManager.findByUUID(authUUID)
     let api = ProviderApiManager.getApi(auth.provider)
 

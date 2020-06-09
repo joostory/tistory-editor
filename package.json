@@ -1,7 +1,7 @@
 {
   "name": "tistory-editor",
   "productName": "TistoryEditor",
-  "version": "1.1.2",
+  "version": "1.2.1",
   "description": "Editor for Tistory",
   "main": "src/main/main.js",
   "scripts": {
@@ -42,7 +42,7 @@
     "electron": "^9.0.2",
     "electron-builder": "^22.7.0",
     "file-loader": "^6.0.0",
-    "html-webpack-injector": "^1.1.2",
+    "html-webpack-injector": "^1.1.4",
     "html-webpack-plugin": "^4.3.0",
     "jest": "^26.0.1",
     "mini-css-extract-plugin": "^0.9.0",
@@ -94,7 +94,7 @@
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
     "tinymce": "^5.3.1",
-    "tinymce-plugin-codeblock": "^2.0.3",
+    "tinymce-plugin-codeblock": "^2.3.0",
     "tinymce-plugin-opengraph": "^2.0.6",
     "tumblr.js": "^2.0.2",
     "turndown": "^6.0.0",

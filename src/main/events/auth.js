@@ -21,6 +21,7 @@ function saveAuth(auth) {
 
 module.exports = () => {
   ipcMain.on('fetch-initial-data', (evt) => {
+    console.log('Main.receive: fetch-initial-data')
     let authList = AuthenticationManager.getAll()
     if (Array.isArray(authList) && authList.length > 0) {
       fetchAccounts(authList).then(data => {
@@ -32,6 +33,7 @@ module.exports = () => {
   })
 
   ipcMain.on("request-auth", (evt, provider) => {
+    console.log('Main.receive: request-auth', provider)
     let providerApi = ProviderApiManager.getApi(provider)
     providerApi.getAccessToken()
       .then(authInfo => ({
@@ -49,6 +51,7 @@ module.exports = () => {
   })
 
   ipcMain.on("disconnect-auth", (evt, uuid) => {
+    console.log('Main.receive: disconnect-auth', uuid)
     AuthenticationManager.removeByUUID(uuid)
     evt.sender.send('complete-disconnect-auth', uuid)
     evt.sender.send('receive-message', '인증해제 했습니다.')

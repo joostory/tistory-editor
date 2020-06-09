@@ -37,10 +37,12 @@ module.exports = () => {
 	}
 
 	ipcMain.on('fetch-google-photos-images', (evt, nextPageToken) => {
+    console.log('Main.receive: fetch-google-photos-images', nextPageToken)
 		fetchImages(evt, nextPageToken)
 	})
 
 	ipcMain.on("request-google-photos-auth", (evt, arg) => {
+    console.log('Main.receive: request-google-photos-auth')
 		authApi.getAccessToken().then(auth => {
 			settings.set('google-auth', auth)
 			evt.sender.send('receive-google-connected', true)
@@ -49,6 +51,7 @@ module.exports = () => {
 	})
 
 	ipcMain.on("disconnect-google-photos-auth", (evt, arg) => {
+    console.log('Main.receive: disconnect-google-photos-auth')
 		settings.delete('google-auth')
 		evt.sender.send('receive-google-connected', false)
 	})	

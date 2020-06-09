@@ -8,6 +8,7 @@ const analytics = new Analytics('UA-26767980-11', {
 
 export const pageview = (page, pageTitle) => {
 	if (process.env.NODE_ENV !== 'production') {
+    console.log('PageView', page, pageTitle)
 		return
   }
   

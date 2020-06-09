@@ -76,7 +76,7 @@ export default function Blog() {
   const [openBlogSelector, setOpenBlogSelector] = useState(!currentBlog)
 
 	useEffect(() => {
-    pageview(`/blog/${currentBlog.blogId}`, `${currentBlog.name}`)
+    pageview(`/blog/${currentBlog.name}`, `${currentBlog.title}`)
     ipcRenderer.send('fetch-categories', currentAuth.uuid, currentBlog.name)
   }, [currentAuth.uuid, currentBlog.name])
   

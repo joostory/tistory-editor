@@ -183,9 +183,9 @@ export default function Editor({mode, onFinish}) {
     ipcRenderer.send("enable-exist-prompt")
 
     if (post) {
-			pageview(`/blog/${currentBlog.blogId}/post/${post.id}/edit`, `${post.title}`)
+			pageview(`/blog/${currentBlog.name}/post/${post.id}/edit`, `${post.title}`)
 		} else {
-			pageview(`/blog/${currentBlog.blogId}/post`, '새 글 작성')
+			pageview(`/blog/${currentBlog.name}/post`, '새 글 작성')
 		}
     
     return () => {

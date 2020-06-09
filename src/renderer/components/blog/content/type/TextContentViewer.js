@@ -57,8 +57,8 @@ export default function TextContentViewer({ onRequestEditPost }) {
   useEffect(() => {
     if (post) {
       pageview(`/blog/${currentBlog.name}/post/${post.id}`, `${post.title}`)
-      
-      Array.prototype.map.call(viewerContent.current.getElementsByTagName("pre"), pre => {
+
+      Array.prototype.map.call(viewerContent.current.querySelectorAll("pre code"), pre => {
         highlightjs.highlightBlock(pre)
       })
     }
