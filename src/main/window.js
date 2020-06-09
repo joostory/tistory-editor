@@ -1,6 +1,7 @@
 const settings = require('electron-settings')
 const { app, BrowserWindow, Menu, shell, dialog } = require('electron')
 const path = require('path')
+const fs = require('fs')
 const url = require('url')
 const appInfo = require('./appInfo')
 
@@ -15,7 +16,7 @@ function createWindow(config) {
       nodeIntegration: true,
       enableRemoteModule: true
     },
-    icon: `${__dirname}/../../build/icons/512x512.png`
+    icon: path.join(__dirname, '/../../build/icons/512x512.png')
   })
 
   mainWindow.setMenu(null)
