@@ -74,10 +74,15 @@ export default function TinymceEditor({ value, onImageHandler, onOpenFile, onCha
 	}
 
 	function handleFetchOpengraph(url, callback) {
-		OpengraphFetcher.fetch(url, og => {
-      og.image = makeThumbnail('S200x200', og.image)
-      callback(og)
-    })
+    OpengraphFetcher.fetch(url)
+      .then(og => {
+        og.image = makeThumbnail('S200x200', og.image)
+        callback(og)
+      })
+      .catch(error => {
+        console.error(error)
+        callback(null)
+      })
   }
   
   function handleInsertImage(url, filename) {
