@@ -79,7 +79,7 @@
     "isomorphic-fetch": "^2.2.1",
     "marked": "^1.1.1",
     "material-ui-chip-input": "^1.1.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "oauth": "^0.9.15",
     "opengraph-fetcher": "^1.1.1",
     "pinkie-promise": "^2.0.1",
