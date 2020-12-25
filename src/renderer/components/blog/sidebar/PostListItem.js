@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import dateformat from 'dateformat'
+import dayjs from 'dayjs'
 import { ListItem, ListItemText, Typography, Box, makeStyles } from '@material-ui/core'
 import { DraftsOutlined, PhotoOutlined, CommentOutlined } from '@material-ui/icons'
 import { isPublished } from '../../../constants/PostState'
@@ -35,7 +35,7 @@ function PostInfo({post}) {
   return (
     <>
       <Typography component='span' className={classes.info}>
-        {dateformat(new Date(post.date), 'yyyy-mm-dd HH:MM')}
+        {dayjs(post.date).format('YYYY-MM-DD HH:mm')}
       </Typography>
       
       {category &&

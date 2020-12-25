@@ -1,6 +1,6 @@
 const AuthenticationManager = require('../lib/AuthenticationManager')
 const { ipcMain, clipboard } = require('electron')
-const dateformat = require('dateformat')
+const dayjs = require('dayjs')
 const ProviderApiManager = require('../lib/ProviderApiManager')
 
 module.exports = () => {
@@ -59,7 +59,7 @@ module.exports = () => {
     console.log('Main.receive: save-content', authUUID, blogName, post)
     let auth = AuthenticationManager.findByUUID(authUUID)
     let api = ProviderApiManager.getApi(auth.provider)
-		let messagePrefix = dateformat(new Date(), 'HH:MM:ss : ')
+    let messagePrefix = dayjs().format('HH:mm:ss : ')
 
 		if (!api.validateAuthInfo(auth.authInfo)) {
 			evt.sender.send('finish-save-content')
@@ -83,7 +83,7 @@ module.exports = () => {
     console.log('Main.receive: add-content', authUUID, blogName, post)
     let auth = AuthenticationManager.findByUUID(authUUID)
     let api = ProviderApiManager.getApi(auth.provider)
-    let messagePrefix = dateformat(new Date(), 'HH:MM:ss : ')
+    let messagePrefix = dayjs().format('HH:mm:ss : ')
     
 		if (!api.validateAuthInfo(auth.authInfo)) {
 			evt.sender.send('finish-add-content')

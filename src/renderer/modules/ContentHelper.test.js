@@ -1,5 +1,5 @@
 import { makeUrlBase, unixtimstampToDate, timestampsToDate } from './ContentHelper'
-import dateformat from 'dateformat'
+import dayjs from 'dayjs'
 
 describe("makeUrlBase", () => {
   it('// => https', () => {
@@ -24,7 +24,7 @@ describe("unixtimestampToDate", () => {
   })
   
   it('convert empty', () => {
-    const expected = dateformat(new Date(), 'yyyy-mm-dd')
+    const expected = dayjs(new Date()).format('YYYY-MM-DD')
     expect(unixtimstampToDate()).toBe(expected)
   })  
 })

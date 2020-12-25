@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
-import dateformat from 'dateformat'
+import dayjs from 'dayjs'
 import { Chip, IconButton, Box, Divider, Typography, makeStyles, Container, Card, CardMedia, CardContent } from '@material-ui/core'
 import { OpenInBrowser, Edit } from '@material-ui/icons'
 import 'highlight.js/styles/atom-one-dark.css'
@@ -70,7 +70,7 @@ export default function PhotoContentViewer() {
           <CardContent className={classes.cardContent}>
             <Box className={classes.postInfo}>
               <Typography component='span'>
-                {dateformat(new Date(post.date), 'yyyy-mm-dd HH:MM')}
+                {dayjs(post.date).format('YYYY-MM-DD HH:mm')}
               </Typography>
               <IconButton href={post.url} tooltip="브라우저에서 보기" size='small'>
                 <OpenInBrowser />

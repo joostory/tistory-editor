@@ -1,4 +1,4 @@
-import dateformat from 'dateformat'
+import dayjs from 'dayjs'
 
 export const makeUrlBase = (content) => {
 	if (!content) {
@@ -9,8 +9,8 @@ export const makeUrlBase = (content) => {
 
 export const unixtimstampToDate = (timestamp) => {
 	try {
-		const date = timestamp? new Date(parseInt(timestamp)) : new Date()
-		return dateformat(date, 'yyyy-mm-dd')
+    const date = timestamp? new Date(parseInt(timestamp)) : new Date()
+    return dayjs(date).format('YYYY-MM-DD')
 	} catch (e) {
 		console.error(timestamp, e)
 		return ''
@@ -19,8 +19,8 @@ export const unixtimstampToDate = (timestamp) => {
 
 export const timestampsToDate = (timestamps) => {
 	try {
-		const date = timestamps? new Date(timestamps) : new Date()
-		return dateformat(date, 'yyyy-mm-dd')
+    const date = timestamps? new Date(timestamps) : new Date()
+    return dayjs(date).format('YYYY-MM-DD')
 	} catch (e) {
 		console.error(timestamps, e)
 		return ''
