@@ -22,11 +22,11 @@ module.exports = () => {
 			if (auth && auth.refresh_token) {
 				try {
 					const refreshAuth = await authApi.refreshToken(auth.refresh_token)
-					settings.set('google-auth', refreshAuth)
+					settings.setSync('google-auth', refreshAuth)
           fetchImages(evt, nextPageToken)
           return
 				} catch (authError) {
-          settings.set('google-auth', null)
+          settings.setSync('google-auth', null)
           evt.sender.send('receive-google-connected', false)
 				}
       } else {
@@ -44,7 +44,7 @@ module.exports = () => {
 	ipcMain.on("request-google-photos-auth", (evt, arg) => {
     console.log('Main.receive: request-google-photos-auth')
 		authApi.getAccessToken().then(auth => {
-			settings.set('google-auth', auth)
+			settings.setSync('google-auth', auth)
 			evt.sender.send('receive-google-connected', true)
 			fetchImages(evt, null)
 		})
@@ -52,7 +52,7 @@ module.exports = () => {
 
 	ipcMain.on("disconnect-google-photos-auth", (evt, arg) => {
     console.log('Main.receive: disconnect-google-photos-auth')
-		settings.delete('google-auth')
+		settings.unsetSync('google-auth')
 		evt.sender.send('receive-google-connected', false)
 	})	
 }

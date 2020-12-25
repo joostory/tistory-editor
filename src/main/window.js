@@ -36,7 +36,7 @@ function createWindow(config) {
         }
       })
     }
-    settings.set('config', mainWindow.getBounds())
+    settings.setSync('config', mainWindow.getBounds())
   })
 
   mainWindow.on('closed', function () {
@@ -103,7 +103,7 @@ module.exports.initWindow = function initWindow() {
     return
   }
 
-	let data = settings.get('config')
+	let data = settings.getSync('config')
 	if (!data) {
 		data = {
 			width: 1024,

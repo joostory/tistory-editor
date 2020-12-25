@@ -3,11 +3,11 @@ const settings = require('electron-settings')
 let authList = null
 
 function load() {
-  authList = settings.get('authList', [])
+  authList = settings.getSync('authList', [])
 }
 
 function save() {
-  settings.set('authList', authList)
+  settings.setSync('authList', authList)
 }
 
 function getAll() {

@@ -4,7 +4,7 @@ const { app, ipcMain } = require('electron')
 module.exports = () => {
 	ipcMain.on("fetch-preferences", (evt) => {
     console.log('Main.receive: fetch-preferences')
-		let data = settings.get('preferences')
+		let data = settings.getSync('preferences')
 		if (!data) {
 			data = {}
 		}
@@ -13,7 +13,7 @@ module.exports = () => {
 
 	ipcMain.on("save-preferences", (evt, preferences) => {
     console.log('Main.receive: save-preferences', preferences)
-		settings.set("preferences", preferences)
+		settings.setSync("preferences", preferences)
 		evt.sender.send("receive-preferences", preferences)
   })
   
