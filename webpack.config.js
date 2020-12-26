@@ -22,7 +22,7 @@ const config = {
     }),
     new HtmlWebpackInjector(),
     new MiniCssExtractPlugin({
-      filename: "editor.min.css",
+      filename: "[id].min.css",
       chunkFilename: "[id].min.css"
     })
   ],
@@ -43,6 +43,9 @@ const config = {
         use: [
           {
             loader: MiniCssExtractPlugin.loader,
+            options: {
+              publicPath: ''
+            }
           },
           'css-loader',
           "resolve-url-loader",
