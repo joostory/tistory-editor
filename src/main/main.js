@@ -7,11 +7,11 @@ settings.configure({
   fileName: 'Settings'
 })
 
+app.setAsDefaultProtocolClient("tistoryeditor")
 app.showExitPrompt = false
 app.on('ready', () => {
   initWindow()
   ipc.init()
-	// appInfo.fetchLatestVersion()
 })
 
 app.on('activate', () => {
