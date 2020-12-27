@@ -43,7 +43,8 @@ const openWindow = () => {
 		frame:false,
     titleBarStyle: 'hidden',
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      enableRemoteModule: true
     },
 		alwaysOnTop: true
 	})
