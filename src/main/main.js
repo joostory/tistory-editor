@@ -7,7 +7,6 @@ settings.configure({
   fileName: 'Settings'
 })
 
-app.setAsDefaultProtocolClient("tistoryeditor")
 app.showExitPrompt = false
 app.on('ready', () => {
   initWindow()
