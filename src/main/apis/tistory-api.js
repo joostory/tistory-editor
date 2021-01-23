@@ -26,7 +26,8 @@ const getAccessToken = () => {
     alwaysOnTop: true,
     autoHideMenuBar: true,
     webPreferences: {
-			nodeIntegration: false,
+      nodeIntegration: false,
+      contextIsolation: true,
 			session: session.fromPartition("tistory:oauth2:" + new Date())
     }
   }, 'GET')

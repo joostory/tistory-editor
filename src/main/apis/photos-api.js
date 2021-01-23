@@ -18,7 +18,8 @@ class GoogleAuthApi {
 				alwaysOnTop: true,
 				autoHideMenuBar: true,
 				webPreferences: {
-					nodeIntegration: false,
+          nodeIntegration: false,
+          contextIsolation: true,
 					session: session.fromPartition("google:oauth2:" + new Date())
 				}
 			})

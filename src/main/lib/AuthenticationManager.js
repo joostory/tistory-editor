@@ -1,6 +1,6 @@
 const settings = require('electron-settings')
 
-let authList = null
+let authList = []
 
 function load() {
   authList = settings.getSync('authList', [])
