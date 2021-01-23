@@ -52,11 +52,11 @@
     "react-test-renderer": "^17.0.1",
     "regenerator-runtime": "^0.13.7",
     "resolve-url-loader": "^3.1.2",
-    "sass": "^1.32.4",
+    "sass": "^1.32.5",
     "sass-loader": "^10.1.1",
     "style-loader": "^2.0.0",
-    "webpack": "^5.15.0",
-    "webpack-cli": "^4.3.1"
+    "webpack": "^5.17.0",
+    "webpack-cli": "^4.4.0"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.2",
@@ -65,9 +65,9 @@
     "autobind-decorator": "^2.4.0",
     "cheerio": "^1.0.0-rc.5",
     "classnames": "^2.2.6",
-    "codemirror": "^5.59.0",
-    "core-js": "^3.8.1",
-    "dayjs": "^1.9.7",
+    "codemirror": "^5.59.2",
+    "core-js": "^3.8.3",
+    "dayjs": "^1.10.4",
     "debug": "^4.3.1",
     "electron-ga": "^1.0.6",
     "electron-localshortcut": "^3.2.1",
