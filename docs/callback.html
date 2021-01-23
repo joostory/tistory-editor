@@ -24,11 +24,63 @@
 	<meta name="twitter:description" content="Editor for Tistory 는 Tistory의 API를 사용하여 티스토리에 글을 작성하고 작성한 글을 관리하는 목적으로 만들고 있습니다.">
 	<meta name="twitter:image" content="https://joostory.github.io/tistory-editor/image/icon.png">
 	
-	<link rel="canonical" href="https://tistory-editor.tistory.com">
-	<meta http-equiv="refresh" content="2; url=https://tistory-editor.tistory.com">
+  <link rel="canonical" href="https://tistory-editor.tistory.com">
+  <style>
+    .container {
+      position: fixed;
+      top:0; bottom:0;
+      left:0; right:0;
+    }
+    .title {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      border-bottom: 2px solid #666;
+    }
+    .title-text {
+      margin: 0 5px;
+      font-size: 64px;
+    }
+    .loading { visibility: hidden; }
+
+    .bounce-animation {
+      animation: bounce 1s;
+      animation-iteration-count: infinite;
+    }
+
+    .rotate-animation {
+      animation: rotate 3s;
+      animation-iteration-count: infinite;
+    }
+    
+    @keyframes bounce {
+      from {transform: translateY(0%);}
+      10% {transform: translateY(-20%);}
+      50% {transform: translateY(-30%);}
+      90% {transform: translateY(-20%);}
+      to {transform: translateY(0%);}
+    }
+    @keyframes rotate {
+      from {transform: rotate(0)}
+      45% {transform: rotate(0);}
+      50% {transform: rotate(360deg);}
+      to {transform: rotate(360deg)}
+    }
+  </style>
 </head>
 <body>
-	<p>이 페이지를 티스토리로 이동합니다: <a href="https://tistory-editor.tistory.com">tistory-editor.tistory.com</a></p>
-	<p>2초 후에 연결됩니다.</p>
+  <div class="container">
+    <div class="title">
+      <div class="rotate-animation">
+        <div class="bounce-animation">
+          <h1 class="title-text">Editor</h1>
+        </div>
+      </div>
+      
+    </div>
+    
+    <div class="loading">로딩중</div>
+  </div>
 </body>
 </html>

@@ -24,7 +24,7 @@ module.exports = function (oauthInfo, windowParams, tokenMethod = 'POST') {
     opts = opts || {};
 
     if (!oauthInfo.redirectUri) {
-      oauthInfo.redirectUri = 'urn:ietf:wg:oauth:2.0:oob';
+      oauthInfo.redirectUri = 'https://joostory.github.io/tistory-editor/callback.html';
     }
 
     var urlParams = {
