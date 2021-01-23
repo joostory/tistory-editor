@@ -218,18 +218,28 @@ const _uploadFile = (accessToken, blogName, fileBlob, fileOption) => {
 const validateAuthInfo = (auth) => auth && auth.access_token
 
 const fetchAccount = async (auth) => {
-  const userRes = await fetchUser(auth.authInfo)
-  const blogRes = await fetchBlogInfo(auth.authInfo)
+  let user = {
+    name: "tistory",
+    image: null
+  }
+  let blogs = []
+  try {
+    const userRes = await fetchUser(auth.authInfo)
+    const blogRes = await fetchBlogInfo(auth.authInfo)
+    user.name = userRes.tistory.item.name,
+    user.image = userRes.tistory.item.image
+    blogs = blogRes.tistory.item.blogs
+  } catch (e) {
+    console.error(e)
+    user.name = "불러오기 오류"
+  }
   return {
     auth: {
       uuid: auth.uuid,
       provider: auth.provider
     },
-    user: {
-      name: userRes.tistory.item.name,
-      image: userRes.tistory.item.image
-    },
-    blogs: blogRes.tistory.item.blogs.map(blog => ({
+    user: user,
+    blogs: blogs.map(blog => ({
       name: blog.name,
       url: blog.secondaryUrl == ''? blog.url : blog.secondaryUrl,
       title: blog.title,

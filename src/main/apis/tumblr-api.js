@@ -125,17 +125,27 @@ const savePost = async (auth, blogName, post) => {
 const validateAuthInfo = (auth) => auth && auth.token
 
 const fetchAccount = async (auth) => {
-  const res = await fetchUser(auth.authInfo)
+  let blogs = []
+  let username = ""
+  try {
+    const res = await fetchUser(auth.authInfo)
+    username = res.user.name
+    blogs = res.user.blogs
+  } catch (e) {
+    username = "불러오기 오류"
+    console.error(e)
+  }
+  
   return {
     auth: {
       uuid: auth.uuid,
       provider: auth.provider
     },
     user: {
-      name: res.user.name,
+      name: username,
       image: null
     },
-    blogs: res.user.blogs.map(blog => ({
+    blogs: blogs.map(blog => ({
       name: blog.name,
       url: blog.url,
       title: blog.title,
