@@ -1,20 +1,6 @@
-import Analytics from 'electron-ga'
-import { v4 as uuid } from 'uuid'
+import { ipcRenderer } from 'electron'
 
-const clientID = uuid()
-const analytics = new Analytics('UA-26767980-11', {
-  userId: clientID
-})
-
-export const pageview = (page, pageTitle) => {
-	if (process.env.NODE_ENV !== 'production') {
-    console.log('PageView', page, pageTitle)
-		return
-  }
-  
-  return analytics.send('pageview', {
-    dl: encodeURIComponent(page),
-    dt: pageTitle
-  })
+export function pageview(page, pageTitle) {
+  console.log('GA-PageView', page, pageTitle)
+  ipcRenderer.send('ga-pageview', page, pageTitle)
 }
-
