@@ -48,8 +48,8 @@ const config = {
             }
           },
           'css-loader',
-          "resolve-url-loader",
-          'sass-loader'
+          'sass-loader',
+          "resolve-url-loader"
         ]
       },
       {
