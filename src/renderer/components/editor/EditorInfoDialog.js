@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Dialog, Button, DialogTitle, DialogContent, DialogActions, makeStyles, Select, MenuItem, FormControl, InputLabel } from '@material-ui/core'
-import ChipInput from 'material-ui-chip-input'
+import ChipInput from './ChipInput'
 
 const useStyles = makeStyles(theme => ({
   grow: {
