@@ -1,9 +1,11 @@
 const settings = require('electron-settings')
 
+let initialized = false
 let authList = []
 
 function load() {
   authList = settings.getSync('authList', [])
+  console.log("load authList", authList)
 }
 
 function save() {
@@ -11,8 +13,9 @@ function save() {
 }
 
 function getAll() {
-  if (!authList) {
+  if (!initialized) {
     load()
+    initialized = true
   }
   return authList
 }
