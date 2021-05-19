@@ -7,20 +7,7 @@ const appInfo = require('./appInfo')
 
 let mainWindow = null
 
-function createWindow(config) {
-  mainWindow = new BrowserWindow({
-    width: config.width,
-    height: config.height,
-    autoHideMenuBar: true,
-    webPreferences: {
-      nodeIntegration: true,
-      enableRemoteModule: true
-    },
-    icon: path.join(__dirname, '/../../build/icons/512x512.png')
-  })
-
-  mainWindow.setMenu(null)
-
+function setWindowEvent() {
   mainWindow.on("close", (e) => {
     if (app.showExitPrompt) {
       e.preventDefault()
@@ -42,7 +29,9 @@ function createWindow(config) {
   mainWindow.on('closed', function () {
     mainWindow = null
   })
+}
 
+function setWindowWebContents() {
   mainWindow.loadURL(url.format({
     pathname: path.join(__dirname, '../../app/index.html'),
     protocol: 'file:',
@@ -64,6 +53,10 @@ function createWindow(config) {
 
   mainWindow.webContents.on('will-navigate', handleRedirect)
   mainWindow.webContents.on('new-window', handleRedirect)
+}
+
+function setWindowMenu() {
+  mainWindow.setMenu(null)
 
   // Create the Application's main menu
   var template = [
@@ -98,19 +91,40 @@ function createWindow(config) {
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
-module.exports.initWindow = function initWindow() {
-  if (mainWindow !== null) {
-    return
-  }
+function createWindow(config) {
+  mainWindow = new BrowserWindow({
+    width: config.width,
+    height: config.height,
+    autoHideMenuBar: true,
+    webPreferences: {
+      nodeIntegration: true,
+      enableRemoteModule: true
+    },
+    icon: path.join(__dirname, '/../../build/icons/512x512.png')
+  })
 
-	let data = settings.getSync('config')
+  setWindowEvent()
+  setWindowWebContents()
+  setWindowMenu()
+}
+
+function getWindowConfig() {
+  let data = settings.getSync('config')
 	if (!data) {
 		data = {
 			width: 1024,
 			height: 720
 		}
   }
-	createWindow(data)
+  return data
+}
+
+module.exports.initWindow = function initWindow() {
+  if (mainWindow !== null) {
+    return
+  }
+	
+	createWindow(getWindowConfig())
 }
 
 
