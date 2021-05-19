@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require("webpack");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const HtmlWebpackInjector = require('html-webpack-injector')
 
@@ -61,18 +61,19 @@ const config = {
 		]
 	},
   target: "electron-renderer",
-  optimization: {
-    splitChunks: {
-      chunks: 'all'
-    }
-  }
 }
 
 
 
 module.exports = (env, argv) => {
   if (argv.mode === 'production') {
-    config.plugins.push(new OptimizeCSSAssetsPlugin({}))
+    config.minimize = true
+    config.minimizer = [
+      new CssMinimizerPlugin()
+    ]
+    config.splitChunks = {
+      chunks: 'all'
+    }
   }
 
   return config
