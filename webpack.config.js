@@ -67,12 +67,14 @@ const config = {
 
 module.exports = (env, argv) => {
   if (argv.mode === 'production') {
-    config.minimize = true
-    config.minimizer = [
-      new CssMinimizerPlugin()
-    ]
-    config.splitChunks = {
-      chunks: 'all'
+    config.optimization = {
+      minimize: true,
+      minimizer: [
+        new CssMinimizerPlugin()
+      ],
+      splitChunks: {
+        chunks: 'all'
+      }
     }
   }
 
