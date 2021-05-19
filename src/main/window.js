@@ -98,6 +98,7 @@ function createWindow(config) {
     autoHideMenuBar: true,
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: false,
       enableRemoteModule: true
     },
     icon: path.join(__dirname, '/../../build/icons/512x512.png')
