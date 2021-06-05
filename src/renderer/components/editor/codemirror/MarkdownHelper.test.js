@@ -2,7 +2,7 @@ import MarkdownHelper from './MarkdownHelper'
 
 describe("MarkdownHelper", () => {
   it("markdownToHtml: codeblock with language", () => {
-    const expected = "<pre><code class=\"language-javascript\">console.log(&quot;Hello&quot;)</code></pre>\n"
+    const expected = "<pre><code class=\"language-javascript\">console.log(&quot;Hello&quot;)\n</code></pre>\n"
     const result = MarkdownHelper.markdownToHtml("```javascript\nconsole.log(\"Hello\")\n```")
     expect(result).toBe(expected)
   })
