@@ -7,6 +7,7 @@ const objectAssign = require('object-assign');
 const nodeUrl = require('url');
 const electron = require('electron');
 const BrowserWindow = electron.BrowserWindow || electron.remote.BrowserWindow;
+const AuthUtils = require('../lib/AuthUtils')
 
 var generateRandomString = function (length) {
   var text = '';
@@ -31,7 +32,7 @@ module.exports = function (oauthInfo, windowParams, tokenMethod = 'POST') {
       response_type: 'code',
       redirect_uri: oauthInfo.redirectUri,
       client_id: oauthInfo.clientId,
-      state: generateRandomString(16)
+      state: AuthUtils.generateRandomString(16)
     };
 
     if (opts.scope) {
