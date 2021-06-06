@@ -1,4 +1,3 @@
-const oauth2 = require('../oauth/ElectronOauth2');
 const fs = require('fs')
 const fetch = require('isomorphic-fetch')
 const querystring = require('querystring')
@@ -7,6 +6,7 @@ const {session} = require('electron')
 const stream = require('stream')
 const Oauth2infoReader = require('../oauth/OauthInfoReader')
 const appInfo = require('../appInfo')
+const ExternalOAuth2 = require('../oauth/ExternalOAuth2');
 
 const errorHandler = (res) => {
   if (!res.ok) {
@@ -20,19 +20,17 @@ const errorHandler = (res) => {
 
 const BASE_URL = 'https://www.tistory.com/apis'
 
-const getAccessToken = () => {
+const requestAuth = () => {
   const oauth2infoReader = new Oauth2infoReader()
-  const tistoryOAuth = oauth2(oauth2infoReader.getTistory(), {
-    alwaysOnTop: true,
-    autoHideMenuBar: true,
-    webPreferences: {
-      nodeIntegration: false,
-      contextIsolation: true,
-			session: session.fromPartition("tistory:oauth2:" + new Date())
-    }
-  }, 'GET')
+  const tistoryOAuth = new ExternalOAuth2(oauth2infoReader.getTistory())
+  tistoryOAuth.requestAuth({})
+  return tistoryOAuth.getState()
+}
 
-  return tistoryOAuth.getAccessToken({})
+const requestToken = (code) => {
+  const oauth2infoReader = new Oauth2infoReader()
+  const tistoryOAuth = new ExternalOAuth2(oauth2infoReader.getTistory())
+  return tistoryOAuth.requestToken(code, 'GET')
 }
 
 const fetchBlogInfo = (auth) => {
@@ -253,7 +251,8 @@ const fetchAccount = async (auth) => {
 
 
 module.exports = {
-  getAccessToken: getAccessToken,
+  requestAuth: requestAuth,
+  requestToken: requestToken,
   fetchBlogInfo: fetchBlogInfo,
   fetchUser: fetchUser,
   fetchPosts: fetchPosts,
