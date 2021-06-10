@@ -37,32 +37,15 @@ module.exports = () => {
   ipcMain.on("request-auth", (evt, provider) => {
     console.log('Main.receive: request-auth', provider)
     let providerApi = ProviderApiManager.getApi(provider)
-    let state = providerApi.requestAuth()
-    OAuthRequestManager.saveRequestInfo(state, (code) => {
-      const providerApi = ProviderApiManager.getApi(provider)
-      providerApi.requestToken(code)
-        .then(data => {
-          if (data.error) {
-            throw new Error(`${data.error}: ${data.error_description}`)
-          }
-
-          return {
-            uuid: uuid(),
-            provider: provider,
-            authInfo: data
-          }
+    providerApi.requestAuth((auth) => {
+      saveAuth(auth)
+      providerApi.fetchAccount(auth)
+        .then(account => {
+          evt.sender.send('receive-account', account)
         })
-        .then(saveAuth)
-        .then(auth => {
-          providerApi.fetchAccount(auth)
-            .then(account => {
-              evt.sender.send('receive-account', account)
-            })
-        })
-        .catch(e => {
-          console.error(e)
-          evt.sender.send('receive-message', `오류가 발생했습니다. (${e.message})`)
-        })
+    }, e => {
+      console.error(e)
+      evt.sender.send('receive-message', `오류가 발생했습니다. (${e.message})`)
     })
   })
 

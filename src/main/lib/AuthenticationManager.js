@@ -4,7 +4,7 @@ let initialized = false
 let authList = []
 
 function load() {
-  authList = settings.getSync('authList', [])
+  authList = settings.getSync('authList', []).filter(auth => auth != null)
   console.log("load authList", authList)
 }
 
