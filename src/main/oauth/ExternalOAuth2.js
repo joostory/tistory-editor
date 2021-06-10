@@ -1,4 +1,3 @@
-const Promise = require('pinkie-promise');
 const queryString = require('querystring');
 const fetch = require('node-fetch');
 const electron = require('electron');

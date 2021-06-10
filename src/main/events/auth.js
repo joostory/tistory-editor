@@ -2,7 +2,6 @@ const uuid = require('uuid').v4
 const { ipcMain } = require('electron')
 const AuthenticationManager = require('../lib/AuthenticationManager')
 const ProviderApiManager = require('../lib/ProviderApiManager')
-const OAuthRequestManager = require('../oauth/OAuthRequestManager');
 
 async function fetchAccount(auth) {
   const api = ProviderApiManager.getApi(auth.provider)
