@@ -198,7 +198,7 @@ export default function Editor({mode, onFinish}) {
 
       ipcRenderer.send("disable-exist-prompt")
     }
-  })
+  }, [])
 
   return (
     <Box className={classes.root}>

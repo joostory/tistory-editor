@@ -1,20 +1,24 @@
 const oauth2 = require('../oauth/ElectronOauth2');
+const ExternalOAuth2 = require('../oauth/ExternalOAuth2')
 const fetch = require('isomorphic-fetch')
 const {clipboard, session} = require('electron')
 const OauthInfoReader = require('../oauth/OauthInfoReader')
-const appInfo = require('../appInfo')
+const appInfo = require('../appInfo');
+const OAuthRequestManager = require('../oauth/OAuthRequestManager');
 
 class GoogleAuthApi {
+  #googleOAuth
+
 	constructor() {
-		this.googleOAuth = null
+    this.#googleOAuth = null
 	}
 
 	makeGoogleOAuth() {
-		if (!this.googleOAuth) {
+		if (!this.#googleOAuth) {
 			const oauthInfoReader = new OauthInfoReader()
 			const oauthInfo = oauthInfoReader.getGoogle()
 
-			this.googleOAuth = oauth2(oauthInfo, {
+			this.#googleOAuth = oauth2(oauthInfo, {
 				alwaysOnTop: true,
 				autoHideMenuBar: true,
 				webPreferences: {
@@ -25,8 +29,30 @@ class GoogleAuthApi {
 			})
 		}
 		
-		return this.googleOAuth
+		return this.#googleOAuth
 	}
+
+  requestAuth(successHandler, failureHandler) {
+    const oauthInfoReader = new OauthInfoReader()
+    const oauth2 = new ExternalOAuth2(oauthInfoReader.getGoogle())
+    OAuthRequestManager.saveRequestInfo("oauth", (searchParams) => {
+      const code = searchParams.get("code")
+      oauth2.requestToken(code)
+        .then(data => {
+          if (data.error) {
+            throw new Error(`${data.error}: ${data.error_description}`)
+          }
+
+          return data
+        })
+        .then(successHandler)
+        .catch(failureHandler)
+    })
+
+    oauth2.requestAuth({
+			scope: ['https://www.googleapis.com/auth/photoslibrary.readonly']
+		})
+  }
 
 	getAccessToken() {
 		return this.makeGoogleOAuth().getAccessToken({
