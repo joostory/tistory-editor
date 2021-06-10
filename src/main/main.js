@@ -3,7 +3,6 @@ const ipc = require('./ipc-event')
 const settings = require('electron-settings')
 const { initWindow } = require('./window')
 const OAuthRequestManager = require('./oauth/OAuthRequestManager')
-const ProviderApiManager = require('./lib/ProviderApiManager')
 
 const PROTOCOL = "tistory-editor"
 
