@@ -42,9 +42,11 @@ module.exports = () => {
         .then(account => {
           evt.sender.send('receive-account', account)
         })
+      evt.sender.send('request-auth-done')
     }, e => {
       console.error(e)
       evt.sender.send('receive-message', `오류가 발생했습니다. (${e.message})`)
+      evt.sender.send('request-auth-done')
     })
   })
 
