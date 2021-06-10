@@ -59,8 +59,6 @@ class ExternalOAuth2 {
       fetchOptions['body'] = queryString.stringify(tokenRequestData);
     }
 
-    console.log("requestToken", tokenMethod, url, fetchOptions)
-
     return fetch(url, fetchOptions)
       .then(res => res.json())
   }

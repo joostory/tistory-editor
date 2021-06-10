@@ -1,7 +1,37 @@
+const uuid = require('uuid').v4
 const OauthInfoReader = require('../oauth/OauthInfoReader')
 const oauth = require("../oauth/ElectronOauth1")
 const {session, BrowserWindow} = require('electron')
 const tumblr = require("tumblr.js")
+const ExternalOAuth1 = require('../oauth/ExternalOAuth1');
+const OAuthRequestManager = require('../oauth/OAuthRequestManager');
+
+const PROVIDER_ID = 'tumblr'
+
+const requestAuth = (successHandler, failureHandler) => {
+  const oauthInfoReader = new OauthInfoReader()
+  const oauth1 = new ExternalOAuth1(oauthInfoReader.getTumblr())
+  oauth1.requestAuth((requestTokens) => {
+    OAuthRequestManager.saveRequestInfo('oauth', (searchParams) => {
+      const verifier = searchParams.get("oauth_verifier")
+      oauth1.requestToken(verifier, requestTokens, (error, token, tokenSecret) => {
+        if (error) {
+          failureHandler()
+          return
+        }
+
+        successHandler({
+          uuid: uuid(),
+          provider: PROVIDER_ID,
+          authInfo: {
+            token, tokenSecret
+          }
+        })
+      })
+    })
+  })
+
+}
 
 const getAccessToken = () => {
   const window = new BrowserWindow({
@@ -158,6 +188,7 @@ const fetchAccount = async (auth) => {
 
 
 module.exports = {
+  requestAuth: requestAuth,
   getAccessToken: getAccessToken,
   fetchUser: fetchUser,
   fetchPosts: fetchPosts,

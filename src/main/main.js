@@ -27,10 +27,9 @@ app.on('window-all-closed', () => {
 
 app.on("open-url", (e, urlString) => {
   const url = new URL(urlString)
-  console.log("OPEN_URL", urlString, url, url.pathname, url.searchParams.get('code'), url.searchParams.get('state'))
-  const requestHandler = OAuthRequestManager.loadRequestInfo(url.searchParams.get('state'))
+  let requestHandler = OAuthRequestManager.loadRequestInfo("oauth")
   if (requestHandler) {
-    requestHandler(url.searchParams.get('code'))
+    requestHandler(url.searchParams)
   }
 })
 

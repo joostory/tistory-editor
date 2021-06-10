@@ -1,12 +1,14 @@
+const uuid = require('uuid').v4
 const fs = require('fs')
 const fetch = require('isomorphic-fetch')
 const querystring = require('querystring')
 const FormData = require('form-data')
 const {session} = require('electron')
 const stream = require('stream')
-const Oauth2infoReader = require('../oauth/OauthInfoReader')
+const OauthInfoReader = require('../oauth/OauthInfoReader')
 const appInfo = require('../appInfo')
 const ExternalOAuth2 = require('../oauth/ExternalOAuth2');
+const OAuthRequestManager = require('../oauth/OAuthRequestManager');
 
 const errorHandler = (res) => {
   if (!res.ok) {
@@ -19,18 +21,30 @@ const errorHandler = (res) => {
 }
 
 const BASE_URL = 'https://www.tistory.com/apis'
+const PROVIDER_ID = 'tistory'
 
-const requestAuth = () => {
-  const oauth2infoReader = new Oauth2infoReader()
-  const tistoryOAuth = new ExternalOAuth2(oauth2infoReader.getTistory())
-  tistoryOAuth.requestAuth({})
-  return tistoryOAuth.getState()
-}
+const requestAuth = (successHandler, failureHandler) => {
+  const oauthInfoReader = new OauthInfoReader()
+  const oauth2 = new ExternalOAuth2(oauthInfoReader.getTistory())
+  OAuthRequestManager.saveRequestInfo("oauth", (searchParams) => {
+    const code = searchParams.get("code")
+    oauth2.requestToken(code, 'GET')
+      .then(data => {
+        if (data.error) {
+          throw new Error(`${data.error}: ${data.error_description}`)
+        }
 
-const requestToken = (code) => {
-  const oauth2infoReader = new Oauth2infoReader()
-  const tistoryOAuth = new ExternalOAuth2(oauth2infoReader.getTistory())
-  return tistoryOAuth.requestToken(code, 'GET')
+        return {
+          uuid: uuid(),
+          provider: PROVIDER_ID,
+          authInfo: data
+        }
+      })
+      .then(successHandler)
+      .catch(failureHandler)
+  })
+
+  oauth2.requestAuth({})
 }
 
 const fetchBlogInfo = (auth) => {
@@ -252,7 +266,6 @@ const fetchAccount = async (auth) => {
 
 module.exports = {
   requestAuth: requestAuth,
-  requestToken: requestToken,
   fetchBlogInfo: fetchBlogInfo,
   fetchUser: fetchUser,
   fetchPosts: fetchPosts,
