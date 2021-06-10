@@ -6,7 +6,7 @@ module.exports = () => {
 	const authApi = new GoogleAuthApi()
 	const fetchImages = async (evt, nextPageToken) => {
 		console.log('fetchImage', nextPageToken)
-		const auth = settings.get('google-auth')
+		const auth = settings.getSync('google-auth')
 
 		try {
 			if (!auth || !auth.access_token) {
@@ -32,7 +32,7 @@ module.exports = () => {
       } else {
         evt.sender.send('receive-google-connected', false)
       }
-      evt.sender.send('receive-google-photos-images', [])
+      evt.sender.send('receive-google-photos-images', null)
 		}
 	}
 
@@ -43,11 +43,14 @@ module.exports = () => {
 
 	ipcMain.on("request-google-photos-auth", (evt, arg) => {
     console.log('Main.receive: request-google-photos-auth')
-		authApi.getAccessToken().then(auth => {
-			settings.setSync('google-auth', auth)
+    authApi.requestAuth((auth) => {
+      settings.setSync('google-auth', auth)
 			evt.sender.send('receive-google-connected', true)
-			fetchImages(evt, null)
-		})
+			fetchImages(evt, null)//
+    }, () => {
+      console.error(e)
+      evt.sender.send('receive-message', `오류가 발생했습니다. (${e.message})`)
+    })
 	})
 
 	ipcMain.on("disconnect-google-photos-auth", (evt, arg) => {

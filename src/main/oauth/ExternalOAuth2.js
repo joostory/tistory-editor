@@ -20,11 +20,15 @@ class ExternalOAuth2 {
     opts = opts || {};
 
     var urlParams = {
-      response_type: opts.scope || 'code',
+      response_type: 'code',
       redirect_uri: this.#oauthInfo.redirectUri,
       client_id: this.#oauthInfo.clientId,
       state: this.#state
     };
+
+    if (opts.scope) {
+      urlParams.scope = opts.scope;
+    }
 
     if (opts.accessType) {
       urlParams.access_type = opts.accessType;
