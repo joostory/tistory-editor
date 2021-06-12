@@ -128,4 +128,5 @@ module.exports.initWindow = function initWindow() {
 	createWindow(getWindowConfig())
 }
 
+module.exports.getWindow = () => mainWindow
 
