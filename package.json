@@ -1,7 +1,7 @@
 {
   "name": "tistory-editor",
   "productName": "TistoryEditor",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Editor for Tistory",
   "main": "src/main/main.js",
   "scripts": {
