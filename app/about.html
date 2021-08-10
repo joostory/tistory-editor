@@ -7,15 +7,29 @@
 
 		<title>Editor</title>
     <meta name="description" content="Editor for Tistory">
-    <link rel="stylesheet" href="./vendors~editor.min.css">
-		<link rel="stylesheet" href="./editor.min.css">
+    <style>
+      .container {
+        position: absolute;
+        left:0; right:0; top:0; bottom:0;
+        display: flex; align-items: center; justify-content: center;
+        background: #444;
+      }
+      .ready {
+        color: #eee;
+        text-align: center;
+      }
+      .ready h1 {
+        font-size: 64px;
+        margin: 10px;
+      }
+    </style>
 	</head>
 
   <body>
 		<div class='container app'>
 			<div class='ready'>
 				<h1>Editor</h1>
-				<div>버전: <span id="version"></span></div>
+				<div><span id="version">latest</span></div>
         <div id="needUpgrade" style="display:none; margin-top:10px; padding:15px; border-radius:5px; background-color:#f4f4f4">
           새로운 버전 <a href="https://joostory.github.io/tumblr-editor" id="latestVersion"></a>이 준비되었습니다.
         </div>
@@ -25,11 +39,11 @@
 		<script>
       const appInfo = require('electron').remote.require('./appInfo')
       const latestVersion = appInfo.latestVersion()
-			document.getElementById("version").innerHTML = appInfo.version
-			if (appInfo.version != latestVersion) {
-				document.getElementById("latestVersion").innerHTML = latestVersion
-				document.getElementById("needUpgrade").style.display = "block"
-			}
+      document.getElementById("version").innerHTML = appInfo.version
+      if (appInfo.version != latestVersion) {
+        document.getElementById("latestVersion").innerHTML = latestVersion
+        document.getElementById("needUpgrade").style.display = "block"
+      }
 		</script>
   </body>
 
