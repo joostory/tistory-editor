@@ -1,11 +1,13 @@
 const { app, protocol } = require('electron')
 const ipc = require('./ipc-event')
 const settings = require('electron-settings')
+const remote = require('@electron/remote/main')
 const { initWindow, getWindow } = require('./window')
 const OAuthRequestManager = require('./oauth/OAuthRequestManager')
 
 const PROTOCOL = "tistory-editor"
 
+remote.initialize()
 console.log("DEBUG: platform", process.platform)
 settings.configure({
   fileName: 'Settings'

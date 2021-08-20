@@ -5,8 +5,7 @@ const queryString = require('querystring');
 const fetch = require('node-fetch');
 const objectAssign = require('object-assign');
 const nodeUrl = require('url');
-const electron = require('electron');
-const BrowserWindow = electron.BrowserWindow || electron.remote.BrowserWindow;
+const { BrowserWindow } = require('electron');
 const AuthUtils = require('../lib/AuthUtils')
 
 var generateRandomString = function (length) {

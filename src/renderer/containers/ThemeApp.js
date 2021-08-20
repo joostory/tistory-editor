@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react'
-import { remote } from 'electron'
+import { nativeTheme } from '@electron/remote'
 import { useSelector } from 'react-redux'
-import { ThemeProvider, createMuiTheme } from '@material-ui/core'
+import { ThemeProvider, createTheme } from '@material-ui/core'
 import * as AppTheme from '../constants/AppTheme'
 import App from './App'
 
@@ -46,17 +46,17 @@ const LIGHT_PALETTE = {
 
 export default function ThemeApp({}) {
   const preferences = useSelector(state => state.preferences)
-  const [shouldUseDarkColors, setShouldUseDarkColors] = useState(remote.nativeTheme.shouldUseDarkColors)
+  const [shouldUseDarkColors, setShouldUseDarkColors] = useState(nativeTheme.shouldUseDarkColors)
   const theme = useMemo(() => {
     const appTheme = preferences.appTheme || AppTheme.SYSTEM
     const prefersDarkMode = appTheme == AppTheme.SYSTEM? shouldUseDarkColors : appTheme == AppTheme.DARK
-    return createMuiTheme({
+    return createTheme({
       palette: prefersDarkMode? DARK_PALETTE : LIGHT_PALETTE,
     })    
   }, [preferences, shouldUseDarkColors])
 
-  remote.nativeTheme.on('updated', () => {
-    setShouldUseDarkColors(remote.nativeTheme.shouldUseDarkColors)
+  nativeTheme.on('updated', () => {
+    setShouldUseDarkColors(nativeTheme.shouldUseDarkColors)
   })
 
   return (
