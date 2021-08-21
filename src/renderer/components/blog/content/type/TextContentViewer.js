@@ -16,7 +16,9 @@ const useStyles = makeStyles(theme => ({
     background: theme.palette.content.background,
     width: theme.palette.content.maxWidth,
     boxShadow: theme.shadows[1],
-    borderRadius: theme.spacing(0.5)
+    borderRadius: theme.spacing(0.5),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
   },
   title: {
     paddingTop: theme.spacing(5),
@@ -28,8 +30,23 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'center',
     color: theme.palette.content.text
   },
-  postInfoButton: {
+  divContainer: {
+    position: 'relative',
+    paddingTop: 9
+  },
+  btnBox: {
+    position: 'absolute',
+    left: '50%',
+    top: 0,
+    transform: 'translate(-50%, 0)',
+    backgroundColor: '#fff',
+    padding: '0 10px'
+  },
+  btnPostInfo: {
     color: theme.palette.content.text
+  },
+  icoPostInfo: {
+    fontSize: 18
   },
   divider: {
     backgroundColor: theme.palette.content.divider
@@ -75,16 +92,20 @@ export default function TextContentViewer({ onRequestEditPost }) {
           <Typography component='span'>
             {dayjs(post.date).format('YYYY-MM-DD HH:mm')}
           </Typography>
-          <IconButton className={classes.postInfoButton} href={post.url} tooltip="브라우저에서 보기" size='small'>
-            <OpenInBrowser />
-          </IconButton>
-          <IconButton className={classes.postInfoButton} onClick={onRequestEditPost} tooltip="수정하기" size='small'>
-            <Edit />
-          </IconButton>
         </Box>
       </Container>
 
-      <Divider className={classes.divider} />
+      <Container disableGutters={false} className={classes.divContainer}>
+        <Box className={classes.btnBox}>
+          <IconButton className={classes.btnPostInfo} href={post.url} tooltip="브라우저에서 보기" size='small'>
+            <OpenInBrowser className={classes.icoPostInfo} />
+          </IconButton>
+          <IconButton className={classes.btnPostInfo} onClick={onRequestEditPost} tooltip="수정하기" size='small'>
+            <Edit className={classes.icoPostInfo} />
+          </IconButton>
+        </Box>
+        <Divider className={classes.divider} />
+      </Container>
 
       <Container disableGutters={true} className={classes.contentContainer}>
         <div ref={viewerContent}

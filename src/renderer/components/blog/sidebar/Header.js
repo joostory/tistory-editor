@@ -5,7 +5,7 @@ import {
   makeStyles,
   Badge, IconButton
 } from '@material-ui/core'
-import { Menu, MoreHoriz, MoreVert } from '@material-ui/icons'
+import { Menu, MoreHoriz, ArrowDropDown } from '@material-ui/icons'
 import Providers from '../../../constants/Providers'
 
 const useStyle = makeStyles(theme => ({
@@ -45,7 +45,7 @@ export default function Header({onSelectBlog}) {
 	return (
 		<Toolbar className={classes.root}>
       <Badge
-        overlap='circle'
+        overlap='circular'
         anchorOrigin={{vertical:'bottom',horizontal:'right'}}
         badgeContent={<Avatar src={provider.logo} className={classes.smallAvatar} />}
       >
@@ -55,7 +55,7 @@ export default function Header({onSelectBlog}) {
 			<Typography className={classes.title}>
 				{currentBlog.title}
 			</Typography>
-      <IconButton onClick={onSelectBlog}><MoreHoriz /></IconButton>
+      <IconButton onClick={onSelectBlog}><ArrowDropDown /></IconButton>
 		</Toolbar>
 	)
 }
