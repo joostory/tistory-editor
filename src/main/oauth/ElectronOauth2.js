@@ -2,7 +2,7 @@
 
 const Promise = require('pinkie-promise');
 const queryString = require('querystring');
-const fetch = require('node-fetch');
+const axios = require('axios')
 const objectAssign = require('object-assign');
 const nodeUrl = require('url');
 const { BrowserWindow } = require('electron');
@@ -111,8 +111,8 @@ module.exports = function (oauthInfo, windowParams, tokenMethod = 'POST') {
       fetchOptions['body'] = queryString.stringify(data);
     }
 
-    return fetch(url, fetchOptions)
-      .then(res => res.json());
+    return axios(url, fetchOptions)
+      .then(res => res.data);
   }
 
   function getAccessToken(opts) {

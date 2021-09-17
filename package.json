@@ -65,6 +65,7 @@
     "@material-ui/icons": "^4.11.2",
     "@tinymce/tinymce-react": "^3.9.0",
     "autobind-decorator": "^2.4.0",
+    "axios": "^0.21.4",
     "cheerio": "^1.0.0-rc.5",
     "classnames": "^2.2.6",
     "codemirror": "^5.59.2",

@@ -53,6 +53,7 @@ function setWindowWebContents() {
 
   mainWindow.webContents.on('will-navigate', handleRedirect)
   mainWindow.webContents.on('new-window', handleRedirect)
+  require('@electron/remote/main').enable(mainWindow.webContents)
 }
 
 function setWindowMenu() {

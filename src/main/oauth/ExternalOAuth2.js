@@ -1,5 +1,5 @@
 const queryString = require('querystring');
-const fetch = require('node-fetch');
+const axios = require('axios')
 const electron = require('electron');
 const AuthUtils = require('../lib/AuthUtils')
 
@@ -62,8 +62,8 @@ class ExternalOAuth2 {
       fetchOptions['body'] = queryString.stringify(tokenRequestData);
     }
 
-    return fetch(url, fetchOptions)
-      .then(res => res.json())
+    return axios(url, fetchOptions)
+      .then(res => res.data)
   }
 }
 
