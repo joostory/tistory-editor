@@ -1,6 +1,6 @@
 import TurndownService from 'turndown'
 import { gfm } from 'turndown-plugin-gfm'
-import marked from 'marked'
+import { marked } from 'marked'
 
 const turndownService = new TurndownService({
   headingStyle: 'atx',
@@ -20,7 +20,7 @@ class MarkdownHelper {
 	}
 
 	static markdownToHtml(content) {
-		return marked(content, {
+		return marked.parse(content, {
       breaks: true,
       headerIds: false
     })
