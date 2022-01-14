@@ -1,6 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { Dialog, Button, DialogTitle, DialogContent, DialogActions, makeStyles, Select, MenuItem, FormControl, InputLabel } from '@material-ui/core'
+import { Dialog, Button, DialogTitle, DialogContent, DialogActions, Select, MenuItem, FormControl, InputLabel } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import ChipInput from './ChipInput'
 
 const useStyles = makeStyles(theme => ({

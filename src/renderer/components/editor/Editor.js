@@ -7,8 +7,9 @@ import { addPost, updatePost } from '../../actions'
 import * as ContentMode from '../../constants/ContentMode'
 
 import {
-  Box, Snackbar, makeStyles
-} from '@material-ui/core'
+  Box, Snackbar
+} from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import EditorContent from './EditorContent'
 import EditorToolbar from './EditorToolbar'
 import EditorInfoDialog from './EditorInfoDialog'

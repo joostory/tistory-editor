@@ -5,8 +5,9 @@ import { ipcRenderer } from 'electron'
 import {
   Dialog, Button, DialogTitle, DialogContent, DialogActions,
   RadioGroup, Radio, FormControl, InputLabel,
-  FormControlLabel, FormLabel, Select, MenuItem, makeStyles
-} from '@material-ui/core'
+  FormControlLabel, FormLabel, Select, MenuItem
+} from '@mui/material'
+import { makeStyles } from '@mui/styles'
 
 import * as EditorMode from '../constants/EditorMode'
 import * as AppTheme from '../constants/AppTheme'

@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import dayjs from 'dayjs'
-import { Chip, IconButton, Box, Divider, Typography, makeStyles, Container, Card, CardMedia, CardContent } from '@material-ui/core'
-import { OpenInBrowser, Edit } from '@material-ui/icons'
+import { Chip, IconButton, Box, Divider, Typography, Container, Card, CardMedia, CardContent } from '@mui/material'
+import { makeStyles } from '@mui/styles'
+import { OpenInBrowser, Edit } from '@mui/icons-material'
 import 'highlight.js/styles/atom-one-dark.css'
 import { pageview } from '../../../../modules/AnalyticsHelper'
 

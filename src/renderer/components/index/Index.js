@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react'
 import { pageview } from '../../modules/AnalyticsHelper'
 import {
-  Container, Typography, makeStyles,
-} from '@material-ui/core'
+  Container, Typography
+} from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import BlogList from './BlogList'
 import AuthButton from './AuthButton'
 

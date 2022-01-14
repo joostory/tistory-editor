@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import { nativeTheme } from '@electron/remote'
 import { useSelector } from 'react-redux'
-import { ThemeProvider, createTheme } from '@material-ui/core'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
 import * as AppTheme from '../constants/AppTheme'
 import App from './App'
 
@@ -20,7 +20,7 @@ const EDITOR_PALETTE = {
 }
 
 const DARK_PALETTE = {
-  type: 'dark',
+  mode: 'dark',
   primary: {
     main: '#f9dc41'
   },
@@ -32,7 +32,7 @@ const DARK_PALETTE = {
   editor: EDITOR_PALETTE,
 }
 const LIGHT_PALETTE = {
-  type: 'light',
+  mode: 'light',
   primary: {
     main: '#212121'
   },

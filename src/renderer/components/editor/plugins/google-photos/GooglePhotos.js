@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { ipcRenderer } from 'electron'
 import update from 'immutability-helper'
-import { Button } from '@material-ui/core'
+import { Button } from '@mui/material'
 import Loading from '../../../Loading'
 import PhotoList from './PhotoList'
 

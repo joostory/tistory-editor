@@ -2,7 +2,8 @@ import React, { } from 'react'
 import { useSelector } from 'react-redux'
 import TumblrContentViewer from './TumblrContentViewer'
 import TistoryContentViewer from './TistoryContentViewer'
-import { Box, Typography, makeStyles } from '@material-ui/core'
+import { Box, Typography } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 
 const useStyles = makeStyles(theme => ({
   container: {

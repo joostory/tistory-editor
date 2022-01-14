@@ -7,9 +7,9 @@ import {
   GridListTileBar,
   ListSubheader,
   IconButton
-} from '@material-ui/core'
+} from '@mui/material'
 
-import { AddCircleOutline } from '@material-ui/icons'
+import { AddCircleOutline } from '@mui/icons-material'
 
 import Loading from '../../../../components/Loading'
 import { timestampsToDate } from '../../../../modules/ContentHelper'

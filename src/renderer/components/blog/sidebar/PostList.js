@@ -2,7 +2,8 @@ import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { ipcRenderer } from 'electron'
 
-import { CircularProgress, List, Typography, makeStyles, Box } from '@material-ui/core'
+import { CircularProgress, List, Typography, Box } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 
 import PostListItem from './PostListItem'
 import { selectPost, lockPostsLoad } from '../../../actions'

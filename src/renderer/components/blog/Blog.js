@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { ipcRenderer } from 'electron'
 import { useSelector } from 'react-redux'
 import {
-  Fab, Dialog, DialogTitle, DialogContent, Slide, Box,
-  makeStyles
-} from '@material-ui/core'
-import { Add } from '@material-ui/icons'
+  Fab, Dialog, DialogTitle, DialogContent, Slide, Box
+} from '@mui/material'
+import { makeStyles } from '@mui/styles'
+import { Add } from '@mui/icons-material'
 import Sidebar from './sidebar/Sidebar'
 import Content from './content/Content'
 import Editor from '../editor/Editor'

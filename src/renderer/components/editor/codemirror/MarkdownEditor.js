@@ -4,8 +4,9 @@ import { ipcRenderer, clipboard } from 'electron'
 import CodeMirrorComponent from 'react-codemirror-component'
 import MarkdownHelper from './MarkdownHelper'
 
-import { Button, Box, makeStyles } from '@material-ui/core'
-import { FormatBold, FormatItalic, FormatUnderlined, Attachment } from '@material-ui/icons'
+import { Button, Box } from '@mui/material'
+import { makeStyles } from '@mui/styles'
+import { FormatBold, FormatItalic, FormatUnderlined, Attachment } from '@mui/icons-material'
 
 import CodeMirrorHelper from './CodeMirrorHelper'
 import GooglePhotosDialog from '../plugins/google-photos/GooglePhotosDialog'

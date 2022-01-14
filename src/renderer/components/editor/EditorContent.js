@@ -8,7 +8,8 @@ import Dropzone from 'react-dropzone'
 import MarkdownEditor from './codemirror/MarkdownEditor'
 import TinymceEditor from './tinymce/TinymceEditor'
 import EditorSwitch from './EditorSwich'
-import { Container, InputBase, makeStyles } from '@material-ui/core'
+import { Container, InputBase } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 
 const useStyles = makeStyles(theme => ({
   container: {

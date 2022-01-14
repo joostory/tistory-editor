@@ -3,7 +3,8 @@ import { useSelector } from 'react-redux'
 import { pageview } from '../../../modules/AnalyticsHelper'
 import TextContentViewer from './type/TextContentViewer'
 import PhotoContentViewer from './type/PhotoContentViewer'
-import { Typography, makeStyles } from '@material-ui/core'
+import { Typography } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 
 const useStyles = makeStyles(theme => ({
   emtpyMessage: {

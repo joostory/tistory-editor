@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { ipcRenderer } from 'electron'
 import {
-  Button, Dialog, DialogTitle, makeStyles, Box,
+  Button, Dialog, DialogTitle, Box,
   List, ListItem, ListItemAvatar, ListItemText, Avatar, CircularProgress
-} from '@material-ui/core'
-import { Add } from '@material-ui/icons'
+} from '@mui/material'
+import { makeStyles } from '@mui/styles'
+import { Add } from '@mui/icons-material'
 import Providers from '../../constants/Providers'
 
 const useStyle = makeStyles(theme => ({

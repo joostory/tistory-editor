@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Chip, TextField } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+import { Chip, TextField } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import update from 'immutability-helper'
 
 const useListStyles = makeStyles((theme) => ({

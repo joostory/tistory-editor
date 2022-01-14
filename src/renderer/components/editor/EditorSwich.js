@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import * as EditorMode from '../../constants/EditorMode'
-import { Menu, MenuItem, Fab, makeStyles } from '@material-ui/core'
-import { SwapVert } from '@material-ui/icons'
+import { Menu, MenuItem, Fab } from '@mui/material'
+import { makeStyles } from '@mui/styles'
+import { SwapVert } from '@mui/icons-material'
 
 const useStyles = makeStyles(theme => ({
   btn: {

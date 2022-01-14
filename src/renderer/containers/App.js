@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { ipcRenderer } from 'electron'
-import { Snackbar, CssBaseline } from '@material-ui/core'
+import { Snackbar, CssBaseline } from '@mui/material'
 
 import Main from './Main'
 import Preference from '../components/Preference'

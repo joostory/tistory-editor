@@ -1,5 +1,6 @@
 import React from 'react'
-import { Drawer, makeStyles, AppBar, Box } from '@material-ui/core'
+import { Drawer, AppBar, Box } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import Header from './Header'
 import PostList from './PostList'
 

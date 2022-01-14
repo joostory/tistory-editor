@@ -1,5 +1,5 @@
 import React from 'react'
-import { Drafts } from '@material-ui/icons'
+import { Drafts } from '@mui/icons-material'
 
 class Visibility {
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import autobind from 'autobind-decorator'
 import { ipcRenderer } from 'electron'
 
-import { Dialog, Button, DialogTitle, DialogContent, DialogActions } from '@material-ui/core'
+import { Dialog, Button, DialogTitle, DialogContent, DialogActions } from '@mui/material'
 import GooglePhotos from './GooglePhotos'
 
 class GooglePhotosDialog extends Component {

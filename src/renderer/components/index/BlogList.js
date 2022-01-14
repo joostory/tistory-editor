@@ -3,8 +3,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ipcRenderer } from 'electron'
 import {
   List, ListSubheader, Button, Avatar,
-  Typography, Paper, makeStyles
-} from '@material-ui/core'
+  Typography, Paper
+} from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import BlogListItem from './BlogListItem'
 import { selectBlog } from '../../actions'
 import Providers from '../../constants/Providers'

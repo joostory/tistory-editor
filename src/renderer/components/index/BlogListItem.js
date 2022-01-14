@@ -1,7 +1,7 @@
 import React from 'react'
 
-import { Avatar, ListItem, ListItemText, ListItemAvatar, Typography } from '@material-ui/core';
-import { Stars } from '@material-ui/icons'
+import { Avatar, ListItem, ListItemText, ListItemAvatar, Typography } from '@mui/material';
+import { Stars } from '@mui/icons-material'
 
 function ProfileAvatar({blog}) {
   if (blog.image) {

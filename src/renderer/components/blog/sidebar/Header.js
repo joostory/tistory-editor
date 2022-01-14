@@ -2,10 +2,10 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import {
   Toolbar, Avatar, Typography, Button,
-  makeStyles,
   Badge, IconButton
-} from '@material-ui/core'
-import { Menu, MoreHoriz, ArrowDropDown } from '@material-ui/icons'
+} from '@mui/material'
+import { makeStyles } from '@mui/styles'
+import { Menu, MoreHoriz, ArrowDropDown } from '@mui/icons-material'
 import Providers from '../../../constants/Providers'
 
 const useStyle = makeStyles(theme => ({

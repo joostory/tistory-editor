@@ -1,8 +1,9 @@
 import React, { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import dayjs from 'dayjs'
-import { ListItem, ListItemText, Typography, Box, makeStyles } from '@material-ui/core'
-import { DraftsOutlined, PhotoOutlined, CommentOutlined } from '@material-ui/icons'
+import { ListItem, ListItemText, Typography, Box } from '@mui/material'
+import { makeStyles } from '@mui/styles'
+import { DraftsOutlined, PhotoOutlined, CommentOutlined } from '@mui/icons-material'
 import { isPublished } from '../../../constants/PostState'
 
 const useStyles = makeStyles(theme => ({
