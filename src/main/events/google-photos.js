@@ -47,7 +47,7 @@ module.exports = () => {
       settings.setSync('google-auth', auth)
 			evt.sender.send('receive-google-connected', true)
 			fetchImages(evt, null)//
-    }, () => {
+    }, (e) => {
       console.error(e)
       evt.sender.send('receive-message', `오류가 발생했습니다. (${e.message})`)
     })

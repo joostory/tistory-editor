@@ -2,9 +2,7 @@ import React, { Component, Fragment } from 'react'
 import autobind from 'autobind-decorator'
 
 import {
-  GridList,
-  GridListTile,
-  GridListTileBar,
+  ImageList, ImageListItem, ImageListItemBar,
   ListSubheader,
   IconButton
 } from '@mui/material'
@@ -66,15 +64,15 @@ class PhotoList extends Component {
           }
 
           {images.length > 0 &&
-            <GridList cols={2} cellHeight={180}>
+            <ImageList cols={2} cellHeight={180}>
               {images.map(item => {
                 let prevDate = currentDate
                 currentDate = timestampsToDate(item.timestamp)
 
                 let tile = [
-                  <GridListTile key={item.thumbnail}>
+                  <ImageListItem key={item.thumbnail}>
                     <img src={item.thumbnail} alt={item.title} />
-                    <GridListTileBar
+                    <ImageListItemBar
                       style={styles.gridTitleBar}
                       actionIcon={
                         <IconButton onClick={e => onClick(item)}>
@@ -82,20 +80,20 @@ class PhotoList extends Component {
                         </IconButton>
                       }
                     />
-                  </GridListTile>
+                  </ImageListItem>
                 ]
 
                 if (prevDate != currentDate) {
                   tile.unshift(
-                    <GridListTile key={currentDate} cols={2} style={{ height: 'auto' }}>
+                    <ImageListItem key={currentDate} cols={2} style={{ height: 'auto' }}>
                       <ListSubheader component='div'>{currentDate}</ListSubheader>
-                    </GridListTile>
+                    </ImageListItem>
                   )
                 }
 
                 return tile
               })}
-            </GridList>
+            </ImageList>
           }
 
 					{images.length > 0 && fetching &&
