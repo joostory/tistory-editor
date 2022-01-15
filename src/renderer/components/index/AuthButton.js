@@ -4,18 +4,17 @@ import {
   Button, Dialog, DialogTitle, Box,
   List, ListItem, ListItemAvatar, ListItemText, Avatar, CircularProgress
 } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 import { Add } from '@mui/icons-material'
 import Providers from '../../constants/Providers'
 
-const useStyle = makeStyles(theme => ({
+const styles = {
   btnAdd: {
     width: '100%',
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(2)
+    marginTop:(theme) => theme.spacing(1),
+    marginBottom:(theme) => theme.spacing(2)
   },
   dialogTitle: {
-    padding: theme.spacing(1),
+    padding:(theme) => theme.spacing(1),
     textAlign: 'center'
   },
   dialogList: {
@@ -32,10 +31,9 @@ const useStyle = makeStyles(theme => ({
     left: '50%',
     margin: '-20px 0 0 -20px'
   }
-}))
+}
 
 export default function AuthButton() {
-  const classes = useStyle()
   const [open, setOpen] = useState(false)
   const [requestProvider, setRequestProvider] = useState(null)
 
@@ -59,13 +57,13 @@ export default function AuthButton() {
 
   return (
     <>
-      <Button onClick={() => setOpen(!open)} className={classes.btnAdd} color='primary' startIcon={<Add />}>
+      <Button onClick={() => setOpen(!open)} sx={styles.btnAdd} color='primary' startIcon={<Add />}>
         새로운 블로그 연결
       </Button>
 
       <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle className={classes.dialogTitle}>연결할 서비스 선택</DialogTitle>
-        <List className={classes.dialogList}>
+        <DialogTitle sx={styles.dialogTitle}>연결할 서비스 선택</DialogTitle>
+        <List sx={styles.dialogList}>
           {Providers.map(provider =>
             <ListItem key={provider.name} button onClick={() => handleSelectProvider(provider)}>
               <ListItemAvatar>
@@ -80,10 +78,10 @@ export default function AuthButton() {
       </Dialog>
 
       <Dialog open={!!requestProvider} onClose={() => setRequestProvider(null)}>
-        <DialogTitle className={classes.dialogTitle}>{requestProvider?.label} 연결 중</DialogTitle>
-        <Box className={classes.requestBox}>
-          <Avatar src={requestProvider?.logo} className={classes.requestBoxContent} />
-          <CircularProgress className={classes.requestBoxContent} />
+        <DialogTitle sx={styles.dialogTitle}>{requestProvider?.label} 연결 중</DialogTitle>
+        <Box sx={styles.requestBox}>
+          <Avatar src={requestProvider?.logo} sx={styles.requestBoxContent} />
+          <CircularProgress sx={styles.requestBoxContent} />
         </Box>
       </Dialog>
     </>

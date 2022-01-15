@@ -2,19 +2,18 @@ import React, { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import dayjs from 'dayjs'
 import { ListItem, ListItemText, Typography, Box } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 import { DraftsOutlined, PhotoOutlined, CommentOutlined } from '@mui/icons-material'
 import { isPublished } from '../../../constants/PostState'
 
-const useStyles = makeStyles(theme => ({
+const styles = {
   info: {
     display: 'block',
     fontSize: '0.9em'
   },
   icon: {
-    marginLeft: theme.spacing(1)
+    marginLeft:(theme) => theme.spacing(1)
   }
-}))
+}
 
 function PostTitle({post}) {
   return (
@@ -25,7 +24,6 @@ function PostTitle({post}) {
 }
 
 function PostInfo({post}) {
-  const classes = useStyles()
   const currentBlog = useSelector(state => state.currentBlog)
   const category = useMemo(() => {
     if (currentBlog.categories && post.categoryId) {
@@ -35,12 +33,12 @@ function PostInfo({post}) {
 
   return (
     <>
-      <Typography component='span' className={classes.info}>
+      <Typography component='span' sx={styles.info}>
         {dayjs(post.date).format('YYYY-MM-DD HH:mm')}
       </Typography>
       
       {category &&
-        <Typography component='span' className={classes.info} color='secondary'>
+        <Typography component='span' sx={styles.info} color='secondary'>
           {category.name}
         </Typography>
       }
@@ -64,7 +62,6 @@ function PostIcon({post}) {
 }
 
 export default function PostListItem({ post, selected, onSelect }) {
-  const classes = useStyles()
 	return (
 		<ListItem button selected={selected} onClick={() => {onSelect(post)}}>
 			<ListItemText
@@ -72,7 +69,7 @@ export default function PostListItem({ post, selected, onSelect }) {
 				secondary={<PostInfo post={post} />}
 			/>
 
-      <Box className={classes.icon}>
+      <Box sx={styles.icon}>
         <PostIcon post={post} />
       </Box>
 		</ListItem>

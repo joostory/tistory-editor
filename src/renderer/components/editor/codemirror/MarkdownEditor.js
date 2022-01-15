@@ -5,7 +5,6 @@ import CodeMirrorComponent from 'react-codemirror-component'
 import MarkdownHelper from './MarkdownHelper'
 
 import { Button, Box } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 import { FormatBold, FormatItalic, FormatUnderlined, Attachment } from '@mui/icons-material'
 
 import CodeMirrorHelper from './CodeMirrorHelper'
@@ -41,41 +40,38 @@ const PcKeymap = [
 	{ 'Ctrl-K': (cm) => CodeMirrorHelper.link(cm) }
 ]
 
-const useStyles = makeStyles(theme => ({
+const styles = {
   toolbar: {
     position: 'fixed',
     top:15,
     width:700,
     display: 'flex',
     alignItems: 'center',
-    borderRadius: theme.shape.borderRadius,
-    paddingLeft: theme.spacing(0.5),
-    height:theme.spacing(5),
+    borderRadius:(theme) => theme.shape.borderRadius,
+    paddingLeft:(theme) => theme.spacing(0.5),
+    height:(theme) => theme.spacing(5),
     left: '50%',
     transform: 'translate(-50%,0)',
     zIndex:10,
-    background: theme.palette.headerBackground,
-    boxShadow: theme.shadows[1]
+    background:(theme) => theme.palette.headerBackground,
+    boxShadow:(theme) => theme.shadows[1]
   },
   toolbarBtn: {
-    padding: 5,
-    minWidth: 34,
-    height: 34
+    padding: '5px',
+    minWidth: '34px',
+    height: '34px'
   }
-}))
+}
 
 function ToolbarButton({ onClick, children }) {
-  const classes = useStyles()
-
   return (
-    <Button variant='text' onClick={onClick} className={classes.toolbarBtn}>
+    <Button variant='text' onClick={onClick} sx={styles.toolbarBtn}>
       {children}
     </Button>
   )
 }
 
 export default function MarkdownEditor({ value, onOpenFile, onChange }) {
-  const classes = useStyles()
   const currentAuth = useSelector(state => state.currentAuth)
   const currentBlog = useSelector(state => state.currentBlog)
   const [markdownValue, setMarkdownValue] = useState(MarkdownHelper.htmlToMarkdown(value))
@@ -160,7 +156,7 @@ export default function MarkdownEditor({ value, onOpenFile, onChange }) {
 
   return (
     <Box>
-      <Box className={classes.toolbar}>
+      <Box sx={styles.toolbar}>
         <ToolbarButton onClick={handleHeader2}>H2</ToolbarButton>
         <ToolbarButton onClick={handleHeader3}>H3</ToolbarButton>
         <ToolbarButton onClick={handleBold}><FormatBold /></ToolbarButton>

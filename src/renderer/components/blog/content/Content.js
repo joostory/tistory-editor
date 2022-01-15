@@ -3,9 +3,8 @@ import { useSelector } from 'react-redux'
 import TumblrContentViewer from './TumblrContentViewer'
 import TistoryContentViewer from './TistoryContentViewer'
 import { Box, Typography } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 
-const useStyles = makeStyles(theme => ({
+const styles = {
   container: {
     position: 'fixed',
     left: 300,
@@ -23,12 +22,11 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'center'
   }
-}))
+}
 
 function EmptyContent() {
-  const classes = useStyles()
   return (
-    <Typography className={classes.emtpyMessage} color='textSecondary'>
+    <Typography sx={styles.emtpyMessage} color='textSecondary'>
       Editor
     </Typography>
   )
@@ -53,9 +51,8 @@ function ContentViewer({onRequestEditPost}) {
 }
 
 export default function Content({onRequestEditPost}) {
-  const classes = useStyles()
   return (
-    <Box className={classes.container}>
+    <Box sx={styles.container}>
       <ContentViewer onRequestEditPost={onRequestEditPost} />
     </Box>
   )

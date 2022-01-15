@@ -5,12 +5,11 @@ import {
   List, ListSubheader, Button, Avatar,
   Typography, Paper
 } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 import BlogListItem from './BlogListItem'
 import { selectBlog } from '../../actions'
 import Providers from '../../constants/Providers'
 
-const useStyles = makeStyles(theme => ({
+const styles = {
   paper: {
     display: 'flex',
     justifyContent: 'center',
@@ -20,24 +19,23 @@ const useStyles = makeStyles(theme => ({
   header: {
     display: 'flex',
     alignItems: 'center',
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-    backgroundColor: theme.palette.headerBackground,
+    paddingTop:(theme) => theme.spacing(2),
+    paddingBottom:(theme) => theme.spacing(2),
+    backgroundColor:(theme) => theme.palette.headerBackground,
   },
   logo: {
     display: 'flex',
-    width: theme.spacing(3),
-    height: theme.spacing(3),
-    marginRight: theme.spacing(1)
+    width:(theme) => theme.spacing(3),
+    height:(theme) => theme.spacing(3),
+    marginRight:(theme) => theme.spacing(1)
   },
   title: {
     display: 'flex',
     flexGrow: 1
   }
-}))
+}
 
 function ServiceListHeader({service}) {
-  const classes = useStyles()
   const provider = Providers.find(p => p.name == service.auth.provider)
 
   function handleDisconnect() {
@@ -47,9 +45,9 @@ function ServiceListHeader({service}) {
   }
 
   return (
-    <ListSubheader className={classes.header}>
-      <Avatar src={provider.logo} className={classes.logo} />
-      <Typography component='div' className={classes.title}>
+    <ListSubheader sx={styles.header}>
+      <Avatar src={provider.logo} sx={styles.logo} />
+      <Typography component='div' sx={styles.title}>
         {service.user.name}
       </Typography>
       <Button variant='text' color='secondary' size='small' onClick={handleDisconnect}>
@@ -60,7 +58,6 @@ function ServiceListHeader({service}) {
 }
 
 export default function BlogList({afterSelect}) {
-  const classes = useStyles()
   const accounts = useSelector(state => state.accounts)
   const dispatch = useDispatch()
 
@@ -73,7 +70,7 @@ export default function BlogList({afterSelect}) {
 
   if (!accounts || accounts.length == 0) {
     return (
-      <Paper className={classes.paper} variant='outlined' square>
+      <Paper sx={styles.paper} variant='outlined' square>
         연결된 블로그가 없습니다.
       </Paper>
     )

@@ -1,20 +1,16 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Dialog, Button, DialogTitle, DialogContent, DialogActions, Select, MenuItem, FormControl, InputLabel } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 import ChipInput from './ChipInput'
 
-const useStyles = makeStyles(theme => ({
-  grow: {
-    flexGrow: 1
-  },
+const styles = {
   category: {
-    marginBottom: theme.spacing(2)
+    marginTop:(theme) => theme.spacing(1),
+    marginBottom:(theme) => theme.spacing(2)
   }
-}))
+}
 
 export default function EditorInfoDialog({ onRequestClose, onRequestDraft, onRequestPublish, onCategoryChange, onTagsChange, categoryId, tags, open }) {
-  const classes = useStyles()
   const currentAuth = useSelector(state => state.currentAuth)
   const currentBlog = useSelector(state => state.currentBlog)
 
@@ -23,9 +19,9 @@ export default function EditorInfoDialog({ onRequestClose, onRequestDraft, onReq
       <DialogTitle>글의 속성을 확인해주세요.</DialogTitle>
       <DialogContent>
         {currentAuth.provider == 'tistory' && currentBlog.categories &&
-          <FormControl fullWidth={true}>
+          <FormControl fullWidth={true} sx={styles.category}>
             <InputLabel>카테고리</InputLabel>
-            <Select className={classes.category} label='카테고리' value={categoryId} onChange={onCategoryChange}>
+            <Select label='카테고리' value={categoryId} onChange={onCategoryChange}>
               <MenuItem value='0'>분류없음</MenuItem>
               {currentBlog.categories.map(item =>
                 <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
@@ -46,7 +42,7 @@ export default function EditorInfoDialog({ onRequestClose, onRequestDraft, onReq
 
       <DialogActions>
         <Button onClick={onRequestClose}>취소</Button>
-        <div className={classes.grow} />
+        <div style={{flexGrow: 1}} />
         {currentAuth.provider == 'tistory' &&
           <Button onClick={onRequestDraft}>저장</Button>
         }

@@ -4,21 +4,19 @@ import { pageview } from '../../../modules/AnalyticsHelper'
 import TextContentViewer from './type/TextContentViewer'
 import PhotoContentViewer from './type/PhotoContentViewer'
 import { Typography } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 
-const useStyles = makeStyles(theme => ({
+const styles = {
   emtpyMessage: {
     height: '100vh',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
   }
-}))
+}
 
 function UnknownTypeContentViewer() {
-  const classes = useStyles()
   return (
-    <Typography className={classes.emtpyMessage} color='textSecondary'>
+    <Typography sx={styles.emtpyMessage} color='textSecondary'>
       죄송합니다. 아직 이런 형식의 글은 보여드릴 수 없습니다.
     </Typography>
   )

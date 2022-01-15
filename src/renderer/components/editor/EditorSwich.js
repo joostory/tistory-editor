@@ -1,20 +1,17 @@
 import React, { useState } from 'react'
 import * as EditorMode from '../../constants/EditorMode'
 import { Menu, MenuItem, Fab } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 import { SwapVert } from '@mui/icons-material'
 
-const useStyles = makeStyles(theme => ({
+const styles = {
   btn: {
     position: 'fixed',
-    right: theme.spacing(3),
-    bottom: theme.spacing(3)
+    right:(theme) => theme.spacing(3),
+    bottom:(theme) => theme.spacing(3)
   }
-}))
+}
 
 export default function EditorSwitch({ editorMode, onChange }) {
-
-  const classes = useStyles()
   const [open, setOpen] = useState(false)
   const [popoverParent, setPopoverParent] = useState(null)
 
@@ -36,7 +33,7 @@ export default function EditorSwitch({ editorMode, onChange }) {
 
   return (
     <>
-      <Fab color='primary' className={classes.btn} aria-owns={open? 'change-editor-menu':undefined} onClick={handleOpenEditorMode}>
+      <Fab color='primary' sx={styles.btn} aria-owns={open? 'change-editor-menu':undefined} onClick={handleOpenEditorMode}>
         <SwapVert />
       </Fab>
 

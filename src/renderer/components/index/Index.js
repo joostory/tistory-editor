@@ -3,34 +3,31 @@ import { pageview } from '../../modules/AnalyticsHelper'
 import {
   Container, Typography
 } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 import BlogList from './BlogList'
 import AuthButton from './AuthButton'
 
 
-const useStyle = makeStyles(theme => ({
+const styles = {
   root: {
-    maxWidth: 600,
-    marginTop: theme.spacing(5),
-    marginBottom: theme.spacing(5)
+    // maxWidth: 600,
+    marginTop:(theme) => theme.spacing(5),
+    marginBottom:(theme) => theme.spacing(5)
   },
   title: {
     textAlign: 'center',
-    padding: theme.spacing(5)
+    padding:(theme) => theme.spacing(5)
   }
-}))
+}
 
 
 export default function Index() {
-  const classes = useStyle()
-
 	useEffect(() => {
 		pageview('/index', 'Index')
 	}, [])
 
 	return (
-    <Container fixed className={classes.root}>
-      <Typography className={classes.title} variant='h2' component='h1'>
+    <Container fixed sx={styles.root} maxWidth='sm'>
+      <Typography sx={styles.title} variant='h2' component='h1'>
         Editor
       </Typography>
       

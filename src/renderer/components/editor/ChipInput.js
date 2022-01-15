@@ -1,17 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Chip, TextField } from '@mui/material'
-import { makeStyles } from '@mui/styles'
+import { Box, Chip, TextField } from '@mui/material'
 import update from 'immutability-helper'
-
-const useListStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    '& > *': {
-      margin: theme.spacing(0.5),
-    },
-  }
-}))
 
 function ChipInputTextField({label, placeholder, onAdd}) {
   function handleAdd(e) {
@@ -38,22 +27,6 @@ function ChipInputTextField({label, placeholder, onAdd}) {
       onKeyDown={handleInputKeyDown}
       onBlur={handleInputBlur}
     />
-  )
-}
-
-
-function ChipList({values, onDelete}) {
-  const classes = useListStyles()
-  return (
-    <div className={classes.root}>
-      {values.map(value =>
-        <Chip
-          key={value}
-          label={value}
-          onDelete={() => onDelete(value)}
-        />
-      )}
-    </div>
   )
 }
 
@@ -90,10 +63,16 @@ export default function ChipInput({label, placeholder, defaultValue, onChange}) 
         onAdd={handleAdd}
       />
 
-      <ChipList
-        values={chips}
-        onDelete={handleDelete}
-      />
+      <Box>
+        {chips.map(value =>
+          <Chip
+            key={value}
+            label={value}
+            sx={{margin:(theme) => theme.spacing(1/2)}}
+            onDelete={() => handleDelete(value)}
+          />
+        )}
+      </Box>
       
     </>
   )

@@ -4,55 +4,52 @@ import {
   Toolbar, Avatar, Typography, Button,
   Badge, IconButton
 } from '@mui/material'
-import { makeStyles } from '@mui/styles'
-import { Menu, MoreHoriz, ArrowDropDown } from '@mui/icons-material'
+import { ArrowDropDown } from '@mui/icons-material'
 import Providers from '../../../constants/Providers'
 
-const useStyle = makeStyles(theme => ({
+const styles = {
   root: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1)
+    pl: (theme) => ({ md: theme.spacing(2) }),
+    pr: (theme) => ({ md: theme.spacing(1) })
   },
   title: {
     flexGrow: 1,
-    paddingLeft: theme.spacing(2)
+    paddingLeft: (theme) => theme.spacing(2)
   },
   avatar: {
-    width: theme.spacing(5),
-    height: theme.spacing(5)
+    width: (theme) => theme.spacing(5),
+    height: (theme) => theme.spacing(5)
   },
   smallAvatar: {
-    width: theme.spacing(2),
-    height: theme.spacing(2)
+    width: (theme) => theme.spacing(2),
+    height: (theme) => theme.spacing(2)
   }
-}))
+}
 
 function ProfileAvatar({blog}) {
-  const classes = useStyle()
 	if (blog.image) {
-		return <Avatar src={blog.image} className={classes.avatar} />
+		return <Avatar src={blog.image} sx={styles.avatar} />
 	} else {
-		return <Avatar className={classes.avatar}>{blog.title.slice(0,1)}</Avatar>
+		return <Avatar sx={styles.avatar}>{blog.title.slice(0,1)}</Avatar>
 	}
 }
 
 export default function Header({onSelectBlog}) {
-  const classes = useStyle()
   const currentAuth = useSelector(state => state.currentAuth)
   const currentBlog = useSelector(state => state.currentBlog)
   const provider = Providers.find(p => p.name == currentAuth.provider)
 
 	return (
-		<Toolbar className={classes.root}>
+		<Toolbar sx={styles.root}>
       <Badge
         overlap='circular'
         anchorOrigin={{vertical:'bottom',horizontal:'right'}}
-        badgeContent={<Avatar src={provider.logo} className={classes.smallAvatar} />}
+        badgeContent={<Avatar src={provider.logo} sx={styles.smallAvatar} />}
       >
         <ProfileAvatar blog={currentBlog} />
       </Badge>
 
-			<Typography className={classes.title}>
+			<Typography sx={styles.title}>
 				{currentBlog.title}
 			</Typography>
       <IconButton onClick={onSelectBlog}><ArrowDropDown /></IconButton>

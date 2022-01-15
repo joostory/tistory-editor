@@ -9,7 +9,6 @@ import * as ContentMode from '../../constants/ContentMode'
 import {
   Box, Snackbar
 } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 import EditorContent from './EditorContent'
 import EditorToolbar from './EditorToolbar'
 import EditorInfoDialog from './EditorInfoDialog'
@@ -18,15 +17,14 @@ import Loading from '../Loading'
 import { pageview } from '../../modules/AnalyticsHelper'
 import { isPublished, DRAFT, PUBLISHED } from '../../constants/PostState'
 
-const useStyles = makeStyles(theme => ({
+const styles = {
   root: {
-    paddingTop: theme.spacing(9),
-    paddingBottom: theme.spacing(8)
+    paddingTop:(theme) => theme.spacing(9),
+    paddingBottom:(theme) => theme.spacing(8)
   }
-}))
+}
 
 export default function Editor({mode, onFinish}) {
-  const classes = useStyles()
   const currentAuth = useSelector(state => state.currentAuth)
   const currentBlog = useSelector(state => state.currentBlog)
   const post = useSelector(state => state.currentPost)
@@ -202,7 +200,7 @@ export default function Editor({mode, onFinish}) {
   }, [])
 
   return (
-    <Box className={classes.root}>
+    <Box sx={styles.root}>
       <EditorToolbar title={postData.title}
         onSaveClick={e => setShowInfoBox(true)}
         onCancelClick={handleCancel}

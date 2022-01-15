@@ -65,7 +65,6 @@
     "@emotion/styled": "^11.6.0",
     "@mui/icons-material": "^5.2.5",
     "@mui/material": "^5.2.8",
-    "@mui/styles": "^5.2.3",
     "@reduxjs/toolkit": "^1.7.1",
     "@tinymce/tinymce-react": "^3.9.0",
     "autobind-decorator": "^2.4.0",

@@ -9,22 +9,21 @@ import MarkdownEditor from './codemirror/MarkdownEditor'
 import TinymceEditor from './tinymce/TinymceEditor'
 import EditorSwitch from './EditorSwich'
 import { Container, InputBase } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 
-const useStyles = makeStyles(theme => ({
+const styles = {
   container: {
     width: 700,
     padding: '0 50px',
     backgroundColor: '#fff',
-    boxShadow: theme.shadows[1],
-    borderRadius: theme.spacing(0.5)
+    boxShadow:(theme) => theme.shadows[1],
+    borderRadius:(theme) => theme.spacing(0.5)
   },
   titleInput: {
-    marginTop: theme.spacing(4),
-    fontSize: theme.spacing(4),
+    marginTop:(theme) => theme.spacing(4),
+    fontSize:(theme) => theme.spacing(4),
     color: '#333'
   }
-}))
+}
 
 function Editor({editorMode, content, onUpload, onOpenFile, onChange}) {
   if (editorMode == EditorMode.TINYMCE) {
@@ -48,7 +47,6 @@ function Editor({editorMode, content, onUpload, onOpenFile, onChange}) {
 }
 
 export default function EditorContent({content, onChange, onUpload, title, onTitleChange}) {
-  const classes = useStyles()
   const currentBlog = useSelector(state => state.currentBlog)
 	const preferences = useSelector(state => state.preferences)
 
@@ -66,9 +64,9 @@ export default function EditorContent({content, onChange, onUpload, title, onTit
 
   return (
     <>
-      <Container className={classes.container} disableGutters={true}>
+      <Container sx={styles.container} disableGutters={true}>
         <InputBase
-          className={classes.titleInput}
+          sx={styles.titleInput}
           autoFocus={true}
           fullWidth={true}
           multiline={true}

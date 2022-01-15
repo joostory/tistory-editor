@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux'
 import {
   Fab, Dialog, DialogTitle, DialogContent, Slide, Box
 } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 import { Add } from '@mui/icons-material'
 import Sidebar from './sidebar/Sidebar'
 import Content from './content/Content'
@@ -15,7 +14,7 @@ import BlogList from '../index/BlogList'
 import AuthButton from '../index/AuthButton'
 
 
-const useStyles = makeStyles(theme => ({
+const styles = {
   root: {
     position: 'absolute',
     left: 0,
@@ -26,8 +25,8 @@ const useStyles = makeStyles(theme => ({
   },
   btnAdd: {
     position: 'fixed',
-    right: theme.spacing(3),
-    bottom: theme.spacing(3)
+    right:(theme) => theme.spacing(3),
+    bottom:(theme) => theme.spacing(3)
   },
   editor: {
     position: 'fixed',
@@ -36,10 +35,10 @@ const useStyles = makeStyles(theme => ({
     top: 0,
     bottom: 0,
     zIndex: 1300,
-    backgroundColor: theme.palette.background.default,
+    backgroundColor:(theme) => theme.palette.background.default,
     overflowY: 'scroll'
   }
-}))
+}
 
 function BlogListDialog({open, onClose}) {
   return (
@@ -56,9 +55,8 @@ function BlogListDialog({open, onClose}) {
 }
 
 function EditorDialog({mode, onClose}) {
-  const classes = useStyles()
   return (
-    <Box className={classes.editor}>
+    <Box sx={styles.editor}>
       <Editor
         mode={mode}
         onFinish={onClose}
@@ -68,7 +66,6 @@ function EditorDialog({mode, onClose}) {
 }
 
 export default function Blog() {
-  const classes = useStyles()
   const currentAuth = useSelector(state => state.currentAuth)
 	const currentBlog = useSelector(state => state.currentBlog)
   const [contentMode, setContentMode] = useState(ContentMode.VIEW)
@@ -85,12 +82,12 @@ export default function Blog() {
   }, [contentMode])
 
   return (
-    <Box className={classes.root}>
+    <Box sx={styles.root}>
       <Sidebar onSelectBlog={() => setOpenBlogSelector(true)} />
       <Content onRequestEditPost={() => setContentMode(ContentMode.EDIT)} />
       
       {currentBlog && !openEditor &&
-        <Fab color='primary' className={classes.btnAdd} onClick={() => setContentMode(ContentMode.ADD)}>
+        <Fab color='primary' sx={styles.btnAdd} onClick={() => setContentMode(ContentMode.ADD)}>
           <Add />
         </Fab>
       }
