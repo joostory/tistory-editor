@@ -1,14 +1,17 @@
 import React from 'react'
-import { render, unmountComponentAtNode } from 'react-dom'
+import { unmountComponentAtNode } from 'react-dom'
 import autobind from 'autobind-decorator'
 
 const plugin = function (editor) {
-	const $ = editor.$
+  editor.options.register("open_file_handler", {
+    processor: 'function',
+    default: () => {}
+  })
+
+  const openFileHandler = editor.options.get("open_file_handler")
 	
 	const handleButtonClick = () => {
-		if (editor.settings && editor.settings.open_file_handler) {
-			editor.settings.open_file_handler()
-		}
+    openFileHandler()
 	}
 	
 	editor.addCommand('file-upload', handleButtonClick)

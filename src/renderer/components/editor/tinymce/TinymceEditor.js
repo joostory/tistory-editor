@@ -6,7 +6,7 @@ import OpengraphFetcher from 'opengraph-fetcher'
 import tinymce from 'tinymce'
 import { Editor } from '@tinymce/tinymce-react'
 
-import 'tinymce-plugin-opengraph'
+// import 'tinymce-plugin-opengraph'
 import 'tinymce-plugin-codeblock'
 import './plugins/google-photos'
 import './plugins/file-upload'
@@ -28,29 +28,30 @@ export default function TinymceEditor({ value, onImageHandler, onOpenFile, onCha
 
   const tinymcePlugins = useMemo(() => {
     if (imageUploadEnabled) {
-      return 'link table textcolor hr lists paste codeblock opengraph google-photos file-upload autoresize searchreplace'
+      return 'link table lists codeblock opengraph google-photos file-upload autoresize searchreplace'
     } else {
-      return 'link table textcolor hr lists paste codeblock opengraph autoresize searchreplace'
+      return 'link table lists codeblock opengraph autoresize searchreplace'
     }
   }, [imageUploadEnabled])
   const tinymceToolbar = useMemo(() => {
     if (imageUploadEnabled) {
-      return 'formatselect bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock google-photos file-upload opengraph hr removeformat'
+      return 'blocks bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock google-photos file-upload opengraph hr removeformat'
     } else {
-      return 'formatselect bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock opengraph hr removeformat'
+      return 'blocks bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock opengraph hr removeformat'
     }
   }, [imageUploadEnabled])
 
   function handleFinishUploadFile(e, fileUrl) {
 		console.log("finishUploadFile", fileUrl)
 		const editor = tinymce.activeEditor
+    const dom = editor.dom
 		editor.execCommand('mceInsertContent', false, '<img id="__photos_new" src="'+fileUrl+'" />');
-		let $img = editor.$('#__photos_new')
-		$img.removeAttr('id')
-		$img.on('load', e => {
-			editor.nodeChanged()
-			$img.off('load')
-		})
+		let $img = dom.select('#__photos_new')
+		dom.setAttrib($img, 'id')
+    dom.bind($img, 'load', e => {
+      editor.nodeChanged()
+			dom.unbind($img, 'load')
+    })
   }
   
   function handlePastePreprocess(plugin, args) {
@@ -117,9 +118,6 @@ export default function TinymceEditor({ value, onImageHandler, onOpenFile, onCha
           statusbar: false,
           menubar: false,
           paste_data_images: true,
-          valid_children : 'p[s|strike|span|b|u|i|a|#text|br|code|em|sup|sub|q],-h2[img|div|figure|b],figcaption[#text],figure[img|figcaption|br|a|div|span|p|iframe],-span[img],+a[div],-li[blockquote|h2|h3]',
-          extended_valid_elements: 'span/font[style],i/em,b/strong,iframe[mapdata|src|id|width|height|frameborder|scrolling|data-*|allowfullscreen],script[type|src]',
-          text_inline_elements: 'span strong b em i font s u var cite dfn code mark q sup sub samp',
           width: 600,
           min_height: 500,
           file_picker_type: 'image',

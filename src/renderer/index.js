@@ -1,5 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 
 import configureStore from './store/configureStore'
@@ -12,9 +13,9 @@ import ThemeApp from './containers/ThemeApp'
 const store = configureStore()
 registIpcEvent(store)
 
-render (
+const root = createRoot(document.getElementById('root'))
+root.render(
   <Provider store={store}>
     <ThemeApp />
-  </Provider>,
-  document.getElementById('root')
+  </Provider>
 )

@@ -1,11 +1,10 @@
 .editor_inner {
-  .tox .tox-editor-header {
-    position:fixed; top:13px; width:700px; height:34px;
+  .tox:not(.tox-tinymce-inline) .tox-editor-header {
+    position:fixed; top:13px; width:700px;
     left: 50%; transform: translate(calc(-50% - 2px),0);
     z-index:10;
     background:transparent;
   }
-
   .tox-tinymce {
     border:0; background-color:#fff; margin:0 auto;
 
@@ -19,6 +18,9 @@
       .tox-toolbar__group {
         padding: 0 2px;
       }
+    }
+    .tox-tbtn--bespoke {
+      background: transparent;
     }
 
     .tox-edit-area {
