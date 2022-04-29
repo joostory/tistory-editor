@@ -47,7 +47,7 @@ const styles = {
     width:700,
     display: 'flex',
     alignItems: 'center',
-    borderRadius:(theme) => theme.shape.borderRadius,
+    borderRadius:(theme) => 1,
     paddingLeft:(theme) => theme.spacing(0.5),
     height:(theme) => theme.spacing(5),
     left: '50%',

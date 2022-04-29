@@ -43,7 +43,7 @@ function Editor({editorMode, content, onUpload, onOpenFile, onChange}) {
         onChange={onChange}
       />
     )
-  }
+  } 
 }
 
 export default function EditorContent({content, onChange, onUpload, title, onTitleChange}) {
