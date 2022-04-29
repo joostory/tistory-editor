@@ -6,7 +6,7 @@ import OpengraphFetcher from 'opengraph-fetcher'
 import tinymce from 'tinymce'
 import { Editor } from '@tinymce/tinymce-react'
 
-// import 'tinymce-plugin-opengraph'
+import 'tinymce-plugin-opengraph'
 import 'tinymce-plugin-codeblock'
 import './plugins/google-photos'
 import './plugins/file-upload'

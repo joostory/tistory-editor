@@ -97,7 +97,7 @@
     "redux-logger": "^3.0.6",
     "tinymce": "^6.0.2",
     "tinymce-plugin-codeblock": "^3.0.2",
-    "tinymce-plugin-opengraph": "^3.0.0",
+    "tinymce-plugin-opengraph": "^3.0.1",
     "tumblr.js": "^3.0.0",
     "turndown": "^7.0.0",
     "turndown-plugin-gfm": "^1.0.2",
