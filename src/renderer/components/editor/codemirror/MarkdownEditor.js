@@ -8,8 +8,6 @@ import { Button, Box } from '@mui/material'
 import { FormatBold, FormatItalic, FormatUnderlined, Attachment } from '@mui/icons-material'
 
 import CodeMirrorHelper from './CodeMirrorHelper'
-import GooglePhotosDialog from '../plugins/google-photos/GooglePhotosDialog'
-import googlePhotosLogo from '../../../images/google-photos-logo.png'
 import "../../../styles/lib/codemirror/tistory-markdown-theme.scss"
 import "codemirror/lib/codemirror.css"
 import "codemirror/addon/dialog/dialog.css"
@@ -75,7 +73,6 @@ export default function MarkdownEditor({ value, onOpenFile, onChange }) {
   const currentAuth = useSelector(state => state.currentAuth)
   const currentBlog = useSelector(state => state.currentBlog)
   const [markdownValue, setMarkdownValue] = useState(MarkdownHelper.htmlToMarkdown(value))
-  const [openGooglePhotos, setOpenGooglePhotos] = useState(false)
   const editorRef = useRef(null)
 
   const imageUploadEnabled = useMemo(() => currentAuth.provider == 'tistory', [currentAuth])
@@ -124,18 +121,6 @@ export default function MarkdownEditor({ value, onOpenFile, onChange }) {
 		CodeMirrorHelper.link(editorRef.current.getCodeMirror())
 	}
 
-	function handleGooglePhotos(e) {
-    setOpenGooglePhotos(true)
-	}
-
-	function handleCloseGooglePhotos() {
-    setOpenGooglePhotos(false)
-	}
-
-	function handleInsertImage(url, fileName) {
-    ipcRenderer.send("add-image-url", currentAuth.uuid, currentBlog.name, url, fileName)
-  }
-  
   function handleFinishUploadFile(e, fileUrl) {
     CodeMirrorHelper.insertImage(editorRef.current.getCodeMirror(), fileUrl)
   }
@@ -163,7 +148,6 @@ export default function MarkdownEditor({ value, onOpenFile, onChange }) {
         <ToolbarButton onClick={handleItalic}><FormatItalic /></ToolbarButton>
         <ToolbarButton onClick={handleUnderline}><FormatUnderlined /></ToolbarButton>
         <ToolbarButton onClick={handleLink}>Link</ToolbarButton>
-        {imageUploadEnabled && <ToolbarButton onClick={handleGooglePhotos}><img src={googlePhotosLogo} /></ToolbarButton>}
         {imageUploadEnabled && <ToolbarButton onClick={onOpenFile}><Attachment /></ToolbarButton>}
       </Box>
 
@@ -177,12 +161,6 @@ export default function MarkdownEditor({ value, onOpenFile, onChange }) {
         }}
         value={markdownValue}
         onChange={handleChangeContent}
-      />
-
-      <GooglePhotosDialog
-        open={openGooglePhotos}
-        onClose={handleCloseGooglePhotos}
-        onSelectImage={handleInsertImage}
       />
     </Box>
   )

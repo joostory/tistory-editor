@@ -8,7 +8,6 @@ import { Editor } from '@tinymce/tinymce-react'
 
 import 'tinymce-plugin-opengraph'
 import 'tinymce-plugin-codeblock'
-import './plugins/google-photos'
 import './plugins/file-upload'
 
 import 'codemirror/mode/clojure/clojure'
@@ -17,25 +16,24 @@ import 'codemirror/mode/clike/clike'
 import 'codemirror/mode/go/go'
 import 'codemirror/mode/xml/xml'
 
-import GooglePhotosDialog from '../plugins/google-photos/GooglePhotosDialog'
 import { makeThumbnail } from '../../../modules/ThumbnailHelper'
 
 export default function TinymceEditor({ value, onImageHandler, onOpenFile, onChange }) {
   const currentAuth = useSelector(state => state.currentAuth)
   const currentBlog = useSelector(state => state.currentBlog)
-  const [openGooglePhotos, setOpenGooglePhotos] = useState(false)
   const imageUploadEnabled = useMemo(() => currentAuth.provider == 'tistory', [currentAuth])
 
   const tinymcePlugins = useMemo(() => {
     if (imageUploadEnabled) {
-      return 'link table lists codeblock opengraph google-photos file-upload autoresize searchreplace'
+      return 'link table lists codeblock opengraph file-upload autoresize searchreplace'
     } else {
       return 'link table lists codeblock opengraph autoresize searchreplace'
     }
   }, [imageUploadEnabled])
+  
   const tinymceToolbar = useMemo(() => {
     if (imageUploadEnabled) {
-      return 'blocks bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock google-photos file-upload opengraph hr removeformat'
+      return 'blocks bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock file-upload opengraph hr removeformat'
     } else {
       return 'blocks bold italic link inlinecode | alignleft aligncenter alignright | bullist numlist | blockquote codeblock opengraph hr removeformat'
     }
@@ -86,17 +84,6 @@ export default function TinymceEditor({ value, onImageHandler, onOpenFile, onCha
       })
   }
   
-  function handleInsertImage(url, filename) {
-    if (!imageUploadEnabled) {
-      return
-    }
-    ipcRenderer.send("add-image-url", currentAuth.uuid, currentBlog.name, url, filename)
-  }
-
-  function handleToggleGooglePhotos() {
-    setOpenGooglePhotos(!openGooglePhotos)
-  }
-
   useEffect(() => {
     ipcRenderer.on("finish-add-file", handleFinishUploadFile)
 
@@ -145,9 +132,6 @@ export default function TinymceEditor({ value, onImageHandler, onOpenFile, onCha
           opengraph: {
             fetch_handler: handleFetchOpengraph
           },
-          google_photos: {
-            open_handler: handleToggleGooglePhotos
-          },
           open_file_handler: onOpenFile,
           init_instance_callback: (editor) => {
             editor.ui.registry.addIcon('media', 'M')
@@ -155,12 +139,6 @@ export default function TinymceEditor({ value, onImageHandler, onOpenFile, onCha
             editor.setContent(value)
           }
         }}
-      />
-      
-      <GooglePhotosDialog
-        open={openGooglePhotos}
-        onClose={handleToggleGooglePhotos}
-        onSelectImage={handleInsertImage}
       />
     </>
   )
