@@ -6,32 +6,7 @@ const OAuthRequestManager = require('../oauth/OAuthRequestManager');
 
 const PROVIDER_ID = 'tumblr'
 
-const requestAuth = (successHandler, failureHandler) => {
-  const oauthInfoReader = new OauthInfoReader()
-  const oauth1 = new ExternalOAuth1(oauthInfoReader.getTumblr())
-  oauth1.requestAuth((requestTokens) => {
-    OAuthRequestManager.saveRequestInfo('oauth', (searchParams) => {
-      const verifier = searchParams.get("oauth_verifier")
-      oauth1.requestToken(verifier, requestTokens, (error, token, tokenSecret) => {
-        if (error) {
-          failureHandler()
-          return
-        }
-
-        successHandler({
-          uuid: uuid(),
-          provider: PROVIDER_ID,
-          authInfo: {
-            token, tokenSecret
-          }
-        })
-      })
-    })
-  })
-
-}
-
-function createTumblrClient(auth) {
+function _createTumblrClient(auth) {
   const oauthReader = new OauthInfoReader()
   const tumblrInfo = oauthReader.getTumblr()
 
@@ -46,10 +21,6 @@ function createTumblrClient(auth) {
   })
 }
 
-const fetchUser = (auth) => {
-  const client = createTumblrClient(auth)
-  return client.userInfo()
-}
 
 function _tumblrPostToEditorPost(post) {
   return ({
@@ -85,8 +56,39 @@ function _editorPostToTumblrPost(editorPost) {
   return tumblrPost
 }
 
-const fetchPosts = (auth, blogName, options) => {
-  const client = createTumblrClient(auth)
+function requestAuth(successHandler, failureHandler) {
+  const oauthInfoReader = new OauthInfoReader()
+  const oauth1 = new ExternalOAuth1(oauthInfoReader.getTumblr())
+  oauth1.requestAuth((requestTokens) => {
+    OAuthRequestManager.saveRequestInfo('oauth', (searchParams) => {
+      const verifier = searchParams.get("oauth_verifier")
+      oauth1.requestToken(verifier, requestTokens, (error, token, tokenSecret) => {
+        if (error) {
+          failureHandler()
+          return
+        }
+
+        successHandler({
+          uuid: uuid(),
+          provider: PROVIDER_ID,
+          authInfo: {
+            token, tokenSecret
+          }
+        })
+      })
+    })
+  })
+
+}
+
+function fetchUser(auth) {
+  const client = _createTumblrClient(auth)
+  return client.userInfo()
+}
+
+
+function fetchPosts(auth, blogName, options) {
+  const client = _createTumblrClient(auth)
   return client.blogPosts(blogName, options)
     .then(res => ({
       posts: _tumblrPostsToEditorPosts(res.posts),
@@ -94,30 +96,32 @@ const fetchPosts = (auth, blogName, options) => {
     }))
 }
 
-const fetchPost = (auth, blogName, postId) => {
-  const client = createTumblrClient(auth)
+function fetchPost(auth, blogName, postId) {
+  const client = _createTumblrClient(auth)
   return client.blogPosts(blogName, {id: postId})
     .then(res => ({
       post: _tumblrPostToEditorPost(res.posts[0])
     }))
 }
 
-const addPost = async (auth, blogName, post) => {
-  const client = createTumblrClient(auth)
+async function addPost(auth, blogName, post) {
+  const client = _createTumblrClient(auth)
   const res = await client.createTextPost(blogName, _editorPostToTumblrPost(post))
   const fetchRes = await fetchPosts(auth, blogName, {offset:0, limit:1})
   return { post: fetchRes.posts[0] }
 }
 
-const savePost = async (auth, blogName, post) => {
-  const client = createTumblrClient(auth)
+async function savePost(auth, blogName, post) {
+  const client = _createTumblrClient(auth)
   const res = await client.editPost(blogName, _editorPostToTumblrPost(post))
   return await fetchPost(auth, blogName, post.id)
 }
 
-const validateAuthInfo = (auth) => auth && auth.token
+function validateAuthInfo(auth) {
+  return auth && auth.token
+}
 
-const fetchAccount = async (auth) => {
+async function fetchAccount(auth) {
   let blogs = []
   let username = ""
   try {

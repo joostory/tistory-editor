@@ -1,8 +1,4 @@
-import React from 'react'
-import { unmountComponentAtNode } from 'react-dom'
-import autobind from 'autobind-decorator'
-
-const plugin = function (editor) {
+export default function plugin(editor) {
   editor.options.register("open_file_handler", {
     processor: 'function',
     default: () => {}
@@ -23,5 +19,3 @@ const plugin = function (editor) {
     }
 	})
 }
-
-export default plugin

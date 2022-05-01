@@ -9,7 +9,10 @@ const appInfo = require('../appInfo')
 const ExternalOAuth2 = require('../oauth/ExternalOAuth2');
 const OAuthRequestManager = require('../oauth/OAuthRequestManager');
 
-const errorHandler = (res) => {
+const BASE_URL = 'https://www.tistory.com/apis'
+const PROVIDER_ID = 'tistory'
+
+function _errorHandler(res) {
   if (!res.ok) {
     console.error("fetch failed", res)
     res.text().then(text => console.error("fetch body", text))
@@ -19,10 +22,44 @@ const errorHandler = (res) => {
   return res.json()
 }
 
-const BASE_URL = 'https://www.tistory.com/apis'
-const PROVIDER_ID = 'tistory'
+function _uploadFile(accessToken, blogName, fileBlob, fileOption) {
+	let formdata = new FormData();
+  formdata.append("access_token", accessToken)
+  formdata.append("output", "json")
+  formdata.append("blogName", blogName)
+  formdata.append("uploadedfile", fileBlob, fileOption)
 
-const requestAuth = (successHandler, failureHandler) => {
+  return fetch(BASE_URL + "/post/attach", {
+    method: 'post',
+    body: formdata
+  })
+  .then(_errorHandler)
+  .then(res => res.tistory.url)
+}
+
+
+function _tistoryPostToEditorPost(post) {
+  return {
+    id: post.id,
+    url: post.postUrl,
+    title: post.title,
+    date: post.date,
+    categoryId: post.categoryId,
+    state: post.visibility > 0? 'published' : 'draft',
+    tags: post.tags && post.tags.tag? [].concat(post.tags.tag) : [],
+    content: post.content? post.content : ''
+  }
+}
+
+function _tistoryPostsToEditorPosts(tistoryPosts) {
+  let posts = tistoryPosts? [].concat(tistoryPosts) : []
+  return posts.map(_tistoryPostToEditorPost)
+}
+
+
+
+
+function requestAuth(successHandler, failureHandler) {
   const oauthInfoReader = new OauthInfoReader()
   const oauth2 = new ExternalOAuth2(oauthInfoReader.getTistory())
   OAuthRequestManager.saveRequestInfo("oauth", (searchParams) => {
@@ -46,7 +83,7 @@ const requestAuth = (successHandler, failureHandler) => {
   oauth2.requestAuth({})
 }
 
-const fetchBlogInfo = (auth) => {
+function fetchBlogInfo(auth) {
   return fetch(BASE_URL + "/blog/info?" + querystring.stringify({
     access_token: auth.access_token,
     output: "json"
@@ -55,10 +92,10 @@ const fetchBlogInfo = (auth) => {
       'User-Agent': appInfo.userAgent
     }
   })
-  .then(errorHandler)
+  .then(_errorHandler)
 }
 
-const fetchUser = (auth) => {
+function fetchUser(auth) {
   return fetch(BASE_URL + "/user?" + querystring.stringify({
     access_token: auth.access_token,
     output: "json"
@@ -67,26 +104,9 @@ const fetchUser = (auth) => {
       'User-Agent': appInfo.userAgent
     }
   })
-  .then(errorHandler)
+  .then(_errorHandler)
 }
 
-function _tistoryPostToEditorPost(post) {
-  return {
-    id: post.id,
-    url: post.postUrl,
-    title: post.title,
-    date: post.date,
-    categoryId: post.categoryId,
-    state: post.visibility > 0? 'published' : 'draft',
-    tags: post.tags && post.tags.tag? [].concat(post.tags.tag) : [],
-    content: post.content? post.content : ''
-  }
-}
-
-function _tistoryPostsToEditorPosts(tistoryPosts) {
-  let posts = tistoryPosts? [].concat(tistoryPosts) : []
-  return posts.map(_tistoryPostToEditorPost)
-}
 
 const fetchPosts = (auth, blogName, options) => {
   return fetch(BASE_URL + "/post/list?" + querystring.stringify({
@@ -100,7 +120,7 @@ const fetchPosts = (auth, blogName, options) => {
       'User-Agent': appInfo.userAgent
     }
   })
-  .then(errorHandler)
+  .then(_errorHandler)
   .then(res => ({
     page: res.tistory.item.page,
     posts: _tistoryPostsToEditorPosts(res.tistory.item.posts),
@@ -108,7 +128,7 @@ const fetchPosts = (auth, blogName, options) => {
   }))
 }
 
-const fetchPost = (auth, blogName, postId) => {
+function fetchPost(auth, blogName, postId) {
   return fetch(BASE_URL + "/post/read?" + querystring.stringify({
     access_token: auth.access_token,
     output: "json",
@@ -119,13 +139,13 @@ const fetchPost = (auth, blogName, postId) => {
       'User-Agent': appInfo.userAgent
     }
   })
-  .then(errorHandler)
+  .then(_errorHandler)
   .then(res => ({
     post: _tistoryPostToEditorPost(res.tistory.item)
   }))
 }
 
-const fetchCategories = (auth, blogName) => {
+function fetchCategories(auth, blogName) {
   return fetch(BASE_URL + "/category/list?" + querystring.stringify({
     access_token: auth.access_token,
     output: "json",
@@ -135,11 +155,11 @@ const fetchCategories = (auth, blogName) => {
       'User-Agent': appInfo.userAgent
     }
   })
-  .then(errorHandler)
+  .then(_errorHandler)
   .then(res => res.tistory.item.categories)
 }
 
-const savePost = (auth, blogName, post) => {
+function savePost(auth, blogName, post) {
   let formdata = makePostFormData(auth, blogName, post)
   formdata.append("postId", post.id)
 
@@ -151,11 +171,11 @@ const savePost = (auth, blogName, post) => {
       'User-Agent': appInfo.userAgent
     }
   })
-  .then(errorHandler)
+  .then(_errorHandler)
   .then(res => fetchPost(auth, blogName, res.tistory.postId))
 }
 
-const addPost = (auth, blogName, post) => {
+function addPost(auth, blogName, post) {
   let formdata = makePostFormData(auth, blogName, post)
 
   return fetch(BASE_URL + "/post/write", {
@@ -166,11 +186,11 @@ const addPost = (auth, blogName, post) => {
       'User-Agent': appInfo.userAgent
     }
   })
-  .then(errorHandler)
+  .then(_errorHandler)
   .then(res => fetchPost(auth, blogName, res.tistory.postId))
 }
 
-const makePostFormData = (auth, blogName, post) => {
+function makePostFormData(auth, blogName, post) {
   let formdata = new FormData()
   formdata.append("access_token", auth.access_token)
   formdata.append("output", "json")
@@ -189,19 +209,19 @@ const makePostFormData = (auth, blogName, post) => {
   return formdata
 }
 
-const uploadFile = (auth, blogName, filepath) => {
+function uploadFile(auth, blogName, filepath) {
 	console.log("uploadFile", blogName, filepath)
 	return _uploadFile(auth.access_token, blogName, fs.createReadStream(filepath))
 }
 
-const uploadFileWithBuffer = (auth, blogName, buffer, options) => {
+function uploadFileWithBuffer(auth, blogName, buffer, options) {
   console.log("uploadFileWithClipboard", blogName)
 	var imageStream = new stream.PassThrough()
 	imageStream.end(buffer)
 	return _uploadFile(auth.access_token, blogName, imageStream, options)
 }
 
-const uploadFileWithBlob = (auth, blogName, blob, options) => {
+function uploadFileWithBlob(auth, blogName, blob, options) {
   console.log("uploadFileWithBlob", blogName)
   var imageStream = new stream.PassThrough()
 	imageStream.end(blob.buffer)
@@ -212,24 +232,12 @@ const uploadFileWithBlob = (auth, blogName, blob, options) => {
   })
 }
 
-const _uploadFile = (accessToken, blogName, fileBlob, fileOption) => {
-	let formdata = new FormData();
-  formdata.append("access_token", accessToken)
-  formdata.append("output", "json")
-  formdata.append("blogName", blogName)
-  formdata.append("uploadedfile", fileBlob, fileOption)
 
-  return fetch(BASE_URL + "/post/attach", {
-    method: 'post',
-    body: formdata
-  })
-  .then(errorHandler)
-  .then(res => res.tistory.url)
+function validateAuthInfo(auth) {
+  return auth && auth.access_token
 }
 
-const validateAuthInfo = (auth) => auth && auth.access_token
-
-const fetchAccount = async (auth) => {
+async function fetchAccount(auth) {
   let user = {
     name: "tistory",
     image: null
