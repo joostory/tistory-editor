@@ -76,7 +76,7 @@ export default function EditorContent({content, onChange, onUpload, title, onTit
         />
 
         <Dropzone ref={dropzoneRef}
-          accept="image/*" 
+          accept={{"image/*": ['.gif', '.jpg', '.jpeg', '.png']}} 
           onDrop={onUpload}>
 
           {({getRootProps, getInputProps, isDragActive}) =>
