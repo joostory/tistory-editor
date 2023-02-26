@@ -5,7 +5,6 @@ import posts from './posts'
 import currentAuth from './currentAuth'
 import currentBlog from './currentBlog'
 import currentPost from './currentPost'
-import preferences from './preferences'
 
 export default combineReducers({
 	status,
@@ -14,5 +13,4 @@ export default combineReducers({
 	currentBlog,
 	posts,
 	currentPost,
-	preferences
 })

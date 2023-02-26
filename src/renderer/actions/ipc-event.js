@@ -6,13 +6,12 @@ import {
 	receivePosts,
 	receivePostsFailed,
 	disconnectAuth,
-  receivePreferences,
   receivePostContent
 } from './index'
 
 export const registIpcEvent = (store) => {
-	ipcRenderer.send('fetch-initial-data')
-  ipcRenderer.send("fetch-preferences")
+	// ipcRenderer.send('fetch-initial-data')
+  // ipcRenderer.send("fetch-preferences")
 
 	ipcRenderer.on('initialized', (e, accounts) => {
     console.log('Renderer.receive: initialized', accounts)
@@ -48,8 +47,4 @@ export const registIpcEvent = (store) => {
   	store.dispatch(disconnectAuth(uuid))
   })
 
-  ipcRenderer.on("receive-preferences", (e, preferences) => {
-    console.log('Renderer.receive: receive-preferences', preferences)
-    store.dispatch(receivePreferences(preferences))
-  })
 }

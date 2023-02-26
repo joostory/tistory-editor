@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
 import { ipcRenderer } from 'electron'
 
 import {
@@ -10,11 +9,13 @@ import {
 
 import * as EditorMode from '../constants/EditorMode'
 import * as AppTheme from '../constants/AppTheme'
+import { useRecoilValue } from 'recoil'
+import { preferencesState } from '../state/preferences'
 
 
 export default function Preference() {
   const [open, setOpen] = useState(false)
-  const preferences = useSelector(state => state.preferences)
+  const preferences = useRecoilValue(preferencesState)
   const defaultEditor = preferences.editor || EditorMode.MARKDOWN
   const appTheme = preferences.appTheme || AppTheme.SYSTEM
 

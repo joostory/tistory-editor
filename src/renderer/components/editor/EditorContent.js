@@ -9,6 +9,8 @@ import MarkdownEditor from './codemirror/MarkdownEditor'
 import TinymceEditor from './tinymce/TinymceEditor'
 import EditorSwitch from './EditorSwich'
 import { Container, InputBase } from '@mui/material'
+import { useRecoilValue } from 'recoil'
+import { preferencesState } from '../../state/preferences'
 
 const styles = {
   container: {
@@ -48,7 +50,7 @@ function Editor({editorMode, content, onUpload, onOpenFile, onChange}) {
 
 export default function EditorContent({content, onChange, onUpload, title, onTitleChange}) {
   const currentBlog = useSelector(state => state.currentBlog)
-	const preferences = useSelector(state => state.preferences)
+	const preferences = useRecoilValue(preferencesState)
 
   const [editorMode, setEditorMode] = useState(preferences.editor || EditorMode.MARKDOWN)
 

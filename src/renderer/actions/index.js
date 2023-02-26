@@ -64,6 +64,3 @@ export const addPost = (post) => ({
 	 type: types.ADD_POST, post
 })
 
-export const receivePreferences = (preferences) => ({
-	 type: types.RECEIVE_PREFERENCES, preferences
-})

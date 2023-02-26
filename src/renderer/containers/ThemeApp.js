@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import * as AppTheme from '../constants/AppTheme'
 import App from './App'
+import { useRecoilValue } from 'recoil'
+import { preferencesState } from '../state/preferences'
 
 const CONTENT_PALETTE = {
   background: '#fff',
@@ -45,7 +47,7 @@ const LIGHT_PALETTE = {
 }
 
 export default function ThemeApp({}) {
-  const preferences = useSelector(state => state.preferences)
+  const preferences = useRecoilValue(preferencesState)
   const [shouldUseDarkColors, setShouldUseDarkColors] = useState(nativeTheme.shouldUseDarkColors)
   const theme = useMemo(() => {
     const appTheme = preferences.appTheme || AppTheme.SYSTEM
