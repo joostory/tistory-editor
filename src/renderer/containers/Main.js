@@ -1,16 +1,18 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useRecoilValue } from 'recoil'
 
 import Loading from '../components/Loading'
 import Blog from '../components/blog/Blog'
 import Index from '../components/index/Index'
+import { initializedStatusState } from '../state/status'
+import { currentBlogState } from '../state/currentBlog'
 
 export default function Main() {
-  const status = useSelector(state => state.status)
-	const currentBlog = useSelector(state => state.currentBlog)
+  const initialized = useRecoilValue(initializedStatusState)
+  const currentBlog = useRecoilValue(currentBlogState)
 
 
-	if (!status.initialized) {
+	if (!initialized) {
 		return <Loading />
   }
   

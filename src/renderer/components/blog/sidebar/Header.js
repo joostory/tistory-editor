@@ -1,11 +1,12 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useRecoilValue } from 'recoil'
 import {
   Toolbar, Avatar, Typography, Button,
   Badge, IconButton
 } from '@mui/material'
 import { ArrowDropDown } from '@mui/icons-material'
 import Providers from '../../../constants/Providers'
+import { currentAuthState, currentBlogState } from '../../../state/currentBlog' 
 
 const styles = {
   root: {
@@ -35,8 +36,8 @@ function ProfileAvatar({blog}) {
 }
 
 export default function Header({onSelectBlog}) {
-  const currentAuth = useSelector(state => state.currentAuth)
-  const currentBlog = useSelector(state => state.currentBlog)
+  const currentAuth = useRecoilValue(currentAuthState)
+	const currentBlog = useRecoilValue(currentBlogState)
   const provider = Providers.find(p => p.name == currentAuth.provider)
 
 	return (

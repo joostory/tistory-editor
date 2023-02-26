@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react'
-import { useSelector } from 'react-redux'
+import { useRecoilValue } from 'recoil'
 import { ipcRenderer, clipboard } from 'electron'
 import CodeMirrorComponent from 'react-codemirror-component'
 import MarkdownHelper from './MarkdownHelper'
 
 import { Button, Box } from '@mui/material'
 import { FormatBold, FormatItalic, FormatUnderlined, Attachment } from '@mui/icons-material'
+import { currentAuthState, currentBlogState } from '../../../state/currentBlog'
 
 import CodeMirrorHelper from './CodeMirrorHelper'
 import "../../../styles/lib/codemirror/tistory-markdown-theme.scss"
@@ -70,8 +71,8 @@ function ToolbarButton({ onClick, children }) {
 }
 
 export default function MarkdownEditor({ value, onOpenFile, onChange }) {
-  const currentAuth = useSelector(state => state.currentAuth)
-  const currentBlog = useSelector(state => state.currentBlog)
+  const currentAuth = useRecoilValue(currentAuthState)
+	const currentBlog = useRecoilValue(currentBlogState)
   const [markdownValue, setMarkdownValue] = useState(MarkdownHelper.htmlToMarkdown(value))
   const editorRef = useRef(null)
 

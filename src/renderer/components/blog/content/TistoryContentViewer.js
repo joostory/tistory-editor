@@ -1,14 +1,16 @@
 import React, { useEffect, useRef } from 'react'
-import { useSelector } from 'react-redux'
+import { useRecoilValue } from 'recoil'
 import 'highlight.js/styles/atom-one-dark.css'
 import { ipcRenderer } from 'electron'
 import TextContentViewer from './type/TextContentViewer'
+import { currentAuthState, currentBlogState } from '../../../state/currentBlog'
+import { currentPostState } from '../../../state/currentPost'
 
 
 export default function TistoryContentViewer({onRequestEditPost}) {
-  const currentAuth = useSelector(state => state.currentAuth)
-  const currentBlog = useSelector(state => state.currentBlog)
-  const post = useSelector(state => state.currentPost)
+  const currentAuth = useRecoilValue(currentAuthState)
+	const currentBlog = useRecoilValue(currentBlogState)
+  const post = useRecoilValue(currentPostState)
 
   useEffect(() => {
     if (post && !post.fetched) {

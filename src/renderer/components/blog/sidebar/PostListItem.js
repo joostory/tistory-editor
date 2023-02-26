@@ -1,9 +1,10 @@
 import React, { useMemo } from 'react'
-import { useSelector } from 'react-redux'
+import { useRecoilValue } from 'recoil'
 import dayjs from 'dayjs'
 import { ListItem, ListItemText, Typography, Box } from '@mui/material'
 import { DraftsOutlined, PhotoOutlined, CommentOutlined } from '@mui/icons-material'
 import { isPublished } from '../../../constants/PostState'
+import { currentBlogCategoriesState } from '../../../state/currentBlog'
 
 const styles = {
   info: {
@@ -24,12 +25,12 @@ function PostTitle({post}) {
 }
 
 function PostInfo({post}) {
-  const currentBlog = useSelector(state => state.currentBlog)
+  const categories = useRecoilValue(currentBlogCategoriesState)
   const category = useMemo(() => {
-    if (currentBlog.categories && post.categoryId) {
-      return currentBlog.categories.find(c => c.id == post.categoryId)
+    if (categories && post.categoryId) {
+      return categories.find(c => c.id == post.categoryId)
     }
-  }, [currentBlog, post])
+  }, [categories, post])
 
   return (
     <>

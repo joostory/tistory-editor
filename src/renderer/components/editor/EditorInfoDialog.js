@@ -1,7 +1,8 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useRecoilValue } from 'recoil'
 import { Dialog, Button, DialogTitle, DialogContent, DialogActions, Select, MenuItem, FormControl, InputLabel } from '@mui/material'
 import ChipInput from './ChipInput'
+import { currentAuthState, currentBlogCategoriesState } from '../../state/currentBlog'
 
 const styles = {
   category: {
@@ -11,19 +12,19 @@ const styles = {
 }
 
 export default function EditorInfoDialog({ onRequestClose, onRequestDraft, onRequestPublish, onCategoryChange, onTagsChange, categoryId, tags, open }) {
-  const currentAuth = useSelector(state => state.currentAuth)
-  const currentBlog = useSelector(state => state.currentBlog)
+  const currentAuth = useRecoilValue(currentAuthState)
+  const categories = useRecoilValue(currentBlogCategoriesState)
 
   return (
     <Dialog open={open} maxWidth='md' onClose={onRequestClose}>
       <DialogTitle>글의 속성을 확인해주세요.</DialogTitle>
       <DialogContent>
-        {currentAuth.provider == 'tistory' && currentBlog.categories &&
+        {currentAuth.provider == 'tistory' && categories &&
           <FormControl fullWidth={true} sx={styles.category}>
             <InputLabel>카테고리</InputLabel>
             <Select label='카테고리' value={categoryId} onChange={onCategoryChange}>
               <MenuItem value='0'>분류없음</MenuItem>
-              {currentBlog.categories.map(item =>
+              {categories.map(item =>
                 <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
               )}
             </Select>

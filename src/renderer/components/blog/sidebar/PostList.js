@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { ipcRenderer } from 'electron'
 
 import { CircularProgress, List, Typography, Box } from '@mui/material'
 
 import PostListItem from './PostListItem'
-import { selectPost, lockPostsLoad } from '../../../actions'
+import { currentAuthState, currentBlogState } from '../../../state/currentBlog'
+import { postsInitializedState, postsLockState, postsState } from '../../../state/posts'
+import { currentPostState } from '../../../state/currentPost'
 
 
 const styles = {
@@ -21,15 +23,16 @@ const styles = {
 }
 
 export default function PostList() {
-  const posts = useSelector(state => state.posts)
-  const currentPost = useSelector(state => state.currentPost)
-  const currentAuth = useSelector(state => state.currentAuth)
-	const currentBlog = useSelector(state => state.currentBlog)
-	const dispatch = useDispatch()
+  const posts = useRecoilValue(postsState)
+  const [postsLock, setPostsLock] = useRecoilState(postsLockState)
+  const postsInitialized = useRecoilValue(postsInitializedState)
+  const [currentPost, setCurrentPost] = useRecoilState(currentPostState)
+  const currentAuth = useRecoilValue(currentAuthState)
+	const currentBlog = useRecoilValue(currentBlogState)
 
 	function requestNextPage() {
-		if (!posts.lock && posts.hasNext) {
-      dispatch(lockPostsLoad())
+		if (!postsLock && posts.hasNext) {
+      setPostsLock(true)
       let options
       if (currentAuth.provider == 'tistory') {
         options = {
@@ -40,6 +43,7 @@ export default function PostList() {
           offset: posts.list.length
         }
       }
+      console.log("fetch-posts", currentAuth, currentBlog, options)
 			ipcRenderer.send('fetch-posts', currentAuth.uuid, currentBlog.name, options)
 		}
 	}
@@ -57,11 +61,11 @@ export default function PostList() {
 			return
 		}
 
-		dispatch(selectPost(item))
+    setCurrentPost(item)
 	}
 
 	useEffect(() => {
-    if (!posts.initialized) {
+    if (!postsInitialized) {
       requestNextPage()
     }
   }, [posts])

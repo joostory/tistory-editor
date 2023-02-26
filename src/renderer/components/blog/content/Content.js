@@ -1,8 +1,10 @@
 import React, { } from 'react'
-import { useSelector } from 'react-redux'
+import { useRecoilValue } from 'recoil'
 import TumblrContentViewer from './TumblrContentViewer'
 import TistoryContentViewer from './TistoryContentViewer'
 import { Box, Typography } from '@mui/material'
+import { currentAuthState } from '../../../state/currentBlog'
+import { currentPostState } from '../../../state/currentPost'
 
 const styles = {
   container: {
@@ -34,8 +36,8 @@ function EmptyContent() {
 
 
 function ContentViewer({onRequestEditPost}) {
-  const post = useSelector(state => state.currentPost)
-  const currentAuth = useSelector(state => state.currentAuth)
+  const post = useRecoilValue(currentPostState)
+  const currentAuth = useRecoilValue(currentAuthState)
 
   if (!post) {
     return <EmptyContent />

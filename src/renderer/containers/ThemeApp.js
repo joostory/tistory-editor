@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from 'react'
 import { nativeTheme } from '@electron/remote'
-import { useSelector } from 'react-redux'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import * as AppTheme from '../constants/AppTheme'
 import App from './App'

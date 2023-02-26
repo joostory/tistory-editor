@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useRecoilState, useRecoilValue, useSetRecoilState, useRecoilCallback } from 'recoil'
 import update from 'immutability-helper'
 import { ipcRenderer } from 'electron'
 
-import { addPost, updatePost } from '../../actions'
+import { currentAuthState, currentBlogState } from '../../state/currentBlog'
 import * as ContentMode from '../../constants/ContentMode'
 
 import {
@@ -16,6 +16,8 @@ import Loading from '../Loading'
 
 import { pageview } from '../../modules/AnalyticsHelper'
 import { isPublished, DRAFT, PUBLISHED } from '../../constants/PostState'
+import { currentPostState } from '../../state/currentPost'
+import { postsState } from '../../state/posts'
 
 const styles = {
   root: {
@@ -25,10 +27,10 @@ const styles = {
 }
 
 export default function Editor({mode, onFinish}) {
-  const currentAuth = useSelector(state => state.currentAuth)
-  const currentBlog = useSelector(state => state.currentBlog)
-  const post = useSelector(state => state.currentPost)
-  const dispatch = useDispatch()
+  const currentAuth = useRecoilValue(currentAuthState)
+	const currentBlog = useRecoilValue(currentBlogState)
+  const [post, setPost] = useRecoilState(currentPostState)
+  const setPosts = useSetRecoilState(postsState)
 
   const [showInfoBox, setShowInfoBox] = useState(false)
   const [showLoading, setShowLoading] = useState(false)
@@ -36,6 +38,26 @@ export default function Editor({mode, onFinish}) {
   const [uploadFinishedFileCount, setUploadFinishedFileCount] = useState(0)
 
   const [postData, setPostData] = useState(makePostState())
+
+  const handleAddPost = useRecoilCallback(({snapshot}) => async (post) => {
+    const posts = await snapshot.getPromise(postsState)
+    setPosts({
+      ...posts,
+      list: [post, ...posts.list]
+    })
+  })
+
+  const handleModifyPost = useRecoilCallback(({snapshot}) => async (post) => {
+    const posts = await snapshot.getPromise(postsState)
+    const modifiedList = [...posts.list]
+    const index = modifiedList.findIndex(p => p.id == post.id)
+    modifiedList.splice(index, 1, post)
+    setPosts({
+      ...posts,
+      list: modifiedList
+    })
+    setPost(post)
+  })
 
   function makePostState() {
 		if (mode == ContentMode.EDIT && post) {
@@ -120,9 +142,9 @@ export default function Editor({mode, onFinish}) {
     }
     
     if (mode == ContentMode.ADD) {
-      dispatch(addPost(post))
+      handleAddPost(post)
     } else {
-      dispatch(updatePost(post))
+      handleModifyPost(post)
     }
 		onFinish()
 	}

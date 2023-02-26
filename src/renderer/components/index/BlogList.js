@@ -1,13 +1,16 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { ipcRenderer } from 'electron'
 import {
   List, ListSubheader, Button, Avatar,
   Typography, Paper
 } from '@mui/material'
 import BlogListItem from './BlogListItem'
-import { selectBlog } from '../../actions'
 import Providers from '../../constants/Providers'
+import { accountsState } from '../../state/accounts'
+import { currentAuthState, currentBlogCategoriesState, currentBlogState, INITIAL_CATEGORIES, INITIAL_CURRENT_AUTH, INITIAL_CURRENT_BLOG } from '../../state/currentBlog'
+import { INITIAL_POSTS, postsInitializedState, postsLockState, postsState } from '../../state/posts'
+import { currentPostState, INITIAL_CURRENT_POST } from '../../state/currentPost'
 
 const styles = {
   paper: {
@@ -58,11 +61,25 @@ function ServiceListHeader({service}) {
 }
 
 export default function BlogList({afterSelect}) {
-  const accounts = useSelector(state => state.accounts)
-  const dispatch = useDispatch()
+  const accounts = useRecoilValue(accountsState)
+  const setCurrentAuth = useSetRecoilState(currentAuthState)
+  const setCurrentBlog = useSetRecoilState(currentBlogState)
+  const setPosts = useSetRecoilState(postsState)
+  const setPostsInitialized = useSetRecoilState(postsInitializedState)
+  const setPostsLock = useSetRecoilState(postsLockState)
+  const setCurrentBlogCategories = useSetRecoilState(currentBlogCategoriesState)
+  const setCurrentPost = useSetRecoilState(currentPostState)
 
   function handleSelectBlog(auth, blog) {
-    dispatch(selectBlog(auth, blog))
+    setCurrentAuth(auth)
+    setCurrentBlog(blog)
+
+    setCurrentBlogCategories(INITIAL_CATEGORIES)
+    setPosts(INITIAL_POSTS)
+    setPostsInitialized(false)
+    setPostsLock(false)
+    setCurrentPost(INITIAL_CURRENT_POST)
+    
     if (afterSelect) {
       afterSelect()
     }
@@ -80,7 +97,7 @@ export default function BlogList({afterSelect}) {
     <>
       {accounts.map(account =>
         <List key={account.auth.uuid} subheader={<ServiceListHeader service={account} />}>
-          {account.blogs.sort((a,b) =>
+          {[...account.blogs].sort((a,b) =>
             a.primary? -1 : b.primary? 1 : 0
           ).map(blog =>
             <li key={blog.url}>

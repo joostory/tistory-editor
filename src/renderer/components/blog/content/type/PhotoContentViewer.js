@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useRecoilValue } from 'recoil'
 import dayjs from 'dayjs'
 import { Chip, IconButton, Box, Divider, Typography, Container, Card, CardMedia, CardContent } from '@mui/material'
 import { OpenInBrowser, Edit } from '@mui/icons-material'
 import 'highlight.js/styles/atom-one-dark.css'
 import { pageview } from '../../../../modules/AnalyticsHelper'
+import { currentBlogState } from '../../../../state/currentBlog'
+import { currentPostState } from '../../../../state/currentPost'
 
 const styles = {
   root: {
@@ -49,8 +51,8 @@ function Photo({photo}) {
 
 
 export default function PhotoContentViewer() {
-  const currentBlog = useSelector(state => state.currentBlog)
-  const post = useSelector(state => state.currentPost)
+  const currentBlog = useRecoilValue(currentBlogState)
+  const post = useRecoilValue(currentPostState)
 
   useEffect(() => {
     if (post) {

@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
 import classnames from 'classnames'
 
 import * as EditorMode from '../../constants/EditorMode'
@@ -11,6 +10,7 @@ import EditorSwitch from './EditorSwich'
 import { Container, InputBase } from '@mui/material'
 import { useRecoilValue } from 'recoil'
 import { preferencesState } from '../../state/preferences'
+import { currentBlogState } from '../../state/currentBlog'
 
 const styles = {
   container: {
@@ -49,7 +49,7 @@ function Editor({editorMode, content, onUpload, onOpenFile, onChange}) {
 }
 
 export default function EditorContent({content, onChange, onUpload, title, onTitleChange}) {
-  const currentBlog = useSelector(state => state.currentBlog)
+  const currentBlog = useRecoilValue(currentBlogState)
 	const preferences = useRecoilValue(preferencesState)
 
   const [editorMode, setEditorMode] = useState(preferences.editor || EditorMode.MARKDOWN)

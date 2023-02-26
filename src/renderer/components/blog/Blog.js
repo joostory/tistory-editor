@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { ipcRenderer } from 'electron'
-import { useSelector } from 'react-redux'
+import { useRecoilValue } from 'recoil'
 import {
-  Fab, Dialog, DialogTitle, DialogContent, Slide, Box
+  Fab, Dialog, DialogTitle, DialogContent, Box
 } from '@mui/material'
 import { Add } from '@mui/icons-material'
 import Sidebar from './sidebar/Sidebar'
@@ -12,6 +12,8 @@ import * as ContentMode from '../../constants/ContentMode'
 import { pageview } from '../../modules/AnalyticsHelper'
 import BlogList from '../index/BlogList'
 import AuthButton from '../index/AuthButton'
+
+import { currentAuthState, currentBlogState } from '../../state/currentBlog'
 
 
 const styles = {
@@ -66,8 +68,8 @@ function EditorDialog({mode, onClose}) {
 }
 
 export default function Blog() {
-  const currentAuth = useSelector(state => state.currentAuth)
-	const currentBlog = useSelector(state => state.currentBlog)
+  const currentAuth = useRecoilValue(currentAuthState)
+	const currentBlog = useRecoilValue(currentBlogState)
   const [contentMode, setContentMode] = useState(ContentMode.VIEW)
   const [openEditor, setOpenEditor] = useState(false)
   const [openBlogSelector, setOpenBlogSelector] = useState(!currentBlog)

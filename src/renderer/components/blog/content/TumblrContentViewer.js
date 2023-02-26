@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react'
-import { useSelector } from 'react-redux'
 import { pageview } from '../../../modules/AnalyticsHelper'
 import TextContentViewer from './type/TextContentViewer'
 import PhotoContentViewer from './type/PhotoContentViewer'
 import { Typography } from '@mui/material'
+import { useRecoilValue } from 'recoil'
+import { currentBlogState } from '../../../state/currentBlog'
+import { currentPostState } from '../../../state/currentPost'
 
 const styles = {
   emtpyMessage: {
@@ -24,8 +26,8 @@ function UnknownTypeContentViewer() {
 
 
 export default function TumblrContentViewer({ onRequestEditPost }) {
-  const currentBlog = useSelector(state => state.currentBlog)
-  const post = useSelector(state => state.currentPost)
+  const currentBlog = useRecoilValue(currentBlogState)
+  const post = useRecoilValue(currentPostState)
 
   useEffect(() => {
     if (post) {

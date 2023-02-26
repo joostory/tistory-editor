@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import { useSelector } from 'react-redux'
+import { useRecoilValue } from 'recoil'
 import { ipcRenderer, clipboard } from 'electron'
 import OpengraphFetcher from 'opengraph-fetcher'
 
 import tinymce from 'tinymce'
 import { Editor } from '@tinymce/tinymce-react'
+import { currentAuthState, currentBlogState } from '../../../state/currentBlog'
 
 import 'tinymce-plugin-opengraph'
 import 'tinymce-plugin-codeblock'
@@ -19,8 +20,8 @@ import 'codemirror/mode/xml/xml'
 import { makeThumbnail } from '../../../modules/ThumbnailHelper'
 
 export default function TinymceEditor({ value, onImageHandler, onOpenFile, onChange }) {
-  const currentAuth = useSelector(state => state.currentAuth)
-  const currentBlog = useSelector(state => state.currentBlog)
+  const currentAuth = useRecoilValue(currentAuthState)
+	const currentBlog = useRecoilValue(currentBlogState)
   const imageUploadEnabled = useMemo(() => currentAuth.provider == 'tistory', [currentAuth])
 
   const tinymcePlugins = useMemo(() => {
