@@ -60,6 +60,10 @@
     "webpack-cli": "^5.0.1"
   },
   "dependencies": {
+    "@editablejs/editor": "^1.0.1",
+    "@editablejs/models": "^1.0.0",
+    "@editablejs/plugin-toolbar": "^1.0.1",
+    "@editablejs/plugins": "^1.0.2",
     "@electron/remote": "^2.0.1",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",

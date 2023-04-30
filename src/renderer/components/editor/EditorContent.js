@@ -11,6 +11,7 @@ import { Container, InputBase } from '@mui/material'
 import { useRecoilValue } from 'recoil'
 import { preferencesState } from '../../state/preferences'
 import { currentBlogState } from '../../state/currentBlog'
+import EditablejsEditor from './editablejs/EditablejsEditor'
 
 const styles = {
   container: {
@@ -30,13 +31,17 @@ const styles = {
 function Editor({editorMode, content, onUpload, onOpenFile, onChange}) {
   if (editorMode == EditorMode.TINYMCE) {
     return (
-      <TinymceEditor
-        value={content}
-        onImageHandler={onUpload}
-        onOpenFile={onOpenFile}
-        onChange={onChange}
-      />
+      <EditablejsEditor />
     )
+
+    // return (
+    //   <TinymceEditor
+    //     value={content}
+    //     onImageHandler={onUpload}
+    //     onOpenFile={onOpenFile}
+    //     onChange={onChange}
+    //   />
+    // )
   } else {
     return (
       <MarkdownEditor
