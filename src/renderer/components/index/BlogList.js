@@ -40,6 +40,11 @@ const styles = {
 
 function ServiceListHeader({service}) {
   const provider = Providers.find(p => p.name == service.auth.provider)
+  if (!provider) {
+    return (
+      <></>
+    )
+  }
 
   function handleDisconnect() {
     if (confirm(`${provider.label} 서비스에 연결된 ${service.user.name} 계정을 제거하시겠습니까?`)) {
@@ -95,7 +100,7 @@ export default function BlogList({afterSelect}) {
 
   return (
     <>
-      {accounts.map(account =>
+      {accounts.filter(it => it.auth.provider != 'tistory').map(account =>
         <List key={account.auth.uuid} subheader={<ServiceListHeader service={account} />}>
           {[...account.blogs].sort((a,b) =>
             a.primary? -1 : b.primary? 1 : 0

@@ -1,4 +1,3 @@
-import tistoryLogo from '../images/logo_tistory.png'
 import tumblrLogo from '../images/logo_tumblr.png'
 
 class Provider {
@@ -10,6 +9,5 @@ class Provider {
 }
 
 export default [
-  new Provider('tistory', 'Tistory', tistoryLogo),
   new Provider('tumblr', 'Tumblr', tumblrLogo)
 ]

@@ -130,7 +130,7 @@ async function fetchAccount(auth) {
     blogs = res.user.blogs
   } catch (e) {
     username = "불러오기 오류"
-    console.error(e)
+    console.error("FETCH_ACCOUNT_FAILED", e)
   }
   
   return {

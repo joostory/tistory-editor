@@ -24,10 +24,15 @@ module.exports = () => {
   ipcMain.on('fetch-initial-data', (evt) => {
     console.log('Main.receive: fetch-initial-data')
     let authList = AuthenticationManager.getAll()
+    evt.sender.send('initialized', [])
     if (Array.isArray(authList) && authList.length > 0) {
-      fetchAccounts(authList).then(data => {
-        evt.sender.send('initialized', data)
-      })
+      fetchAccounts(authList)
+        .then(data => {
+          evt.sender.send('initialized', data)
+        })
+        .catch(e => {
+          evt.sender.send('initialized', [])
+        })
     } else {
       evt.sender.send('initialized', [])
     }
