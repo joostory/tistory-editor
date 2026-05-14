@@ -22,15 +22,15 @@ const styles = {
   header: {
     display: 'flex',
     alignItems: 'center',
-    paddingTop:(theme) => theme.spacing(2),
-    paddingBottom:(theme) => theme.spacing(2),
-    backgroundColor:(theme) => theme.palette.headerBackground,
+    paddingTop: (theme) => theme.spacing(2),
+    paddingBottom: (theme) => theme.spacing(2),
+    backgroundColor: (theme) => theme.palette.headerBackground,
   },
   logo: {
     display: 'flex',
-    width:(theme) => theme.spacing(3),
-    height:(theme) => theme.spacing(3),
-    marginRight:(theme) => theme.spacing(1)
+    width: (theme) => theme.spacing(3),
+    height: (theme) => theme.spacing(3),
+    marginRight: (theme) => theme.spacing(1)
   },
   title: {
     display: 'flex',
@@ -38,7 +38,7 @@ const styles = {
   }
 }
 
-function ServiceListHeader({service}) {
+function ServiceListHeader({ service }) {
   const provider = Providers.find(p => p.name == service.auth.provider)
   if (!provider) {
     return (
@@ -65,7 +65,7 @@ function ServiceListHeader({service}) {
   )
 }
 
-export default function BlogList({afterSelect}) {
+export default function BlogList({ afterSelect }) {
   const accounts = useAtomValue(accountsState)
   const setCurrentAuth = useSetAtom(currentAuthState)
   const setCurrentBlog = useSetAtom(currentBlogState)
@@ -84,7 +84,7 @@ export default function BlogList({afterSelect}) {
     setPostsInitialized(false)
     setPostsLock(false)
     setCurrentPost(INITIAL_CURRENT_POST)
-    
+
     if (afterSelect) {
       afterSelect()
     }
@@ -102,15 +102,14 @@ export default function BlogList({afterSelect}) {
     <>
       {accounts.filter(it => it.auth.provider != 'tistory').map(account =>
         <List key={account.auth.uuid} subheader={<ServiceListHeader service={account} />}>
-          {[...account.blogs].sort((a,b) =>
-            a.primary? -1 : b.primary? 1 : 0
+          {[...account.blogs].sort((a, b) =>
+            a.primary ? -1 : b.primary ? 1 : 0
           ).map(blog =>
-            <li key={blog.url}>
-              <BlogListItem
-                blog={blog}
-                onSelect={e => handleSelectBlog(account.auth, blog)}
-              />
-            </li>
+            <BlogListItem
+              blog={blog}
+              key={blog.url}
+              onSelect={e => handleSelectBlog(account.auth, blog)}
+            />
           )}
         </List>
       )}
