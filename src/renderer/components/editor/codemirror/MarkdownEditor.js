@@ -1,7 +1,9 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react'
-import { useRecoilValue } from 'recoil'
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react'
+import { useAtomValue } from 'jotai'
 import { ipcRenderer, clipboard } from 'electron'
-import CodeMirrorComponent from 'react-codemirror-component'
+import CodeMirror, { EditorView } from '@uiw/react-codemirror'
+import { markdown, markdownLanguage } from '@codemirror/lang-markdown'
+import { languages } from '@codemirror/language-data'
 import MarkdownHelper from './MarkdownHelper'
 
 import { Button, Box } from '@mui/material'
@@ -9,56 +11,50 @@ import { FormatBold, FormatItalic, FormatUnderlined, Attachment } from '@mui/ico
 import { currentAuthState, currentBlogState } from '../../../state/currentBlog'
 
 import CodeMirrorHelper from './CodeMirrorHelper'
-import "../../../styles/lib/codemirror/tistory-markdown-theme.scss"
-import "codemirror/lib/codemirror.css"
-import "codemirror/addon/dialog/dialog.css"
-import "codemirror/mode/javascript/javascript"
-import "codemirror/mode/xml/xml"
-import "codemirror/mode/markdown/markdown"
-import "codemirror/addon/dialog/dialog"
-import "codemirror/addon/search/search"
-import "codemirror/addon/search/searchcursor"
-import "codemirror/addon/search/jump-to-line"
-import "codemirror/addon/display/placeholder"
-
-const MacKeymap = [
-	{ 'Cmd-2': (cm) => CodeMirrorHelper.header2(cm) },
-	{ 'Cmd-3': (cm) => CodeMirrorHelper.header3(cm) },
-	{ 'Cmd-B': (cm) => CodeMirrorHelper.bold(cm) },
-	{ 'Cmd-I': (cm) => CodeMirrorHelper.italic(cm) },
-	{ 'Cmd-U': (cm) => CodeMirrorHelper.underline(cm) },
-	{ 'Cmd-K': (cm) => CodeMirrorHelper.link(cm) }
-]
-
-const PcKeymap = [
-	{ 'Ctrl-2': (cm) => CodeMirrorHelper.header2(cm) },
-	{ 'Ctrl-3': (cm) => CodeMirrorHelper.header3(cm) },
-	{ 'Ctrl-B': (cm) => CodeMirrorHelper.bold(cm) },
-	{ 'Ctrl-I': (cm) => CodeMirrorHelper.italic(cm) },
-	{ 'Ctrl-U': (cm) => CodeMirrorHelper.underline(cm) },
-	{ 'Ctrl-K': (cm) => CodeMirrorHelper.link(cm) }
-]
 
 const styles = {
   toolbar: {
     position: 'fixed',
-    top:15,
-    width:700,
+    top: 15,
+    width: 700,
     display: 'flex',
     alignItems: 'center',
-    borderRadius:(theme) => 1,
-    paddingLeft:(theme) => theme.spacing(0.5),
-    height:(theme) => theme.spacing(5),
+    borderRadius: (theme) => 1,
+    paddingLeft: (theme) => theme.spacing(0.5),
+    height: (theme) => theme.spacing(5),
     left: '50%',
     transform: 'translate(-50%,0)',
-    zIndex:10,
-    background:(theme) => theme.palette.headerBackground,
-    boxShadow:(theme) => theme.shadows[1]
+    zIndex: 10,
+    background: (theme) => theme.palette.headerBackground,
+    boxShadow: (theme) => theme.shadows[1]
   },
   toolbarBtn: {
     padding: '5px',
     minWidth: '34px',
     height: '34px'
+  },
+  editor: {
+    '.cm-editor': {
+      height: 'auto',
+      minHeight: '500px',
+      backgroundColor: '#fff !important',
+      color: '#333 !important',
+      padding: '20px 0',
+      '& .cm-line': {
+        padding: '0px',
+      }
+    },
+    '.cm-scroller': {
+      fontFamily: 'Nanum Gothic, sans-serif',
+      lineHeight: 1.6,
+    },
+    '.cm-content': {
+      color: '#333 !important',
+      fontSize: '14px',
+    },
+    '.cm-focused': {
+      outline: 'none !important'
+    }
   }
 }
 
@@ -71,74 +67,67 @@ function ToolbarButton({ onClick, children }) {
 }
 
 export default function MarkdownEditor({ value, onOpenFile, onChange }) {
-  const currentAuth = useRecoilValue(currentAuthState)
-	const currentBlog = useRecoilValue(currentBlogState)
+  const currentAuth = useAtomValue(currentAuthState)
+  const currentBlog = useAtomValue(currentBlogState)
   const [markdownValue, setMarkdownValue] = useState(MarkdownHelper.htmlToMarkdown(value))
   const editorRef = useRef(null)
 
   const imageUploadEnabled = useMemo(() => currentAuth.provider == 'tistory', [currentAuth])
 
-	function handlePaste(e) {
+  const handlePaste = useCallback((e) => {
     if (imageUploadEnabled) {
       let image = clipboard.readImage()
       if (!image.isEmpty()) {
         ipcRenderer.send("add-clipboard-image", currentAuth.uuid, currentBlog.name)
       }
     }
-	}
+  }, [imageUploadEnabled, currentAuth, currentBlog])
 
-  function handleChangeContent(value) {
-    setMarkdownValue(value)
-    onChange(MarkdownHelper.markdownToHtml(value))
-	}
+  const handleChangeContent = useCallback((val) => {
+    setMarkdownValue(val)
+    onChange(MarkdownHelper.markdownToHtml(val))
+  }, [onChange])
 
-	function handleHeader2(e) {
-		e.preventDefault()
-		CodeMirrorHelper.header2(editorRef.current.getCodeMirror())
-	}
-
-	function handleHeader3(e) {
-		e.preventDefault()
-		CodeMirrorHelper.header3(editorRef.current.getCodeMirror())
-	}
-	
-	function handleBold(e) {
-		e.preventDefault()
-		CodeMirrorHelper.bold(editorRef.current.getCodeMirror())
-	}
-
-	function handleItalic(e) {
-		e.preventDefault()
-		CodeMirrorHelper.italic(editorRef.current.getCodeMirror())
-	}
-
-	function handleUnderline(e) {
-		e.preventDefault()
-		CodeMirrorHelper.underline(editorRef.current.getCodeMirror())
-	}
-
-	function handleLink(e) {
-		e.preventDefault()
-		CodeMirrorHelper.link(editorRef.current.getCodeMirror())
-	}
-
-  function handleFinishUploadFile(e, fileUrl) {
-    CodeMirrorHelper.insertImage(editorRef.current.getCodeMirror(), fileUrl)
+  const handleHeader2 = (e) => {
+    e.preventDefault()
+    if (editorRef.current?.view) CodeMirrorHelper.header2(editorRef.current.view)
   }
 
+  const handleHeader3 = (e) => {
+    e.preventDefault()
+    if (editorRef.current?.view) CodeMirrorHelper.header3(editorRef.current.view)
+  }
+
+  const handleBold = (e) => {
+    e.preventDefault()
+    if (editorRef.current?.view) CodeMirrorHelper.bold(editorRef.current.view)
+  }
+
+  const handleItalic = (e) => {
+    e.preventDefault()
+    if (editorRef.current?.view) CodeMirrorHelper.italic(editorRef.current.view)
+  }
+
+  const handleUnderline = (e) => {
+    e.preventDefault()
+    if (editorRef.current?.view) CodeMirrorHelper.underline(editorRef.current.view)
+  }
+
+  const handleLink = (e) => {
+    e.preventDefault()
+    if (editorRef.current?.view) CodeMirrorHelper.link(editorRef.current.view)
+  }
+
+  const handleFinishUploadFile = useCallback((e, fileUrl) => {
+    if (editorRef.current?.view) CodeMirrorHelper.insertImage(editorRef.current.view, fileUrl)
+  }, [])
+
   useEffect(() => {
-    let cm = editorRef.current.getCodeMirror()
-		cm.on("paste", handlePaste)
-
-		const keymap = navigator.userAgent.indexOf('Macintosh') > 0 ? MacKeymap : PcKeymap
-    keymap.map(map => cm.addKeyMap(map))
-
     ipcRenderer.on("finish-add-file", handleFinishUploadFile)
-
     return () => {
       ipcRenderer.removeListener("finish-add-file", handleFinishUploadFile)
     }
-  }, [])
+  }, [handleFinishUploadFile])
 
   return (
     <Box>
@@ -152,18 +141,26 @@ export default function MarkdownEditor({ value, onOpenFile, onChange }) {
         {imageUploadEnabled && <ToolbarButton onClick={onOpenFile}><Attachment /></ToolbarButton>}
       </Box>
 
-      <CodeMirrorComponent ref={editorRef}
-        options={{
-          lineNumbers: false,
-          lineWrapping: true,
-          mode: 'markdown',
-          theme:'tistory-markdown',
-          placeholder: '내용을 입력하세요.'
-        }}
-        value={markdownValue}
-        onChange={handleChangeContent}
-      />
+      <Box sx={styles.editor}>
+        <CodeMirror
+          ref={editorRef}
+          value={markdownValue}
+          height="auto"
+          minHeight="500px"
+          theme="light"
+          extensions={[
+            markdown({ base: markdownLanguage, codeLanguages: languages }),
+            EditorView.lineWrapping
+          ]}
+          onChange={handleChangeContent}
+          placeholder="내용을 입력하세요."
+          basicSetup={{
+            lineNumbers: false,
+            foldGutter: false,
+          }}
+          onPaste={handlePaste}
+        />
+      </Box>
     </Box>
   )
 }
-

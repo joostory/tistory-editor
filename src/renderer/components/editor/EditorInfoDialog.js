@@ -1,5 +1,5 @@
 import React from 'react'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import { Dialog, Button, DialogTitle, DialogContent, DialogActions, Select, MenuItem, FormControl, InputLabel } from '@mui/material'
 import ChipInput from './ChipInput'
 import { currentAuthState, currentBlogCategoriesState } from '../../state/currentBlog'
@@ -12,8 +12,8 @@ const styles = {
 }
 
 export default function EditorInfoDialog({ onRequestClose, onRequestDraft, onRequestPublish, onCategoryChange, onTagsChange, categoryId, tags, open }) {
-  const currentAuth = useRecoilValue(currentAuthState)
-  const categories = useRecoilValue(currentBlogCategoriesState)
+  const currentAuth = useAtomValue(currentAuthState)
+  const categories = useAtomValue(currentBlogCategoriesState)
 
   return (
     <Dialog open={open} maxWidth='md' onClose={onRequestClose}>

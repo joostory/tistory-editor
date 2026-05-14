@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import dayjs from 'dayjs'
 import { Chip, IconButton, Box, Divider, Typography, Container, Card, CardMedia, CardContent } from '@mui/material'
 import { OpenInBrowser, Edit } from '@mui/icons-material'
@@ -51,8 +51,8 @@ function Photo({photo}) {
 
 
 export default function PhotoContentViewer() {
-  const currentBlog = useRecoilValue(currentBlogState)
-  const post = useRecoilValue(currentPostState)
+  const currentBlog = useAtomValue(currentBlogState)
+  const post = useAtomValue(currentPostState)
 
   useEffect(() => {
     if (post) {

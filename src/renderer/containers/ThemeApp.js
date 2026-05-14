@@ -3,7 +3,7 @@ import { nativeTheme } from '@electron/remote'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import * as AppTheme from '../constants/AppTheme'
 import App from './App'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import { preferencesState } from '../state/preferences'
 
 const CONTENT_PALETTE = {
@@ -46,7 +46,7 @@ const LIGHT_PALETTE = {
 }
 
 export default function ThemeApp({}) {
-  const preferences = useRecoilValue(preferencesState)
+  const preferences = useAtomValue(preferencesState)
   const [shouldUseDarkColors, setShouldUseDarkColors] = useState(nativeTheme.shouldUseDarkColors)
   const theme = useMemo(() => {
     const appTheme = preferences.appTheme || AppTheme.SYSTEM

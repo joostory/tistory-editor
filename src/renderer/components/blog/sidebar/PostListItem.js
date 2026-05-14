@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import dayjs from 'dayjs'
 import { ListItem, ListItemText, Typography, Box } from '@mui/material'
 import { DraftsOutlined, PhotoOutlined, CommentOutlined } from '@mui/icons-material'
@@ -25,7 +25,7 @@ function PostTitle({post}) {
 }
 
 function PostInfo({post}) {
-  const categories = useRecoilValue(currentBlogCategoriesState)
+  const categories = useAtomValue(currentBlogCategoriesState)
   const category = useMemo(() => {
     if (categories && post.categoryId) {
       return categories.find(c => c.id == post.categoryId)

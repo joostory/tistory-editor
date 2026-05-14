@@ -43,9 +43,9 @@ export default function EditorSwitch({ editorMode, onChange }) {
         anchorEl={popoverParent}
         onClose={handleCloseEditorMode}
       >
-        <MenuItem selected={editorMode === EditorMode.TINYMCE}
-          onClick={e => handleChangeEditorMode(EditorMode.TINYMCE)}>
-          Rich Editor
+        <MenuItem selected={editorMode === EditorMode.TIPTAP}
+          onClick={e => handleChangeEditorMode(EditorMode.TIPTAP)}>
+          Rich Editor (Tiptap)
         </MenuItem>
         <MenuItem selected={editorMode === EditorMode.MARKDOWN}
           onClick={e => handleChangeEditorMode(EditorMode.MARKDOWN)}>

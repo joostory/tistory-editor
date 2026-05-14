@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { ipcRenderer } from 'electron'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import {
   Fab, Dialog, DialogTitle, DialogContent, Box
 } from '@mui/material'
@@ -68,8 +68,8 @@ function EditorDialog({mode, onClose}) {
 }
 
 export default function Blog() {
-  const currentAuth = useRecoilValue(currentAuthState)
-	const currentBlog = useRecoilValue(currentBlogState)
+  const currentAuth = useAtomValue(currentAuthState)
+	const currentBlog = useAtomValue(currentBlogState)
   const [contentMode, setContentMode] = useState(ContentMode.VIEW)
   const [openEditor, setOpenEditor] = useState(false)
   const [openBlogSelector, setOpenBlogSelector] = useState(!currentBlog)

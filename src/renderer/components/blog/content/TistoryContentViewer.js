@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import 'highlight.js/styles/atom-one-dark.css'
 import { ipcRenderer } from 'electron'
 import TextContentViewer from './type/TextContentViewer'
@@ -8,9 +8,9 @@ import { currentPostState } from '../../../state/currentPost'
 
 
 export default function TistoryContentViewer({onRequestEditPost}) {
-  const currentAuth = useRecoilValue(currentAuthState)
-	const currentBlog = useRecoilValue(currentBlogState)
-  const post = useRecoilValue(currentPostState)
+  const currentAuth = useAtomValue(currentAuthState)
+	const currentBlog = useAtomValue(currentBlogState)
+  const post = useAtomValue(currentPostState)
 
   useEffect(() => {
     if (post && !post.fetched) {

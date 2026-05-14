@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useAtom, useAtomValue } from 'jotai'
 import { ipcRenderer } from 'electron'
 
 import { CircularProgress, List, Typography, Box } from '@mui/material'
@@ -23,12 +23,12 @@ const styles = {
 }
 
 export default function PostList() {
-  const posts = useRecoilValue(postsState)
-  const [postsLock, setPostsLock] = useRecoilState(postsLockState)
-  const postsInitialized = useRecoilValue(postsInitializedState)
-  const [currentPost, setCurrentPost] = useRecoilState(currentPostState)
-  const currentAuth = useRecoilValue(currentAuthState)
-	const currentBlog = useRecoilValue(currentBlogState)
+  const posts = useAtomValue(postsState)
+  const [postsLock, setPostsLock] = useAtom(postsLockState)
+  const postsInitialized = useAtomValue(postsInitializedState)
+  const [currentPost, setCurrentPost] = useAtom(currentPostState)
+  const currentAuth = useAtomValue(currentAuthState)
+	const currentBlog = useAtomValue(currentBlogState)
 
 	function requestNextPage() {
 		if (!postsLock && posts.hasNext) {

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { ipcRenderer } from 'electron'
-import { useSetRecoilState, useRecoilCallback } from 'recoil'
+import { useSetAtom } from 'jotai'
 import { preferencesState } from '../state/preferences'
 import { initializedStatusState } from '../state/status'
 import { accountsState } from '../state/accounts'
@@ -10,45 +10,41 @@ import { currentPostState } from '../state/currentPost'
 
 
 export default function IpcEventReceiver() {
-  const setPreferences = useSetRecoilState(preferencesState)
-  const setAccounts = useSetRecoilState(accountsState)
-  const setInitializedStatus = useSetRecoilState(initializedStatusState)
-  const setCurrentBlogCategories = useSetRecoilState(currentBlogCategoriesState)
-  const setPosts = useSetRecoilState(postsState)
-  const setPostsLock = useSetRecoilState(postsLockState)
-  const setPostsInitialized = useSetRecoilState(postsInitializedState)
-  const setCurrentPost = useSetRecoilState(currentPostState)
+  const setPreferences = useSetAtom(preferencesState)
+  const setAccounts = useSetAtom(accountsState)
+  const setInitializedStatus = useSetAtom(initializedStatusState)
+  const setCurrentBlogCategories = useSetAtom(currentBlogCategoriesState)
+  const setPosts = useSetAtom(postsState)
+  const setPostsLock = useSetAtom(postsLockState)
+  const setPostsInitialized = useSetAtom(postsInitializedState)
+  const setCurrentPost = useSetAtom(currentPostState)
 
-  const handleAddAccount = useRecoilCallback(({snapshot}) => async (account) => {
-    const accounts = await snapshot.getPromise(accountsState)
-    setAccounts([...accounts, account])
-  })
+  const handleAddAccount = (account) => {
+    setAccounts(prev => [...prev, account])
+  }
 
-  const handleRemoveAccount = useRecoilCallback(({snapshot}) => async (uuid) => {
-    const accounts = await snapshot.getPromise(accountsState)
-    setAccounts(accounts.filter(a => a.auth.uuid != uuid))
-  })
+  const handleRemoveAccount = (uuid) => {
+    setAccounts(prev => prev.filter(a => a.auth.uuid != uuid))
+  }
 
-  const handleAddPosts = useRecoilCallback(({snapshot}) => async (page, posts, hasNext) => {
-    const state = await snapshot.getPromise(postsState)
-    setPosts({
+  const handleAddPosts = (page, posts, hasNext) => {
+    setPosts(prev => ({
       page: page,
-      list: [...state.list, ...posts],
+      list: [...prev.list, ...posts],
       hasNext: hasNext
-    })
+    }))
     setPostsLock(false)
     setPostsInitialized(true)
-  })
+  }
 
-  const handleReceivePostsFailed = useRecoilCallback(({snapshot}) => async () => {
-    const state = await snapshot.getPromise(postsState)
-    setPosts({
-      ...state,
+  const handleReceivePostsFailed = () => {
+    setPosts(prev => ({
+      ...prev,
       hasNext: false,
       lock: false,
       initialized: true
-    })
-  })
+    }))
+  }
 
   useEffect(() => {
     ipcRenderer.send('fetch-initial-data')

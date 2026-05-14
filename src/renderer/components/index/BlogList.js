@@ -1,5 +1,5 @@
 import React from 'react'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useAtomValue, useSetAtom } from 'jotai'
 import { ipcRenderer } from 'electron'
 import {
   List, ListSubheader, Button, Avatar,
@@ -66,14 +66,14 @@ function ServiceListHeader({service}) {
 }
 
 export default function BlogList({afterSelect}) {
-  const accounts = useRecoilValue(accountsState)
-  const setCurrentAuth = useSetRecoilState(currentAuthState)
-  const setCurrentBlog = useSetRecoilState(currentBlogState)
-  const setPosts = useSetRecoilState(postsState)
-  const setPostsInitialized = useSetRecoilState(postsInitializedState)
-  const setPostsLock = useSetRecoilState(postsLockState)
-  const setCurrentBlogCategories = useSetRecoilState(currentBlogCategoriesState)
-  const setCurrentPost = useSetRecoilState(currentPostState)
+  const accounts = useAtomValue(accountsState)
+  const setCurrentAuth = useSetAtom(currentAuthState)
+  const setCurrentBlog = useSetAtom(currentBlogState)
+  const setPosts = useSetAtom(postsState)
+  const setPostsInitialized = useSetAtom(postsInitializedState)
+  const setPostsLock = useSetAtom(postsLockState)
+  const setCurrentBlogCategories = useSetAtom(currentBlogCategoriesState)
+  const setCurrentPost = useSetAtom(currentPostState)
 
   function handleSelectBlog(auth, blog) {
     setCurrentAuth(auth)

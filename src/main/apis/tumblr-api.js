@@ -11,13 +11,10 @@ function _createTumblrClient(auth) {
   const tumblrInfo = oauthReader.getTumblr()
 
   return tumblr.createClient({
-    credentials: {
-      consumer_key: tumblrInfo.clientKey,
-      consumer_secret: tumblrInfo.clientSecret,
-      token: auth.token,
-      token_secret: auth.tokenSecret
-    },
-    returnPromises: true
+    consumer_key: tumblrInfo.clientKey,
+    consumer_secret: tumblrInfo.clientSecret,
+    token: auth.token,
+    token_secret: auth.tokenSecret
   })
 }
 
@@ -113,7 +110,7 @@ async function addPost(auth, blogName, post) {
 
 async function savePost(auth, blogName, post) {
   const client = _createTumblrClient(auth)
-  const res = await client.editPost(blogName, _editorPostToTumblrPost(post))
+  const res = await client.editPost(blogName, post.id, _editorPostToTumblrPost(post))
   return await fetchPost(auth, blogName, post.id)
 }
 

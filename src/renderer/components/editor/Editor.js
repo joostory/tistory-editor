@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useRecoilState, useRecoilValue, useSetRecoilState, useRecoilCallback } from 'recoil'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import update from 'immutability-helper'
 import { ipcRenderer } from 'electron'
 
@@ -27,10 +27,10 @@ const styles = {
 }
 
 export default function Editor({mode, onFinish}) {
-  const currentAuth = useRecoilValue(currentAuthState)
-	const currentBlog = useRecoilValue(currentBlogState)
-  const [post, setPost] = useRecoilState(currentPostState)
-  const setPosts = useSetRecoilState(postsState)
+  const currentAuth = useAtomValue(currentAuthState)
+	const currentBlog = useAtomValue(currentBlogState)
+  const [post, setPost] = useAtom(currentPostState)
+  const setPosts = useSetAtom(postsState)
 
   const [showInfoBox, setShowInfoBox] = useState(false)
   const [showLoading, setShowLoading] = useState(false)
@@ -39,25 +39,25 @@ export default function Editor({mode, onFinish}) {
 
   const [postData, setPostData] = useState(makePostState())
 
-  const handleAddPost = useRecoilCallback(({snapshot}) => async (post) => {
-    const posts = await snapshot.getPromise(postsState)
-    setPosts({
-      ...posts,
-      list: [post, ...posts.list]
-    })
-  })
+  const handleAddPost = (post) => {
+    setPosts(prev => ({
+      ...prev,
+      list: [post, ...prev.list]
+    }))
+  }
 
-  const handleModifyPost = useRecoilCallback(({snapshot}) => async (post) => {
-    const posts = await snapshot.getPromise(postsState)
-    const modifiedList = [...posts.list]
-    const index = modifiedList.findIndex(p => p.id == post.id)
-    modifiedList.splice(index, 1, post)
-    setPosts({
-      ...posts,
-      list: modifiedList
+  const handleModifyPost = (post) => {
+    setPosts(prev => {
+      const modifiedList = [...prev.list]
+      const index = modifiedList.findIndex(p => p.id == post.id)
+      modifiedList.splice(index, 1, post)
+      return {
+        ...prev,
+        list: modifiedList
+      }
     })
     setPost(post)
-  })
+  }
 
   function makePostState() {
 		if (mode == ContentMode.EDIT && post) {

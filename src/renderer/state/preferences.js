@@ -1,8 +1,8 @@
-import { atom } from 'recoil'
+import { atom } from 'jotai'
 
 export const INITIAL_PREFERENCES = {}
 
-export const preferencesState = atom({
-  key: 'preferences',
-  default: INITIAL_PREFERENCES
-})
+export const preferencesState = atom(
+  
+   INITIAL_PREFERENCES
+)

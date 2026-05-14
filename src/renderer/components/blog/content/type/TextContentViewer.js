@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import dayjs from 'dayjs'
 import { Chip, IconButton, Box, Divider, Typography, Container } from '@mui/material'
 import { OpenInBrowser, Edit } from '@mui/icons-material'
@@ -68,8 +68,8 @@ const styles = {
 
 
 export default function TextContentViewer({ onRequestEditPost }) {
-  const currentBlog = useRecoilValue(currentBlogState)
-  const post = useRecoilValue(currentPostState)
+  const currentBlog = useAtomValue(currentBlogState)
+  const post = useAtomValue(currentPostState)
   const viewerContent = useRef(null)
 
   useEffect(() => {

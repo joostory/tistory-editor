@@ -3,7 +3,7 @@ import { pageview } from '../../../modules/AnalyticsHelper'
 import TextContentViewer from './type/TextContentViewer'
 import PhotoContentViewer from './type/PhotoContentViewer'
 import { Typography } from '@mui/material'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import { currentBlogState } from '../../../state/currentBlog'
 import { currentPostState } from '../../../state/currentPost'
 
@@ -26,8 +26,8 @@ function UnknownTypeContentViewer() {
 
 
 export default function TumblrContentViewer({ onRequestEditPost }) {
-  const currentBlog = useRecoilValue(currentBlogState)
-  const post = useRecoilValue(currentPostState)
+  const currentBlog = useAtomValue(currentBlogState)
+  const post = useAtomValue(currentPostState)
 
   useEffect(() => {
     if (post) {

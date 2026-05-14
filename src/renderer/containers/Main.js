@@ -1,5 +1,5 @@
 import React from 'react'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 
 import Loading from '../components/Loading'
 import Blog from '../components/blog/Blog'
@@ -8,8 +8,8 @@ import { initializedStatusState } from '../state/status'
 import { currentBlogState } from '../state/currentBlog'
 
 export default function Main() {
-  const initialized = useRecoilValue(initializedStatusState)
-  const currentBlog = useRecoilValue(currentBlogState)
+  const initialized = useAtomValue(initializedStatusState)
+  const currentBlog = useAtomValue(currentBlogState)
 
 
 	if (!initialized) {

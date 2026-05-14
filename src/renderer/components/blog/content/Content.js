@@ -1,5 +1,5 @@
 import React, { } from 'react'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import TumblrContentViewer from './TumblrContentViewer'
 import TistoryContentViewer from './TistoryContentViewer'
 import { Box, Typography } from '@mui/material'
@@ -36,8 +36,8 @@ function EmptyContent() {
 
 
 function ContentViewer({onRequestEditPost}) {
-  const post = useRecoilValue(currentPostState)
-  const currentAuth = useRecoilValue(currentAuthState)
+  const post = useAtomValue(currentPostState)
+  const currentAuth = useAtomValue(currentAuthState)
 
   if (!post) {
     return <EmptyContent />

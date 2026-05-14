@@ -1,4 +1,4 @@
-import { atom } from 'recoil'
+import { atom } from 'jotai'
 
 export const INITIAL_POSTS = {
 	page: 0,
@@ -6,17 +6,17 @@ export const INITIAL_POSTS = {
 	hasNext: true
 }
 
-export const postsState = atom({
-  key: 'posts',
-  default: INITIAL_POSTS
-})
+export const postsState = atom(
+  
+   INITIAL_POSTS
+)
 
-export const postsInitializedState = atom({
-  key: 'postsInitialized',
-  default: false
-})
+export const postsInitializedState = atom(
+  
+   false
+)
 
-export const postsLockState = atom({
-  key: 'postsLock',
-  default: false
-})
+export const postsLockState = atom(
+  
+   false
+)

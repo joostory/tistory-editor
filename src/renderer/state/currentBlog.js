@@ -1,20 +1,20 @@
-import { atom } from 'recoil'
+import { atom } from 'jotai'
 
 export const INITIAL_CURRENT_AUTH = null
 export const INITIAL_CURRENT_BLOG = null
 export const INITIAL_CATEGORIES = []
 
-export const currentAuthState = atom({
-  key: 'currentAuth',
-  default: INITIAL_CURRENT_AUTH
-})
+export const currentAuthState = atom(
+  
+   INITIAL_CURRENT_AUTH
+)
 
-export const currentBlogState = atom({
-  key: 'currentBlog',
-  default: INITIAL_CURRENT_BLOG
-})
+export const currentBlogState = atom(
+  
+   INITIAL_CURRENT_BLOG
+)
 
-export const currentBlogCategoriesState = atom({
-  key: 'currentBlogCategories',
-  default: INITIAL_CATEGORIES
-})
+export const currentBlogCategoriesState = atom(
+  
+   INITIAL_CATEGORIES
+)

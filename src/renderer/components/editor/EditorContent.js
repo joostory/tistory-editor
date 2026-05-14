@@ -5,10 +5,10 @@ import * as EditorMode from '../../constants/EditorMode'
 
 import Dropzone from 'react-dropzone'
 import MarkdownEditor from './codemirror/MarkdownEditor'
-import TinymceEditor from './tinymce/TinymceEditor'
+import TiptapEditor from './tiptap/TiptapEditor'
 import EditorSwitch from './EditorSwich'
 import { Container, InputBase } from '@mui/material'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import { preferencesState } from '../../state/preferences'
 import { currentBlogState } from '../../state/currentBlog'
 
@@ -28,9 +28,9 @@ const styles = {
 }
 
 function Editor({editorMode, content, onUpload, onOpenFile, onChange}) {
-  if (editorMode == EditorMode.TINYMCE) {
+  if (editorMode == EditorMode.TIPTAP) {
     return (
-      <TinymceEditor
+      <TiptapEditor
         value={content}
         onImageHandler={onUpload}
         onOpenFile={onOpenFile}
@@ -49,8 +49,8 @@ function Editor({editorMode, content, onUpload, onOpenFile, onChange}) {
 }
 
 export default function EditorContent({content, onChange, onUpload, title, onTitleChange}) {
-  const currentBlog = useRecoilValue(currentBlogState)
-	const preferences = useRecoilValue(preferencesState)
+  const currentBlog = useAtomValue(currentBlogState)
+	const preferences = useAtomValue(preferencesState)
 
   const [editorMode, setEditorMode] = useState(preferences.editor || EditorMode.MARKDOWN)
 

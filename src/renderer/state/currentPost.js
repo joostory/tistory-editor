@@ -1,8 +1,8 @@
-import { atom } from 'recoil'
+import { atom } from 'jotai'
 
 export const INITIAL_CURRENT_POST = null
 
-export const currentPostState = atom({
-  key: 'currentPost',
-  default: INITIAL_CURRENT_POST
-})
+export const currentPostState = atom(
+  
+   INITIAL_CURRENT_POST
+)

@@ -1,5 +1,5 @@
 import React from 'react'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import {
   Toolbar, Avatar, Typography, Button,
   Badge, IconButton
@@ -36,8 +36,8 @@ function ProfileAvatar({blog}) {
 }
 
 export default function Header({onSelectBlog}) {
-  const currentAuth = useRecoilValue(currentAuthState)
-	const currentBlog = useRecoilValue(currentBlogState)
+  const currentAuth = useAtomValue(currentAuthState)
+	const currentBlog = useAtomValue(currentBlogState)
   const provider = Providers.find(p => p.name == currentAuth.provider)
 
 	return (
