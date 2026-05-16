@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { useAtomValue } from 'jotai'
 import dayjs from 'dayjs'
-import { ListItem, ListItemText, Typography, Box } from '@mui/material'
+import { ListItem, ListItemButton, ListItemText, Typography, Box } from '@mui/material'
 import { DraftsOutlined, PhotoOutlined, CommentOutlined } from '@mui/icons-material'
 import { isPublished } from '../../../constants/PostState'
 import { currentBlogCategoriesState } from '../../../state/currentBlog'
@@ -12,11 +12,11 @@ const styles = {
     fontSize: '0.9em'
   },
   icon: {
-    marginLeft:(theme) => theme.spacing(1)
+    marginLeft: (theme) => theme.spacing(1)
   }
 }
 
-function PostTitle({post}) {
+function PostTitle({ post }) {
   return (
     <Typography noWrap={true}>
       {post.title}
@@ -24,7 +24,7 @@ function PostTitle({post}) {
   )
 }
 
-function PostInfo({post}) {
+function PostInfo({ post }) {
   const categories = useAtomValue(currentBlogCategoriesState)
   const category = useMemo(() => {
     if (categories && post.categoryId) {
@@ -37,7 +37,7 @@ function PostInfo({post}) {
       <Typography component='span' sx={styles.info}>
         {dayjs(post.date).format('YYYY-MM-DD HH:mm')}
       </Typography>
-      
+
       {category &&
         <Typography component='span' sx={styles.info} color='secondary'>
           {category.name}
@@ -47,12 +47,12 @@ function PostInfo({post}) {
   )
 }
 
-function PostIcon({post}) {
+function PostIcon({ post }) {
   if (!isPublished(post.state)) {
     return <DraftsOutlined />
   }
 
-  switch(post.type) {
+  switch (post.type) {
     case 'photo':
       return <PhotoOutlined />
     case 'link':
@@ -63,17 +63,19 @@ function PostIcon({post}) {
 }
 
 export default function PostListItem({ post, selected, onSelect }) {
-	return (
-		<ListItem button selected={selected} onClick={() => {onSelect(post)}}>
-			<ListItemText
-				primary={<PostTitle post={post} />}
-				secondary={<PostInfo post={post} />}
-			/>
+  return (
+    <ListItem selected={selected}>
+      <ListItemButton onClick={() => { onSelect(post) }}>
+        <ListItemText
+          primary={<PostTitle post={post} />}
+          secondary={<PostInfo post={post} />}
+        />
 
-      <Box sx={styles.icon}>
-        <PostIcon post={post} />
-      </Box>
-		</ListItem>
-	)
+        <Box sx={styles.icon}>
+          <PostIcon post={post} />
+        </Box>
+      </ListItemButton>
+    </ListItem>
+  )
 }
 

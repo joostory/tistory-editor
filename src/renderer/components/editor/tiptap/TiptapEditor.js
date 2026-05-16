@@ -79,9 +79,9 @@ const MenuBar = ({ editor, onImageClick }) => {
           <Code />
         </ToggleButton>
       </ToggleButtonGroup>
-      
+
       <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
-      
+
       <ToggleButtonGroup size="small">
         <ToggleButton
           value="bulletList"
@@ -124,6 +124,10 @@ export default function TiptapEditor({ value, onChange, onOpenFile, onImageHandl
       onChange(editor.getHTML())
     },
     editorProps: {
+      style: {
+        padding: '20px 0 40px',
+        margin: 0
+      },
       handleDrop: (view, event, slice, moved) => {
         if (!moved && event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files[0]) {
           onImageHandler(Array.prototype.slice.call(event.dataTransfer.files))
@@ -157,7 +161,10 @@ export default function TiptapEditor({ value, onChange, onOpenFile, onImageHandl
     <Box sx={styles.root}>
       <MenuBar editor={editor} onImageClick={onOpenFile} />
       <Box sx={styles.editorContent}>
-        <EditorContent editor={editor} />
+        <EditorContent
+          className="content"
+          editor={editor}
+        />
       </Box>
     </Box>
   )

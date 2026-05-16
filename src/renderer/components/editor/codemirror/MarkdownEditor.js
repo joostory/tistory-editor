@@ -39,7 +39,7 @@ const styles = {
       minHeight: '500px',
       backgroundColor: '#fff !important',
       color: '#333 !important',
-      padding: '20px 0',
+      padding: '20px 0 40px',
       '& .cm-line': {
         padding: '0px',
       }

@@ -1,7 +1,6 @@
 import React, { } from 'react'
 import { useAtomValue } from 'jotai'
 import TumblrContentViewer from './TumblrContentViewer'
-import TistoryContentViewer from './TistoryContentViewer'
 import { Box, Typography } from '@mui/material'
 import { currentAuthState } from '../../../state/currentBlog'
 import { currentPostState } from '../../../state/currentPost'
@@ -35,7 +34,7 @@ function EmptyContent() {
 }
 
 
-function ContentViewer({onRequestEditPost}) {
+function ContentViewer({ onRequestEditPost }) {
   const post = useAtomValue(currentPostState)
   const currentAuth = useAtomValue(currentAuthState)
 
@@ -43,16 +42,14 @@ function ContentViewer({onRequestEditPost}) {
     return <EmptyContent />
   }
 
-  if (currentAuth.provider == 'tistory') {
-    return <TistoryContentViewer onRequestEditPost={onRequestEditPost} />
-  } else if (currentAuth.provider == 'tumblr') {
+  if (currentAuth.provider == 'tumblr') {
     return <TumblrContentViewer onRequestEditPost={onRequestEditPost} />
   } else {
     return <EmptyContent />
   }
 }
 
-export default function Content({onRequestEditPost}) {
+export default function Content({ onRequestEditPost }) {
   return (
     <Box sx={styles.container}>
       <ContentViewer onRequestEditPost={onRequestEditPost} />
