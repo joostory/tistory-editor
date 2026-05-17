@@ -3,7 +3,14 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
 import { Box, ToggleButton, ToggleButtonGroup, Divider } from '@mui/material'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
 import { ipcRenderer } from 'electron'
+
+const lightTheme = createTheme({
+  palette: {
+    mode: 'light',
+  },
+})
 import {
   FormatBold,
   FormatItalic,
@@ -158,14 +165,16 @@ export default function TiptapEditor({ value, onChange, onOpenFile, onImageHandl
   }, [editor])
 
   return (
-    <Box sx={styles.root}>
-      <MenuBar editor={editor} onImageClick={onOpenFile} />
-      <Box sx={styles.editorContent}>
-        <EditorContent
-          className="content"
-          editor={editor}
-        />
+    <ThemeProvider theme={lightTheme}>
+      <Box sx={styles.root}>
+        <MenuBar editor={editor} onImageClick={onOpenFile} />
+        <Box sx={styles.editorContent}>
+          <EditorContent
+            className="content"
+            editor={editor}
+          />
+        </Box>
       </Box>
-    </Box>
+    </ThemeProvider>
   )
 }
