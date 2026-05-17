@@ -6,6 +6,8 @@ const OAuthRequestManager = require('../oauth/OAuthRequestManager');
 
 const PROVIDER_ID = 'tumblr'
 
+const NpfConverter = require('../lib/NpfConverter')
+
 function _createTumblrClient(auth) {
   const oauthReader = new OauthInfoReader()
   const tumblrInfo = oauthReader.getTumblr()
@@ -20,11 +22,30 @@ function _createTumblrClient(auth) {
 
 
 function _tumblrPostToEditorPost(post) {
+  let tiptapContent = null
+  let markdownContent = ''
+  let contentHtml = ''
+
+  if (post.content && Array.isArray(post.content)) {
+    // Neue Post Format (NPF)
+    tiptapContent = NpfConverter.npfToTiptap(post.content)
+    markdownContent = NpfConverter.npfToMarkdown(post.content)
+    contentHtml = NpfConverter.npfToHtml(post.content)
+  } else {
+    // Legacy Post (HTML in body)
+    const npfBlocks = NpfConverter.htmlToNpf(post.body || '')
+    tiptapContent = NpfConverter.npfToTiptap(npfBlocks)
+    markdownContent = NpfConverter.npfToMarkdown(npfBlocks)
+    contentHtml = post.body || ''
+  }
+
   return ({
     id: post.id,
     url: post.post_url,
-    title: post.summary,
-    content: post.body,
+    title: post.summary || post.title || '',
+    content: contentHtml,
+    contentJson: tiptapContent,
+    contentMarkdown: markdownContent,
     photos: post.photos,
     tags: post.tags,
     date: post.date,
@@ -40,9 +61,27 @@ function _tumblrPostsToEditorPosts(tumblrPosts) {
 }
 
 function _editorPostToTumblrPost(editorPost) {
+  let npfBlocks = []
+
+  if (editorPost.format === 'json') {
+    // Tiptap JSON 형식
+    let jsonContent = editorPost.content
+    if (typeof jsonContent === 'string') {
+      try {
+        jsonContent = JSON.parse(jsonContent)
+      } catch (e) {
+        console.error("Failed to parse json content in backend", e)
+      }
+    }
+    npfBlocks = NpfConverter.tiptapToNpf(jsonContent)
+  } else {
+    // Markdown 형식
+    npfBlocks = NpfConverter.markdownToNpf(editorPost.content || '')
+  }
+
   let tumblrPost = {
     title: editorPost.title,
-    body: editorPost.content,
+    content: npfBlocks,
     tags: editorPost.tags
   }
 
@@ -103,7 +142,7 @@ function fetchPost(auth, blogName, postId) {
 
 async function addPost(auth, blogName, post) {
   const client = _createTumblrClient(auth)
-  const res = await client.createTextPost(blogName, _editorPostToTumblrPost(post))
+  const res = await client.createPost(blogName, _editorPostToTumblrPost(post))
   const fetchRes = await fetchPosts(auth, blogName, {offset:0, limit:1})
   return { post: fetchRes.posts[0] }
 }

@@ -165,7 +165,7 @@ export default function TiptapEditor({ value, onChange, onOpenFile, onImageHandl
     ],
     content: value,
     onUpdate: ({ editor }) => {
-      onChange(editor.getHTML())
+      onChange(editor.getJSON())
     },
     editorProps: {
       style: {
@@ -183,8 +183,17 @@ export default function TiptapEditor({ value, onChange, onOpenFile, onImageHandl
   })
 
   useEffect(() => {
-    if (editor && value !== editor.getHTML()) {
-      editor.commands.setContent(value)
+    if (editor && value) {
+      if (typeof value === 'object') {
+        const currentJson = editor.getJSON()
+        if (JSON.stringify(value) !== JSON.stringify(currentJson)) {
+          editor.commands.setContent(value)
+        }
+      } else {
+        if (value !== editor.getHTML()) {
+          editor.commands.setContent(value)
+        }
+      }
     }
   }, [value, editor])
 

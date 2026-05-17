@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react'
 import classnames from 'classnames'
+import { ipcRenderer } from 'electron'
 
 import * as EditorMode from '../../constants/EditorMode'
 
@@ -60,8 +61,24 @@ export default function EditorContent({content, onChange, onUpload, title, onTit
 		dropzoneRef.current.open()
   }
 
-	function handleChangeEditorMode(selectedMode) {
-    setEditorMode(selectedMode)
+	async function handleChangeEditorMode(selectedMode) {
+    if (selectedMode === editorMode) return
+
+    const fromFormat = editorMode === EditorMode.TIPTAP ? 'json' : 'markdown'
+    const toFormat = selectedMode === EditorMode.TIPTAP ? 'json' : 'markdown'
+
+    try {
+      const converted = await ipcRenderer.invoke('convert-content', {
+        content: content,
+        from: fromFormat,
+        to: toFormat
+      })
+      onChange(converted)
+      setEditorMode(selectedMode)
+    } catch (e) {
+      console.error("Failed to convert content format", e)
+      setEditorMode(selectedMode)
+    }
   }
 
   return (

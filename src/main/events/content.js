@@ -2,8 +2,20 @@ const AuthenticationManager = require('../lib/AuthenticationManager')
 const { ipcMain, clipboard } = require('electron')
 const dayjs = require('dayjs')
 const ProviderApiManager = require('../lib/ProviderApiManager')
+const NpfConverter = require('../lib/NpfConverter')
 
 module.exports = () => {
+  ipcMain.handle("convert-content", async (evt, { content, from, to }) => {
+    console.log('Main.handle: convert-content', { from, to })
+    if (from === 'json' && to === 'markdown') {
+      const npf = NpfConverter.tiptapToNpf(content)
+      return NpfConverter.npfToMarkdown(npf)
+    } else if (from === 'markdown' && to === 'json') {
+      const npf = NpfConverter.markdownToNpf(content)
+      return NpfConverter.npfToTiptap(npf)
+    }
+    return content
+  })
   ipcMain.on("fetch-categories", (evt, authUUID, blogName) => {
     console.log('Main.receive: fetch-categories', authUUID, blogName)
     let auth = AuthenticationManager.findByUUID(authUUID)

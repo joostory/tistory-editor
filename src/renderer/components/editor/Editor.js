@@ -18,6 +18,7 @@ import { pageview } from '../../modules/AnalyticsHelper'
 import { isPublished, DRAFT, PUBLISHED } from '../../constants/PostState'
 import { currentPostState } from '../../state/currentPost'
 import { postsState } from '../../state/posts'
+import { preferencesState } from '../../state/preferences'
 
 const styles = {
   root: {
@@ -31,6 +32,7 @@ export default function Editor({mode, onFinish}) {
 	const currentBlog = useAtomValue(currentBlogState)
   const [post, setPost] = useAtom(currentPostState)
   const setPosts = useSetAtom(postsState)
+  const preferences = useAtomValue(preferencesState)
 
   const [showInfoBox, setShowInfoBox] = useState(false)
   const [showLoading, setShowLoading] = useState(false)
@@ -61,9 +63,14 @@ export default function Editor({mode, onFinish}) {
 
   function makePostState() {
 		if (mode == ContentMode.EDIT && post) {
+      let content = post.content
+      if (post.contentJson || post.contentMarkdown) {
+        const defaultEditor = preferences.editor || 'markdown'
+        content = defaultEditor === 'tiptap' ? post.contentJson : post.contentMarkdown
+      }
 			return {
 				title: post.title,
-        content: post.content,
+        content: content,
         categoryId: post.categoryId,
 				tags: post.tags
 			}
@@ -105,6 +112,7 @@ export default function Editor({mode, onFinish}) {
 		let savePost = {
 			title: postData.title,
       content: postData.content,
+      format: typeof postData.content === 'object' ? 'json' : 'markdown',
       categoryId: postData.categoryId,
       tags: postData.tags.join(","),
       state: state,

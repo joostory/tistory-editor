@@ -69,8 +69,23 @@ function ToolbarButton({ onClick, children }) {
 export default function MarkdownEditor({ value, onOpenFile, onChange }) {
   const currentAuth = useAtomValue(currentAuthState)
   const currentBlog = useAtomValue(currentBlogState)
-  const [markdownValue, setMarkdownValue] = useState(MarkdownHelper.htmlToMarkdown(value))
+  const initialMarkdown = useMemo(() => {
+    if (!value) return ""
+    if (typeof value === 'object') {
+      return ""
+    }
+    if (typeof value === 'string' && value.includes('<') && value.includes('>')) {
+      return MarkdownHelper.htmlToMarkdown(value)
+    }
+    return value
+  }, [value])
+
+  const [markdownValue, setMarkdownValue] = useState(initialMarkdown)
   const editorRef = useRef(null)
+
+  useEffect(() => {
+    setMarkdownValue(initialMarkdown)
+  }, [initialMarkdown])
 
   const imageUploadEnabled = useMemo(() => currentAuth.provider == 'tistory', [currentAuth])
 
@@ -85,7 +100,7 @@ export default function MarkdownEditor({ value, onOpenFile, onChange }) {
 
   const handleChangeContent = useCallback((val) => {
     setMarkdownValue(val)
-    onChange(MarkdownHelper.markdownToHtml(val))
+    onChange(val)
   }, [onChange])
 
   const handleHeader2 = (e) => {
