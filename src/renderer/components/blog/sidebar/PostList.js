@@ -34,11 +34,7 @@ export default function PostList() {
 		if (!postsLock && posts.hasNext) {
       setPostsLock(true)
       let options
-      if (currentAuth.provider == 'tistory') {
-        options = {
-          page: Number(posts.page) + 1
-        }
-      } else if (currentAuth.provider == 'tumblr') {
+      if (currentAuth.provider == 'tumblr') {
         options = {
           offset: posts.list.length
         }

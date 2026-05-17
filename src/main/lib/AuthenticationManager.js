@@ -7,7 +7,7 @@ function load() {
   if (settings.hasSync('authList')) {
     authList = settings.getSync('authList')  
   }
-  authList = authList.filter(auth => auth != null).filter(auth => auth.provider != 'tistory')
+  authList = authList.filter(auth => auth != null)
   console.log("load authList", authList)
 }
 

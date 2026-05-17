@@ -100,7 +100,7 @@ export default function BlogList({ afterSelect }) {
 
   return (
     <>
-      {accounts.filter(it => it.auth.provider != 'tistory').map(account =>
+      {accounts.map(account =>
         <List key={account.auth.uuid} subheader={<ServiceListHeader service={account} />}>
           {[...account.blogs].sort((a, b) =>
             a.primary ? -1 : b.primary ? 1 : 0

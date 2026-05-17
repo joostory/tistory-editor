@@ -87,7 +87,7 @@ export default function MarkdownEditor({ value, onOpenFile, onChange }) {
     setMarkdownValue(initialMarkdown)
   }, [initialMarkdown])
 
-  const imageUploadEnabled = useMemo(() => currentAuth.provider == 'tistory', [currentAuth])
+  const imageUploadEnabled = false
 
   const handlePaste = useCallback((e) => {
     if (imageUploadEnabled) {

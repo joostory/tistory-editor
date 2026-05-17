@@ -6,10 +6,4 @@ describe('oauthInfo reader', () => {
     let target = reader.getGoogle()
     expect(target).not.toBeUndefined()
   })
-
-  it('read tistory oauthInfo', () => {
-    let reader = new OauthInfoReader()
-    let target = reader.getTistory()
-    expect(target).not.toBeUndefined()
-  })
 })

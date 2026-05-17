@@ -23,13 +23,6 @@ class OauthInfoReader {
     return this.oauthInfo.google
   }
 
-  getTistory() {
-    if (!this.oauthInfo.tistory) {
-      throw new Exception('NO TISTORY OAUTHINFO')
-    }
-    return this.oauthInfo.tistory
-  }
-
   getTumblr() {
     if (!this.oauthInfo.tumblr) {
       throw new Exception('NO TUMBLR OAUTHINFO')
