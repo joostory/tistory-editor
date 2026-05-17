@@ -27,14 +27,19 @@ const styles = {
     height: '100%',
   },
   toolbar: {
+    position: 'fixed',
+    top: 15,
+    width: 700,
     display: 'flex',
-    flexWrap: 'wrap',
-    padding: '8px',
-    borderBottom: '1px solid #eee',
-    position: 'sticky',
-    top: 0,
-    backgroundColor: '#fff',
+    alignItems: 'center',
+    borderRadius: (theme) => 1,
+    paddingLeft: (theme) => theme.spacing(0.5),
+    height: (theme) => theme.spacing(5),
+    left: '50%',
+    transform: 'translate(-50%,0)',
     zIndex: 10,
+    background: 'rgba(255,255,255,0.9)',
+    boxShadow: (theme) => theme.shadows[1]
   },
   editorContent: {
     flex: 1,
@@ -53,6 +58,25 @@ const styles = {
         margin: '1em auto',
       }
     },
+  },
+  toolbarBtn: {
+    border: '0 !important',
+    borderRadius: '4px !important',
+    margin: '0 2px',
+    padding: '5px',
+    minWidth: '34px',
+    height: '34px',
+    color: '#555',
+    '&.Mui-selected': {
+      backgroundColor: 'rgba(0, 0, 0, 0.08) !important',
+      color: '#000',
+      '&:hover': {
+        backgroundColor: 'rgba(0, 0, 0, 0.12) !important',
+      }
+    },
+    '&:hover': {
+      backgroundColor: 'rgba(0, 0, 0, 0.04) !important',
+    }
   }
 }
 
@@ -61,13 +85,21 @@ const MenuBar = ({ editor, onImageClick }) => {
     return null
   }
 
+  const groupSx = {
+    border: 'none',
+    '& .MuiToggleButtonGroup-grouped': {
+      border: 0,
+    }
+  }
+
   return (
     <Box sx={styles.toolbar}>
-      <ToggleButtonGroup size="small">
+      <ToggleButtonGroup size="small" sx={groupSx}>
         <ToggleButton
           value="bold"
           selected={editor.isActive('bold')}
           onClick={() => editor.chain().focus().toggleBold().run()}
+          sx={styles.toolbarBtn}
         >
           <FormatBold />
         </ToggleButton>
@@ -75,6 +107,7 @@ const MenuBar = ({ editor, onImageClick }) => {
           value="italic"
           selected={editor.isActive('italic')}
           onClick={() => editor.chain().focus().toggleItalic().run()}
+          sx={styles.toolbarBtn}
         >
           <FormatItalic />
         </ToggleButton>
@@ -82,6 +115,7 @@ const MenuBar = ({ editor, onImageClick }) => {
           value="code"
           selected={editor.isActive('code')}
           onClick={() => editor.chain().focus().toggleCode().run()}
+          sx={styles.toolbarBtn}
         >
           <Code />
         </ToggleButton>
@@ -89,11 +123,12 @@ const MenuBar = ({ editor, onImageClick }) => {
 
       <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
 
-      <ToggleButtonGroup size="small">
+      <ToggleButtonGroup size="small" sx={groupSx}>
         <ToggleButton
           value="bulletList"
           selected={editor.isActive('bulletList')}
           onClick={() => editor.chain().focus().toggleBulletList().run()}
+          sx={styles.toolbarBtn}
         >
           <FormatListBulleted />
         </ToggleButton>
@@ -101,6 +136,7 @@ const MenuBar = ({ editor, onImageClick }) => {
           value="orderedList"
           selected={editor.isActive('orderedList')}
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
+          sx={styles.toolbarBtn}
         >
           <FormatListNumbered />
         </ToggleButton>
@@ -108,10 +144,11 @@ const MenuBar = ({ editor, onImageClick }) => {
 
       <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
 
-      <ToggleButtonGroup size="small">
+      <ToggleButtonGroup size="small" sx={groupSx}>
         <ToggleButton
           value="image"
           onClick={onImageClick}
+          sx={styles.toolbarBtn}
         >
           <ImageIcon />
         </ToggleButton>
