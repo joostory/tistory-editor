@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { pageview } from '../../../modules/AnalyticsHelper'
 import TextContentViewer from './type/TextContentViewer'
-import PhotoContentViewer from './type/PhotoContentViewer'
 import { Typography } from '@mui/material'
 import { useAtomValue } from 'jotai'
 import { currentBlogState } from '../../../state/currentBlog'
@@ -35,13 +34,5 @@ export default function TumblrContentViewer({ onRequestEditPost }) {
     }
   }, [post])
 
-  switch(post.type) {
-    case 'text':
-      return <TextContentViewer onRequestEditPost={onRequestEditPost} />
-    case 'photo':
-      return <PhotoContentViewer />
-    default:
-      return <UnknownTypeContentViewer />
-  }
+  return <TextContentViewer onRequestEditPost={onRequestEditPost} />
 }
-

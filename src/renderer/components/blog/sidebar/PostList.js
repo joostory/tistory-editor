@@ -36,7 +36,8 @@ export default function PostList() {
       let options
       if (currentAuth.provider == 'tumblr') {
         options = {
-          offset: posts.list.length
+          offset: posts.list.length,
+          npf: true,
         }
       }
       console.log("fetch-posts", currentAuth, currentBlog, options)
