@@ -5,6 +5,7 @@ import { ipcRenderer } from 'electron'
 
 import { currentAuthState, currentBlogState } from '../../state/currentBlog'
 import * as ContentMode from '../../constants/ContentMode'
+import * as EditorMode from '../../constants/EditorMode'
 
 import {
   Box, Snackbar
@@ -65,8 +66,11 @@ export default function Editor({mode, onFinish}) {
 		if (mode == ContentMode.EDIT && post) {
       let content = post.content
       if (post.contentJson || post.contentMarkdown) {
-        const defaultEditor = preferences.editor || 'markdown'
-        content = defaultEditor === 'tiptap' ? post.contentJson : post.contentMarkdown
+        const defaultEditor = preferences.editor || EditorMode.MARKDOWN
+        content = defaultEditor === EditorMode.TIPTAP ? post.contentJson : post.contentMarkdown
+        console.log("Found native fields! Selected editor:", defaultEditor, "Resulting content:", content)
+      } else {
+        console.warn("Native fields contentJson/contentMarkdown NOT found in post object!", Object.keys(post))
       }
 			return {
 				title: post.title,
