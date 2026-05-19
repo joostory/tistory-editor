@@ -7,12 +7,7 @@ on:
 
 jobs:
   build:
-
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [macOS-latest]
+    runs-on: ubuntu-latest
 
     steps:
       - name: Context
@@ -26,21 +21,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Decrypt secret
-        run: ./.github/scripts/decrypt_secret.sh
-        env:
-          BUILD_KEY: ${{ secrets.BUILD_KEY }}
-          BUILD_IV: ${{ secrets.BUILD_IV }}
-          BUILD_PASS: ${{ secrets.BUILD_PASS }}
       - name: npm install
         run: |
           npm install
       - name: npm build
         run: |
           npm run build
-      - name: electron build
-        run: |
-          npm run dist -- -lwm
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
