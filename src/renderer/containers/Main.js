@@ -64,9 +64,7 @@ function BlogRouteWrapper() {
   return <Blog />
 }
 
-export default function Main() {
-  const initialized = useAtomValue(initializedStatusState)
-  const currentBlog = useAtomValue(currentBlogState)
+function IndexRouteWrapper() {
   const setCurrentBlog = useSetAtom(currentBlogState)
   const setCurrentAuth = useSetAtom(currentAuthState)
   const setPosts = useSetAtom(postsState)
@@ -75,39 +73,37 @@ export default function Main() {
   const setCurrentBlogCategories = useSetAtom(currentBlogCategoriesState)
   const setCurrentPost = useSetAtom(currentPostState)
 
+  useEffect(() => {
+    // 홈 화면 진입 시 블로그 관련 상태들을 자연스럽게 정리
+    setCurrentAuth(null)
+    setCurrentBlog(null)
+    setCurrentBlogCategories(INITIAL_CATEGORIES)
+    setPosts(INITIAL_POSTS)
+    setPostsInitialized(false)
+    setPostsLock(false)
+    setCurrentPost(INITIAL_CURRENT_POST)
+  }, [setCurrentAuth, setCurrentBlog, setCurrentBlogCategories, setPosts, setPostsInitialized, setPostsLock, setCurrentPost])
+
+  return <Index />
+}
+
+export default function Main() {
+  const initialized = useAtomValue(initializedStatusState)
   const navigate = useNavigate()
   const location = useLocation()
 
-  // 1. Jotai 상태 변경 -> URL 동기화
+  // 앱 초기화 상태 동기화
   useEffect(() => {
     if (!initialized) {
       if (location.pathname !== '/loading') {
         navigate('/loading', { replace: true })
       }
-    } else if (currentBlog) {
-      const targetPath = `/blog/${encodeURIComponent(currentBlog.name)}`
-      if (location.pathname !== targetPath) {
-        navigate(targetPath)
-      }
     } else {
-      if (location.pathname !== '/' && !location.pathname.startsWith('/blog/')) {
+      if (location.pathname === '/loading') {
         navigate('/', { replace: true })
       }
     }
-  }, [initialized, currentBlog, navigate, location.pathname])
-
-  // 2. URL이 홈(/)으로 복귀 시 Jotai 블로그 상태 초기화 (뒤로가기로 홈 진입 시 대응)
-  useEffect(() => {
-    if (initialized && location.pathname === '/' && currentBlog) {
-      setCurrentAuth(null)
-      setCurrentBlog(null)
-      setCurrentBlogCategories(INITIAL_CATEGORIES)
-      setPosts(INITIAL_POSTS)
-      setPostsInitialized(false)
-      setPostsLock(false)
-      setCurrentPost(INITIAL_CURRENT_POST)
-    }
-  }, [initialized, location.pathname, currentBlog, setCurrentAuth, setCurrentBlog, setCurrentBlogCategories, setPosts, setPostsInitialized, setPostsLock, setCurrentPost])
+  }, [initialized, navigate, location.pathname])
 
   if (!initialized) {
     return <Loading />
@@ -117,7 +113,7 @@ export default function Main() {
     <Routes>
       <Route path="/loading" element={<Loading />} />
       <Route path="/blog/:blogName" element={<BlogRouteWrapper />} />
-      <Route path="/" element={<Index />} />
+      <Route path="/" element={<IndexRouteWrapper />} />
     </Routes>
   )
 }

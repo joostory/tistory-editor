@@ -1,6 +1,7 @@
 import React from 'react'
-import { useAtomValue, useSetAtom } from 'jotai'
+import { useAtomValue } from 'jotai'
 import { ipcRenderer } from 'electron'
+import { useNavigate } from 'react-router-dom'
 import {
   List, ListSubheader, Button, Avatar,
   Typography, Paper
@@ -8,9 +9,6 @@ import {
 import BlogListItem from './BlogListItem'
 import Providers from '../../constants/Providers'
 import { accountsState } from '../../state/accounts'
-import { currentAuthState, currentBlogCategoriesState, currentBlogState, INITIAL_CATEGORIES, INITIAL_CURRENT_AUTH, INITIAL_CURRENT_BLOG } from '../../state/currentBlog'
-import { INITIAL_POSTS, postsInitializedState, postsLockState, postsState } from '../../state/posts'
-import { currentPostState, INITIAL_CURRENT_POST } from '../../state/currentPost'
 
 const styles = {
   paper: {
@@ -67,23 +65,10 @@ function ServiceListHeader({ service }) {
 
 export default function BlogList({ afterSelect }) {
   const accounts = useAtomValue(accountsState)
-  const setCurrentAuth = useSetAtom(currentAuthState)
-  const setCurrentBlog = useSetAtom(currentBlogState)
-  const setPosts = useSetAtom(postsState)
-  const setPostsInitialized = useSetAtom(postsInitializedState)
-  const setPostsLock = useSetAtom(postsLockState)
-  const setCurrentBlogCategories = useSetAtom(currentBlogCategoriesState)
-  const setCurrentPost = useSetAtom(currentPostState)
+  const navigate = useNavigate()
 
   function handleSelectBlog(auth, blog) {
-    setCurrentAuth(auth)
-    setCurrentBlog(blog)
-
-    setCurrentBlogCategories(INITIAL_CATEGORIES)
-    setPosts(INITIAL_POSTS)
-    setPostsInitialized(false)
-    setPostsLock(false)
-    setCurrentPost(INITIAL_CURRENT_POST)
+    navigate(`/blog/${encodeURIComponent(blog.name)}`)
 
     if (afterSelect) {
       afterSelect()
