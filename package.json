@@ -10,7 +10,9 @@
     "start:app": "cross-env NODE_DEBUG=request NODE_ENV=development electron .",
     "start": "npm-run-all --parallel start:build start:app",
     "clean": "rm -rf dist",
-    "dist": "electron-builder --x64",
+    "dist": "electron-builder",
+    "dist:mac": "electron-builder --mac --x64 --arm64",
+    "dist:all": "electron-builder --mac --win --linux",
     "test": "jest -u"
   },
   "repository": {

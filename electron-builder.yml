@@ -16,17 +16,14 @@ files:
   - src/css/
   - src/images/
   - app/
-  - build/
-  - node_modules/
 
 mac:
   target: dmg
   category: public.app-category.utilities
-  darkModeSupport: true
 
 win:
   target: nsis
 
 linux:
   target: deb
-  asar: false
+
