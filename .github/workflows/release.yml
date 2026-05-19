@@ -1,9 +1,8 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - v*
+  release:
+    types: [published]
 
 jobs:
   # 1단계: 공통 정적 컴파일 및 에셋 패키지 빌드 (저렴하고 빠른 Linux 환경에서 단 1회 수행)
@@ -23,6 +22,13 @@ jobs:
           BUILD_KEY: ${{ secrets.BUILD_KEY }}
           BUILD_IV: ${{ secrets.BUILD_IV }}
           BUILD_PASS: ${{ secrets.BUILD_PASS }}
+      # GitHub Release 태그명(예: v1.6.2)을 추출하여 package.json 버전에 실시간으로 자동 동기화 주입
+      - name: Sync package.json version with Release Tag
+        run: |
+          TAG_NAME="${{ github.event.release.tag_name }}"
+          VERSION="${TAG_NAME#v}" # v1.6.2 -> 1.6.2 변환
+          echo "Syncing app version to: $VERSION"
+          npm version $VERSION --no-git-tag-version
       - name: Install compilation dependencies
         run: npm install
       - name: Compile frontend (webpack build)
@@ -75,7 +81,6 @@ jobs:
   release:
     needs: package
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/')
     steps:
       # 모든 OS의 배포 바이너리들을 단일 dist 폴더로 통합 다운로드
       - name: Download all distributables
@@ -88,6 +93,7 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.event.release.tag_name }}
           files: |
             dist/TistoryEditor-*.exe
             dist/TistoryEditor-*.deb
