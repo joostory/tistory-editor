@@ -95,6 +95,7 @@
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-dropzone": "^15.0.0",
+    "react-router-dom": "^7.15.1",
     "tumblr.js": "^5.0.1",
     "turndown": "^7.2.4",
     "turndown-plugin-gfm": "^1.0.2",

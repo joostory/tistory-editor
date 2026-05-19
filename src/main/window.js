@@ -44,15 +44,21 @@ function setWindowWebContents() {
     mainWindow.webContents.openDevTools()
   }
 
-  var handleRedirect = (e, url) => {
-    if(url != mainWindow.webContents.getURL()) {
-      e.preventDefault()
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    if (url.startsWith('http:') || url.startsWith('https:')) {
       shell.openExternal(url)
     }
-  }
+    return { action: 'deny' }
+  })
 
-  mainWindow.webContents.on('will-navigate', handleRedirect)
-  mainWindow.webContents.on('new-window', handleRedirect)
+  mainWindow.webContents.on('will-navigate', (e, url) => {
+    if (!url.startsWith('file://')) {
+      e.preventDefault()
+      if (url.startsWith('http:') || url.startsWith('https:')) {
+        shell.openExternal(url)
+      }
+    }
+  })
   require('@electron/remote/main').enable(mainWindow.webContents)
 }
 

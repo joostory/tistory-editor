@@ -75,13 +75,19 @@ export default function Blog() {
   const [openBlogSelector, setOpenBlogSelector] = useState(!currentBlog)
 
 	useEffect(() => {
-    pageview(`/blog/${currentBlog.name}`, `${currentBlog.title}`)
-    ipcRenderer.send('fetch-categories', currentAuth.uuid, currentBlog.name)
-  }, [currentAuth.uuid, currentBlog.name])
+    if (currentBlog && currentAuth) {
+      pageview(`/blog/${currentBlog.name}`, `${currentBlog.title}`)
+      ipcRenderer.send('fetch-categories', currentAuth.uuid, currentBlog.name)
+    }
+  }, [currentAuth?.uuid, currentBlog?.name])
   
   useEffect(() => {
     setOpenEditor(contentMode === ContentMode.EDIT || contentMode === ContentMode.ADD)
   }, [contentMode])
+
+  if (!currentBlog || !currentAuth) {
+    return null
+  }
 
   return (
     <Box sx={styles.root}>

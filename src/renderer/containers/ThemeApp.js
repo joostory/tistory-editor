@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import { nativeTheme } from '@electron/remote'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
+import { HashRouter } from 'react-router-dom'
 import * as AppTheme from '../constants/AppTheme'
 import App from './App'
 import { useAtomValue } from 'jotai'
@@ -62,7 +63,9 @@ export default function ThemeApp({}) {
 
   return (
     <ThemeProvider theme={theme}>
-      <App />
+      <HashRouter>
+        <App />
+      </HashRouter>
     </ThemeProvider>
   )
 }
