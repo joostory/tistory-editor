@@ -66,7 +66,9 @@ jobs:
         run: npm install
       # 해당 OS 플랫폼 바이너리 패키징만 독자적으로 초고속 수행 (Webpack 컴파일 생략)
       - name: Packaging app
-        run: npm run dist
+        run: npm run dist -- --publish never
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # 생성된 실행용 바이너리만 업로드
       - name: Upload packaging artifact
         uses: actions/upload-artifact@v4
