@@ -196,16 +196,17 @@ function fetchUser(auth) {
 
 function fetchPosts(auth, blogName, options) {
   const client = _createTumblrClient(auth)
-  return client.blogPosts(blogName, options)
+  const queryOptions = { npf: true, ...options }
+  return client.blogPosts(blogName, queryOptions)
     .then(res => ({
       posts: _tumblrPostsToEditorPosts(res.posts),
-      hasNext: res.blog.posts > options.offset + res.posts.length
+      hasNext: res.blog.posts > ((options && options.offset) || 0) + res.posts.length
     }))
 }
 
 function fetchPost(auth, blogName, postId) {
   const client = _createTumblrClient(auth)
-  return client.blogPosts(blogName, {id: postId})
+  return client.blogPosts(blogName, {id: postId, npf: true})
     .then(res => ({
       post: _tumblrPostToEditorPost(res.posts[0])
     }))

@@ -218,6 +218,40 @@ function htmlToNpf(html) {
     if (node.nodeType === 1) {
       const tagName = node.tagName.toLowerCase()
 
+      // 내부에 img 태그가 중첩되어 있는 경우 (단독 img 태그 제외)
+      if (tagName !== 'img' && $node.find('img').length > 0) {
+        // 내부에 있는 모든 img 엘리먼트들을 순차적으로 NPF 이미지 블록으로 추출
+        $node.find('img').each((_, imgNode) => {
+          const src = $(imgNode).attr('src')
+          if (src) {
+            blocks.push({
+              type: 'image',
+              media: [{ url: src }],
+              alt_text: $(imgNode).attr('alt') || ''
+            })
+          }
+        })
+
+        // 이미지를 제외한 순수 텍스트 콘텐츠가 남아있다면 텍스트 블록도 유실 없이 추출
+        const clone = $node.clone()
+        clone.find('img').remove() // 이미지는 위에서 처리했으므로 클론에서 삭제
+        const text = clone.text().replace(/\n/g, ' ').trim()
+        if (text) {
+          const formatting = []
+          parseInlineFormats(clone, $, formatting)
+          const block = {
+            type: 'text',
+            text: text
+          }
+          if (formatting.length > 0) {
+            block.formatting = formatting
+          }
+          blocks.push(block)
+        }
+        return
+      }
+
+      // 내부에 img가 없는 일반 엘리먼트 처리
       if (['p', 'div', 'blockquote', 'pre', 'li', 'span'].includes(tagName)) {
         const text = $node.text().replace(/\n/g, ' ').trim()
         if (text) {
