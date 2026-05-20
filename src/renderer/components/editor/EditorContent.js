@@ -1,10 +1,7 @@
-import React, { useRef, useState } from 'react'
-import classnames from 'classnames'
+import React, { useState } from 'react'
 import { ipcRenderer } from 'electron'
 
 import * as EditorMode from '../../constants/EditorMode'
-
-import Dropzone from 'react-dropzone'
 import MarkdownEditor from './codemirror/MarkdownEditor'
 import TiptapEditor from './tiptap/TiptapEditor'
 import EditorSwitch from './EditorSwich'
@@ -28,13 +25,11 @@ const styles = {
   }
 }
 
-function Editor({editorMode, content, onUpload, onOpenFile, onChange}) {
+function Editor({editorMode, content, onChange}) {
   if (editorMode == EditorMode.TIPTAP) {
     return (
       <TiptapEditor
         value={content}
-        onImageHandler={onUpload}
-        onOpenFile={onOpenFile}
         onChange={onChange}
       />
     )
@@ -42,25 +37,17 @@ function Editor({editorMode, content, onUpload, onOpenFile, onChange}) {
     return (
       <MarkdownEditor
         value={content}
-        onOpenFile={onOpenFile}
         onChange={onChange}
       />
     )
   } 
 }
 
-export default function EditorContent({content, onChange, onUpload, title, onTitleChange}) {
-  const currentBlog = useAtomValue(currentBlogState)
+export default function EditorContent({content, onChange, title, onTitleChange}) {
   const currentAuth = useAtomValue(currentAuthState)
 	const preferences = useAtomValue(preferencesState)
 
   const [editorMode, setEditorMode] = useState(preferences.editor || EditorMode.MARKDOWN)
-
-  const dropzoneRef = useRef(null)
-
-	function handleOpenFile() {
-		dropzoneRef.current.open()
-  }
 
 	async function handleChangeEditorMode(selectedMode) {
     if (selectedMode === editorMode) return
@@ -97,31 +84,13 @@ export default function EditorContent({content, onChange, onUpload, title, onTit
           />
         )}
 
-        <Dropzone ref={dropzoneRef}
-          accept={{"image/*": ['.gif', '.jpg', '.jpeg', '.png']}} 
-          onDrop={onUpload}>
-
-          {({getRootProps, getInputProps, isDragActive}) =>
-            <div className={classnames('editor_inner', {droppable:isDragActive})} {...getRootProps({
-              onClick: e => e.stopPropagation()
-            })}>
-              <Editor
-                editorMode={editorMode}
-                content={content}
-                currentBlog={currentBlog}
-                onChange={onChange}
-                onUpload={onUpload}
-                onOpenFile={handleOpenFile}
-              />
-
-              <input {...getInputProps()} />
-
-              <div className="dropzone_box">
-                <b>파일을 넣어주세요.</b>
-              </div>
-            </div>
-          }
-        </Dropzone>
+        <div className="editor_inner">
+          <Editor
+            editorMode={editorMode}
+            content={content}
+            onChange={onChange}
+          />
+        </div>
       </Container>
 
       <EditorSwitch

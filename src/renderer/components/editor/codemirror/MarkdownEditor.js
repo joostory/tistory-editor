@@ -1,13 +1,12 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react'
 import { useAtomValue } from 'jotai'
-import { ipcRenderer, clipboard } from 'electron'
 import CodeMirror, { EditorView } from '@uiw/react-codemirror'
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown'
 import { languages } from '@codemirror/language-data'
 import MarkdownHelper from './MarkdownHelper'
 
 import { Button, Box } from '@mui/material'
-import { FormatBold, FormatItalic, FormatUnderlined, Attachment } from '@mui/icons-material'
+import { FormatBold, FormatItalic, FormatUnderlined } from '@mui/icons-material'
 import { currentAuthState, currentBlogState } from '../../../state/currentBlog'
 
 import CodeMirrorHelper from './CodeMirrorHelper'
@@ -66,7 +65,7 @@ function ToolbarButton({ onClick, children }) {
   )
 }
 
-export default function MarkdownEditor({ value, onOpenFile, onChange }) {
+export default function MarkdownEditor({ value, onChange }) {
   const currentAuth = useAtomValue(currentAuthState)
   const currentBlog = useAtomValue(currentBlogState)
   const initialMarkdown = useMemo(() => {
@@ -86,17 +85,6 @@ export default function MarkdownEditor({ value, onOpenFile, onChange }) {
   useEffect(() => {
     setMarkdownValue(initialMarkdown)
   }, [initialMarkdown])
-
-  const imageUploadEnabled = false
-
-  const handlePaste = useCallback((e) => {
-    if (imageUploadEnabled) {
-      let image = clipboard.readImage()
-      if (!image.isEmpty()) {
-        ipcRenderer.send("add-clipboard-image", currentAuth.uuid, currentBlog.name)
-      }
-    }
-  }, [imageUploadEnabled, currentAuth, currentBlog])
 
   const handleChangeContent = useCallback((val) => {
     setMarkdownValue(val)
@@ -133,16 +121,7 @@ export default function MarkdownEditor({ value, onOpenFile, onChange }) {
     if (editorRef.current?.view) CodeMirrorHelper.link(editorRef.current.view)
   }
 
-  const handleFinishUploadFile = useCallback((e, fileUrl) => {
-    if (editorRef.current?.view) CodeMirrorHelper.insertImage(editorRef.current.view, fileUrl)
-  }, [])
 
-  useEffect(() => {
-    ipcRenderer.on("finish-add-file", handleFinishUploadFile)
-    return () => {
-      ipcRenderer.removeListener("finish-add-file", handleFinishUploadFile)
-    }
-  }, [handleFinishUploadFile])
 
   return (
     <Box>
@@ -153,7 +132,6 @@ export default function MarkdownEditor({ value, onOpenFile, onChange }) {
         <ToolbarButton onClick={handleItalic}><FormatItalic /></ToolbarButton>
         <ToolbarButton onClick={handleUnderline}><FormatUnderlined /></ToolbarButton>
         <ToolbarButton onClick={handleLink}>Link</ToolbarButton>
-        {imageUploadEnabled && <ToolbarButton onClick={onOpenFile}><Attachment /></ToolbarButton>}
       </Box>
 
       <Box sx={styles.editor}>
@@ -173,7 +151,6 @@ export default function MarkdownEditor({ value, onOpenFile, onChange }) {
             lineNumbers: false,
             foldGutter: false,
           }}
-          onPaste={handlePaste}
         />
       </Box>
     </Box>

@@ -100,11 +100,6 @@ function localFileToReadStream(fileUrl) {
   return null
 }
 
-async function uploadFileWithBuffer(auth, blogName, filebuffer, options) {
-  const contentType = options.contentType || 'image/png'
-  const base64Data = filebuffer.toString('base64')
-  return `data:${contentType};base64,${base64Data}`
-}
 
 function _editorPostToTumblrPost(editorPost) {
   let npfBlocks = []
@@ -304,6 +299,5 @@ module.exports = {
   addPost: addPost,
   savePost: savePost,
   validateAuthInfo: validateAuthInfo,
-  fetchAccount: fetchAccount,
-  uploadFileWithBuffer: uploadFileWithBuffer
+  fetchAccount: fetchAccount
 }

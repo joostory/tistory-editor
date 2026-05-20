@@ -37,8 +37,6 @@ export default function Editor({mode, onFinish}) {
 
   const [showInfoBox, setShowInfoBox] = useState(false)
   const [showLoading, setShowLoading] = useState(false)
-  const [uploadFileCount, setUploadFileCount] = useState(0)
-  const [uploadFinishedFileCount, setUploadFinishedFileCount] = useState(0)
 
   const [postData, setPostData] = useState(makePostState())
 
@@ -133,18 +131,7 @@ export default function Editor({mode, onFinish}) {
 		}
   }
 
-	function handleStartAddFile(e) {
-    setUploadFileCount(uploadFileCount + 1)
-	}
 
-	function handleFinishAddFile(e) {
-		if (uploadFileCount == uploadFinishedFileCount + 1) {
-      setUploadFileCount(0)
-      setUploadFinishedFileCount(0)
-		} else {
-      setUploadFinishedFileCount(uploadFinishedFileCount + 1)
-		}
-	}
 
 	function handleFinishSaveContent(e, post) {
     setShowLoading(false)
@@ -187,25 +174,9 @@ export default function Editor({mode, onFinish}) {
 		}
 	}
 
-  function handleUploadFiles(files) {
-    files.map(file => {
-      const fileReader = new FileReader();
-      fileReader.addEventListener("load", e => {
-        ipcRenderer.send("add-file", currentAuth.uuid, currentBlog.name, e.target.result, {
-          name: file.name,
-          type: file.type,
-          size: file.size
-        })
-      });
-      fileReader.readAsDataURL(file);
-    })
-  }
-  
   useEffect(() => {
     document.body.addEventListener("keydown", handleKeyDown, false)
 
-		ipcRenderer.on("start-add-file", handleStartAddFile)
-		ipcRenderer.on("finish-add-file", handleFinishAddFile)
 		ipcRenderer.on("finish-add-content", handleFinishSaveContent)
     ipcRenderer.on("finish-save-content", handleFinishSaveContent)
 
@@ -220,8 +191,6 @@ export default function Editor({mode, onFinish}) {
     return () => {
       document.body.removeEventListener("keydown", handleKeyDown, false)
 
-      ipcRenderer.removeListener("start-add-file", handleStartAddFile)
-      ipcRenderer.removeListener("finish-add-file", handleFinishAddFile)
       ipcRenderer.removeListener("finish-add-content", handleFinishSaveContent)
       ipcRenderer.removeListener("finish-save-content", handleFinishSaveContent)
 
@@ -239,7 +208,6 @@ export default function Editor({mode, onFinish}) {
 
       <EditorContent
         content={postData.content}
-        onUpload={handleUploadFiles}
         onChange={handleChangeContent}
         title={postData.title}
         onTitleChange={handleChangeTitle}
@@ -254,11 +222,6 @@ export default function Editor({mode, onFinish}) {
 
       {showLoading && <Loading />}
       
-      <Snackbar
-        open={uploadFileCount > 0}
-        message={`업로드 중 (${uploadFinishedFileCount} / ${uploadFileCount})`}
-      />
-
     </Box>
   )
 }

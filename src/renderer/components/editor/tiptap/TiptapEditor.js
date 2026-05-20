@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
 import { Box, ToggleButton, ToggleButtonGroup, Divider } from '@mui/material'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
-import { ipcRenderer } from 'electron'
 
 const lightTheme = createTheme({
   palette: {
@@ -209,7 +208,8 @@ const MenuBar = ({ editor, onImageClick }) => {
   )
 }
 
-export default function TiptapEditor({ value, onChange, onOpenFile, onImageHandler }) {
+export default function TiptapEditor({ value, onChange }) {
+  const fileInputRef = useRef(null)
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -225,14 +225,51 @@ export default function TiptapEditor({ value, onChange, onOpenFile, onImageHandl
         margin: 0
       },
       handleDrop: (view, event, slice, moved) => {
-        if (!moved && event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files[0]) {
-          onImageHandler(Array.prototype.slice.call(event.dataTransfer.files))
-          return true
+        if (!moved && event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files.length > 0) {
+          const files = Array.prototype.slice.call(event.dataTransfer.files)
+          const imageFiles = files.filter(file => file.type.indexOf('image/') === 0)
+          if (imageFiles.length > 0) {
+            insertImages(imageFiles)
+            return true
+          }
         }
         return false
       },
+      handlePaste: (view, event, slice) => {
+        if (event.clipboardData && event.clipboardData.files && event.clipboardData.files.length > 0) {
+          const files = Array.prototype.slice.call(event.clipboardData.files)
+          const imageFiles = files.filter(file => file.type.indexOf('image/') === 0)
+          if (imageFiles.length > 0) {
+            insertImages(imageFiles)
+            return true
+          }
+        }
+        return false
+      }
     }
   })
+
+  const insertImages = (files) => {
+    files.forEach(file => {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        if (editor) {
+          editor.chain().focus().setImage({ src: e.target.result }).run()
+        }
+      }
+      reader.readAsDataURL(file)
+    })
+  }
+
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const files = Array.prototype.slice.call(e.target.files)
+      const imageFiles = files.filter(file => file.type.indexOf('image/') === 0)
+      if (imageFiles.length > 0) {
+        insertImages(imageFiles)
+      }
+    }
+  }
 
   useEffect(() => {
     if (editor && value) {
@@ -249,29 +286,26 @@ export default function TiptapEditor({ value, onChange, onOpenFile, onImageHandl
     }
   }, [value, editor])
 
-  useEffect(() => {
-    function handleFinishUploadFile(e, fileUrl) {
-      if (editor) {
-        editor.chain().focus().setImage({ src: fileUrl }).run()
-      }
-    }
 
-    ipcRenderer.on("finish-add-file", handleFinishUploadFile)
-    return () => {
-      ipcRenderer.removeListener("finish-add-file", handleFinishUploadFile)
-    }
-  }, [editor])
 
   return (
     <ThemeProvider theme={lightTheme}>
       <Box sx={styles.root}>
-        <MenuBar editor={editor} onImageClick={onOpenFile} />
+        <MenuBar editor={editor} onImageClick={() => fileInputRef.current?.click()} />
         <Box sx={styles.editorContent}>
           <EditorContent
             className="content"
             editor={editor}
           />
         </Box>
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          accept="image/*"
+          multiple
+          style={{ display: 'none' }}
+        />
       </Box>
     </ThemeProvider>
   )
