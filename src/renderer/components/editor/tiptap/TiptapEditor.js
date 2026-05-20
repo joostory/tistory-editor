@@ -44,12 +44,35 @@ const styles = {
   editorContent: {
     flex: 1,
     overflowY: 'auto',
+    backgroundColor: '#fff',
+    color: '#333',
     '.ProseMirror': {
       outline: 'none',
       minHeight: '500px',
       padding: '16px',
+      color: '#333',
+      fontSize: '16px',
+      lineHeight: '1.6',
       'p': {
-        margin: '0 0 1em 0',
+        margin: '0 0 12px 0',
+      },
+      'h1': {
+        fontSize: '28px',
+        fontWeight: 700,
+        margin: '24px 0 12px 0',
+        lineHeight: 1.3
+      },
+      'h2': {
+        fontSize: '22px',
+        fontWeight: 700,
+        margin: '20px 0 10px 0',
+        lineHeight: 1.35
+      },
+      'h3': {
+        fontSize: '18px',
+        fontWeight: 700,
+        margin: '16px 0 8px 0',
+        lineHeight: 1.4
       },
       'img': {
         maxWidth: '100%',
@@ -118,6 +141,35 @@ const MenuBar = ({ editor, onImageClick }) => {
           sx={styles.toolbarBtn}
         >
           <Code />
+        </ToggleButton>
+      </ToggleButtonGroup>
+
+      <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+
+      <ToggleButtonGroup size="small" sx={groupSx}>
+        <ToggleButton
+          value="h1"
+          selected={editor.isActive('heading', { level: 1 })}
+          onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+          sx={{ ...styles.toolbarBtn, fontWeight: 'bold', fontSize: '13px' }}
+        >
+          H1
+        </ToggleButton>
+        <ToggleButton
+          value="h2"
+          selected={editor.isActive('heading', { level: 2 })}
+          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+          sx={{ ...styles.toolbarBtn, fontWeight: 'bold', fontSize: '12px' }}
+        >
+          H2
+        </ToggleButton>
+        <ToggleButton
+          value="h3"
+          selected={editor.isActive('heading', { level: 3 })}
+          onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+          sx={{ ...styles.toolbarBtn, fontWeight: 'bold', fontSize: '11px' }}
+        >
+          H3
         </ToggleButton>
       </ToggleButtonGroup>
 

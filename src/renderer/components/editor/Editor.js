@@ -231,9 +231,10 @@ export default function Editor({mode, onFinish}) {
 
   return (
     <Box sx={styles.root}>
-      <EditorToolbar title={postData.title}
+      <EditorToolbar
         onSaveClick={e => setShowInfoBox(true)}
         onCancelClick={handleCancel}
+        disabled={currentAuth.provider !== 'tumblr' && postData.title.length === 0}
       />
 
       <EditorContent

@@ -7,7 +7,7 @@ import highlightjs from 'highlight.js'
 import 'highlight.js/styles/atom-one-dark.css'
 import * as ContentHelper from '../../../../modules/ContentHelper'
 import { pageview } from '../../../../modules/AnalyticsHelper'
-import { currentBlogState } from '../../../../state/currentBlog'
+import { currentBlogState, currentAuthState } from '../../../../state/currentBlog'
 import { currentPostState } from '../../../../state/currentPost'
 
 const styles = {
@@ -15,7 +15,7 @@ const styles = {
     margin: (theme) => theme.spacing(3),
     marginTop: (theme) => theme.spacing(5),
     marginBottom: (theme) => theme.spacing(5),
-    background: (theme) => theme.palette.content.background,
+    background: '#fff',
     width: (theme) => theme.palette.content.maxWidth,
     boxShadow: (theme) => theme.shadows[1],
     borderRadius: (theme) => theme.spacing(0.5),
@@ -25,12 +25,12 @@ const styles = {
   title: {
     paddingTop: (theme) => theme.spacing(5),
     paddingBottom: (theme) => theme.spacing(2),
-    color: (theme) => theme.palette.content.text
+    color: '#222'
   },
   postInfo: {
     paddingBottom: (theme) => theme.spacing(3),
     textAlign: 'center',
-    color: (theme) => theme.palette.content.text
+    color: '#666'
   },
   divContainer: {
     position: 'relative',
@@ -45,30 +45,57 @@ const styles = {
     padding: '0 10px'
   },
   btnPostInfo: {
-    color: (theme) => theme.palette.content.text
+    color: '#555'
   },
   icoPostInfo: {
     fontSize: 18
   },
   divider: {
-    backgroundColor: (theme) => theme.palette.content.divider
+    backgroundColor: '#eee'
   },
   contentContainer: {
     padding: (theme) => theme.spacing(3),
     paddingLeft: (theme) => theme.spacing(5),
     paddingRight: (theme) => theme.spacing(5),
-    paddingBottom: (theme) => theme.spacing(5)
+    paddingBottom: (theme) => theme.spacing(5),
+    '& .content': {
+      color: '#333',
+      fontSize: '16px',
+      lineHeight: '1.6',
+      '& p': {
+        margin: '0 0 12px 0',
+      },
+      '& h1': {
+        fontSize: '28px',
+        fontWeight: 700,
+        margin: '24px 0 12px 0',
+        lineHeight: 1.3
+      },
+      '& h2': {
+        fontSize: '22px',
+        fontWeight: 700,
+        margin: '20px 0 10px 0',
+        lineHeight: 1.35
+      },
+      '& h3': {
+        fontSize: '18px',
+        fontWeight: 700,
+        margin: '16px 0 8px 0',
+        lineHeight: 1.4
+      }
+    }
   },
   tag: {
     marginRight: (theme) => theme.spacing(1),
-    color: (theme) => theme.palette.content.text,
-    borderColor: (theme) => theme.palette.content.tagBorder
+    color: '#555',
+    borderColor: '#ddd'
   }
 }
 
 
 export default function TextContentViewer({ onRequestEditPost }) {
   const currentBlog = useAtomValue(currentBlogState)
+  const currentAuth = useAtomValue(currentAuthState)
   const post = useAtomValue(currentPostState)
   const viewerContent = useRef(null)
 
@@ -82,31 +109,65 @@ export default function TextContentViewer({ onRequestEditPost }) {
     }
   }, [post])
 
+  const isTumblr = currentAuth && currentAuth.provider === 'tumblr'
+
   return (
     <Box sx={styles.root}>
-      <Container disableGutters={true}>
-        <Typography variant='h4' component='h1' align='center' sx={styles.title}>
-          {post.title}
-        </Typography>
+      {isTumblr ? (
+        <>
+          <Box sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingTop: (theme) => theme.spacing(2),
+            paddingBottom: (theme) => theme.spacing(1),
+            px: (theme) => theme.spacing(2),
+            backgroundColor: '#fff',
+            borderTopLeftRadius: '4px',
+            borderTopRightRadius: '4px'
+          }}>
+            <Typography variant='body2' sx={{ color: '#666' }}>
+              {dayjs(post.date).format('YYYY-MM-DD HH:mm')}
+            </Typography>
 
-        <Box sx={styles.postInfo}>
-          <Typography component='span'>
-            {dayjs(post.date).format('YYYY-MM-DD HH:mm')}
-          </Typography>
-        </Box>
-      </Container>
+            <Box sx={{ display: 'flex', gap: 0.5 }}>
+              <IconButton sx={styles.btnPostInfo} href={post.url} title="브라우저에서 보기" size='small'>
+                <OpenInBrowser sx={styles.icoPostInfo} />
+              </IconButton>
+              <IconButton sx={styles.btnPostInfo} onClick={onRequestEditPost} title="수정하기" size='small'>
+                <Edit sx={styles.icoPostInfo} />
+              </IconButton>
+            </Box>
+          </Box>
+          <Divider sx={{ ...styles.divider, mx: 2 }} />
+        </>
+      ) : (
+        <>
+          <Container disableGutters={true}>
+            <Typography variant='h4' component='h1' align='center' sx={styles.title}>
+              {post.title}
+            </Typography>
 
-      <Container disableGutters={false} sx={styles.divContainer}>
-        <Box sx={styles.btnBox}>
-          <IconButton sx={styles.btnPostInfo} href={post.url} tooltip="브라우저에서 보기" size='small'>
-            <OpenInBrowser sx={styles.icoPostInfo} />
-          </IconButton>
-          <IconButton sx={styles.btnPostInfo} onClick={onRequestEditPost} tooltip="수정하기" size='small'>
-            <Edit sx={styles.icoPostInfo} />
-          </IconButton>
-        </Box>
-        <Divider sx={styles.divider} />
-      </Container>
+            <Box sx={styles.postInfo}>
+              <Typography component='span' sx={{ color: '#666' }}>
+                {dayjs(post.date).format('YYYY-MM-DD HH:mm')}
+              </Typography>
+            </Box>
+          </Container>
+
+          <Container disableGutters={false} sx={styles.divContainer}>
+            <Box sx={styles.btnBox}>
+              <IconButton sx={styles.btnPostInfo} href={post.url} tooltip="브라우저에서 보기" size='small'>
+                <OpenInBrowser sx={styles.icoPostInfo} />
+              </IconButton>
+              <IconButton sx={styles.btnPostInfo} onClick={onRequestEditPost} tooltip="수정하기" size='small'>
+                <Edit sx={styles.icoPostInfo} />
+              </IconButton>
+            </Box>
+            <Divider sx={styles.divider} />
+          </Container>
+        </>
+      )}
 
       <Container disableGutters={true} sx={styles.contentContainer}>
         <div ref={viewerContent}

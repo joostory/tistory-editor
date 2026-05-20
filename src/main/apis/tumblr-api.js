@@ -155,7 +155,6 @@ function _editorPostToTumblrPost(editorPost) {
   })
 
   let tumblrPost = {
-    title: editorPost.title,
     content: npfBlocks,
     tags: editorPost.tags
   }

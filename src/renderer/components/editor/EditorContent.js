@@ -11,7 +11,7 @@ import EditorSwitch from './EditorSwich'
 import { Container, InputBase } from '@mui/material'
 import { useAtomValue } from 'jotai'
 import { preferencesState } from '../../state/preferences'
-import { currentBlogState } from '../../state/currentBlog'
+import { currentBlogState, currentAuthState } from '../../state/currentBlog'
 
 const styles = {
   container: {
@@ -51,6 +51,7 @@ function Editor({editorMode, content, onUpload, onOpenFile, onChange}) {
 
 export default function EditorContent({content, onChange, onUpload, title, onTitleChange}) {
   const currentBlog = useAtomValue(currentBlogState)
+  const currentAuth = useAtomValue(currentAuthState)
 	const preferences = useAtomValue(preferencesState)
 
   const [editorMode, setEditorMode] = useState(preferences.editor || EditorMode.MARKDOWN)
@@ -84,15 +85,17 @@ export default function EditorContent({content, onChange, onUpload, title, onTit
   return (
     <>
       <Container sx={styles.container} disableGutters={true}>
-        <InputBase
-          sx={styles.titleInput}
-          autoFocus={true}
-          fullWidth={true}
-          multiline={true}
-          placeholder='제목을 입력하세요.'
-          value={title}
-          onChange={onTitleChange}
-        />
+        {currentAuth && currentAuth.provider !== 'tumblr' && (
+          <InputBase
+            sx={styles.titleInput}
+            autoFocus={true}
+            fullWidth={true}
+            multiline={true}
+            placeholder='제목을 입력하세요.'
+            value={title}
+            onChange={onTitleChange}
+          />
+        )}
 
         <Dropzone ref={dropzoneRef}
           accept={{"image/*": ['.gif', '.jpg', '.jpeg', '.png']}} 

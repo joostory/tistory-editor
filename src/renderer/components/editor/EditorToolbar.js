@@ -12,7 +12,7 @@ const styles = {
   }
 }
 
-export default function EditorToolbar({ title, onSaveClick, onCancelClick }) {
+export default function EditorToolbar({ onSaveClick, onCancelClick, disabled }) {
   return (
     <Toolbar sx={styles.root}>
       <Button onClick={onCancelClick}>
@@ -21,7 +21,7 @@ export default function EditorToolbar({ title, onSaveClick, onCancelClick }) {
 
       <div style={{flexGrow: 1}} />
       
-      <Button variant='contained' color='primary' onClick={onSaveClick} disabled={title.length == 0}>
+      <Button variant='contained' color='primary' onClick={onSaveClick} disabled={disabled}>
         완료
       </Button>
     </Toolbar>
