@@ -188,18 +188,17 @@ export default function Editor({mode, onFinish}) {
 	}
 
   function handleUploadFiles(files) {
-    // 사용중단
-		// files.map(file => {
-    //   const fileReader = new FileReader();
-    //   fileReader.addEventListener("load", e => {
-    //     ipcRenderer.send("add-file", currentAuth.uuid, currentBlog.name, e.target.result, {
-    //       name: file.name,
-    //       type: file.type,
-    //       size: file.size
-    //     })
-    //   });
-    //   fileReader.readAsDataURL(file);
-		// })
+    files.map(file => {
+      const fileReader = new FileReader();
+      fileReader.addEventListener("load", e => {
+        ipcRenderer.send("add-file", currentAuth.uuid, currentBlog.name, e.target.result, {
+          name: file.name,
+          type: file.type,
+          size: file.size
+        })
+      });
+      fileReader.readAsDataURL(file);
+    })
   }
   
   useEffect(() => {

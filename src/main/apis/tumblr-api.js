@@ -1,3 +1,6 @@
+const fs = require('fs')
+const path = require('path')
+const os = require('os')
 const uuid = require('uuid').v4
 const OauthInfoReader = require('../oauth/OauthInfoReader')
 const tumblr = require("tumblr.js")
@@ -60,6 +63,49 @@ function _tumblrPostsToEditorPosts(tumblrPosts) {
   return posts.map(_tumblrPostToEditorPost)
 }
 
+function base64ToReadStream(base64Data) {
+  const matches = base64Data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/)
+  if (!matches || matches.length !== 3) {
+    return null
+  }
+  const contentType = matches[1]
+  const base64Str = matches[2]
+  const extension = contentType.split('/')[1] || 'png'
+  
+  const buffer = Buffer.from(base64Str, 'base64')
+  const tempFilePath = path.join(os.tmpdir(), `tumblr_upload_${uuid()}.${extension}`)
+  
+  fs.writeFileSync(tempFilePath, buffer)
+  
+  const stream = fs.createReadStream(tempFilePath)
+  stream.tempFilePath = tempFilePath
+  return stream
+}
+
+function localFileToReadStream(fileUrl) {
+  try {
+    let filePath = fileUrl
+    if (fileUrl.startsWith('file://')) {
+      filePath = decodeURIComponent(fileUrl.replace(/^file:\/\//, ''))
+      if (process.platform === 'win32' && filePath.startsWith('/')) {
+        filePath = filePath.substring(1)
+      }
+    }
+    if (fs.existsSync(filePath)) {
+      return fs.createReadStream(filePath)
+    }
+  } catch (e) {
+    console.error("Failed to parse local file url:", fileUrl, e)
+  }
+  return null
+}
+
+async function uploadFileWithBuffer(auth, blogName, filebuffer, options) {
+  const contentType = options.contentType || 'image/png'
+  const base64Data = filebuffer.toString('base64')
+  return `data:${contentType};base64,${base64Data}`
+}
+
 function _editorPostToTumblrPost(editorPost) {
   let npfBlocks = []
 
@@ -79,6 +125,35 @@ function _editorPostToTumblrPost(editorPost) {
     npfBlocks = NpfConverter.markdownToNpf(editorPost.content || '')
   }
 
+  const streamsToCleanup = []
+  
+  npfBlocks = npfBlocks.map(block => {
+    if (block.type === 'image' && block.media && block.media[0] && block.media[0].url) {
+      const url = block.media[0].url
+      if (url.startsWith('data:image/')) {
+        const stream = base64ToReadStream(url)
+        if (stream) {
+          streamsToCleanup.push(stream.tempFilePath)
+          return {
+            type: 'image',
+            media: stream,
+            alt_text: block.alt_text || ''
+          }
+        }
+      } else if (url.startsWith('file://') || (path.isAbsolute(url) && fs.existsSync(url))) {
+        const stream = localFileToReadStream(url)
+        if (stream) {
+          return {
+            type: 'image',
+            media: stream,
+            alt_text: block.alt_text || ''
+          }
+        }
+      }
+    }
+    return block
+  })
+
   let tumblrPost = {
     title: editorPost.title,
     content: npfBlocks,
@@ -88,6 +163,8 @@ function _editorPostToTumblrPost(editorPost) {
   if (editorPost.id) {
     tumblrPost.id = editorPost.id
   }
+
+  tumblrPost._tempFiles = streamsToCleanup
 
   return tumblrPost
 }
@@ -142,15 +219,45 @@ function fetchPost(auth, blogName, postId) {
 
 async function addPost(auth, blogName, post) {
   const client = _createTumblrClient(auth)
-  const res = await client.createPost(blogName, _editorPostToTumblrPost(post))
-  const fetchRes = await fetchPosts(auth, blogName, {offset:0, limit:1})
-  return { post: fetchRes.posts[0] }
+  const tumblrPost = _editorPostToTumblrPost(post)
+  try {
+    const res = await client.createPost(blogName, tumblrPost)
+    const fetchRes = await fetchPosts(auth, blogName, {offset:0, limit:1})
+    return { post: fetchRes.posts[0] }
+  } finally {
+    if (tumblrPost._tempFiles) {
+      tumblrPost._tempFiles.forEach(filePath => {
+        try {
+          if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath)
+          }
+        } catch (e) {
+          console.error("Failed to delete temp file:", filePath, e)
+        }
+      })
+    }
+  }
 }
 
 async function savePost(auth, blogName, post) {
   const client = _createTumblrClient(auth)
-  const res = await client.editPost(blogName, post.id, _editorPostToTumblrPost(post))
-  return await fetchPost(auth, blogName, post.id)
+  const tumblrPost = _editorPostToTumblrPost(post)
+  try {
+    const res = await client.editPost(blogName, post.id, tumblrPost)
+    return await fetchPost(auth, blogName, post.id)
+  } finally {
+    if (tumblrPost._tempFiles) {
+      tumblrPost._tempFiles.forEach(filePath => {
+        try {
+          if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath)
+          }
+        } catch (e) {
+          console.error("Failed to delete temp file:", filePath, e)
+        }
+      })
+    }
+  }
 }
 
 function validateAuthInfo(auth) {
@@ -198,5 +305,6 @@ module.exports = {
   addPost: addPost,
   savePost: savePost,
   validateAuthInfo: validateAuthInfo,
-  fetchAccount: fetchAccount
+  fetchAccount: fetchAccount,
+  uploadFileWithBuffer: uploadFileWithBuffer
 }
