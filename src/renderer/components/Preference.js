@@ -7,7 +7,6 @@ import {
   FormControlLabel, FormLabel, Select, MenuItem
 } from '@mui/material'
 
-import * as EditorMode from '../constants/EditorMode'
 import * as AppTheme from '../constants/AppTheme'
 import { useAtomValue } from 'jotai'
 import { preferencesState } from '../state/preferences'
@@ -16,7 +15,6 @@ import { preferencesState } from '../state/preferences'
 export default function Preference() {
   const [open, setOpen] = useState(false)
   const preferences = useAtomValue(preferencesState)
-  const defaultEditor = preferences.editor || EditorMode.MARKDOWN
   const appTheme = preferences.appTheme || AppTheme.SYSTEM
 
   function handlePreferenceOpen() {
@@ -33,11 +31,6 @@ export default function Preference() {
     }))
   }
 
-  function handleChangeEditor(e) {
-    ipcRenderer.send("save-preferences", Object.assign({}, preferences, {
-      editor: e.target.value
-    }))
-  }
 
   useEffect(() => {
     ipcRenderer.on("open-preference", handlePreferenceOpen)
@@ -61,14 +54,7 @@ export default function Preference() {
             <MenuItem value={AppTheme.DARK}>어두움</MenuItem>
           </Select>
         </FormControl>
-        
-        <FormControl fullWidth>
-          <FormLabel>기본 에디터</FormLabel>
-          <RadioGroup name="editor" value={defaultEditor} onChange={handleChangeEditor}>
-            <FormControlLabel value={EditorMode.MARKDOWN} label="Markdown Editor" control={<Radio />} />
-            <FormControlLabel value={EditorMode.TIPTAP} label="Rich Editor (Tiptap)" control={<Radio />} />
-          </RadioGroup>
-        </FormControl>
+
         
       </DialogContent>
 

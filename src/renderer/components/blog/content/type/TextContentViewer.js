@@ -58,32 +58,6 @@ const styles = {
     paddingLeft: (theme) => theme.spacing(5),
     paddingRight: (theme) => theme.spacing(5),
     paddingBottom: (theme) => theme.spacing(5),
-    '& .content': {
-      color: '#333',
-      fontSize: '16px',
-      lineHeight: '1.6',
-      '& p': {
-        margin: '0 0 12px 0',
-      },
-      '& h1': {
-        fontSize: '28px',
-        fontWeight: 700,
-        margin: '24px 0 12px 0',
-        lineHeight: 1.3
-      },
-      '& h2': {
-        fontSize: '22px',
-        fontWeight: 700,
-        margin: '20px 0 10px 0',
-        lineHeight: 1.35
-      },
-      '& h3': {
-        fontSize: '18px',
-        fontWeight: 700,
-        margin: '16px 0 8px 0',
-        lineHeight: 1.4
-      }
-    }
   },
   tag: {
     marginRight: (theme) => theme.spacing(1),

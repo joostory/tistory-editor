@@ -9,18 +9,24 @@
 }
 
 .content h1 {
-  font-size: 2em;
-  margin: 2em 0 1em
+  font-size: 28px;
+  font-weight: 700;
+  margin: 24px 0 12px 0;
+  line-height: 1.3;
 }
 
 .content h2 {
-  font-size: 1.8em;
-  margin: 2em 0 1em
+  font-size: 22px;
+  font-weight: 700;
+  margin: 20px 0 10px 0;
+  line-height: 1.35;
 }
 
 .content h3 {
-  font-size: 1.5em;
-  margin: 2em 0 1em
+  font-size: 18px;
+  font-weight: 700;
+  margin: 16px 0 8px 0;
+  line-height: 1.4;
 }
 
 .content h4,
@@ -42,7 +48,7 @@
 
 .content p {
   line-height: 1.6em;
-  margin: 0 auto 28px
+  margin: 0 auto 12px;
 }
 
 .content a {
