@@ -736,8 +736,10 @@ function convertSingleBlockToHtml(block) {
     const siteName = block.site_name || ''
     const poster = block.poster && block.poster[0] ? block.poster[0].url : ''
     
-    const imageTag = poster ? `<div class="link-card-image" style="background-image: url('${escapeHtml(poster)}')"></div>` : ''
-    return `<div class="link-card" data-url="${escapeHtml(url)}" data-title="${escapeHtml(title)}" data-description="${escapeHtml(description)}" data-site-name="${escapeHtml(siteName)}" data-image="${escapeHtml(poster)}"><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer"><div class="link-card-content"><div class="link-card-title">${escapeHtml(title)}</div><div class="link-card-description">${escapeHtml(description)}</div><div class="link-card-site">${escapeHtml(siteName)}</div></div>${imageTag}</a></div>`
+    const hasImage = !!poster
+    const imageStyle = hasImage ? `background-image: url('${escapeHtml(poster)}')` : 'display: none'
+    
+    return `<div class="link-card" data-url="${escapeHtml(url)}" data-title="${escapeHtml(title)}" data-description="${escapeHtml(description)}" data-site-name="${escapeHtml(siteName)}" data-image="${escapeHtml(poster)}" style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; display: flex; margin: 16px 0; font-family: sans-serif; text-decoration: none; color: inherit; cursor: pointer;"><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" style="display: flex; width: 100%; text-decoration: none; color: inherit;"><div class="link-card-content" style="flex: 1; padding: 16px; display: flex; flex-direction: column; justify-content: center;"><div class="link-card-title" style="font-weight: bold; font-size: 16px; margin-bottom: 8px; color: #1a202c; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(title)}</div><div class="link-card-description" style="font-size: 14px; color: #4a5568; margin-bottom: 8px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${escapeHtml(description)}</div><div class="link-card-site" style="font-size: 12px; color: #718096;">${escapeHtml(siteName)}</div></div><div class="link-card-image" style="width: 150px; background-size: cover; background-position: center; ${imageStyle}"></div></a></div>`
   }
   return ''
 }
