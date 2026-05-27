@@ -136,6 +136,55 @@ ol li {
   height: auto
 }
 
+.content .image-group {
+  display: grid;
+  gap: 8px;
+  margin: 0 auto 12px;
+  width: 100%;
+}
+
+/* 이미지 개수가 2개인 이미지 그룹 (2열 배치) */
+.content .image-group:has(> img:first-child:nth-last-child(2)) {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* 이미지 개수가 3개인 이미지 그룹 (3열 배치) */
+.content .image-group:has(> img:first-child:nth-last-child(3)) {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* 이미지 개수가 4개인 이미지 그룹 (2x2를 위해 2열 배치) */
+.content .image-group:has(> img:first-child:nth-last-child(4)) {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* 이미지 개수가 5개 이상인 이미지 그룹 (최대 3열 배치 준수) */
+.content .image-group:has(> img:first-child:nth-last-child(n+5)) {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.content .image-group[data-count="2"] {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.content .image-group[data-count="3"] {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.content .image-group[data-count="4"] {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.content .image-group img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  margin: 0 !important;
+}
+
+
+
 .content hr {
   margin: 3em 5em 3em;
   border: 0;

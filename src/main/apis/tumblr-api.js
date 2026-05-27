@@ -31,13 +31,13 @@ function _tumblrPostToEditorPost(post) {
 
   if (post.content && Array.isArray(post.content)) {
     // Neue Post Format (NPF)
-    tiptapContent = NpfConverter.npfToTiptap(post.content)
+    tiptapContent = NpfConverter.npfToTiptap(post.content, post.layout)
     markdownContent = NpfConverter.npfToMarkdown(post.content)
-    contentHtml = NpfConverter.npfToHtml(post.content)
+    contentHtml = NpfConverter.npfToHtml(post.content, post.layout)
   } else {
     // Legacy Post (HTML in body)
     const npfBlocks = NpfConverter.htmlToNpf(post.body || '')
-    tiptapContent = NpfConverter.npfToTiptap(npfBlocks)
+    tiptapContent = NpfConverter.npfToTiptap(npfBlocks, null)
     markdownContent = NpfConverter.npfToMarkdown(npfBlocks)
     contentHtml = post.body || ''
   }
@@ -120,6 +120,9 @@ function _editorPostToTumblrPost(editorPost) {
     npfBlocks = NpfConverter.markdownToNpf(editorPost.content || '')
   }
 
+  // map 연산 수행 시 새로운 배열이 반환되어 layout 프로퍼티가 유실되는 것을 방지하기 위해 먼저 추출합니다.
+  const layout = npfBlocks.layout || []
+
   const streamsToCleanup = []
   
   npfBlocks = npfBlocks.map(block => {
@@ -151,6 +154,7 @@ function _editorPostToTumblrPost(editorPost) {
 
   let tumblrPost = {
     content: npfBlocks,
+    layout: layout,
     tags: editorPost.tags
   }
 

@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
+import ImageGroup from './ImageGroup'
 import { Box, ToggleButton, ToggleButtonGroup, Divider } from '@mui/material'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 
@@ -16,7 +17,9 @@ import {
   FormatListBulleted,
   FormatListNumbered,
   Code,
-  Image as ImageIcon
+  Image as ImageIcon,
+  GridView,
+  LayersClear
 } from '@mui/icons-material'
 
 const styles = {
@@ -81,6 +84,36 @@ const MenuBar = ({ editor, onImageClick }) => {
     border: 'none',
     '& .MuiToggleButtonGroup-grouped': {
       border: 0,
+    }
+  }
+
+  const canGroup = () => {
+    try {
+      if (!editor) return false
+      let canMerge = false
+      let consecutiveCount = 0
+      
+      editor.state.doc.forEach((node) => {
+        if (node.type.name === 'image') {
+          consecutiveCount++
+          if (consecutiveCount > 1) {
+            canMerge = true
+          }
+        } else {
+          consecutiveCount = 0
+        }
+      })
+      return canMerge
+    } catch (e) {
+      return false
+    }
+  }
+
+  const canUngroup = () => {
+    try {
+      return editor.isActive('imageGroup')
+    } catch (e) {
+      return false
     }
   }
 
@@ -170,8 +203,27 @@ const MenuBar = ({ editor, onImageClick }) => {
           value="image"
           onClick={onImageClick}
           sx={styles.toolbarBtn}
+          title="이미지 추가"
         >
           <ImageIcon />
+        </ToggleButton>
+        <ToggleButton
+          value="groupImages"
+          disabled={!canGroup()}
+          onClick={() => editor.commands.groupImages()}
+          sx={styles.toolbarBtn}
+          title="이미지 묶기 (2개 이상 이미지 드래그 선택 필요)"
+        >
+          <GridView />
+        </ToggleButton>
+        <ToggleButton
+          value="ungroupImages"
+          disabled={!canUngroup()}
+          onClick={() => editor.commands.ungroupImages()}
+          sx={styles.toolbarBtn}
+          title="이미지 묶음 풀기"
+        >
+          <LayersClear />
         </ToggleButton>
       </ToggleButtonGroup>
     </Box>
@@ -184,6 +236,7 @@ export default function TiptapEditor({ value, onChange }) {
     extensions: [
       StarterKit,
       Image,
+      ImageGroup,
     ],
     content: value,
     onUpdate: ({ editor }) => {
@@ -202,6 +255,17 @@ export default function TiptapEditor({ value, onChange }) {
             insertImages(imageFiles)
             return true
           }
+        }
+        
+        if (moved) {
+          const coordinates = view.posAtCoords({ left: event.clientX, top: event.clientY })
+          const pos = coordinates ? coordinates.pos : null
+          
+          setTimeout(() => {
+            if (editor && pos !== null) {
+              editor.commands.groupImagesNearCursor(pos)
+            }
+          }, 50)
         }
         return false
       },

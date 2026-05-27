@@ -15,10 +15,12 @@ turndownService.use(turndownPluginGfm.gfm)
 
 /**
  * Tiptap JSON (ProseMirror JSON)을 Tumblr NPF Blocks 배열로 변환
+ * 변환된 결과 blocks 배열에 .layout 프로퍼티를 주입하여 동시 반환
  */
 function tiptapToNpf(tiptapJson) {
   if (!tiptapJson) return []
   const blocks = []
+  const displayRows = []
   
   const content = tiptapJson.content || []
   for (const node of content) {
@@ -64,124 +66,243 @@ function tiptapToNpf(tiptapJson) {
         block.formatting = formatting
       }
       
+      const nextIdx = blocks.length
       blocks.push(block)
+      displayRows.push({ blocks: [nextIdx] })
+
     } else if (node.type === 'image') {
       if (node.attrs && node.attrs.src) {
+        const nextIdx = blocks.length
         blocks.push({
           type: 'image',
           media: [{ url: node.attrs.src }],
           alt_text: node.attrs.alt || ''
         })
+        displayRows.push({ blocks: [nextIdx] })
+      }
+    } else if (node.type === 'imageGroup') {
+      const groupBlockIndices = []
+      
+      if (Array.isArray(node.content)) {
+        for (const childImg of node.content) {
+          if (childImg.type === 'image' && childImg.attrs && childImg.attrs.src) {
+            const nextIdx = blocks.length
+            blocks.push({
+              type: 'image',
+              media: [{ url: childImg.attrs.src }],
+              alt_text: childImg.attrs.alt || ''
+            })
+            groupBlockIndices.push(nextIdx)
+          }
+        }
+      }
+      
+      if (groupBlockIndices.length > 0) {
+        const N = groupBlockIndices.length
+        if (N <= 3) {
+          displayRows.push({ blocks: groupBlockIndices })
+        } else if (N === 4) {
+          // 2x2 배치를 위해 2개씩 분할
+          displayRows.push({ blocks: groupBlockIndices.slice(0, 2) })
+          displayRows.push({ blocks: groupBlockIndices.slice(2, 4) })
+        } else if (N === 5) {
+          // 최대 3개 제약 준수를 위해 3개, 2개 분할
+          displayRows.push({ blocks: groupBlockIndices.slice(0, 3) })
+          displayRows.push({ blocks: groupBlockIndices.slice(3, 5) })
+        } else {
+          // 6개 이상일 경우 최대 3개 단위로 분할
+          for (let k = 0; k < groupBlockIndices.length; k += 3) {
+            displayRows.push({ blocks: groupBlockIndices.slice(k, k + 3) })
+          }
+        }
       }
     }
   }
+  
+  // 배열 속성으로 layout을 숨겨서 반환 (하위 호환성 극대화)
+  blocks.layout = [{
+    type: 'rows',
+    display: displayRows
+  }]
   
   return blocks
 }
 
 /**
- * Tumblr NPF Blocks 배열을 Tiptap JSON (ProseMirror JSON)으로 변환
+ * Tumblr NPF Blocks 배열과 layout 정보를 Tiptap JSON (ProseMirror JSON)으로 변환
  */
-function npfToTiptap(npfBlocks) {
+function npfToTiptap(npfBlocks, layout) {
   const content = []
   
   if (!npfBlocks || !Array.isArray(npfBlocks)) {
     return { type: 'doc', content }
   }
-  
-  for (const block of npfBlocks) {
-    if (block.type === 'text') {
-      const text = block.text || ''
-      const formatting = block.formatting || []
-      const childNodes = []
-      
-      if (text.length > 0) {
-        // 각 글자 인덱스별 마크 목록 수집
-        const charMarks = Array.from({ length: text.length }, () => [])
-        
-        for (const format of formatting) {
-          const start = Math.max(0, format.start)
-          const end = Math.min(text.length, format.end)
-          for (let i = start; i < end; i++) {
-            const mark = { type: format.type }
-            if (format.type === 'link' && format.url) {
-              mark.attrs = { href: format.url }
-            }
-            charMarks[i].push(mark)
+
+  // layout 정보가 있는 경우
+  const rowsLayout = layout && Array.isArray(layout) ? layout.find(l => l.type === 'rows') : null
+
+  if (rowsLayout && Array.isArray(rowsLayout.display)) {
+    // 이미 변환에 사용된 블록 인덱스 추적
+    const usedBlockIndices = new Set()
+
+    for (const row of rowsLayout.display) {
+      if (!row || !Array.isArray(row.blocks) || row.blocks.length === 0) continue
+
+      // 행에 지정된 블록들 중 image 타입이 여러 개 들어있는지 검사
+      const rowImageBlocks = []
+      const isAllImages = row.blocks.every(idx => {
+        const block = npfBlocks[idx]
+        return block && block.type === 'image'
+      })
+
+      if (isAllImages && row.blocks.length > 1) {
+        // 이미지 그룹(imageGroup)으로 묶어서 생성
+        const groupImages = []
+        for (const idx of row.blocks) {
+          const block = npfBlocks[idx]
+          const mediaUrl = block.media && block.media[0] ? block.media[0].url : ''
+          if (mediaUrl) {
+            groupImages.push({
+              type: 'image',
+              attrs: {
+                src: mediaUrl,
+                alt: block.alt_text || ''
+              }
+            })
           }
+          usedBlockIndices.add(idx)
         }
         
-        // 동일 마크 조합을 가진 연속된 글자 구간 병합
-        let currentText = ''
-        let currentMarks = null
-        
-        const areMarksEqual = (m1, m2) => {
-          if (m1.length !== m2.length) return false
-          const serialize = m => JSON.stringify(m.map(x => ({ type: x.type, href: x.attrs?.href })).sort((a, b) => a.type.localeCompare(b.type)))
-          return serialize(m1) === serialize(m2)
+        if (groupImages.length > 0) {
+          content.push({
+            type: 'imageGroup',
+            content: groupImages
+          })
         }
-        
-        for (let i = 0; i < text.length; i++) {
-          const marksAtChar = charMarks[i]
-          if (currentMarks === null) {
-            currentText = text[i]
-            currentMarks = marksAtChar
-          } else if (areMarksEqual(currentMarks, marksAtChar)) {
-            currentText += text[i]
-          } else {
-            const childNode = { type: 'text', text: currentText }
-            if (currentMarks.length > 0) {
-              childNode.marks = currentMarks
-            }
-            childNodes.push(childNode)
-            
-            currentText = text[i]
-            currentMarks = marksAtChar
+      } else {
+        // 개별 변환
+        for (const idx of row.blocks) {
+          const block = npfBlocks[idx]
+          if (!block) continue
+          const node = convertSingleBlockToTiptapNode(block)
+          if (node) {
+            content.push(node)
           }
+          usedBlockIndices.add(idx)
         }
-        
-        if (currentText.length > 0) {
-          const childNode = { type: 'text', text: currentText }
-          if (currentMarks && currentMarks.length > 0) {
-            childNode.marks = currentMarks
-          }
-          childNodes.push(childNode)
-        }
-      }
-      
-      const node = {
-        type: block.subtype && block.subtype.startsWith('heading') ? 'heading' : 'paragraph'
-      }
-      
-      if (node.type === 'heading') {
-        const match = block.subtype.match(/\d+/)
-        const level = match ? parseInt(match[0], 10) : 1
-        node.attrs = { level }
-      }
-      
-      if (childNodes.length > 0) {
-        node.content = childNodes
-      }
-      
-      content.push(node)
-    } else if (block.type === 'image') {
-      const mediaUrl = block.media && block.media[0] ? block.media[0].url : ''
-      if (mediaUrl) {
-        content.push({
-          type: 'image',
-          attrs: {
-            src: mediaUrl,
-            alt: block.alt_text || ''
-          }
-        })
       }
     }
+
+    // layout에 포함되지 않은 잔여 블록 처리 (혹시 모를 누락 방지)
+    for (let i = 0; i < npfBlocks.length; i++) {
+      if (!usedBlockIndices.has(i)) {
+        const node = convertSingleBlockToTiptapNode(npfBlocks[i])
+        if (node) content.push(node)
+      }
+    }
+  } else {
+    // layout이 없는 경우: 순차적으로 단독 변환 (기본 한 줄에 하나씩)
+    for (const block of npfBlocks) {
+      const node = convertSingleBlockToTiptapNode(block)
+      if (node) content.push(node)
+    }
   }
-  
+
   return {
     type: 'doc',
     content
   }
+}
+
+/**
+ * 단일 NPF 블록을 Tiptap 노드로 변환하는 헬퍼 함수
+ */
+function convertSingleBlockToTiptapNode(block) {
+  if (block.type === 'text') {
+    const text = block.text || ''
+    const formatting = block.formatting || []
+    const childNodes = []
+    
+    if (text.length > 0) {
+      const charMarks = Array.from({ length: text.length }, () => [])
+      
+      for (const format of formatting) {
+        const start = Math.max(0, format.start)
+        const end = Math.min(text.length, format.end)
+        for (let i = start; i < end; i++) {
+          const mark = { type: format.type }
+          if (format.type === 'link' && format.url) {
+            mark.attrs = { href: format.url }
+          }
+          charMarks[i].push(mark)
+        }
+      }
+      
+      let currentText = ''
+      let currentMarks = null
+      
+      const areMarksEqual = (m1, m2) => {
+        if (m1.length !== m2.length) return false
+        const serialize = m => JSON.stringify(m.map(x => ({ type: x.type, href: x.attrs?.href })).sort((a, b) => a.type.localeCompare(b.type)))
+        return serialize(m1) === serialize(m2)
+      }
+      
+      for (let i = 0; i < text.length; i++) {
+        const marksAtChar = charMarks[i]
+        if (currentMarks === null) {
+          currentText = text[i]
+          currentMarks = marksAtChar
+        } else if (areMarksEqual(currentMarks, marksAtChar)) {
+          currentText += text[i]
+        } else {
+          const childNode = { type: 'text', text: currentText }
+          if (currentMarks.length > 0) {
+            childNode.marks = currentMarks
+          }
+          childNodes.push(childNode)
+          
+          currentText = text[i]
+          currentMarks = marksAtChar
+        }
+      }
+      
+      if (currentText.length > 0) {
+        const childNode = { type: 'text', text: currentText }
+        if (currentMarks && currentMarks.length > 0) {
+          childNode.marks = currentMarks
+        }
+        childNodes.push(childNode)
+      }
+    }
+    
+    const node = {
+      type: block.subtype && block.subtype.startsWith('heading') ? 'heading' : 'paragraph'
+    }
+    
+    if (node.type === 'heading') {
+      const match = block.subtype.match(/\d+/)
+      const level = match ? parseInt(match[0], 10) : 1
+      node.attrs = { level }
+    }
+    
+    if (childNodes.length > 0) {
+      node.content = childNodes
+    }
+    
+    return node
+  } else if (block.type === 'image') {
+    const mediaUrl = block.media && block.media[0] ? block.media[0].url : ''
+    if (mediaUrl) {
+      return {
+        type: 'image',
+        attrs: {
+          src: mediaUrl,
+          alt: block.alt_text || ''
+        }
+      }
+    }
+  }
+  return null
 }
 
 // ==========================================
@@ -190,9 +311,6 @@ function npfToTiptap(npfBlocks) {
 
 /**
  * HTML 문자열을 Tumblr NPF Blocks 배열로 변환
- */
-/**
- * HTML 문자열을 Tumblr NPF Blocks 배열로 변환 (인라인 서식 및 다양한 노드 타입 완벽 지원)
  */
 function htmlToNpf(html) {
   if (!html) return []
@@ -331,63 +449,111 @@ function parseInlineFormats($el, $, formatting, currentOffset = { val: 0 }) {
 }
 
 /**
- * Tumblr NPF Blocks 배열을 HTML 문자열로 변환
+ * Tumblr NPF Blocks 배열을 HTML 문자열로 변환 (layout 정보 연동)
  */
-function npfToHtml(npfBlocks) {
+function npfToHtml(npfBlocks, layout) {
   if (!npfBlocks || !Array.isArray(npfBlocks)) return ''
 
-  return npfBlocks.map(block => {
-    if (block.type === 'text') {
-      let text = block.text || ''
-      const formatting = block.formatting || []
-      
-      if (formatting.length > 0) {
-        // formatting 정보를 HTML 태그로 주입하기 위해 정렬 및 태그화
-        // 간단하면서 안전한 복원을 위해 글자별 태그 적용 후 렌더링
-        const tagsOpen = Array.from({ length: text.length + 1 }, () => '')
-        const tagsClose = Array.from({ length: text.length + 1 }, () => '')
-        
-        // 정밀한 HTML 태그 조립
-        formatting.forEach(format => {
-          const start = Math.max(0, format.start)
-          const end = Math.min(text.length, format.end)
-          if (format.type === 'bold') {
-            tagsOpen[start] = '<strong>' + tagsOpen[start]
-            tagsClose[end] = tagsClose[end] + '</strong>'
-          } else if (format.type === 'italic') {
-            tagsOpen[start] = '<em>' + tagsOpen[start]
-            tagsClose[end] = tagsClose[end] + '</em>'
-          } else if (format.type === 'link' && format.url) {
-            tagsOpen[start] = `<a href="${format.url}">` + tagsOpen[start]
-            tagsClose[end] = tagsClose[end] + '</a>'
-          }
-        })
-        
-        let htmlText = ''
-        for (let i = 0; i <= text.length; i++) {
-          htmlText += tagsClose[i]
-          htmlText += tagsOpen[i]
-          if (i < text.length) {
-            htmlText += escapeHtml(text[i])
-          }
-        }
-        text = htmlText
+  const htmlParts = []
+  
+  const rowsLayout = layout && Array.isArray(layout) ? layout.find(l => l.type === 'rows') : null
+
+  if (rowsLayout && Array.isArray(rowsLayout.display)) {
+    const usedBlockIndices = new Set()
+
+    for (const row of rowsLayout.display) {
+      if (!row || !Array.isArray(row.blocks) || row.blocks.length === 0) continue
+
+      const isAllImages = row.blocks.every(idx => {
+        const block = npfBlocks[idx]
+        return block && block.type === 'image'
+      })
+
+      if (isAllImages && row.blocks.length > 1) {
+        const imagesHtml = row.blocks.map(idx => {
+          const imgBlock = npfBlocks[idx]
+          const mediaUrl = imgBlock.media && imgBlock.media[0] ? imgBlock.media[0].url : ''
+          return `<img src="${mediaUrl}" alt="${imgBlock.alt_text || ''}" />`
+        }).join('')
+        htmlParts.push(`<div class="image-group" data-count="${row.blocks.length}">${imagesHtml}</div>`)
+        row.blocks.forEach(idx => usedBlockIndices.add(idx))
       } else {
-        text = escapeHtml(text)
+        for (const idx of row.blocks) {
+          const block = npfBlocks[idx]
+          if (!block) continue
+          htmlParts.push(convertSingleBlockToHtml(block))
+          usedBlockIndices.add(idx)
+        }
       }
-      
-      if (block.subtype && block.subtype.startsWith('heading')) {
-        const match = block.subtype.match(/\d+/)
-        const level = match ? match[0] : '1'
-        return `<h${level}>${text}</h${level}>`
-      }
-      return `<p>${text}</p>`
-    } else if (block.type === 'image') {
-      const mediaUrl = block.media && block.media[0] ? block.media[0].url : ''
-      return `<img src="${mediaUrl}" alt="${block.alt_text || ''}" />`
     }
-    return ''
-  }).join('\n')
+
+    // 누락된 블록 렌더링
+    for (let i = 0; i < npfBlocks.length; i++) {
+      if (!usedBlockIndices.has(i)) {
+        htmlParts.push(convertSingleBlockToHtml(npfBlocks[i]))
+      }
+    }
+  } else {
+    // layout이 없는 경우: 단독 변환 (기본 한 줄에 하나씩)
+    for (const block of npfBlocks) {
+      htmlParts.push(convertSingleBlockToHtml(block))
+    }
+  }
+
+  return htmlParts.join('\n')
+}
+
+/**
+ * 단일 NPF 블록을 HTML 문자열로 변환하는 헬퍼 함수
+ */
+function convertSingleBlockToHtml(block) {
+  if (block.type === 'text') {
+    let text = block.text || ''
+    const formatting = block.formatting || []
+    
+    if (formatting.length > 0) {
+      const tagsOpen = Array.from({ length: text.length + 1 }, () => '')
+      const tagsClose = Array.from({ length: text.length + 1 }, () => '')
+      
+      formatting.forEach(format => {
+        const start = Math.max(0, format.start)
+        const end = Math.min(text.length, format.end)
+        if (format.type === 'bold') {
+          tagsOpen[start] = '<strong>' + tagsOpen[start]
+          tagsClose[end] = tagsClose[end] + '</strong>'
+        } else if (format.type === 'italic') {
+          tagsOpen[start] = '<em>' + tagsOpen[start]
+          tagsClose[end] = tagsClose[end] + '</em>'
+        } else if (format.type === 'link' && format.url) {
+          tagsOpen[start] = `<a href="${format.url}">` + tagsOpen[start]
+          tagsClose[end] = tagsClose[end] + '</a>'
+        }
+      })
+      
+      let htmlText = ''
+      for (let k = 0; k <= text.length; k++) {
+        htmlText += tagsClose[k]
+        htmlText += tagsOpen[k]
+        if (k < text.length) {
+          htmlText += escapeHtml(text[k])
+        }
+      }
+      text = htmlText
+    } else {
+      text = escapeHtml(text)
+    }
+    
+    if (block.subtype && block.subtype.startsWith('heading')) {
+      const match = block.subtype.match(/\d+/)
+      const level = match ? match[0] : '1'
+      return `<h${level}>${text}</h${level}>`
+    }
+    return `<p>${text}</p>`
+  } else if (block.type === 'image') {
+    const mediaUrl = block.media && block.media[0] ? block.media[0].url : ''
+    return `<img src="${mediaUrl}" alt="${block.alt_text || ''}" />`
+  }
+  return ''
 }
 
 function escapeHtml(text) {
@@ -409,7 +575,9 @@ function escapeHtml(text) {
 function markdownToNpf(markdownText) {
   if (!markdownText) return []
   const html = marked.parse(markdownText)
-  return htmlToNpf(html)
+  const blocks = htmlToNpf(html)
+  blocks.layout = []
+  return blocks
 }
 
 /**
