@@ -14,8 +14,9 @@ export const ImageGroup = Node.create({
     ]
   },
 
-  renderHTML({ HTMLAttributes }) {
-    return ['div', { class: 'image-group', ...HTMLAttributes }, 0]
+  renderHTML({ node, HTMLAttributes }) {
+    const childCount = node ? node.childCount : 1
+    return ['div', { class: 'image-group', 'data-count': childCount, ...HTMLAttributes }, 0]
   },
 })
 
