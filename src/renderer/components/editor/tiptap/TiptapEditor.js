@@ -4,6 +4,7 @@ import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
 import ImageGroup from './ImageGroup'
 import LinkCard from './LinkCard'
+import { ipcRenderer } from 'electron'
 import { Box, ToggleButton, ToggleButtonGroup, Divider } from '@mui/material'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 
@@ -20,7 +21,8 @@ import {
   Code,
   Image as ImageIcon,
   GridView,
-  LayersClear
+  LayersClear,
+  AddLink
 } from '@mui/icons-material'
 
 const styles = {
@@ -76,7 +78,7 @@ const styles = {
   }
 }
 
-const MenuBar = ({ editor, onImageClick }) => {
+const MenuBar = ({ editor, onImageClick, onAddLinkCard }) => {
   if (!editor) {
     return null
   }
@@ -209,6 +211,14 @@ const MenuBar = ({ editor, onImageClick }) => {
           <ImageIcon />
         </ToggleButton>
         <ToggleButton
+          value="linkCard"
+          onClick={onAddLinkCard}
+          sx={styles.toolbarBtn}
+          title="링크 카드 추가"
+        >
+          <AddLink />
+        </ToggleButton>
+        <ToggleButton
           value="groupImages"
           disabled={!canGroup()}
           onClick={() => editor.commands.groupImages()}
@@ -307,6 +317,44 @@ export default function TiptapEditor({ value, onChange }) {
     }
   }
 
+  const handleAddLinkCard = async () => {
+    const url = window.prompt("오픈그래프 링크 카드를 삽입할 URL을 입력하세요:")
+    if (!url) return
+
+    try {
+      const result = await ipcRenderer.invoke('fetch-opengraph', url)
+      if (result && result.success && editor) {
+        const ogData = result.data
+        editor.chain().focus().insertContent({
+          type: 'linkCard',
+          attrs: {
+            url: ogData.url,
+            title: ogData.title,
+            description: ogData.description,
+            siteName: ogData.siteName,
+            image: ogData.image
+          }
+        }).run()
+      } else {
+        alert("오픈그래프 데이터를 가져오지 못했습니다. 일반 텍스트 링크로 삽입합니다.")
+        if (editor) {
+          editor.chain().focus().insertContent({
+            type: 'paragraph',
+            content: [
+              {
+                type: 'text',
+                text: url,
+                marks: [{ type: 'link', attrs: { href: url } }]
+              }
+            ]
+          }).run()
+        }
+      }
+    } catch (e) {
+      console.error('Failed to add link card', e)
+    }
+  }
+
   useEffect(() => {
     if (editor && value) {
       if (typeof value === 'object') {
@@ -327,7 +375,11 @@ export default function TiptapEditor({ value, onChange }) {
   return (
     <ThemeProvider theme={lightTheme}>
       <Box sx={styles.root}>
-        <MenuBar editor={editor} onImageClick={() => fileInputRef.current?.click()} />
+        <MenuBar 
+          editor={editor} 
+          onImageClick={() => fileInputRef.current?.click()} 
+          onAddLinkCard={handleAddLinkCard}
+        />
         <Box sx={styles.editorContent}>
           <EditorContent
             className="content"
