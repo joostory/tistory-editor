@@ -1,12 +1,13 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
 import ImageGroup from './ImageGroup'
 import LinkCard from './LinkCard'
 import { ipcRenderer } from 'electron'
-import { Box, ToggleButton, ToggleButtonGroup, Divider } from '@mui/material'
+import { Box, ToggleButton, ToggleButtonGroup, Divider, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, CircularProgress } from '@mui/material'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
+
 
 const lightTheme = createTheme({
   palette: {
@@ -243,6 +244,10 @@ const MenuBar = ({ editor, onImageClick, onAddLinkCard }) => {
 
 export default function TiptapEditor({ value, onChange }) {
   const fileInputRef = useRef(null)
+  const [isLinkCardDialogOpen, setIsLinkCardDialogOpen] = useState(false)
+  const [linkCardUrl, setLinkCardUrl] = useState('')
+  const [isFetchingOg, setIsFetchingOg] = useState(false)
+
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -317,12 +322,24 @@ export default function TiptapEditor({ value, onChange }) {
     }
   }
 
-  const handleAddLinkCard = async () => {
-    const url = window.prompt("오픈그래프 링크 카드를 삽입할 URL을 입력하세요:")
-    if (!url) return
+  const handleOpenLinkCardDialog = () => {
+    setLinkCardUrl('')
+    setIsLinkCardDialogOpen(true)
+  }
 
+  const handleCloseLinkCardDialog = () => {
+    if (isFetchingOg) return
+    setIsLinkCardDialogOpen(false)
+    setLinkCardUrl('')
+  }
+
+  const handleSubmitLinkCard = async (e) => {
+    if (e) e.preventDefault()
+    if (!linkCardUrl || !linkCardUrl.trim()) return
+
+    setIsFetchingOg(true)
     try {
-      const result = await ipcRenderer.invoke('fetch-opengraph', url)
+      const result = await ipcRenderer.invoke('fetch-opengraph', linkCardUrl.trim())
       if (result && result.success && editor) {
         const ogData = result.data
         editor.chain().focus().insertContent({
@@ -335,6 +352,7 @@ export default function TiptapEditor({ value, onChange }) {
             image: ogData.image
           }
         }).run()
+        handleCloseLinkCardDialog()
       } else {
         alert("오픈그래프 데이터를 가져오지 못했습니다. 일반 텍스트 링크로 삽입합니다.")
         if (editor) {
@@ -343,15 +361,20 @@ export default function TiptapEditor({ value, onChange }) {
             content: [
               {
                 type: 'text',
-                text: url,
-                marks: [{ type: 'link', attrs: { href: url } }]
+                text: linkCardUrl.trim(),
+                marks: [{ type: 'link', attrs: { href: linkCardUrl.trim() } }]
               }
             ]
           }).run()
         }
+        handleCloseLinkCardDialog()
       }
     } catch (e) {
       console.error('Failed to add link card', e)
+      alert("링크 카드 삽입 중 오류가 발생했습니다.")
+      handleCloseLinkCardDialog()
+    } finally {
+      setIsFetchingOg(false)
     }
   }
 
@@ -378,7 +401,7 @@ export default function TiptapEditor({ value, onChange }) {
         <MenuBar 
           editor={editor} 
           onImageClick={() => fileInputRef.current?.click()} 
-          onAddLinkCard={handleAddLinkCard}
+          onAddLinkCard={handleOpenLinkCardDialog}
         />
         <Box sx={styles.editorContent}>
           <EditorContent
@@ -394,6 +417,50 @@ export default function TiptapEditor({ value, onChange }) {
           multiple
           style={{ display: 'none' }}
         />
+        <Dialog 
+          open={isLinkCardDialogOpen} 
+          onClose={handleCloseLinkCardDialog}
+          fullWidth
+          maxWidth="xs"
+        >
+          <DialogTitle sx={{ pb: 1, fontSize: '1.1rem', fontWeight: 'bold' }}>
+            오픈그래프 링크 카드 추가
+          </DialogTitle>
+          <form onSubmit={handleSubmitLinkCard}>
+            <DialogContent sx={{ py: 1 }}>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="link-card-url"
+                label="URL 주소"
+                type="url"
+                fullWidth
+                variant="outlined"
+                size="small"
+                value={linkCardUrl}
+                onChange={(e) => setLinkCardUrl(e.target.value)}
+                disabled={isFetchingOg}
+                placeholder="https://example.com"
+                required
+              />
+            </DialogContent>
+            <DialogActions sx={{ px: 3, pb: 2 }}>
+              <Button onClick={handleCloseLinkCardDialog} disabled={isFetchingOg} size="small">
+                취소
+              </Button>
+              <Button 
+                type="submit" 
+                variant="contained" 
+                color="primary" 
+                disabled={isFetchingOg || !linkCardUrl.trim()} 
+                size="small"
+                startIcon={isFetchingOg ? <CircularProgress size={16} color="inherit" /> : null}
+              >
+                {isFetchingOg ? '가져오는 중...' : '추가'}
+              </Button>
+            </DialogActions>
+          </form>
+        </Dialog>
       </Box>
     </ThemeProvider>
   )
