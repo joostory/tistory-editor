@@ -17,7 +17,9 @@ import {
   FormatListBulleted,
   FormatListNumbered,
   Code,
-  Image as ImageIcon
+  Image as ImageIcon,
+  GridView,
+  LayersClear
 } from '@mui/icons-material'
 
 const styles = {
@@ -82,6 +84,29 @@ const MenuBar = ({ editor, onImageClick }) => {
     border: 'none',
     '& .MuiToggleButtonGroup-grouped': {
       border: 0,
+    }
+  }
+
+  const canGroup = () => {
+    try {
+      const { from, to } = editor.state.selection
+      let imageCount = 0
+      editor.state.doc.nodesBetween(from, to, (node) => {
+        if (node.type.name === 'image') {
+          imageCount++
+        }
+      })
+      return imageCount > 1
+    } catch (e) {
+      return false
+    }
+  }
+
+  const canUngroup = () => {
+    try {
+      return editor.isActive('imageGroup')
+    } catch (e) {
+      return false
     }
   }
 
@@ -171,8 +196,27 @@ const MenuBar = ({ editor, onImageClick }) => {
           value="image"
           onClick={onImageClick}
           sx={styles.toolbarBtn}
+          title="이미지 추가"
         >
           <ImageIcon />
+        </ToggleButton>
+        <ToggleButton
+          value="groupImages"
+          disabled={!canGroup()}
+          onClick={() => editor.commands.groupImages()}
+          sx={styles.toolbarBtn}
+          title="이미지 묶기 (2개 이상 이미지 드래그 선택 필요)"
+        >
+          <GridView />
+        </ToggleButton>
+        <ToggleButton
+          value="ungroupImages"
+          disabled={!canUngroup()}
+          onClick={() => editor.commands.ungroupImages()}
+          sx={styles.toolbarBtn}
+          title="이미지 묶음 풀기"
+        >
+          <LayersClear />
         </ToggleButton>
       </ToggleButtonGroup>
     </Box>

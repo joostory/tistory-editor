@@ -98,7 +98,23 @@ function tiptapToNpf(tiptapJson) {
       }
       
       if (groupBlockIndices.length > 0) {
-        displayRows.push({ blocks: groupBlockIndices })
+        const N = groupBlockIndices.length
+        if (N <= 3) {
+          displayRows.push({ blocks: groupBlockIndices })
+        } else if (N === 4) {
+          // 2x2 배치를 위해 2개씩 분할
+          displayRows.push({ blocks: groupBlockIndices.slice(0, 2) })
+          displayRows.push({ blocks: groupBlockIndices.slice(2, 4) })
+        } else if (N === 5) {
+          // 최대 3개 제약 준수를 위해 3개, 2개 분할
+          displayRows.push({ blocks: groupBlockIndices.slice(0, 3) })
+          displayRows.push({ blocks: groupBlockIndices.slice(3, 5) })
+        } else {
+          // 6개 이상일 경우 최대 3개 단위로 분할
+          for (let k = 0; k < groupBlockIndices.length; k += 3) {
+            displayRows.push({ blocks: groupBlockIndices.slice(k, k + 3) })
+          }
+        }
       }
     }
   }
