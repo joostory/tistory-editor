@@ -89,14 +89,21 @@ const MenuBar = ({ editor, onImageClick }) => {
 
   const canGroup = () => {
     try {
-      const { from, to } = editor.state.selection
-      let imageCount = 0
-      editor.state.doc.nodesBetween(from, to, (node) => {
+      if (!editor) return false
+      let canMerge = false
+      let consecutiveCount = 0
+      
+      editor.state.doc.forEach((node) => {
         if (node.type.name === 'image') {
-          imageCount++
+          consecutiveCount++
+          if (consecutiveCount > 1) {
+            canMerge = true
+          }
+        } else {
+          consecutiveCount = 0
         }
       })
-      return imageCount > 1
+      return canMerge
     } catch (e) {
       return false
     }
@@ -248,6 +255,17 @@ export default function TiptapEditor({ value, onChange }) {
             insertImages(imageFiles)
             return true
           }
+        }
+        
+        if (moved) {
+          const coordinates = view.posAtCoords({ left: event.clientX, top: event.clientY })
+          const pos = coordinates ? coordinates.pos : null
+          
+          setTimeout(() => {
+            if (editor && pos !== null) {
+              editor.commands.groupImagesNearCursor(pos)
+            }
+          }, 50)
         }
         return false
       },
