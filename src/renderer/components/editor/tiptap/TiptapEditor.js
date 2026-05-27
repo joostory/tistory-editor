@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
+import ImageGroup from './ImageGroup'
 import { Box, ToggleButton, ToggleButtonGroup, Divider } from '@mui/material'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 
@@ -184,6 +185,7 @@ export default function TiptapEditor({ value, onChange }) {
     extensions: [
       StarterKit,
       Image,
+      ImageGroup,
     ],
     content: value,
     onUpdate: ({ editor }) => {

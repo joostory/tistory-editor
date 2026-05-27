@@ -31,13 +31,13 @@ function _tumblrPostToEditorPost(post) {
 
   if (post.content && Array.isArray(post.content)) {
     // Neue Post Format (NPF)
-    tiptapContent = NpfConverter.npfToTiptap(post.content)
+    tiptapContent = NpfConverter.npfToTiptap(post.content, post.layout)
     markdownContent = NpfConverter.npfToMarkdown(post.content)
-    contentHtml = NpfConverter.npfToHtml(post.content)
+    contentHtml = NpfConverter.npfToHtml(post.content, post.layout)
   } else {
     // Legacy Post (HTML in body)
     const npfBlocks = NpfConverter.htmlToNpf(post.body || '')
-    tiptapContent = NpfConverter.npfToTiptap(npfBlocks)
+    tiptapContent = NpfConverter.npfToTiptap(npfBlocks, null)
     markdownContent = NpfConverter.npfToMarkdown(npfBlocks)
     contentHtml = post.body || ''
   }
@@ -149,8 +149,11 @@ function _editorPostToTumblrPost(editorPost) {
     return block
   })
 
+  const layout = npfBlocks.layout || []
+
   let tumblrPost = {
     content: npfBlocks,
+    layout: layout,
     tags: editorPost.tags
   }
 
