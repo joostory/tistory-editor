@@ -120,6 +120,9 @@ function _editorPostToTumblrPost(editorPost) {
     npfBlocks = NpfConverter.markdownToNpf(editorPost.content || '')
   }
 
+  // map 연산 수행 시 새로운 배열이 반환되어 layout 프로퍼티가 유실되는 것을 방지하기 위해 먼저 추출합니다.
+  const layout = npfBlocks.layout || []
+
   const streamsToCleanup = []
   
   npfBlocks = npfBlocks.map(block => {
@@ -148,8 +151,6 @@ function _editorPostToTumblrPost(editorPost) {
     }
     return block
   })
-
-  const layout = npfBlocks.layout || []
 
   let tumblrPost = {
     content: npfBlocks,
