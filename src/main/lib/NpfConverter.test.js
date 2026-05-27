@@ -268,7 +268,10 @@ describe('NpfConverter - 리스트 및 링크 양방향 변환 검증 테스트'
         {
           type: 'link',
           url: 'https://www.tumblr.com/docs/npf',
-          title: 'API | Tumblr'
+          title: 'API | Tumblr',
+          description: 'Tumblr is a place to express yourself',
+          site_name: 'tumblr.com',
+          poster: [{ url: 'https://test.com/thumbnail.jpg' }]
         }
       ]
       
@@ -277,22 +280,29 @@ describe('NpfConverter - 리스트 및 링크 양방향 변환 검증 테스트'
         type: 'doc',
         content: [
           {
-            type: 'paragraph',
-            content: [
-              {
-                type: 'text',
-                text: 'API | Tumblr',
-                marks: [
-                  {
-                    type: 'link',
-                    attrs: { href: 'https://www.tumblr.com/docs/npf' }
-                  }
-                ]
-              }
-            ]
+            type: 'linkCard',
+            attrs: {
+              url: 'https://www.tumblr.com/docs/npf',
+              title: 'API | Tumblr',
+              description: 'Tumblr is a place to express yourself',
+              siteName: 'tumblr.com',
+              image: 'https://test.com/thumbnail.jpg'
+            }
           }
         ]
       })
+      
+      const backToNpf = NpfConverter.tiptapToNpf(tiptap)
+      expect(backToNpf).toEqual(expect.arrayContaining([
+        expect.objectContaining({
+          type: 'link',
+          url: 'https://www.tumblr.com/docs/npf',
+          title: 'API | Tumblr',
+          description: 'Tumblr is a place to express yourself',
+          site_name: 'tumblr.com',
+          poster: [{ url: 'https://test.com/thumbnail.jpg' }]
+        })
+      ]))
     })
   })
   
@@ -310,17 +320,32 @@ describe('NpfConverter - 리스트 및 링크 양방향 변환 검증 테스트'
     })
     
     test('단독 링크 파싱 및 렌더링', () => {
-      const html = '<p><a href="https://www.tumblr.com/docs/npf">API | Tumblr</a></p>'
+      const html = '<div class="link-card" data-url="https://www.tumblr.com/docs/npf" data-title="API | Tumblr" data-description="Tumblr is a place to express yourself" data-site-name="tumblr.com" data-image="https://test.com/thumbnail.jpg"><a href="https://www.tumblr.com/docs/npf" target="_blank" rel="noopener noreferrer"><div class="link-card-content"><div class="link-card-title">API | Tumblr</div><div class="link-card-description">Tumblr is a place to express yourself</div><div class="link-card-site">tumblr.com</div></div><div class="link-card-image" style="background-image: url(\'https://test.com/thumbnail.jpg\')"></div></a></div>'
       const npf = [
         {
           type: 'link',
           url: 'https://www.tumblr.com/docs/npf',
-          title: 'API | Tumblr'
+          title: 'API | Tumblr',
+          description: 'Tumblr is a place to express yourself',
+          site_name: 'tumblr.com',
+          poster: [{ url: 'https://test.com/thumbnail.jpg' }]
         }
       ]
       
+      const parsedNpf = NpfConverter.htmlToNpf(html)
+      expect(parsedNpf).toEqual([
+        {
+          type: 'link',
+          url: 'https://www.tumblr.com/docs/npf',
+          title: 'API | Tumblr',
+          description: 'Tumblr is a place to express yourself',
+          site_name: 'tumblr.com',
+          poster: [{ url: 'https://test.com/thumbnail.jpg' }]
+        }
+      ])
+
       const backToHtml = NpfConverter.npfToHtml(npf, null)
-      expect(backToHtml).toBe('<p><a href="https://www.tumblr.com/docs/npf">API | Tumblr</a></p>')
+      expect(backToHtml).toBe(html)
     })
   })
 })

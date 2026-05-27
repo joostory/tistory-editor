@@ -107,6 +107,20 @@ function tiptapToNpf(tiptapJson) {
         })
         displayRows.push({ blocks: [nextIdx] })
       }
+    } else if (node.type === 'linkCard') {
+      if (node.attrs && node.attrs.url) {
+        const nextIdx = blocks.length
+        const posterMedia = node.attrs.image ? [{ url: node.attrs.image }] : []
+        blocks.push({
+          type: 'link',
+          url: node.attrs.url,
+          title: node.attrs.title || '',
+          description: node.attrs.description || '',
+          site_name: node.attrs.siteName || '',
+          poster: posterMedia
+        })
+        displayRows.push({ blocks: [nextIdx] })
+      }
     } else if (node.type === 'imageGroup') {
       const groupBlockIndices = []
       
@@ -369,22 +383,16 @@ function convertSingleBlockToTiptapNode(block) {
       }
     }
   } else if (block.type === 'link') {
-    const url = block.url || ''
-    const title = block.title || url
+    const poster = block.poster && block.poster[0] ? block.poster[0].url : ''
     return {
-      type: 'paragraph',
-      content: [
-        {
-          type: 'text',
-          text: title,
-          marks: [
-            {
-              type: 'link',
-              attrs: { href: url }
-            }
-          ]
-        }
-      ]
+      type: 'linkCard',
+      attrs: {
+        url: block.url || '',
+        title: block.title || '',
+        description: block.description || '',
+        siteName: block.site_name || '',
+        image: poster
+      }
     }
   }
   return null
@@ -436,6 +444,24 @@ function htmlToNpf(html) {
             }
             blocks.push(block)
           }
+        })
+        return
+      }
+
+      if (tagName === 'div' && $node.hasClass('link-card')) {
+        const url = $node.attr('data-url') || ''
+        const title = $node.attr('data-title') || ''
+        const description = $node.attr('data-description') || ''
+        const siteName = $node.attr('data-site-name') || ''
+        const image = $node.attr('data-image') || ''
+        const posterMedia = image ? [{ url: image }] : []
+        blocks.push({
+          type: 'link',
+          url,
+          title,
+          description,
+          site_name: siteName,
+          poster: posterMedia
         })
         return
       }
@@ -706,7 +732,12 @@ function convertSingleBlockToHtml(block) {
   } else if (block.type === 'link') {
     const url = block.url || ''
     const title = block.title || url
-    return `<p><a href="${escapeHtml(url)}">${escapeHtml(title)}</a></p>`
+    const description = block.description || ''
+    const siteName = block.site_name || ''
+    const poster = block.poster && block.poster[0] ? block.poster[0].url : ''
+    
+    const imageTag = poster ? `<div class="link-card-image" style="background-image: url('${escapeHtml(poster)}')"></div>` : ''
+    return `<div class="link-card" data-url="${escapeHtml(url)}" data-title="${escapeHtml(title)}" data-description="${escapeHtml(description)}" data-site-name="${escapeHtml(siteName)}" data-image="${escapeHtml(poster)}"><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer"><div class="link-card-content"><div class="link-card-title">${escapeHtml(title)}</div><div class="link-card-description">${escapeHtml(description)}</div><div class="link-card-site">${escapeHtml(siteName)}</div></div>${imageTag}</a></div>`
   }
   return ''
 }
