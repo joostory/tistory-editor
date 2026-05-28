@@ -3,24 +3,32 @@ import TiptapEditor from './tiptap/TiptapEditor'
 import { Container, InputBase } from '@mui/material'
 import { useAtomValue } from 'jotai'
 import { currentAuthState } from '../../state/currentBlog'
+import { Auth } from '../../types'
 
 const styles = {
   container: {
     width: 700,
     padding: '0 50px',
     backgroundColor: '#fff',
-    boxShadow:(theme) => theme.shadows[1],
-    borderRadius:(theme) => theme.spacing(0.5)
+    boxShadow: (theme: any) => theme.shadows[1],
+    borderRadius: (theme: any) => theme.spacing(0.5)
   },
   titleInput: {
-    marginTop:(theme) => theme.spacing(4),
-    fontSize:(theme) => theme.spacing(4),
+    marginTop: (theme: any) => theme.spacing(4),
+    fontSize: (theme: any) => theme.spacing(4),
     color: '#333'
   }
 }
 
-export default function EditorContent({content, onChange, title, onTitleChange}) {
-  const currentAuth = useAtomValue(currentAuthState)
+interface EditorContentProps {
+  content: any;
+  onChange: (value: any) => void;
+  title: string;
+  onTitleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export default function EditorContent({ content, onChange, title, onTitleChange }: EditorContentProps) {
+  const currentAuth = useAtomValue(currentAuthState) as Auth
 
   return (
     <Container sx={styles.container} disableGutters={true}>
@@ -45,4 +53,3 @@ export default function EditorContent({content, onChange, title, onTitleChange})
     </Container>
   )
 }
-

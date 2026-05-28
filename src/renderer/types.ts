@@ -32,3 +32,19 @@ export interface Preferences {
   appTheme?: string;
   [key: string]: any;
 }
+
+export interface Post {
+  id: string | number;
+  title: string;
+  content: string;
+  contentJson?: string;
+  categoryId: string;
+  tags: string[];
+}
+
+export interface PostData {
+  title: string;
+  content: any;
+  categoryId: string;
+  tags: string[];
+}
