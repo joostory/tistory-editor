@@ -16,6 +16,29 @@ module.exports = () => {
     }
     return content
   })
+  ipcMain.handle("fetch-opengraph", async (evt, url) => {
+    console.log('Main.handle: fetch-opengraph', url)
+    const fetcher = require('opengraph-fetcher')
+    try {
+      const data = await fetcher.fetch(url)
+      return {
+        success: true,
+        data: {
+          url: data.url || url,
+          title: data.title || '',
+          description: data.description || '',
+          siteName: data.host || '',
+          image: data.image || ''
+        }
+      }
+    } catch (e) {
+      console.error('Failed to fetch opengraph', e)
+      return {
+        success: false,
+        error: e.message
+      }
+    }
+  })
   ipcMain.on("fetch-categories", (evt, authUUID, blogName) => {
     console.log('Main.receive: fetch-categories', authUUID, blogName)
     let auth = AuthenticationManager.findByUUID(authUUID)
