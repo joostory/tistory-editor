@@ -1,15 +1,10 @@
 const tumblr = require('../apis/tumblr-api')
 
-
-function getApi(provider) {
+export function getApi(provider: string): any {
   switch (provider) {
     case 'tumblr':
       return tumblr
     default:
-      throw `Unknown provider : ${provider}`
+      throw new Error(`Unknown provider : ${provider}`)
   }
-}
-
-module.exports = {
-  getApi: getApi
 }

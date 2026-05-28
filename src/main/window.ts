@@ -1,15 +1,17 @@
-const settings = require('electron-settings')
-const { app, BrowserWindow, Menu, shell, dialog } = require('electron')
-const path = require('path')
-const fs = require('fs')
-const url = require('url')
-const appInfo = require('./appInfo')
+import { app, BrowserWindow, Menu, shell, dialog } from 'electron'
+import * as settings from 'electron-settings'
+import * as path from 'path'
+import * as url from 'url'
+import * as appInfo from './appInfo'
+import * as remote from '@electron/remote/main'
 
-let mainWindow = null
+let mainWindow: BrowserWindow | null = null
 
 function setWindowEvent() {
+  if (!mainWindow) return
+
   mainWindow.on("close", (e) => {
-    if (app.showExitPrompt) {
+    if ((app as any).showExitPrompt) {
       e.preventDefault()
       dialog.showMessageBox({
         type: 'question',
@@ -18,12 +20,14 @@ function setWindowEvent() {
         message: '지금 앱을 종료하면 저장하지 않는 내용이 사라집니다. 종료하시겠습니까?'
       }).then(result => {
         if (result.response === 0) {
-          app.showExitPrompt = false
-          mainWindow.close()
+          (app as any).showExitPrompt = false
+          mainWindow?.close()
         }
       })
     }
-    settings.setSync('config', mainWindow.getBounds())
+    if (mainWindow) {
+      settings.setSync('config', mainWindow.getBounds() as any)
+    }
   })
 
   mainWindow.on('closed', function () {
@@ -32,6 +36,8 @@ function setWindowEvent() {
 }
 
 function setWindowWebContents() {
+  if (!mainWindow) return
+
   if (process.env.ELECTRON_RENDERER_URL) {
     mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL, {
       userAgent: appInfo.userAgentFull
@@ -66,19 +72,22 @@ function setWindowWebContents() {
       }
     }
   })
-  require('@electron/remote/main').enable(mainWindow.webContents)
+  
+  remote.enable(mainWindow.webContents)
 }
 
 function setWindowMenu() {
+  if (!mainWindow) return
+
   mainWindow.setMenu(null)
 
   // Create the Application's main menu
-  var template = [
+  const template: any[] = [
     {
       label: "Application",
       submenu: [
         { label: "About", click() { appInfo.openWindow() }},
-        { label: "Preferences...", accelerator: "CmdOrCtrl+,", click() { mainWindow.webContents.send("open-preference") }},
+        { label: "Preferences...", accelerator: "CmdOrCtrl+,", click() { mainWindow?.webContents.send("open-preference") }},
         { type: "separator" },
         { label: "Quit", accelerator: "CmdOrCtrl+Q", click() { app.quit() }}
       ]
@@ -86,26 +95,26 @@ function setWindowMenu() {
     {
       label: "Edit",
       submenu: [
-        { label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
-        { label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
+        { label: "Undo", accelerator: "CmdOrCtrl+Z", role: "undo" },
+        { label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", role: "redo" },
         { type: "separator" },
-        { label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:" },
-        { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
-        { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
-        { label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
+        { label: "Cut", accelerator: "CmdOrCtrl+X", role: "cut" },
+        { label: "Copy", accelerator: "CmdOrCtrl+C", role: "copy" },
+        { label: "Paste", accelerator: "CmdOrCtrl+V", role: "paste" },
+        { label: "Select All", accelerator: "CmdOrCtrl+A", role: "selectAll" }
       ]
     },
     {
       label: "View",
       submenu: [
-        { label: "Toggle Fullscreen", accelerator: "F11", click() { mainWindow.setFullScreen(!mainWindow.isFullScreen()) }}
+        { label: "Toggle Fullscreen", accelerator: "F11", click() { mainWindow?.setFullScreen(!mainWindow?.isFullScreen()) }}
       ]
     }
   ];
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
-function createWindow(config) {
+function createWindow(config: any) {
   mainWindow = new BrowserWindow({
     width: config.width,
     height: config.height,
@@ -113,6 +122,7 @@ function createWindow(config) {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
+      // @ts-ignore
       enableRemoteModule: true
     },
     icon: path.join(__dirname, '/../../build/icons/512x512.png')
@@ -124,23 +134,22 @@ function createWindow(config) {
 }
 
 function getWindowConfig() {
-  let data = settings.getSync('config')
-	if (!data) {
-		data = {
-			width: 1024,
-			height: 720
-		}
+  let data: any = settings.getSync('config')
+  if (!data) {
+    data = {
+      width: 1024,
+      height: 720
+    }
   }
   return data
 }
 
-module.exports.initWindow = function initWindow() {
+export function initWindow(): void {
   if (mainWindow !== null) {
     return
   }
-	
-	createWindow(getWindowConfig())
+  
+  createWindow(getWindowConfig())
 }
 
-module.exports.getWindow = () => mainWindow
-
+export const getWindow = (): BrowserWindow | null => mainWindow

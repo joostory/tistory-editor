@@ -1,9 +1,9 @@
-const { app, protocol } = require('electron')
-const ipc = require('./ipc-event')
-const settings = require('electron-settings')
-const remote = require('@electron/remote/main')
-const { initWindow, getWindow } = require('./window')
-const OAuthRequestManager = require('./oauth/OAuthRequestManager')
+import { app } from 'electron'
+import * as ipc from './ipc-event'
+import * as settings from 'electron-settings'
+import * as remote from '@electron/remote/main'
+import { initWindow, getWindow } from './window'
+import OAuthRequestManager from './oauth/OAuthRequestManager'
 
 const PROTOCOL = "tistory-editor"
 
@@ -13,9 +13,9 @@ settings.configure({
   fileName: 'Settings'
 })
 
-let deeplinkingUrl
+let deeplinkingUrl: string | undefined
 app.setAsDefaultProtocolClient(PROTOCOL)
-app.showExitPrompt = false
+;(app as any).showExitPrompt = false
 
 app.on('ready', () => {
   initWindow()
@@ -40,10 +40,11 @@ app.on("open-url", (e, urlString) => {
   }
 })
 
-function execOAuthRequestHandler(deeplinkingUrl) {
-  console.log("OPEN-URL", deeplinkingUrl)
-  const url = new URL(deeplinkingUrl)
-  let requestHandler = OAuthRequestManager.loadRequestInfo("oauth")
+function execOAuthRequestHandler(deeplinkingUrlStr?: string) {
+  if (!deeplinkingUrlStr) return
+  console.log("OPEN-URL", deeplinkingUrlStr)
+  const url = new URL(deeplinkingUrlStr)
+  const requestHandler = OAuthRequestManager.loadRequestInfo("oauth")
   if (requestHandler) {
     requestHandler(url.searchParams)
   }
@@ -66,14 +67,15 @@ console.log("DEBUG: gotTheLock", gotTheLock)
 if (!gotTheLock) {
   app.quit()
 } else {
-  app.on('second-instance', (e, argv) => {
+  app.on('second-instance', (_e, argv) => {
     console.log("DEBUG: second-instance argv", argv)
     if (process.platform !== 'darwin') {
       deeplinkingUrl = argv.find((arg) => arg.startsWith('tistory-editor://'));
     }
 
     restoreWindow()
-    execOAuthRequestHandler(deeplinkingUrl)
+    if (deeplinkingUrl) {
+      execOAuthRequestHandler(deeplinkingUrl)
+    }
   })
 }
-

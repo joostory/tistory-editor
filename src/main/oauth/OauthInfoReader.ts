@@ -1,7 +1,8 @@
-const fs = require('fs')
-const path = require('path')
+import * as fs from 'fs'
+import * as path from 'path'
 
-class OauthInfoReader {
+export default class OauthInfoReader {
+  oauthInfo: any
 
   constructor() {
     let data = ''
@@ -10,25 +11,23 @@ class OauthInfoReader {
     } else if (fs.existsSync(path.join(__dirname, "../../../oauthInfo.json"))) {
       data = fs.readFileSync(path.join(__dirname, "../../../oauthInfo.json"), 'utf8')
     } else {
-      throw new Exception('NO OAUTHINFO')
+      throw new Error('NO OAUTHINFO')
     }
 
     this.oauthInfo = JSON.parse(data)
   }
 
-  getGoogle() {
+  getGoogle(): any {
     if (!this.oauthInfo.google) {
-      throw new Exception('NO GOOGLE OAUTHINFO')
+      throw new Error('NO GOOGLE OAUTHINFO')
     }
     return this.oauthInfo.google
   }
 
-  getTumblr() {
+  getTumblr(): any {
     if (!this.oauthInfo.tumblr) {
-      throw new Exception('NO TUMBLR OAUTHINFO')
+      throw new Error('NO TUMBLR OAUTHINFO')
     }
     return this.oauthInfo.tumblr
   }
 }
-
-module.exports = OauthInfoReader

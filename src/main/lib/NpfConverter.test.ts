@@ -1,10 +1,11 @@
+import { marked } from 'marked'
+import * as NpfConverter from './NpfConverter'
+
 jest.mock('marked', () => ({
   marked: {
-    parse: (x) => x
+    parse: (x: string) => x
   }
 }))
-
-const NpfConverter = require('./NpfConverter')
 
 describe('NpfConverter - NPF Layout & Tiptap imageGroup 명시적 연동 테스트', () => {
   const sampleNpfContent = [
@@ -100,10 +101,10 @@ describe('NpfConverter - NPF Layout & Tiptap imageGroup 명시적 연동 테스�
       expect(tiptap.type).toBe('doc')
       expect(tiptap.content.length).toBe(6) // heading, 4 images, paragraph
       
-      const imageNodes = tiptap.content.filter(n => n.type === 'image')
+      const imageNodes = tiptap.content.filter((n: any) => n.type === 'image')
       expect(imageNodes.length).toBe(4)
       
-      const groupNodes = tiptap.content.filter(n => n.type === 'imageGroup')
+      const groupNodes = tiptap.content.filter((n: any) => n.type === 'imageGroup')
       expect(groupNodes.length).toBe(0)
     })
   })
@@ -137,8 +138,9 @@ describe('NpfConverter - NPF Layout & Tiptap imageGroup 명시적 연동 테스�
       expect(npfBlocks[3].text).toBe('작성 완료')
 
       // layout 프로퍼티 검증
-      expect(npfBlocks.layout).toBeDefined()
-      const layoutObj = npfBlocks.layout[0]
+      const extendedBlocks = npfBlocks as any
+      expect(extendedBlocks.layout).toBeDefined()
+      const layoutObj = extendedBlocks.layout[0]
       expect(layoutObj.type).toBe('rows')
       
       // display 구조 검증
@@ -163,7 +165,7 @@ describe('NpfConverter - NPF Layout & Tiptap imageGroup 명시적 연동 테스�
           }
         ]
       }
-      const blocks = NpfConverter.tiptapToNpf(tiptapJson)
+      const blocks = NpfConverter.tiptapToNpf(tiptapJson) as any
       const display = blocks.layout[0].display
       expect(display.length).toBe(2)
       expect(display[0].blocks).toEqual([0, 1])
@@ -186,7 +188,7 @@ describe('NpfConverter - NPF Layout & Tiptap imageGroup 명시적 연동 테스�
           }
         ]
       }
-      const blocks = NpfConverter.tiptapToNpf(tiptapJson)
+      const blocks = NpfConverter.tiptapToNpf(tiptapJson) as any
       const display = blocks.layout[0].display
       expect(display.length).toBe(2)
       expect(display[0].blocks).toEqual([0, 1, 2])
@@ -213,7 +215,7 @@ describe('NpfConverter - 리스트 및 링크 양방향 변환 검증 테스트'
         ]
       }
       
-      const npf = NpfConverter.tiptapToNpf(tiptap)
+      const npf = NpfConverter.tiptapToNpf(tiptap) as any
       expect(npf).toEqual(expect.arrayContaining([
         expect.objectContaining({ type: 'text', text: '제목 테스트', subtype: 'heading1' }),
         expect.objectContaining({ type: 'text', text: '일반 본문' })
@@ -253,7 +255,7 @@ describe('NpfConverter - 리스트 및 링크 양방향 변환 검증 테스트'
         ]
       }
       
-      const npf = NpfConverter.tiptapToNpf(tiptap)
+      const npf = NpfConverter.tiptapToNpf(tiptap) as any
       expect(npf).toEqual(expect.arrayContaining([
         expect.objectContaining({ type: 'text', text: '첫번째', subtype: 'unordered-list-item' }),
         expect.objectContaining({ type: 'text', text: '두번째', subtype: 'unordered-list-item' })

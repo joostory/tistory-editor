@@ -1,17 +1,17 @@
-const fs = require('fs')
-const path = require('path')
-const os = require('os')
-const uuid = require('uuid').v4
-const OauthInfoReader = require('../oauth/OauthInfoReader')
+import * as fs from 'fs'
+import * as path from 'path'
+import * as os from 'os'
+import { v4 as uuidv4 } from 'uuid'
+import OauthInfoReader from '../oauth/OauthInfoReader'
+import ExternalOAuth1 from '../oauth/ExternalOAuth1'
+import OAuthRequestManager from '../oauth/OAuthRequestManager'
+
+const NpfConverter = require('../lib/NpfConverter')
 const tumblr = require("tumblr.js")
-const ExternalOAuth1 = require('../oauth/ExternalOAuth1');
-const OAuthRequestManager = require('../oauth/OAuthRequestManager');
 
 const PROVIDER_ID = 'tumblr'
 
-const NpfConverter = require('../lib/NpfConverter')
-
-function _createTumblrClient(auth) {
+function _createTumblrClient(auth: any) {
   const oauthReader = new OauthInfoReader()
   const tumblrInfo = oauthReader.getTumblr()
 
@@ -23,8 +23,7 @@ function _createTumblrClient(auth) {
   })
 }
 
-
-function _tumblrPostToEditorPost(post) {
+function _tumblrPostToEditorPost(post: any) {
   let tiptapContent = null
   let markdownContent = ''
   let contentHtml = ''
@@ -42,7 +41,7 @@ function _tumblrPostToEditorPost(post) {
     contentHtml = post.body || ''
   }
 
-  return ({
+  return {
     id: post.id,
     url: post.post_url,
     title: post.summary || post.title || '',
@@ -54,16 +53,15 @@ function _tumblrPostToEditorPost(post) {
     date: post.date,
     type: post.type,
     state: post.state
-  })
+  }
 }
 
-function _tumblrPostsToEditorPosts(tumblrPosts) {
-  let posts = tumblrPosts? [].concat(tumblrPosts) : []
-
+function _tumblrPostsToEditorPosts(tumblrPosts: any) {
+  const posts = tumblrPosts ? [].concat(tumblrPosts) : []
   return posts.map(_tumblrPostToEditorPost)
 }
 
-function base64ToReadStream(base64Data) {
+function base64ToReadStream(base64Data: string) {
   const matches = base64Data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/)
   if (!matches || matches.length !== 3) {
     return null
@@ -73,16 +71,16 @@ function base64ToReadStream(base64Data) {
   const extension = contentType.split('/')[1] || 'png'
   
   const buffer = Buffer.from(base64Str, 'base64')
-  const tempFilePath = path.join(os.tmpdir(), `tumblr_upload_${uuid()}.${extension}`)
+  const tempFilePath = path.join(os.tmpdir(), `tumblr_upload_${uuidv4()}.${extension}`)
   
   fs.writeFileSync(tempFilePath, buffer)
   
-  const stream = fs.createReadStream(tempFilePath)
+  const stream = fs.createReadStream(tempFilePath) as any
   stream.tempFilePath = tempFilePath
   return stream
 }
 
-function localFileToReadStream(fileUrl) {
+function localFileToReadStream(fileUrl: string) {
   try {
     let filePath = fileUrl
     if (fileUrl.startsWith('file://')) {
@@ -100,9 +98,8 @@ function localFileToReadStream(fileUrl) {
   return null
 }
 
-
-function _editorPostToTumblrPost(editorPost) {
-  let npfBlocks = []
+function _editorPostToTumblrPost(editorPost: any) {
+  let npfBlocks: any = []
 
   if (editorPost.format === 'json') {
     // Tiptap JSON 형식
@@ -120,16 +117,15 @@ function _editorPostToTumblrPost(editorPost) {
     npfBlocks = NpfConverter.markdownToNpf(editorPost.content || '')
   }
 
-  // map 연산 수행 시 새로운 배열이 반환되어 layout 프로퍼티가 유실되는 것을 방지하기 위해 먼저 추출합니다.
+  // map 연산 수행 시 layout 유실 방지 목적
   const layout = npfBlocks.layout || []
-
-  const streamsToCleanup = []
+  const streamsToCleanup: string[] = []
   
-  npfBlocks = npfBlocks.map(block => {
+  npfBlocks = npfBlocks.map((block: any) => {
     if (block.type === 'image' && block.media && block.media[0] && block.media[0].url) {
-      const url = block.media[0].url
-      if (url.startsWith('data:image/')) {
-        const stream = base64ToReadStream(url)
+      const urlStr = block.media[0].url
+      if (urlStr.startsWith('data:image/')) {
+        const stream = base64ToReadStream(urlStr)
         if (stream) {
           streamsToCleanup.push(stream.tempFilePath)
           return {
@@ -138,8 +134,8 @@ function _editorPostToTumblrPost(editorPost) {
             alt_text: block.alt_text || ''
           }
         }
-      } else if (url.startsWith('file://') || (path.isAbsolute(url) && fs.existsSync(url))) {
-        const stream = localFileToReadStream(url)
+      } else if (urlStr.startsWith('file://') || (path.isAbsolute(urlStr) && fs.existsSync(urlStr))) {
+        const stream = localFileToReadStream(urlStr)
         if (stream) {
           return {
             type: 'image',
@@ -152,7 +148,7 @@ function _editorPostToTumblrPost(editorPost) {
     return block
   })
 
-  let tumblrPost = {
+  const tumblrPost: any = {
     content: npfBlocks,
     layout: layout,
     tags: editorPost.tags
@@ -167,65 +163,67 @@ function _editorPostToTumblrPost(editorPost) {
   return tumblrPost
 }
 
-function requestAuth(successHandler, failureHandler) {
+export function requestAuth(successHandler: (account: any) => void, failureHandler: () => void) {
   const oauthInfoReader = new OauthInfoReader()
   const oauth1 = new ExternalOAuth1(oauthInfoReader.getTumblr())
   oauth1.requestAuth((requestTokens) => {
-    OAuthRequestManager.saveRequestInfo('oauth', (searchParams) => {
+    OAuthRequestManager.saveRequestInfo('oauth', (searchParams: URLSearchParams) => {
       const verifier = searchParams.get("oauth_verifier")
-      oauth1.requestToken(verifier, requestTokens, (error, token, tokenSecret) => {
-        if (error) {
-          failureHandler()
-          return
-        }
-
-        successHandler({
-          uuid: uuid(),
-          provider: PROVIDER_ID,
-          authInfo: {
-            token, tokenSecret
+      if (verifier) {
+        oauth1.requestToken(verifier, requestTokens, (error: any, token: string, tokenSecret: string) => {
+          if (error) {
+            failureHandler()
+            return
           }
+
+          successHandler({
+            uuid: uuidv4(),
+            provider: PROVIDER_ID,
+            authInfo: {
+              token, tokenSecret
+            }
+          })
         })
-      })
+      } else {
+        failureHandler()
+      }
     })
   })
-
 }
 
-function fetchUser(auth) {
+export function fetchUser(auth: any): Promise<any> {
   const client = _createTumblrClient(auth)
   return client.userInfo()
 }
 
-
-function fetchPosts(auth, blogName, options) {
+export function fetchPosts(auth: any, blogName: string, options: any): Promise<any> {
   const client = _createTumblrClient(auth)
   const queryOptions = { npf: true, ...options }
   return client.blogPosts(blogName, queryOptions)
-    .then(res => ({
+    .then((res: any) => ({
       posts: _tumblrPostsToEditorPosts(res.posts),
       hasNext: res.blog.posts > ((options && options.offset) || 0) + res.posts.length
     }))
 }
 
-function fetchPost(auth, blogName, postId) {
+export function fetchPost(auth: any, blogName: string, postId: any): Promise<any> {
   const client = _createTumblrClient(auth)
-  return client.blogPosts(blogName, {id: postId, npf: true})
-    .then(res => ({
+  return client.blogPosts(blogName, { id: postId, npf: true })
+    .then((res: any) => ({
       post: _tumblrPostToEditorPost(res.posts[0])
     }))
 }
 
-async function addPost(auth, blogName, post) {
+export async function addPost(auth: any, blogName: string, post: any): Promise<any> {
   const client = _createTumblrClient(auth)
   const tumblrPost = _editorPostToTumblrPost(post)
   try {
-    const res = await client.createPost(blogName, tumblrPost)
-    const fetchRes = await fetchPosts(auth, blogName, {offset:0, limit:1})
+    await client.createPost(blogName, tumblrPost)
+    const fetchRes = await fetchPosts(auth, blogName, { offset: 0, limit: 1 })
     return { post: fetchRes.posts[0] }
   } finally {
     if (tumblrPost._tempFiles) {
-      tumblrPost._tempFiles.forEach(filePath => {
+      tumblrPost._tempFiles.forEach((filePath: string) => {
         try {
           if (fs.existsSync(filePath)) {
             fs.unlinkSync(filePath)
@@ -238,15 +236,15 @@ async function addPost(auth, blogName, post) {
   }
 }
 
-async function savePost(auth, blogName, post) {
+export async function savePost(auth: any, blogName: string, post: any): Promise<any> {
   const client = _createTumblrClient(auth)
   const tumblrPost = _editorPostToTumblrPost(post)
   try {
-    const res = await client.editPost(blogName, post.id, tumblrPost)
+    await client.editPost(blogName, post.id, tumblrPost)
     return await fetchPost(auth, blogName, post.id)
   } finally {
     if (tumblrPost._tempFiles) {
-      tumblrPost._tempFiles.forEach(filePath => {
+      tumblrPost._tempFiles.forEach((filePath: string) => {
         try {
           if (fs.existsSync(filePath)) {
             fs.unlinkSync(filePath)
@@ -259,17 +257,17 @@ async function savePost(auth, blogName, post) {
   }
 }
 
-function validateAuthInfo(auth) {
-  return auth && auth.token
+export function validateAuthInfo(auth: any): boolean {
+  return !!(auth && auth.token)
 }
 
-async function fetchAccount(auth) {
-  let blogs = []
+export async function fetchAccount(auth: any): Promise<any> {
+  let blogs: any[] = []
   let username = ""
   try {
     const res = await fetchUser(auth.authInfo)
-    username = res.user.name
-    blogs = res.user.blogs
+    username = (res as any).user.name
+    blogs = (res as any).user.blogs
   } catch (e) {
     username = "불러오기 오류"
     console.error("FETCH_ACCOUNT_FAILED", e)
@@ -289,20 +287,8 @@ async function fetchAccount(auth) {
       url: blog.url,
       title: blog.title,
       description: blog.description,
-      image: blog.avatar? blog.avatar[0].url: null,
+      image: blog.avatar ? blog.avatar[0].url : null,
       primary: blog.primary
     }))
   }
-}
-
-
-module.exports = {
-  requestAuth: requestAuth,
-  fetchUser: fetchUser,
-  fetchPosts: fetchPosts,
-  fetchPost: fetchPost,
-  addPost: addPost,
-  savePost: savePost,
-  validateAuthInfo: validateAuthInfo,
-  fetchAccount: fetchAccount
 }

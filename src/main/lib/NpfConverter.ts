@@ -1,5 +1,5 @@
-const cheerio = require('cheerio')
-const { marked } = require('marked')
+import * as cheerio from 'cheerio'
+import { marked } from 'marked'
 const TurndownService = require('turndown')
 const turndownPluginGfm = require('turndown-plugin-gfm')
 
@@ -13,12 +13,9 @@ turndownService.use(turndownPluginGfm.gfm)
 // 1. Tiptap JSON <-> Tumblr NPF Blocks 변환
 // ==========================================
 
-/**
- * Tiptap JSON 텍스트 노드를 파싱하여 NPF 텍스트 블록 객체 생성
- */
-function parseTextNode(node, subtype) {
+function parseTextNode(node: any, subtype: string | null): any {
   let text = ''
-  const formatting = []
+  const formatting: any[] = []
   
   if (node.content) {
     for (const child of node.content) {
@@ -29,7 +26,7 @@ function parseTextNode(node, subtype) {
         
         if (child.marks) {
           for (const mark of child.marks) {
-            const format = {
+            const format: any = {
               start,
               end,
               type: mark.type
@@ -44,7 +41,7 @@ function parseTextNode(node, subtype) {
     }
   }
   
-  const block = {
+  const block: any = {
     type: 'text',
     text
   }
@@ -60,19 +57,15 @@ function parseTextNode(node, subtype) {
   return block
 }
 
-/**
- * Tiptap JSON (ProseMirror JSON)을 Tumblr NPF Blocks 배열로 변환
- * 변환된 결과 blocks 배열에 .layout 프로퍼티를 주입하여 동시 반환
- */
-function tiptapToNpf(tiptapJson) {
+export function tiptapToNpf(tiptapJson: any): any[] {
   if (!tiptapJson) return []
-  const blocks = []
-  const displayRows = []
+  const blocks: any = []
+  const displayRows: any[] = []
   
   const content = tiptapJson.content || []
   for (const node of content) {
     if (node.type === 'paragraph' || node.type === 'heading') {
-      let subtype = null
+      let subtype: string | null = null
       if (node.type === 'heading') {
         const level = (node.attrs && node.attrs.level) || 1
         subtype = `heading${level}`
@@ -122,7 +115,7 @@ function tiptapToNpf(tiptapJson) {
         displayRows.push({ blocks: [nextIdx] })
       }
     } else if (node.type === 'imageGroup') {
-      const groupBlockIndices = []
+      const groupBlockIndices: number[] = []
       
       if (Array.isArray(node.content)) {
         for (const childImg of node.content) {
@@ -165,20 +158,17 @@ function tiptapToNpf(tiptapJson) {
   return blocks
 }
 
-/**
- * NPF 텍스트 블록의 formatting 및 text를 기반으로 Tiptap 자식 텍스트 노드 배열 생성
- */
-function parseChildNodes(text, formatting) {
-  const childNodes = []
+function parseChildNodes(text: string, formatting: any[]): any[] {
+  const childNodes: any[] = []
   if (!text || text.length === 0) return childNodes
 
-  const charMarks = Array.from({ length: text.length }, () => [])
+  const charMarks: any[][] = Array.from({ length: text.length }, () => [])
   
   for (const format of formatting) {
     const start = Math.max(0, format.start)
     const end = Math.min(text.length, format.end)
     for (let i = start; i < end; i++) {
-      const mark = { type: format.type }
+      const mark: any = { type: format.type }
       if (format.type === 'link' && format.url) {
         mark.attrs = { href: format.url }
       }
@@ -187,11 +177,11 @@ function parseChildNodes(text, formatting) {
   }
   
   let currentText = ''
-  let currentMarks = null
+  let currentMarks: any[] | null = null
   
-  const areMarksEqual = (m1, m2) => {
+  const areMarksEqual = (m1: any[], m2: any[]) => {
     if (m1.length !== m2.length) return false
-    const serialize = m => JSON.stringify(m.map(x => ({ type: x.type, href: x.attrs?.href })).sort((a, b) => a.type.localeCompare(b.type)))
+    const serialize = (m: any[]) => JSON.stringify(m.map(x => ({ type: x.type, href: x.attrs?.href })).sort((a, b) => a.type.localeCompare(b.type)))
     return serialize(m1) === serialize(m2)
   }
   
@@ -203,7 +193,7 @@ function parseChildNodes(text, formatting) {
     } else if (areMarksEqual(currentMarks, marksAtChar)) {
       currentText += text[i]
     } else {
-      const childNode = { type: 'text', text: currentText }
+      const childNode: any = { type: 'text', text: currentText }
       if (currentMarks.length > 0) {
         childNode.marks = currentMarks
       }
@@ -215,7 +205,7 @@ function parseChildNodes(text, formatting) {
   }
   
   if (currentText.length > 0) {
-    const childNode = { type: 'text', text: currentText }
+    const childNode: any = { type: 'text', text: currentText }
     if (currentMarks && currentMarks.length > 0) {
       childNode.marks = currentMarks
     }
@@ -225,11 +215,8 @@ function parseChildNodes(text, formatting) {
   return childNodes
 }
 
-/**
- * Tumblr NPF Blocks 배열과 layout 정보를 Tiptap JSON (ProseMirror JSON)으로 변환
- */
-function npfToTiptap(npfBlocks, layout) {
-  const content = []
+export function npfToTiptap(npfBlocks: any[], layout: any[] | null | undefined): any {
+  const content: any[] = []
   
   if (!npfBlocks || !Array.isArray(npfBlocks)) {
     return { type: 'doc', content }
@@ -238,7 +225,7 @@ function npfToTiptap(npfBlocks, layout) {
   const rowsLayout = layout && Array.isArray(layout) ? layout.find(l => l.type === 'rows') : null
 
   if (rowsLayout && Array.isArray(rowsLayout.display)) {
-    const usedBlockIndices = new Set()
+    const usedBlockIndices = new Set<number>()
 
     for (const row of rowsLayout.display) {
       if (!row || !Array.isArray(row.blocks) || row.blocks.length === 0) continue
@@ -249,7 +236,7 @@ function npfToTiptap(npfBlocks, layout) {
       })
 
       if (isAllImages && row.blocks.length > 1) {
-        const groupImages = []
+        const groupImages: any[] = []
         for (const idx of row.blocks) {
           const block = npfBlocks[idx]
           const mediaUrl = block.media && block.media[0] ? block.media[0].url : ''
@@ -298,8 +285,8 @@ function npfToTiptap(npfBlocks, layout) {
   }
 
   // 2차 후처리 필터: 임시 리스트 아이템들을 실제 bulletList / orderedList로 그룹화
-  const finalContent = []
-  let currentList = null
+  const finalContent: any[] = []
+  let currentList: any | null = null
 
   const flushList = () => {
     if (currentList) {
@@ -338,15 +325,12 @@ function npfToTiptap(npfBlocks, layout) {
   }
 }
 
-/**
- * 단일 NPF 블록을 Tiptap 노드로 변환하는 헬퍼 함수
- */
-function convertSingleBlockToTiptapNode(block) {
+function convertSingleBlockToTiptapNode(block: any): any {
   if (block.type === 'text') {
     const childNodes = parseChildNodes(block.text || '', block.formatting || [])
     
     if (block.subtype === 'unordered-list-item' || block.subtype === 'ordered-list-item') {
-      const pNode = { type: 'paragraph' }
+      const pNode: any = { type: 'paragraph' }
       if (childNodes.length > 0) {
         pNode.content = childNodes
       }
@@ -356,7 +340,7 @@ function convertSingleBlockToTiptapNode(block) {
       }
     }
 
-    const node = {
+    const node: any = {
       type: block.subtype && block.subtype.startsWith('heading') ? 'heading' : 'paragraph'
     }
     
@@ -402,19 +386,16 @@ function convertSingleBlockToTiptapNode(block) {
 // 2. HTML <-> Tumblr NPF Blocks 변환 (마크다운 파싱을 위한 중간체)
 // ==========================================
 
-/**
- * HTML 문자열을 Tumblr NPF Blocks 배열로 변환
- */
-function htmlToNpf(html) {
+export function htmlToNpf(html: string): any[] {
   if (!html) return []
   const $ = cheerio.load(html)
-  const blocks = []
+  const blocks: any[] = []
 
   $('body').contents().each((_, node) => {
     const $node = $(node)
     
     if (node.nodeType === 3) {
-      const text = node.nodeValue.replace(/\n/g, '').trim()
+      const text = (node.nodeValue || '').replace(/\n/g, '').trim()
       if (text) {
         blocks.push({
           type: 'text',
@@ -425,16 +406,16 @@ function htmlToNpf(html) {
     }
 
     if (node.nodeType === 1) {
-      const tagName = node.tagName.toLowerCase()
+      const tagName = ((node as any).tagName || '').toLowerCase()
 
       if (tagName === 'ul' || tagName === 'ol') {
         $node.children('li').each((_, liNode) => {
           const $li = $(liNode)
           const text = $li.text().replace(/\n/g, ' ').trim()
           if (text) {
-            const formatting = []
+            const formatting: any[] = []
             parseInlineFormats($li, $, formatting)
-            const block = {
+            const block: any = {
               type: 'text',
               text: text,
               subtype: tagName === 'ul' ? 'unordered-list-item' : 'ordered-list-item'
@@ -482,9 +463,9 @@ function htmlToNpf(html) {
         clone.find('img').remove()
         const text = clone.text().replace(/\n/g, ' ').trim()
         if (text) {
-          const formatting = []
+          const formatting: any[] = []
           parseInlineFormats(clone, $, formatting)
-          const block = {
+          const block: any = {
             type: 'text',
             text: text
           }
@@ -499,9 +480,9 @@ function htmlToNpf(html) {
       if (['p', 'div', 'blockquote', 'pre', 'li', 'span'].includes(tagName)) {
         const text = $node.text().replace(/\n/g, ' ').trim()
         if (text) {
-          const formatting = []
+          const formatting: any[] = []
           parseInlineFormats($node, $, formatting)
-          const block = {
+          const block: any = {
             type: 'text',
             text: text
           }
@@ -555,15 +536,15 @@ function htmlToNpf(html) {
   return blocks
 }
 
-function parseInlineFormats($el, $, formatting, currentOffset = { val: 0 }) {
-  $el.contents().each((_, child) => {
+function parseInlineFormats($el: any, $: any, formatting: any[], currentOffset = { val: 0 }) {
+  $el.contents().each((_: any, child: any) => {
     const $child = $(child)
     const childText = $child.text()
     
     if (child.nodeType === 3) {
       currentOffset.val += childText.length
     } else if (child.nodeType === 1) {
-      const tagName = child.tagName.toLowerCase()
+      const tagName = (child.tagName || '').toLowerCase()
       const start = currentOffset.val
       const end = start + childText.length
       
@@ -586,15 +567,12 @@ function parseInlineFormats($el, $, formatting, currentOffset = { val: 0 }) {
   })
 }
 
-/**
- * NPF 텍스트 블록의 formatting을 주입하여 HTML 안전하게 생성
- */
-function applyFormattingToHtml(text, formatting) {
+function applyFormattingToHtml(text: string, formatting: any[]): string {
   if (!text) return ''
   if (!formatting || formatting.length === 0) return escapeHtml(text)
 
-  const tagsOpen = Array.from({ length: text.length + 1 }, () => '')
-  const tagsClose = Array.from({ length: text.length + 1 }, () => '')
+  const tagsOpen: string[] = Array.from({ length: text.length + 1 }, () => '')
+  const tagsClose: string[] = Array.from({ length: text.length + 1 }, () => '')
   
   formatting.forEach(format => {
     const start = Math.max(0, format.start)
@@ -622,17 +600,14 @@ function applyFormattingToHtml(text, formatting) {
   return htmlText
 }
 
-/**
- * Tumblr NPF Blocks 배열을 HTML 문자열로 변환 (layout 정보 연동)
- */
-function npfToHtml(npfBlocks, layout) {
+export function npfToHtml(npfBlocks: any[], layout?: any[] | null | undefined): string {
   if (!npfBlocks || !Array.isArray(npfBlocks)) return ''
 
-  const htmlParts = []
+  const htmlParts: string[] = []
   const rowsLayout = layout && Array.isArray(layout) ? layout.find(l => l.type === 'rows') : null
 
   if (rowsLayout && Array.isArray(rowsLayout.display)) {
-    const usedBlockIndices = new Set()
+    const usedBlockIndices = new Set<number>()
 
     for (const row of rowsLayout.display) {
       if (!row || !Array.isArray(row.blocks) || row.blocks.length === 0) continue
@@ -672,9 +647,9 @@ function npfToHtml(npfBlocks, layout) {
   }
 
   // 2차 후처리 래핑 필터: 임시 li-temp 노드들을 연속적으로 ul / ol 태그로 감싸 병합
-  const finalHtmlParts = []
-  let currentListType = null
-  let listItems = []
+  const finalHtmlParts: string[] = []
+  let currentListType: string | null = null
+  let listItems: string[] = []
 
   const flushList = () => {
     if (currentListType && listItems.length > 0) {
@@ -707,10 +682,7 @@ function npfToHtml(npfBlocks, layout) {
   return finalHtmlParts.join('\n')
 }
 
-/**
- * 단일 NPF blocks를 HTML 문자열로 변환하는 헬퍼 함수
- */
-function convertSingleBlockToHtml(block) {
+function convertSingleBlockToHtml(block: any): string {
   if (block.type === 'text') {
     const formattedText = applyFormattingToHtml(block.text || '', block.formatting || [])
     
@@ -744,7 +716,7 @@ function convertSingleBlockToHtml(block) {
   return ''
 }
 
-function escapeHtml(text) {
+function escapeHtml(text: string): string {
   return text
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -757,30 +729,15 @@ function escapeHtml(text) {
 // 3. Markdown <-> Tumblr NPF Blocks 변환
 // ==========================================
 
-/**
- * Markdown 문자열을 Tumblr NPF Blocks 배열로 변환
- */
-function markdownToNpf(markdownText) {
+export function markdownToNpf(markdownText: string): any[] {
   if (!markdownText) return []
-  const html = marked.parse(markdownText)
-  const blocks = htmlToNpf(html)
+  const html = marked.parse(markdownText) as string
+  const blocks: any = htmlToNpf(html)
   blocks.layout = []
   return blocks
 }
 
-/**
- * Tumblr NPF Blocks 배열을 Markdown 문자열로 변환
- */
-function npfToMarkdown(npfBlocks) {
+export function npfToMarkdown(npfBlocks: any[]): string {
   const html = npfToHtml(npfBlocks)
   return turndownService.turndown(html)
-}
-
-module.exports = {
-  tiptapToNpf,
-  npfToTiptap,
-  htmlToNpf,
-  npfToHtml,
-  markdownToNpf,
-  npfToMarkdown
 }
