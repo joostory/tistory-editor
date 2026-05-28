@@ -1,18 +1,26 @@
 import React from 'react'
-
 import { Avatar, ListItem, ListItemText, ListItemAvatar, Typography, ListItemButton } from '@mui/material';
 import { Stars } from '@mui/icons-material'
+import { Blog } from '../../types'
 
-function ProfileAvatar({ blog }) {
+interface ProfileAvatarProps {
+  blog: Blog;
+}
+
+function ProfileAvatar({ blog }: ProfileAvatarProps) {
   if (blog.image) {
-    return <Avatar size={40} src={blog.image} />
+    return <Avatar sx={{ width: 40, height: 40 }} src={blog.image} />
   } else {
-    return <Avatar size={40}>{blog.title.slice(0, 1)}</Avatar>
+    return <Avatar sx={{ width: 40, height: 40 }}>{blog.title.slice(0, 1)}</Avatar>
   }
 }
 
-export default function BlogListItem({ blog, onSelect }) {
+interface BlogListItemProps {
+  blog: Blog;
+  onSelect: () => void;
+}
 
+export default function BlogListItem({ blog, onSelect }: BlogListItemProps) {
   return (
     <ListItem disablePadding alignItems='flex-start'>
       <ListItemButton onClick={onSelect} sx={{ alignItems: 'flex-start' }}>

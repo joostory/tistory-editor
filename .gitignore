@@ -9,3 +9,4 @@ app/*.png
 app/*.txt
 app/index.html
 .oauthInfo.json
+out
