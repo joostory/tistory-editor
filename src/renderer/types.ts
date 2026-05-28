@@ -27,3 +27,8 @@ export interface Provider {
   label: string;
   logo: string;
 }
+
+export interface Preferences {
+  appTheme?: string;
+  [key: string]: any;
+}

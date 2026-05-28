@@ -6,6 +6,7 @@ import * as AppTheme from '../constants/AppTheme'
 import App from './App'
 import { useAtomValue } from 'jotai'
 import { preferencesState } from '../state/preferences'
+import { Preferences } from '../types'
 
 const CONTENT_PALETTE = {
   background: '#fff',
@@ -22,7 +23,7 @@ const EDITOR_PALETTE = {
 }
 
 const DARK_PALETTE = {
-  mode: 'dark',
+  mode: 'dark' as const,
   primary: {
     main: '#f9dc41'
   },
@@ -33,8 +34,9 @@ const DARK_PALETTE = {
   content: CONTENT_PALETTE,
   editor: EDITOR_PALETTE,
 }
+
 const LIGHT_PALETTE = {
-  mode: 'light',
+  mode: 'light' as const,
   primary: {
     main: '#212121'
   },
@@ -46,14 +48,15 @@ const LIGHT_PALETTE = {
   editor: EDITOR_PALETTE,
 }
 
-export default function ThemeApp({}) {
-  const preferences = useAtomValue(preferencesState)
-  const [shouldUseDarkColors, setShouldUseDarkColors] = useState(nativeTheme.shouldUseDarkColors)
+export default function ThemeApp() {
+  const preferences = useAtomValue(preferencesState) as Preferences
+  const [shouldUseDarkColors, setShouldUseDarkColors] = useState<boolean>(nativeTheme.shouldUseDarkColors)
+
   const theme = useMemo(() => {
     const appTheme = preferences.appTheme || AppTheme.SYSTEM
-    const prefersDarkMode = appTheme == AppTheme.SYSTEM? shouldUseDarkColors : appTheme == AppTheme.DARK
+    const prefersDarkMode = appTheme === AppTheme.SYSTEM ? shouldUseDarkColors : appTheme === AppTheme.DARK
     return createTheme({
-      palette: prefersDarkMode? DARK_PALETTE : LIGHT_PALETTE,
+      palette: prefersDarkMode ? DARK_PALETTE : LIGHT_PALETTE,
     })    
   }, [preferences, shouldUseDarkColors])
 
