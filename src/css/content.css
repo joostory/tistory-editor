@@ -74,6 +74,10 @@ ol li {
   list-style: decimal
 }
 
+.content li p {
+  margin: 0
+}
+
 .content blockquote {
   padding: 0 0 0 20px;
   margin: 0 auto 28px;
