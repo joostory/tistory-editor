@@ -8,10 +8,13 @@ import { Auth } from '../../types'
 const styles = {
   container: {
     width: 700,
-    padding: '0 50px',
+    paddingTop: (theme: any) => theme.spacing(2),
+    paddingLeft: (theme: any) => theme.spacing(4),
+    paddingRight: (theme: any) => theme.spacing(4),
+    paddingBottom: (theme: any) => theme.spacing(5),
     backgroundColor: '#fff',
     boxShadow: (theme: any) => theme.shadows[1],
-    borderRadius: (theme: any) => theme.spacing(0.5)
+    borderRadius: (theme: any) => theme.spacing(2)
   },
   titleInput: {
     marginTop: (theme: any) => theme.spacing(4),
