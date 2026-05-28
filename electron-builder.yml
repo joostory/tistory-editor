@@ -11,10 +11,7 @@ directories:
 files:
   - package.json
   - oauthInfo.json
-  - src/lib/
-  - src/main/
-  - src/css/
-  - src/images/
+  - out/
   - app/
 
 mac:
