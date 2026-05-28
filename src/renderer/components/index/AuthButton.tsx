@@ -2,19 +2,21 @@ import React, { useEffect, useState } from 'react'
 import { ipcRenderer } from 'electron'
 import {
   Button, Dialog, DialogTitle, Box,
-  List, ListItem, ListItemAvatar, ListItemText, Avatar, CircularProgress
+  List, ListItem, ListItemAvatar, ListItemText, Avatar, CircularProgress,
+  ListItemButton
 } from '@mui/material'
 import { Add } from '@mui/icons-material'
 import Providers from '../../constants/Providers'
+import { Provider } from '../../types'
 
 const styles = {
   btnAdd: {
     width: '100%',
-    marginTop:(theme) => theme.spacing(1),
-    marginBottom:(theme) => theme.spacing(2)
+    marginTop: (theme: any) => theme.spacing(1),
+    marginBottom: (theme: any) => theme.spacing(2)
   },
   dialogTitle: {
-    padding:(theme) => theme.spacing(1),
+    padding: (theme: any) => theme.spacing(1),
     textAlign: 'center'
   },
   dialogList: {
@@ -34,10 +36,10 @@ const styles = {
 }
 
 export default function AuthButton() {
-  const [open, setOpen] = useState(false)
-  const [requestProvider, setRequestProvider] = useState(null)
+  const [open, setOpen] = useState<boolean>(false)
+  const [requestProvider, setRequestProvider] = useState<Provider | null>(null)
 
-  function handleSelectProvider(provider) {
+  function handleSelectProvider(provider: Provider) {
     setOpen(false)
     setRequestProvider(provider)
     ipcRenderer.send('request-auth', provider.name)
@@ -64,16 +66,16 @@ export default function AuthButton() {
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle sx={styles.dialogTitle}>연결할 서비스 선택</DialogTitle>
         <List sx={styles.dialogList}>
-          {Providers.map(provider =>
-            <ListItem key={provider.name} button onClick={() => handleSelectProvider(provider)}>
-              <ListItemAvatar>
-                <Avatar src={provider.logo} />
-              </ListItemAvatar>
-              <ListItemText
-                primary={provider.label}
-              />
+          {Providers.map((provider: any) => (
+            <ListItem key={provider.name} disablePadding>
+              <ListItemButton onClick={() => handleSelectProvider(provider)}>
+                <ListItemAvatar>
+                  <Avatar src={provider.logo} />
+                </ListItemAvatar>
+                <ListItemText primary={provider.label} />
+              </ListItemButton>
             </ListItem>
-          )}
+          ))}
         </List>
       </Dialog>
 

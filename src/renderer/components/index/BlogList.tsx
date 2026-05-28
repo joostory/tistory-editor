@@ -9,6 +9,7 @@ import {
 import BlogListItem from './BlogListItem'
 import Providers from '../../constants/Providers'
 import { accountsState } from '../../state/accounts'
+import { Account, Blog, Auth } from '../../types'
 
 const styles = {
   paper: {
@@ -20,15 +21,15 @@ const styles = {
   header: {
     display: 'flex',
     alignItems: 'center',
-    paddingTop: (theme) => theme.spacing(2),
-    paddingBottom: (theme) => theme.spacing(2),
-    backgroundColor: (theme) => theme.palette.headerBackground,
+    paddingTop: (theme: any) => theme.spacing(2),
+    paddingBottom: (theme: any) => theme.spacing(2),
+    backgroundColor: (theme: any) => theme.palette.headerBackground,
   },
   logo: {
     display: 'flex',
-    width: (theme) => theme.spacing(3),
-    height: (theme) => theme.spacing(3),
-    marginRight: (theme) => theme.spacing(1)
+    width: (theme: any) => theme.spacing(3),
+    height: (theme: any) => theme.spacing(3),
+    marginRight: (theme: any) => theme.spacing(1)
   },
   title: {
     display: 'flex',
@@ -36,12 +37,14 @@ const styles = {
   }
 }
 
-function ServiceListHeader({ service }) {
-  const provider = Providers.find(p => p.name == service.auth.provider)
+interface ServiceListHeaderProps {
+  service: Account;
+}
+
+function ServiceListHeader({ service }: ServiceListHeaderProps) {
+  const provider = Providers.find((p: any) => p.name == service.auth.provider)
   if (!provider) {
-    return (
-      <></>
-    )
+    return <></>
   }
 
   function handleDisconnect() {
@@ -63,11 +66,15 @@ function ServiceListHeader({ service }) {
   )
 }
 
-export default function BlogList({ afterSelect }) {
-  const accounts = useAtomValue(accountsState)
+interface BlogListProps {
+  afterSelect?: () => void;
+}
+
+export default function BlogList({ afterSelect }: BlogListProps) {
+  const accounts = useAtomValue(accountsState) as Account[]
   const navigate = useNavigate()
 
-  function handleSelectBlog(auth, blog) {
+  function handleSelectBlog(auth: Auth, blog: Blog) {
     navigate(`/blog/${encodeURIComponent(blog.name)}`)
 
     if (afterSelect) {
@@ -93,7 +100,7 @@ export default function BlogList({ afterSelect }) {
             <BlogListItem
               blog={blog}
               key={blog.url}
-              onSelect={e => handleSelectBlog(account.auth, blog)}
+              onSelect={() => handleSelectBlog(account.auth, blog)}
             />
           )}
         </List>
