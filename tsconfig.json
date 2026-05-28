@@ -3,8 +3,7 @@
     "target": "ES2022",
     "module": "commonjs",
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
-    "allowJs": true,
-    "checkJs": false,
+    "allowJs": false,
     "jsx": "react-jsx",
     "noEmit": true,
     "moduleResolution": "node",
@@ -23,8 +22,6 @@
     "out",
     "dist",
     "**/*.test.ts",
-    "**/*.test.tsx",
-    "**/*.test.js",
-    "**/*.test.jsx"
+    "**/*.test.tsx"
   ]
 }
