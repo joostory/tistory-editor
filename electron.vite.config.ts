@@ -43,7 +43,7 @@ export default defineConfig({
         formats: ['cjs']
       },
       rollupOptions: {
-        external: ['electron', 'electron-settings', '@electron/remote'],
+        external: ['electron', 'electron-settings'],
         output: {
           preserveModules: true, // 디렉토리 계층 구조 보존
           entryFileNames: '[name].js' // 원래 확장자 유지

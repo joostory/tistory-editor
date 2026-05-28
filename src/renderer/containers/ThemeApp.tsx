@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react'
-import { nativeTheme } from '@electron/remote'
+import React, { useMemo, useState, useEffect } from 'react'
+import { ipcRenderer } from 'electron'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import { HashRouter } from 'react-router-dom'
 import * as AppTheme from '../constants/AppTheme'
@@ -50,7 +50,27 @@ const LIGHT_PALETTE = {
 
 export default function ThemeApp() {
   const preferences = useAtomValue(preferencesState) as Preferences
-  const [shouldUseDarkColors, setShouldUseDarkColors] = useState<boolean>(nativeTheme.shouldUseDarkColors)
+  const [shouldUseDarkColors, setShouldUseDarkColors] = useState<boolean>(false)
+
+  useEffect(() => {
+    // 초기 시스템 다크모드 설정값 조회
+    ipcRenderer.invoke('get-native-theme-dark-mode')
+      .then((isDark: boolean) => {
+        setShouldUseDarkColors(isDark)
+      })
+      .catch((err) => {
+        console.error('Failed to get native theme dark mode', err)
+      })
+
+    const handleThemeUpdate = (_e: any, isDark: boolean) => {
+      setShouldUseDarkColors(isDark)
+    }
+
+    ipcRenderer.on('native-theme-updated', handleThemeUpdate)
+    return () => {
+      ipcRenderer.removeListener('native-theme-updated', handleThemeUpdate)
+    }
+  }, [])
 
   const theme = useMemo(() => {
     const appTheme = preferences.appTheme || AppTheme.SYSTEM
@@ -59,10 +79,6 @@ export default function ThemeApp() {
       palette: prefersDarkMode ? DARK_PALETTE : LIGHT_PALETTE,
     })    
   }, [preferences, shouldUseDarkColors])
-
-  nativeTheme.on('updated', () => {
-    setShouldUseDarkColors(nativeTheme.shouldUseDarkColors)
-  })
 
   return (
     <ThemeProvider theme={theme}>

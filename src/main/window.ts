@@ -3,7 +3,6 @@ import * as settings from 'electron-settings'
 import * as path from 'path'
 import * as url from 'url'
 import * as appInfo from './appInfo'
-import * as remote from '@electron/remote/main'
 
 let mainWindow: BrowserWindow | null = null
 
@@ -72,8 +71,6 @@ function setWindowWebContents() {
       }
     }
   })
-  
-  remote.enable(mainWindow.webContents)
 }
 
 function setWindowMenu() {
@@ -121,9 +118,7 @@ function createWindow(config: any) {
     autoHideMenuBar: true,
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false,
-      // @ts-ignore
-      enableRemoteModule: true
+      contextIsolation: false
     },
     icon: path.join(__dirname, '/../../build/icons/512x512.png')
   })

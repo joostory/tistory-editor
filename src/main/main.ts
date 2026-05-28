@@ -1,13 +1,11 @@
 import { app } from 'electron'
 import * as ipc from './ipc-event'
 import * as settings from 'electron-settings'
-import * as remote from '@electron/remote/main'
 import { initWindow, getWindow } from './window'
 import OAuthRequestManager from './oauth/OAuthRequestManager'
 
 const PROTOCOL = "tistory-editor"
 
-remote.initialize()
 console.log("DEBUG: platform", process.platform)
 settings.configure({
   fileName: 'Settings'

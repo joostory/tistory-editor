@@ -41,9 +41,7 @@ export const openWindow = () => {
     titleBarStyle: 'hidden',
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false,
-      // @ts-ignore
-      enableRemoteModule: true
+      contextIsolation: false
     },
     alwaysOnTop: true
   })
