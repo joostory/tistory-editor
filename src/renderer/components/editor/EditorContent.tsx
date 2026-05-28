@@ -47,12 +47,10 @@ export default function EditorContent({ content, onChange, title, onTitleChange 
         />
       )}
 
-      <div className="editor_inner">
-        <TiptapEditor
-          value={content}
-          onChange={onChange}
-        />
-      </div>
+      <TiptapEditor
+        value={content}
+        onChange={onChange}
+      />
     </Container>
   )
 }

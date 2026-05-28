@@ -8,7 +8,8 @@ const styles = {
     width: 300,
     '& .MuiDrawer-paper': {
       width: 300,
-      boxSizing: 'border-box'
+      boxSizing: 'border-box',
+      overflow: 'hidden',
     }
   } as SxProps<Theme>,
   toolbar: {

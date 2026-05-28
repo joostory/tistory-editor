@@ -36,7 +36,7 @@ const styles = {
     bottom: 0,
     zIndex: 1300,
     backgroundColor: (theme) => theme.palette.background.default,
-    overflowY: 'scroll'
+    overflowY: 'scroll',
   } as SxProps<Theme>
 }
 
