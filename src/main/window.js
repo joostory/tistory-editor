@@ -32,27 +32,30 @@ function setWindowEvent() {
 }
 
 function setWindowWebContents() {
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, '../../app/index.html'),
-    protocol: 'file:',
-    slashes: true
-  }), {
-    userAgent: appInfo.userAgentFull
-  })
-
-  if (process.env.NODE_ENV == "development") {
+  if (process.env.NODE_ENV === "development") {
+    mainWindow.loadURL("http://localhost:8080", {
+      userAgent: appInfo.userAgentFull
+    })
     mainWindow.webContents.openDevTools()
+  } else {
+    mainWindow.loadURL(url.format({
+      pathname: path.join(__dirname, '../../app/index.html'),
+      protocol: 'file:',
+      slashes: true
+    }), {
+      userAgent: appInfo.userAgentFull
+    })
   }
 
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-    if (url.startsWith('http:') || url.startsWith('https:')) {
+    if ((url.startsWith('http:') || url.startsWith('https:')) && !url.startsWith('http://localhost:8080')) {
       shell.openExternal(url)
     }
     return { action: 'deny' }
   })
 
   mainWindow.webContents.on('will-navigate', (e, url) => {
-    if (!url.startsWith('file://')) {
+    if (!url.startsWith('file://') && !url.startsWith('http://localhost:8080')) {
       e.preventDefault()
       if (url.startsWith('http:') || url.startsWith('https:')) {
         shell.openExternal(url)
