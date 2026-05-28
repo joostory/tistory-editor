@@ -32,14 +32,14 @@ function setWindowEvent() {
 }
 
 function setWindowWebContents() {
-  if (process.env.NODE_ENV === "development") {
-    mainWindow.loadURL("http://localhost:8080", {
+  if (process.env.ELECTRON_RENDERER_URL) {
+    mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL, {
       userAgent: appInfo.userAgentFull
     })
     mainWindow.webContents.openDevTools()
   } else {
     mainWindow.loadURL(url.format({
-      pathname: path.join(__dirname, '../../app/index.html'),
+      pathname: path.join(__dirname, '../renderer/index.html'),
       protocol: 'file:',
       slashes: true
     }), {
@@ -48,14 +48,18 @@ function setWindowWebContents() {
   }
 
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-    if ((url.startsWith('http:') || url.startsWith('https:')) && !url.startsWith('http://localhost:8080')) {
+    if ((url.startsWith('http:') || url.startsWith('https:')) && 
+        (!process.env.ELECTRON_RENDERER_URL || !url.startsWith(process.env.ELECTRON_RENDERER_URL)) &&
+        !url.startsWith('http://localhost:5173')) {
       shell.openExternal(url)
     }
     return { action: 'deny' }
   })
 
   mainWindow.webContents.on('will-navigate', (e, url) => {
-    if (!url.startsWith('file://') && !url.startsWith('http://localhost:8080')) {
+    if (!url.startsWith('file://') && 
+        (!process.env.ELECTRON_RENDERER_URL || !url.startsWith(process.env.ELECTRON_RENDERER_URL)) &&
+        !url.startsWith('http://localhost:5173')) {
       e.preventDefault()
       if (url.startsWith('http:') || url.startsWith('https:')) {
         shell.openExternal(url)

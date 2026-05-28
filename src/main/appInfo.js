@@ -51,7 +51,7 @@ const openWindow = () => {
 	})
 
 	infoWindow.loadURL(url.format({
-    pathname: path.join(__dirname, '../../app/about.html'),
+    pathname: path.join(__dirname, '../renderer/about.html'),
     protocol: 'file:',
     slashes: true
   }))
