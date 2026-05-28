@@ -1,6 +1,16 @@
 import { Node } from '@tiptap/core'
 import { Plugin, PluginKey } from '@tiptap/pm/state'
 
+declare module '@tiptap/core' {
+  interface Commands<ReturnType> {
+    imageGroup: {
+      groupImages: () => ReturnType
+      groupImagesNearCursor: (targetPos: number | null | undefined) => ReturnType
+      ungroupImages: () => ReturnType
+    }
+  }
+}
+
 export const ImageGroup = Node.create({
   name: 'imageGroup',
   group: 'block',
@@ -31,7 +41,11 @@ export const ImageGroup = Node.create({
           let tr = newState.tr
           let modified = false
 
-          const tasks = []
+          interface Task {
+            node: any;
+            pos: number;
+          }
+          const tasks: Task[] = []
           newState.doc.descendants((node, pos) => {
             if (node.type.name === 'imageGroup') {
               if (node.childCount <= 1) {
@@ -50,8 +64,10 @@ export const ImageGroup = Node.create({
               modified = true
             } else if (node.childCount === 1) {
               const childImage = node.firstChild
-              tr.replaceWith(pos, pos + node.nodeSize, childImage)
-              modified = true
+              if (childImage) {
+                tr.replaceWith(pos, pos + node.nodeSize, childImage)
+                modified = true
+              }
             }
           }
 
@@ -65,13 +81,13 @@ export const ImageGroup = Node.create({
     return {
       groupImages: () => ({ state, chain }) => {
         const { from, to } = state.selection
-        
+
         if (from !== to) {
           // 1. 드래그 선택 범위가 존재하는 경우: 해당 범위 내의 개별 이미지들만 정밀 병합
-          const images = []
+          const images: any[] = []
           let groupStart = -1
           let groupEnd = -1
-          
+
           state.doc.nodesBetween(from, to, (node, pos) => {
             if (node.type.name === 'image') {
               images.push(node.toJSON())
@@ -79,7 +95,7 @@ export const ImageGroup = Node.create({
               groupEnd = pos + node.nodeSize
             }
           })
-          
+
           if (images.length > 1 && groupStart !== -1 && groupEnd !== -1) {
             return chain()
               .focus()
@@ -92,9 +108,9 @@ export const ImageGroup = Node.create({
           }
         } else {
           // 2. 선택 범위가 없는 단순 커서 상태: 에디터 전체 선형 스캔 일괄 병합 (툴바 전용)
-          let currentGroup = []
-          const groupsToMerge = []
-          
+          let currentGroup: any[] = []
+          const groupsToMerge: any[] = []
+
           state.doc.forEach((node, pos) => {
             if (node.type.name === 'image') {
               currentGroup.push({ node: node.toJSON(), pos, size: node.nodeSize })
@@ -109,7 +125,7 @@ export const ImageGroup = Node.create({
               currentGroup = []
             }
           })
-          
+
           if (currentGroup.length > 1) {
             groupsToMerge.push({
               start: currentGroup[0].pos,
@@ -117,7 +133,7 @@ export const ImageGroup = Node.create({
               images: currentGroup.map(item => item.node)
             })
           }
-          
+
           if (groupsToMerge.length > 0) {
             let runChain = chain().focus()
             for (let k = groupsToMerge.length - 1; k >= 0; k--) {
@@ -141,11 +157,11 @@ export const ImageGroup = Node.create({
         // targetPos 주변 3포인트 스캔
         const start = Math.max(0, targetPos - 3)
         const end = Math.min(state.doc.content.size, targetPos + 3)
-        
-        const localImages = []
+
+        const localImages: any[] = []
         let localStart = -1
         let localEnd = -1
-        
+
         state.doc.nodesBetween(start, end, (node, pos) => {
           if (node.type.name === 'image') {
             localImages.push(node.toJSON())
@@ -165,7 +181,7 @@ export const ImageGroup = Node.create({
           }
           return true
         })
-        
+
         if (localImages.length > 1 && localStart !== -1 && localEnd !== -1) {
           return chain()
             .focus()
@@ -178,12 +194,12 @@ export const ImageGroup = Node.create({
         }
         return false
       },
-      
+
       ungroupImages: () => ({ state, chain }) => {
         const { from, to } = state.selection
-        let groupNode = null
+        let groupNode: any = null
         let groupPos = -1
-        
+
         state.doc.nodesBetween(from, to, (node, pos) => {
           if (node.type.name === 'imageGroup') {
             groupNode = node
@@ -191,15 +207,15 @@ export const ImageGroup = Node.create({
             return false
           }
         })
-        
+
         if (groupNode) {
-          const images = []
-          groupNode.forEach((childNode) => {
+          const images: any[] = []
+          groupNode.forEach((childNode: any) => {
             if (childNode.type.name === 'image') {
               images.push(childNode.toJSON())
             }
           })
-          
+
           if (images.length > 0) {
             return chain()
               .focus()
@@ -215,4 +231,3 @@ export const ImageGroup = Node.create({
 })
 
 export default ImageGroup
-

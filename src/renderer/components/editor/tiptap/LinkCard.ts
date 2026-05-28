@@ -21,13 +21,16 @@ export const LinkCard = Node.create({
     return [
       {
         tag: 'div.link-card',
-        getAttrs: element => ({
-          url: element.getAttribute('data-url') || '',
-          title: element.getAttribute('data-title') || '',
-          description: element.getAttribute('data-description') || '',
-          siteName: element.getAttribute('data-site-name') || '',
-          image: element.getAttribute('data-image') || ''
-        })
+        getAttrs: (element: string | HTMLElement) => {
+          if (typeof element === 'string') return {}
+          return {
+            url: element.getAttribute('data-url') || '',
+            title: element.getAttribute('data-title') || '',
+            description: element.getAttribute('data-description') || '',
+            siteName: element.getAttribute('data-site-name') || '',
+            image: element.getAttribute('data-image') || ''
+          }
+        }
       }
     ]
   },

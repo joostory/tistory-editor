@@ -1,19 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useEditor, EditorContent } from '@tiptap/react'
+import { useEditor, EditorContent, Editor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
 import ImageGroup from './ImageGroup'
 import LinkCard from './LinkCard'
 import { ipcRenderer } from 'electron'
-import { Box, ToggleButton, ToggleButtonGroup, Divider, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, CircularProgress } from '@mui/material'
+import { Box, ToggleButton, ToggleButtonGroup, Divider, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, CircularProgress, SxProps, Theme } from '@mui/material'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
-
-
-const lightTheme = createTheme({
-  palette: {
-    mode: 'light',
-  },
-})
 import {
   FormatBold,
   FormatItalic,
@@ -26,19 +19,25 @@ import {
   AddLink
 } from '@mui/icons-material'
 
+const lightTheme = createTheme({
+  palette: {
+    mode: 'light',
+  },
+})
+
 const styles = {
   root: {
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-  },
+  } as SxProps<Theme>,
   toolbar: {
     position: 'fixed',
     top: 15,
     width: 700,
     display: 'flex',
     alignItems: 'center',
-    borderRadius: (theme) => 1,
+    borderRadius: 1,
     paddingLeft: (theme) => theme.spacing(0.5),
     height: (theme) => theme.spacing(5),
     left: '50%',
@@ -46,18 +45,18 @@ const styles = {
     zIndex: 10,
     background: 'rgba(255,255,255,0.9)',
     boxShadow: (theme) => theme.shadows[1]
-  },
+  } as SxProps<Theme>,
   editorContent: {
     flex: 1,
     overflowY: 'auto',
     backgroundColor: '#fff',
     color: '#333',
-    '.ProseMirror': {
+    '& .ProseMirror': {
       outline: 'none',
       minHeight: '500px',
       padding: '16px',
     },
-  },
+  } as SxProps<Theme>,
   toolbarBtn: {
     border: '0 !important',
     borderRadius: '4px !important',
@@ -76,10 +75,16 @@ const styles = {
     '&:hover': {
       backgroundColor: 'rgba(0, 0, 0, 0.04) !important',
     }
-  }
+  } as SxProps<Theme>
 }
 
-const MenuBar = ({ editor, onImageClick, onAddLinkCard }) => {
+interface MenuBarProps {
+  editor: Editor | null
+  onImageClick: () => void
+  onAddLinkCard: () => void
+}
+
+const MenuBar: React.FC<MenuBarProps> = ({ editor, onImageClick, onAddLinkCard }) => {
   if (!editor) {
     return null
   }
@@ -91,7 +96,7 @@ const MenuBar = ({ editor, onImageClick, onAddLinkCard }) => {
     }
   }
 
-  const canGroup = () => {
+  const canGroup = (): boolean => {
     try {
       if (!editor) return false
       let canMerge = false
@@ -113,7 +118,7 @@ const MenuBar = ({ editor, onImageClick, onAddLinkCard }) => {
     }
   }
 
-  const canUngroup = () => {
+  const canUngroup = (): boolean => {
     try {
       return editor.isActive('imageGroup')
     } catch (e) {
@@ -157,7 +162,7 @@ const MenuBar = ({ editor, onImageClick, onAddLinkCard }) => {
           value="h1"
           selected={editor.isActive('heading', { level: 1 })}
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-          sx={{ ...styles.toolbarBtn, fontWeight: 'bold', fontSize: '13px' }}
+          sx={{ ...styles.toolbarBtn, fontWeight: 'bold', fontSize: '13px' } as SxProps<Theme>}
         >
           H1
         </ToggleButton>
@@ -165,7 +170,7 @@ const MenuBar = ({ editor, onImageClick, onAddLinkCard }) => {
           value="h2"
           selected={editor.isActive('heading', { level: 2 })}
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-          sx={{ ...styles.toolbarBtn, fontWeight: 'bold', fontSize: '12px' }}
+          sx={{ ...styles.toolbarBtn, fontWeight: 'bold', fontSize: '12px' } as SxProps<Theme>}
         >
           H2
         </ToggleButton>
@@ -173,7 +178,7 @@ const MenuBar = ({ editor, onImageClick, onAddLinkCard }) => {
           value="h3"
           selected={editor.isActive('heading', { level: 3 })}
           onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-          sx={{ ...styles.toolbarBtn, fontWeight: 'bold', fontSize: '11px' }}
+          sx={{ ...styles.toolbarBtn, fontWeight: 'bold', fontSize: '11px' } as SxProps<Theme>}
         >
           H3
         </ToggleButton>
@@ -242,11 +247,28 @@ const MenuBar = ({ editor, onImageClick, onAddLinkCard }) => {
   )
 }
 
-export default function TiptapEditor({ value, onChange }) {
-  const fileInputRef = useRef(null)
-  const [isLinkCardDialogOpen, setIsLinkCardDialogOpen] = useState(false)
-  const [linkCardUrl, setLinkCardUrl] = useState('')
-  const [isFetchingOg, setIsFetchingOg] = useState(false)
+interface TiptapEditorProps {
+  value: any
+  onChange: (value: any) => void
+}
+
+export default function TiptapEditor({ value, onChange }: TiptapEditorProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [isLinkCardDialogOpen, setIsLinkCardDialogOpen] = useState<boolean>(false)
+  const [linkCardUrl, setLinkCardUrl] = useState<string>('')
+  const [isFetchingOg, setIsFetchingOg] = useState<boolean>(false)
+
+  const insertImages = (files: File[]) => {
+    files.forEach(file => {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        if (editor && e.target?.result) {
+          editor.chain().focus().setImage({ src: e.target.result as string }).run()
+        }
+      }
+      reader.readAsDataURL(file)
+    })
+  }
 
   const editor = useEditor({
     extensions: [
@@ -260,13 +282,13 @@ export default function TiptapEditor({ value, onChange }) {
       onChange(editor.getJSON())
     },
     editorProps: {
-      style: {
-        padding: '20px 0 40px',
-        margin: 0
+      attributes: {
+        style: 'padding: 20px 0 40px; margin: 0;'
       },
       handleDrop: (view, event, slice, moved) => {
-        if (!moved && event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files.length > 0) {
-          const files = Array.prototype.slice.call(event.dataTransfer.files)
+        const dragEvent = event as DragEvent
+        if (!moved && dragEvent.dataTransfer && dragEvent.dataTransfer.files && dragEvent.dataTransfer.files.length > 0) {
+          const files = Array.from(dragEvent.dataTransfer.files)
           const imageFiles = files.filter(file => file.type.indexOf('image/') === 0)
           if (imageFiles.length > 0) {
             insertImages(imageFiles)
@@ -275,7 +297,7 @@ export default function TiptapEditor({ value, onChange }) {
         }
         
         if (moved) {
-          const coordinates = view.posAtCoords({ left: event.clientX, top: event.clientY })
+          const coordinates = view.posAtCoords({ left: dragEvent.clientX, top: dragEvent.clientY })
           const pos = coordinates ? coordinates.pos : null
           
           setTimeout(() => {
@@ -286,9 +308,10 @@ export default function TiptapEditor({ value, onChange }) {
         }
         return false
       },
-      handlePaste: (view, event, slice) => {
-        if (event.clipboardData && event.clipboardData.files && event.clipboardData.files.length > 0) {
-          const files = Array.prototype.slice.call(event.clipboardData.files)
+      handlePaste: (view, event) => {
+        const clipboardEvent = event as ClipboardEvent
+        if (clipboardEvent.clipboardData && clipboardEvent.clipboardData.files && clipboardEvent.clipboardData.files.length > 0) {
+          const files = Array.from(clipboardEvent.clipboardData.files)
           const imageFiles = files.filter(file => file.type.indexOf('image/') === 0)
           if (imageFiles.length > 0) {
             insertImages(imageFiles)
@@ -300,21 +323,9 @@ export default function TiptapEditor({ value, onChange }) {
     }
   })
 
-  const insertImages = (files) => {
-    files.forEach(file => {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        if (editor) {
-          editor.chain().focus().setImage({ src: e.target.result }).run()
-        }
-      }
-      reader.readAsDataURL(file)
-    })
-  }
-
-  const handleFileChange = (e) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      const files = Array.prototype.slice.call(e.target.files)
+      const files = Array.from(e.target.files)
       const imageFiles = files.filter(file => file.type.indexOf('image/') === 0)
       if (imageFiles.length > 0) {
         insertImages(imageFiles)
@@ -333,7 +344,7 @@ export default function TiptapEditor({ value, onChange }) {
     setLinkCardUrl('')
   }
 
-  const handleSubmitLinkCard = async (e) => {
+  const handleSubmitLinkCard = async (e: React.FormEvent) => {
     if (e) e.preventDefault()
     if (!linkCardUrl || !linkCardUrl.trim()) return
 
@@ -392,8 +403,6 @@ export default function TiptapEditor({ value, onChange }) {
       }
     }
   }, [value, editor])
-
-
 
   return (
     <ThemeProvider theme={lightTheme}>
