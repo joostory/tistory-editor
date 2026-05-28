@@ -29,7 +29,6 @@ describe("unixtimestampToDate", () => {
   })  
 })
 
-
 describe("timestampsToDate", () => {
   it('2018-12-04T23:39:17Z', () => {
     expect(timestampsToDate('2018-12-04T23:39:17Z')).toBe('2018-12-05')

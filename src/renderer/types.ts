@@ -40,6 +40,11 @@ export interface Post {
   contentJson?: string;
   categoryId: string;
   tags: string[];
+  date?: string | number | Date;
+  url?: string;
+  state?: string;
+  type?: string;
+  photos?: any[];
 }
 
 export interface PostData {

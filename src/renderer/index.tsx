@@ -6,10 +6,13 @@ import '../css/content.css'
 import ThemeApp from './containers/ThemeApp'
 import IpcEventReceiver from './containers/IpcEventReceiver'
 
-const root = createRoot(document.getElementById('root'))
-root.render(
-  <>
-    <IpcEventReceiver />
-    <ThemeApp />
-  </>
-)
+const container = document.getElementById('root')
+if (container) {
+  const root = createRoot(container)
+  root.render(
+    <>
+      <IpcEventReceiver />
+      <ThemeApp />
+    </>
+  )
+}

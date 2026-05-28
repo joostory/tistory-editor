@@ -1,13 +1,19 @@
 import tumblrLogo from '../images/logo_tumblr.png'
 
 class Provider {
-  constructor(name, label, logo) {
+  name: string
+  label: string
+  logo: string
+
+  constructor(name: string, label: string, logo: string) {
     this.name = name
     this.label = label
     this.logo = logo
   }
 }
 
-export default [
+const providers: Provider[] = [
   new Provider('tumblr', 'Tumblr', tumblrLogo)
 ]
+
+export default providers

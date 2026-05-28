@@ -1,5 +1,6 @@
+import { Theme } from '@mui/material/styles'
 
-const styles = theme => ({
+const styles = (theme: Theme) => ({
   button: {
     borderRadius: "18px",
     color: "#fff",

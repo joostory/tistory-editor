@@ -7,7 +7,7 @@ import { accountsState } from '../state/accounts'
 import { currentBlogCategoriesState } from '../state/currentBlog'
 import { postsInitializedState, postsLockState, postsState } from '../state/posts'
 import { currentPostState } from '../state/currentPost'
-
+import { Account, Post, Preferences } from '../types'
 
 export default function IpcEventReceiver() {
   const setPreferences = useSetAtom(preferencesState)
@@ -19,15 +19,15 @@ export default function IpcEventReceiver() {
   const setPostsInitialized = useSetAtom(postsInitializedState)
   const setCurrentPost = useSetAtom(currentPostState)
 
-  const handleAddAccount = (account) => {
+  const handleAddAccount = (account: Account) => {
     setAccounts(prev => [...prev, account])
   }
 
-  const handleRemoveAccount = (uuid) => {
-    setAccounts(prev => prev.filter(a => a.auth.uuid != uuid))
+  const handleRemoveAccount = (uuid: string) => {
+    setAccounts(prev => prev.filter(a => a.auth.uuid !== uuid))
   }
 
-  const handleAddPosts = (page, posts, hasNext) => {
+  const handleAddPosts = (page: number, posts: Post[], hasNext: boolean) => {
     setPosts(prev => ({
       page: page,
       list: [...prev.list, ...posts],
@@ -40,55 +40,56 @@ export default function IpcEventReceiver() {
   const handleReceivePostsFailed = () => {
     setPosts(prev => ({
       ...prev,
-      hasNext: false,
-      lock: false,
-      initialized: true
+      hasNext: false
     }))
+    setPostsLock(false)
+    setPostsInitialized(true)
   }
 
   useEffect(() => {
     ipcRenderer.send('fetch-initial-data')
     ipcRenderer.send("fetch-preferences")
 
-    ipcRenderer.on('initialized', (e, data) => {
+    ipcRenderer.on('initialized', (_e, data: Account[]) => {
       console.log('Renderer.receive: initialized', data)
       setAccounts(data)
       setInitializedStatus(true)
     })
   
-    ipcRenderer.on("receive-account", (e, data) => {
+    ipcRenderer.on("receive-account", (_e, data: Account) => {
       console.log('Renderer.receive: receive-account', data)
       handleAddAccount(data)
     })
 
-    ipcRenderer.on("receive-categories", (e, data) => {
+    ipcRenderer.on("receive-categories", (_e, data: any[]) => {
       console.log('Renderer.receive: receive-categories', data)
       setCurrentBlogCategories(data)
     })
 
-    ipcRenderer.on("complete-disconnect-auth", (e, data) => {
+    ipcRenderer.on("complete-disconnect-auth", (_e, data: string) => {
       console.log('Renderer.receive: complete-disconnect-auth', data)
       handleRemoveAccount(data)
     })
 
-    ipcRenderer.on("receive-posts-failed", (e, res) => {
+    ipcRenderer.on("receive-posts-failed", () => {
       console.log('Renderer.receive: receive-posts-failed')
       handleReceivePostsFailed()
     })
-    ipcRenderer.on("receive-posts", (e, res) => {
+    
+    ipcRenderer.on("receive-posts", (_e, res: { page: number; posts: Post[]; hasNext: boolean }) => {
       console.log('Renderer.receive: receive-posts', res)
       handleAddPosts(res.page, res.posts, res.hasNext)
     })
   
-    ipcRenderer.on("receive-content", (e, post) => {
+    ipcRenderer.on("receive-content", (_e, post: Post) => {
       console.log('Renderer.receive: receive-content', post)
       setCurrentPost({
         ...post,
         fetched: true
-      })
+      } as any)
     })
 
-    ipcRenderer.on("receive-preferences", (e, data) => {
+    ipcRenderer.on("receive-preferences", (_e, data: Preferences) => {
       console.log('Renderer.receive: receive-preferences', data)
       setPreferences(data)
     })

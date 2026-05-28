@@ -1,7 +1,7 @@
-import React, { } from 'react'
+import React from 'react'
 import { useAtomValue } from 'jotai'
 import TumblrContentViewer from './TumblrContentViewer'
-import { Box, Typography } from '@mui/material'
+import { Box, Typography, SxProps, Theme } from '@mui/material'
 import { currentAuthState } from '../../../state/currentBlog'
 import { currentPostState } from '../../../state/currentPost'
 
@@ -16,13 +16,13 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'start'
-  },
+  } as SxProps<Theme>,
   emtpyMessage: {
     height: '100vh',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
-  }
+  } as SxProps<Theme>
 }
 
 function EmptyContent() {
@@ -33,8 +33,11 @@ function EmptyContent() {
   )
 }
 
+interface ContentProps {
+  onRequestEditPost: () => void
+}
 
-function ContentViewer({ onRequestEditPost }) {
+function ContentViewer({ onRequestEditPost }: ContentProps) {
   const post = useAtomValue(currentPostState)
   const currentAuth = useAtomValue(currentAuthState)
 
@@ -42,14 +45,14 @@ function ContentViewer({ onRequestEditPost }) {
     return <EmptyContent />
   }
 
-  if (currentAuth.provider == 'tumblr') {
+  if (currentAuth && currentAuth.provider === 'tumblr') {
     return <TumblrContentViewer onRequestEditPost={onRequestEditPost} />
   } else {
     return <EmptyContent />
   }
 }
 
-export default function Content({ onRequestEditPost }) {
+export default function Content({ onRequestEditPost }: ContentProps) {
   return (
     <Box sx={styles.container}>
       <ContentViewer onRequestEditPost={onRequestEditPost} />

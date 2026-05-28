@@ -1,22 +1,27 @@
 import React, { useMemo } from 'react'
 import { useAtomValue } from 'jotai'
 import dayjs from 'dayjs'
-import { ListItem, ListItemButton, ListItemText, Typography, Box } from '@mui/material'
+import { ListItem, ListItemButton, ListItemText, Typography, Box, SxProps, Theme } from '@mui/material'
 import { DraftsOutlined, PhotoOutlined, CommentOutlined } from '@mui/icons-material'
 import { isPublished } from '../../../constants/PostState'
 import { currentBlogCategoriesState } from '../../../state/currentBlog'
+import { Post } from '../../../types'
 
 const styles = {
   info: {
     display: 'block',
     fontSize: '0.9em'
-  },
+  } as SxProps<Theme>,
   icon: {
     marginLeft: (theme) => theme.spacing(1)
-  }
+  } as SxProps<Theme>
 }
 
-function PostTitle({ post }) {
+interface HelperProps {
+  post: Post & { date?: string | number | Date; state?: string; type?: string }
+}
+
+function PostTitle({ post }: HelperProps) {
   return (
     <Typography noWrap={true}>
       {post.title}
@@ -24,12 +29,14 @@ function PostTitle({ post }) {
   )
 }
 
-function PostInfo({ post }) {
+function PostInfo({ post }: HelperProps) {
   const categories = useAtomValue(currentBlogCategoriesState)
+  
   const category = useMemo(() => {
     if (categories && post.categoryId) {
-      return categories.find(c => c.id == post.categoryId)
+      return categories.find((c: any) => c.id == post.categoryId)
     }
+    return null
   }, [categories, post])
 
   return (
@@ -47,8 +54,8 @@ function PostInfo({ post }) {
   )
 }
 
-function PostIcon({ post }) {
-  if (!isPublished(post.state)) {
+function PostIcon({ post }: HelperProps) {
+  if (!isPublished(post.state || '')) {
     return <DraftsOutlined />
   }
 
@@ -62,10 +69,16 @@ function PostIcon({ post }) {
   }
 }
 
-export default function PostListItem({ post, selected, onSelect }) {
+interface PostListItemProps {
+  post: Post
+  selected: boolean
+  onSelect: (post: Post) => void
+}
+
+export default function PostListItem({ post, selected, onSelect }: PostListItemProps) {
   return (
-    <ListItem selected={selected}>
-      <ListItemButton onClick={() => { onSelect(post) }}>
+    <ListItem disablePadding>
+      <ListItemButton selected={selected} onClick={() => { onSelect(post) }}>
         <ListItemText
           primary={<PostTitle post={post} />}
           secondary={<PostInfo post={post} />}
@@ -78,4 +91,3 @@ export default function PostListItem({ post, selected, onSelect }) {
     </ListItem>
   )
 }
-

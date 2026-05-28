@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { ipcRenderer } from 'electron'
 import { useAtomValue } from 'jotai'
 import {
-  Fab, Dialog, DialogTitle, DialogContent, Box
+  Fab, Dialog, DialogTitle, DialogContent, Box, SxProps, Theme
 } from '@mui/material'
 import { Add } from '@mui/icons-material'
 import Sidebar from './sidebar/Sidebar'
@@ -12,9 +12,7 @@ import * as ContentMode from '../../constants/ContentMode'
 import { pageview } from '../../modules/AnalyticsHelper'
 import BlogList from '../index/BlogList'
 import AuthButton from '../index/AuthButton'
-
 import { currentAuthState, currentBlogState } from '../../state/currentBlog'
-
 
 const styles = {
   root: {
@@ -24,12 +22,12 @@ const styles = {
     top: 0,
     bottom: 0,
     overflow: 'hidden'
-  },
+  } as SxProps<Theme>,
   btnAdd: {
     position: 'fixed',
-    right:(theme) => theme.spacing(3),
-    bottom:(theme) => theme.spacing(3)
-  },
+    right: (theme) => theme.spacing(3),
+    bottom: (theme) => theme.spacing(3)
+  } as SxProps<Theme>,
   editor: {
     position: 'fixed',
     left: 0,
@@ -37,12 +35,17 @@ const styles = {
     top: 0,
     bottom: 0,
     zIndex: 1300,
-    backgroundColor:(theme) => theme.palette.background.default,
+    backgroundColor: (theme) => theme.palette.background.default,
     overflowY: 'scroll'
-  }
+  } as SxProps<Theme>
 }
 
-function BlogListDialog({open, onClose}) {
+interface BlogListDialogProps {
+  open: boolean
+  onClose: () => void
+}
+
+function BlogListDialog({ open, onClose }: BlogListDialogProps) {
   return (
     <Dialog open={open} scroll="paper" onClose={onClose}>
       <DialogTitle>
@@ -56,7 +59,12 @@ function BlogListDialog({open, onClose}) {
   )
 }
 
-function EditorDialog({mode, onClose}) {
+interface EditorDialogProps {
+  mode: string
+  onClose: () => void
+}
+
+function EditorDialog({ mode, onClose }: EditorDialogProps) {
   return (
     <Box sx={styles.editor}>
       <Editor
@@ -69,12 +77,12 @@ function EditorDialog({mode, onClose}) {
 
 export default function Blog() {
   const currentAuth = useAtomValue(currentAuthState)
-	const currentBlog = useAtomValue(currentBlogState)
-  const [contentMode, setContentMode] = useState(ContentMode.VIEW)
-  const [openEditor, setOpenEditor] = useState(false)
-  const [openBlogSelector, setOpenBlogSelector] = useState(!currentBlog)
+  const currentBlog = useAtomValue(currentBlogState)
+  const [contentMode, setContentMode] = useState<string>(ContentMode.VIEW)
+  const [openEditor, setOpenEditor] = useState<boolean>(false)
+  const [openBlogSelector, setOpenBlogSelector] = useState<boolean>(!currentBlog)
 
-	useEffect(() => {
+  useEffect(() => {
     if (currentBlog && currentAuth) {
       pageview(`/blog/${currentBlog.name}`, `${currentBlog.title}`)
       ipcRenderer.send('fetch-categories', currentAuth.uuid, currentBlog.name)
@@ -111,7 +119,6 @@ export default function Blog() {
           onClose={() => setContentMode(ContentMode.VIEW)}
         />
       }
-      
     </Box>
   )
 }
