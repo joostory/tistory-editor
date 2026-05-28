@@ -6,8 +6,8 @@
   "main": "src/main/main.js",
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --mode production",
-    "start:build": "cross-env NODE_ENV=development webpack --watch --mode development",
-    "start:app": "cross-env NODE_DEBUG=request NODE_ENV=development electron .",
+    "start:build": "cross-env NODE_ENV=development webpack serve --mode development",
+    "start:app": "wait-on http://localhost:8080 && cross-env NODE_DEBUG=request NODE_ENV=development electron .",
     "start": "npm-run-all --parallel start:build start:app",
     "clean": "rm -rf dist",
     "dist": "electron-builder",
@@ -57,8 +57,10 @@
     "sass": "^1.99.0",
     "sass-loader": "^17.0.0",
     "style-loader": "^4.0.0",
+    "wait-on": "^9.0.10",
     "webpack": "^5.106.2",
-    "webpack-cli": "^7.0.2"
+    "webpack-cli": "^7.0.2",
+    "webpack-dev-server": "^5.2.4"
   },
   "dependencies": {
     "@codemirror/lang-markdown": "^6.5.0",

@@ -67,6 +67,16 @@ const config = {
 		]
 	},
   target: "electron-renderer",
+  devServer: {
+    static: {
+      directory: path.join(__dirname, 'app'),
+    },
+    compress: true,
+    port: 8080,
+    hot: true,
+    historyApiFallback: true,
+    open: false
+  }
 }
 
 
