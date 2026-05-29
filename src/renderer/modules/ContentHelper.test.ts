@@ -1,4 +1,4 @@
-import { makeUrlBase, unixtimstampToDate, timestampsToDate } from './ContentHelper'
+import { makeUrlBase, unixtimstampToDate, timestampsToDate } from '#/renderer/modules/ContentHelper'
 import dayjs from 'dayjs'
 
 describe("makeUrlBase", () => {

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Dialog, Button, DialogTitle, DialogContent, DialogActions } from '@mui/material'
-import ChipInput from './ChipInput'
+import ChipInput from '#/renderer/components/editor/ChipInput'
 
 interface EditorInfoDialogProps {
   onRequestClose: () => void;

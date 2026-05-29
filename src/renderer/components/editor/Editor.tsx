@@ -3,23 +3,23 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import update from 'immutability-helper'
 import { ipcRenderer } from 'electron'
 
-import { currentAuthState, currentBlogState } from '../../state/currentBlog'
-import * as ContentMode from '../../constants/ContentMode'
+import { currentAuthState, currentBlogState } from '#/renderer/state/currentBlog'
+import * as ContentMode from '#/renderer/constants/ContentMode'
 
 import {
   Box
 } from '@mui/material'
-import EditorContent from './EditorContent'
-import EditorToolbar from './EditorToolbar'
-import EditorInfoDialog from './EditorInfoDialog'
-import Loading from '../Loading'
+import EditorContent from '#/renderer/components/editor/EditorContent'
+import EditorToolbar from '#/renderer/components/editor/EditorToolbar'
+import EditorInfoDialog from '#/renderer/components/editor/EditorInfoDialog'
+import Loading from '#/renderer/components/Loading'
 
-import { pageview } from '../../modules/AnalyticsHelper'
-import { isPublished, PUBLISHED } from '../../constants/PostState'
-import { currentPostState } from '../../state/currentPost'
-import { postsState } from '../../state/posts'
-import { preferencesState } from '../../state/preferences'
-import { Post, PostData, Auth, Blog, Preferences } from '../../types'
+import { pageview } from '#/renderer/modules/AnalyticsHelper'
+import { isPublished, PUBLISHED } from '#/renderer/constants/PostState'
+import { currentPostState } from '#/renderer/state/currentPost'
+import { postsState } from '#/renderer/state/posts'
+import { preferencesState } from '#/renderer/state/preferences'
+import { Post, PostData, Auth, Blog, Preferences } from '#/renderer/types'
 
 const styles = {
   root: {

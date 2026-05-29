@@ -1,4 +1,4 @@
-import OauthInfoReader from './OauthInfoReader'
+import OauthInfoReader from '#/main/oauth/OauthInfoReader'
 
 describe('oauthInfo reader', () => {
   it('read google oauthInfo', () => {

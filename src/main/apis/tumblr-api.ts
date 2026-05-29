@@ -2,9 +2,9 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as os from 'os'
 import { v4 as uuidv4 } from 'uuid'
-import OauthInfoReader from '../oauth/OauthInfoReader'
-import ExternalOAuth1 from '../oauth/ExternalOAuth1'
-import OAuthRequestManager from '../oauth/OAuthRequestManager'
+import OauthInfoReader from '#/main/oauth/OauthInfoReader'
+import ExternalOAuth1 from '#/main/oauth/ExternalOAuth1'
+import OAuthRequestManager from '#/main/oauth/OAuthRequestManager'
 
 const NpfConverter = require('../lib/NpfConverter')
 const tumblr = require("tumblr.js")

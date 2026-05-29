@@ -1,8 +1,8 @@
 import { ipcMain } from 'electron'
 import dayjs from 'dayjs'
-import * as AuthenticationManager from '../lib/AuthenticationManager'
-import * as ProviderApiManager from '../lib/ProviderApiManager'
-import * as NpfConverter from '../lib/NpfConverter'
+import * as AuthenticationManager from '#/main/lib/AuthenticationManager'
+import * as ProviderApiManager from '#/main/lib/ProviderApiManager'
+import * as NpfConverter from '#/main/lib/NpfConverter'
 
 // 'opengraph-fetcher'는 CJS 혹은 ESM 지원 여부가 불투명할 수 있으므로 safe require 사용
 const fetcher = require('opengraph-fetcher')

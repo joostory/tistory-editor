@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react'
 import { ipcRenderer } from 'electron'
 import { useSetAtom } from 'jotai'
-import { preferencesState } from '../state/preferences'
-import { initializedStatusState } from '../state/status'
-import { accountsState } from '../state/accounts'
-import { currentBlogCategoriesState } from '../state/currentBlog'
-import { postsInitializedState, postsLockState, postsState } from '../state/posts'
-import { currentPostState } from '../state/currentPost'
-import { Account, Post, Preferences } from '../types'
+import { preferencesState } from '#/renderer/state/preferences'
+import { initializedStatusState } from '#/renderer/state/status'
+import { accountsState } from '#/renderer/state/accounts'
+import { currentBlogCategoriesState } from '#/renderer/state/currentBlog'
+import { postsInitializedState, postsLockState, postsState } from '#/renderer/state/posts'
+import { currentPostState } from '#/renderer/state/currentPost'
+import { Account, Post, Preferences } from '#/renderer/types'
 
 export default function IpcEventReceiver() {
   const setPreferences = useSetAtom(preferencesState)

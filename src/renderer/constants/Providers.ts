@@ -1,4 +1,4 @@
-import tumblrLogo from '../images/logo_tumblr.png'
+import tumblrLogo from '#/renderer/images/logo_tumblr.png'
 
 class Provider {
   name: string

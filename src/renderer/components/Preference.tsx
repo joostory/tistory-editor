@@ -6,9 +6,9 @@ import {
   FormControl, InputLabel, Select, MenuItem, SelectChangeEvent
 } from '@mui/material'
 
-import * as AppTheme from '../constants/AppTheme'
+import * as AppTheme from '#/renderer/constants/AppTheme'
 import { useAtomValue } from 'jotai'
-import { preferencesState } from '../state/preferences'
+import { preferencesState } from '#/renderer/state/preferences'
 
 export default function Preference() {
   const [open, setOpen] = useState<boolean>(false)

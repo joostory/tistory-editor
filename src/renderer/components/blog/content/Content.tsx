@@ -1,9 +1,9 @@
 import React from 'react'
 import { useAtomValue } from 'jotai'
-import TumblrContentViewer from './TumblrContentViewer'
+import TumblrContentViewer from '#/renderer/components/blog/content/TumblrContentViewer'
 import { Box, Typography, SxProps, Theme } from '@mui/material'
-import { currentAuthState } from '../../../state/currentBlog'
-import { currentPostState } from '../../../state/currentPost'
+import { currentAuthState } from '#/renderer/state/currentBlog'
+import { currentPostState } from '#/renderer/state/currentPost'
 
 const styles = {
   container: {

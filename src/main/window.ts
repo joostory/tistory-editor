@@ -2,7 +2,7 @@ import { app, BrowserWindow, Menu, shell, dialog } from 'electron'
 import * as settings from 'electron-settings'
 import * as path from 'path'
 import * as url from 'url'
-import * as appInfo from './appInfo'
+import * as appInfo from '#/main/appInfo'
 
 let mainWindow: BrowserWindow | null = null
 

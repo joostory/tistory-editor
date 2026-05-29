@@ -3,6 +3,9 @@
   "productName": "TistoryEditor",
   "version": "0.0.0-development",
   "description": "Editor for Tistory",
+  "imports": {
+    "#/*": "./src/*"
+  },
   "main": "out/main/main.js",
   "scripts": {
     "dev": "electron-vite dev",

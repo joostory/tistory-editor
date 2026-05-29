@@ -1,7 +1,7 @@
 import React from 'react'
 import { Avatar, ListItem, ListItemText, ListItemAvatar, Typography, ListItemButton } from '@mui/material';
 import { Stars } from '@mui/icons-material'
-import { Blog } from '../../types'
+import { Blog } from '#/renderer/types'
 
 interface ProfileAvatarProps {
   blog: Blog;

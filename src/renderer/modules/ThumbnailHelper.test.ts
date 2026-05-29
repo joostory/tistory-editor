@@ -1,4 +1,4 @@
-import { makeThumbnail } from './ThumbnailHelper'
+import { makeThumbnail } from '#/renderer/modules/ThumbnailHelper'
 
 describe("ThumbnailHelper", () => {
   it("makeThumbnail", () => {

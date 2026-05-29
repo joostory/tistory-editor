@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
-import { pageview } from '../../modules/AnalyticsHelper'
+import { pageview } from '#/renderer/modules/AnalyticsHelper'
 import {
   Container, Typography
 } from '@mui/material'
-import BlogList from './BlogList'
-import AuthButton from './AuthButton'
+import BlogList from '#/renderer/components/index/BlogList'
+import AuthButton from '#/renderer/components/index/AuthButton'
 
 const styles = {
   root: {

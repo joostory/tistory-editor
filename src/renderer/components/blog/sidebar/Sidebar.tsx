@@ -1,7 +1,7 @@
 import React from 'react'
 import { Drawer, Box, SxProps, Theme } from '@mui/material'
-import Header from './Header'
-import PostList from './PostList'
+import Header from '#/renderer/components/blog/sidebar/Header'
+import PostList from '#/renderer/components/blog/sidebar/PostList'
 
 const styles = {
   sidebar: {

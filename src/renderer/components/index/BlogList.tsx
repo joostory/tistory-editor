@@ -6,10 +6,10 @@ import {
   List, ListSubheader, Button, Avatar,
   Typography, Paper
 } from '@mui/material'
-import BlogListItem from './BlogListItem'
-import Providers from '../../constants/Providers'
-import { accountsState } from '../../state/accounts'
-import { Account, Blog, Auth } from '../../types'
+import BlogListItem from '#/renderer/components/index/BlogListItem'
+import Providers from '#/renderer/constants/Providers'
+import { accountsState } from '#/renderer/state/accounts'
+import { Account, Blog, Auth } from '#/renderer/types'
 
 const styles = {
   paper: {

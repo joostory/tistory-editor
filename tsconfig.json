@@ -13,7 +13,7 @@
     "skipLibCheck": true,
     "noUncheckedSideEffectImports": false,
     "paths": {
-      "*": ["./node_modules/*", "./src/*"]
+      "#/*": ["./src/*"]
     }
   },
   "include": ["src/**/*"],

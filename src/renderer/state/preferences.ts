@@ -1,5 +1,5 @@
 import { atom } from 'jotai'
-import { Preferences } from '../types'
+import { Preferences } from '#/renderer/types'
 
 export const INITIAL_PREFERENCES: Preferences = {}
 

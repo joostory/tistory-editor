@@ -1,9 +1,9 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 
-import './styles/index.scss'
-import ThemeApp from './containers/ThemeApp'
-import IpcEventReceiver from './containers/IpcEventReceiver'
+import '#/renderer/styles/index.scss'
+import ThemeApp from '#/renderer/containers/ThemeApp'
+import IpcEventReceiver from '#/renderer/containers/IpcEventReceiver'
 
 const container = document.getElementById('root')
 if (container) {

@@ -10,3 +10,4 @@ app/*.txt
 app/index.html
 .oauthInfo.json
 out
+scratch

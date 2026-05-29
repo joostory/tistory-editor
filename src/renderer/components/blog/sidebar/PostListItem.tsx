@@ -3,9 +3,9 @@ import { useAtomValue } from 'jotai'
 import dayjs from 'dayjs'
 import { ListItem, ListItemButton, ListItemText, Typography, Box, SxProps, Theme } from '@mui/material'
 import { DraftsOutlined, PhotoOutlined, CommentOutlined } from '@mui/icons-material'
-import { isPublished } from '../../../constants/PostState'
-import { currentBlogCategoriesState } from '../../../state/currentBlog'
-import { Post } from '../../../types'
+import { Post } from '#/renderer/types'
+import { isPublished } from '#/renderer/constants/PostState'
+import { currentBlogCategoriesState } from '#/renderer/state/currentBlog'
 
 const styles = {
   info: {

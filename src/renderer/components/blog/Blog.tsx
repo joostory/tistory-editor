@@ -5,14 +5,14 @@ import {
   Fab, Dialog, DialogTitle, DialogContent, Box, SxProps, Theme
 } from '@mui/material'
 import { Add } from '@mui/icons-material'
-import Sidebar from './sidebar/Sidebar'
-import Content from './content/Content'
-import Editor from '../editor/Editor'
-import * as ContentMode from '../../constants/ContentMode'
-import { pageview } from '../../modules/AnalyticsHelper'
-import BlogList from '../index/BlogList'
-import AuthButton from '../index/AuthButton'
-import { currentAuthState, currentBlogState } from '../../state/currentBlog'
+import Sidebar from '#/renderer/components/blog/sidebar/Sidebar'
+import Content from '#/renderer/components/blog/content/Content'
+import Editor from '#/renderer/components/editor/Editor'
+import * as ContentMode from '#/renderer/constants/ContentMode'
+import { pageview } from '#/renderer/modules/AnalyticsHelper'
+import BlogList from '#/renderer/components/index/BlogList'
+import AuthButton from '#/renderer/components/index/AuthButton'
+import { currentAuthState, currentBlogState } from '#/renderer/state/currentBlog'
 
 const styles = {
   root: {

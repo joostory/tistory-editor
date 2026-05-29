@@ -4,11 +4,11 @@ import { ipcRenderer } from 'electron'
 
 import { CircularProgress, List, Typography, Box, SxProps, Theme } from '@mui/material'
 
-import PostListItem from './PostListItem'
-import { currentAuthState, currentBlogState } from '../../../state/currentBlog'
-import { postsInitializedState, postsLockState, postsState } from '../../../state/posts'
-import { currentPostState } from '../../../state/currentPost'
-import { Post } from '../../../types'
+import PostListItem from '#/renderer/components/blog/sidebar/PostListItem'
+import { currentAuthState, currentBlogState } from '#/renderer/state/currentBlog'
+import { postsInitializedState, postsLockState, postsState } from '#/renderer/state/posts'
+import { currentPostState } from '#/renderer/state/currentPost'
+import { Post } from '#/renderer/types'
 
 const styles = {
   root: {
