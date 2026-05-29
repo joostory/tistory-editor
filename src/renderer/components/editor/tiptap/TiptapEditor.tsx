@@ -324,7 +324,7 @@ export default function TiptapEditor({ value, onChange }: TiptapEditorProps) {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      const files = Array.from(e.target.files)
+      const files = Array.from(e.target.files) as File[]
       const imageFiles = files.filter(file => file.type.indexOf('image/') === 0)
       if (imageFiles.length > 0) {
         insertImages(imageFiles)
