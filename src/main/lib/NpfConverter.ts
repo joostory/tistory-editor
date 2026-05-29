@@ -147,6 +147,24 @@ export function tiptapToNpf(tiptapJson: any): any[] {
           }
         }
       }
+    } else if (node.type === 'video') {
+      if (node.attrs && node.attrs.src) {
+        const nextIdx = blocks.length
+        const posterMedia = node.attrs.poster ? [{ type: 'image/jpeg', url: node.attrs.poster }] : []
+        blocks.push({
+          type: 'video',
+          provider: node.attrs.provider || 'tumblr',
+          url: node.attrs.src,
+          media: {
+            url: node.attrs.src,
+            type: 'video/mp4',
+            width: node.attrs.width || 1920,
+            height: node.attrs.height || 1080
+          },
+          poster: posterMedia
+        })
+        displayRows.push({ blocks: [nextIdx] })
+      }
     }
   }
   
@@ -376,6 +394,19 @@ function convertSingleBlockToTiptapNode(block: any): any {
         description: block.description || '',
         siteName: block.site_name || '',
         image: poster
+      }
+    }
+  } else if (block.type === 'video') {
+    const videoUrl = block.media && block.media.url ? block.media.url : (block.url || '')
+    const poster = block.poster && block.poster[0] ? block.poster[0].url : ''
+    return {
+      type: 'video',
+      attrs: {
+        src: videoUrl,
+        poster: poster,
+        provider: block.provider || '',
+        width: block.media && block.media.width ? block.media.width : undefined,
+        height: block.media && block.media.height ? block.media.height : undefined
       }
     }
   }
@@ -712,6 +743,14 @@ function convertSingleBlockToHtml(block: any): string {
     const imageStyle = hasImage ? `background-image: url('${escapeHtml(poster)}')` : 'display: none'
     
     return `<div class="link-card" data-url="${escapeHtml(url)}" data-title="${escapeHtml(title)}" data-description="${escapeHtml(description)}" data-site-name="${escapeHtml(siteName)}" data-image="${escapeHtml(poster)}" style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; display: flex; margin: 16px 0; font-family: sans-serif; text-decoration: none; color: inherit; cursor: pointer;"><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" style="display: flex; width: 100%; text-decoration: none; color: inherit;"><div class="link-card-content" style="flex: 1; padding: 16px; display: flex; flex-direction: column; justify-content: center;"><div class="link-card-title" style="font-weight: bold; font-size: 16px; margin-bottom: 8px; color: #1a202c; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(title)}</div><div class="link-card-description" style="font-size: 14px; color: #4a5568; margin-bottom: 8px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${escapeHtml(description)}</div><div class="link-card-site" style="font-size: 12px; color: #718096;">${escapeHtml(siteName)}</div></div><div class="link-card-image" style="width: 150px; background-size: cover; background-position: center; ${imageStyle}"></div></a></div>`
+  } else if (block.type === 'video') {
+    const videoUrl = block.media && block.media.url ? block.media.url : (block.url || '')
+    const poster = block.poster && block.poster[0] ? block.poster[0].url : ''
+    const posterAttr = poster ? ` poster="${escapeHtml(poster)}"` : ''
+    const widthAttr = block.media && block.media.width ? ` width="${block.media.width}"` : ''
+    const heightAttr = block.media && block.media.height ? ` height="${block.media.height}"` : ''
+    
+    return `<div class="video-container" style="margin: 16px 0; max-width: 100%;"><video src="${escapeHtml(videoUrl)}"${posterAttr}${widthAttr}${heightAttr} controls style="max-width: 100%; height: auto; border-radius: 8px;"></video></div>`
   }
   return ''
 }

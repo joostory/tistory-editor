@@ -349,5 +349,36 @@ describe('NpfConverter - 리스트 및 링크 양방향 변환 검증 테스트'
       const backToHtml = NpfConverter.npfToHtml(npf, null)
       expect(backToHtml).toBe(html)
     })
+    
+    test('비디오 블록 렌더링', () => {
+      const npf = [
+        {
+          type: 'video',
+          provider: 'tumblr',
+          url: 'https://va.media.tumblr.com/tumblr_sk4xj7CLM11qzwrx8_720.mp4',
+          media: {
+            url: 'https://va.media.tumblr.com/tumblr_sk4xj7CLM11qzwrx8_720.mp4',
+            type: 'video/mp4',
+            width: 1920,
+            height: 1080
+          },
+          poster: [
+            {
+              media_key: '991bb1a1c530c82f1ddeee54d6bb40d1:b4033b57af129a96-ef',
+              type: 'image/jpeg',
+              width: 540,
+              height: 304,
+              url: 'https://64.media.tumblr.com/991bb1a1c530c82f1ddeee54d6bb40d1/b4033b57af129a96-ef/s540x810/0fd1fc8eca5c93194791936cfaee77f5d7471b69.jpg'
+            }
+          ]
+        }
+      ]
+      
+      const html = NpfConverter.npfToHtml(npf, null)
+      expect(html).toContain('<video src="https://va.media.tumblr.com/tumblr_sk4xj7CLM11qzwrx8_720.mp4"')
+      expect(html).toContain('poster="https://64.media.tumblr.com/991bb1a1c530c82f1ddeee54d6bb40d1/b4033b57af129a96-ef/s540x810/0fd1fc8eca5c93194791936cfaee77f5d7471b69.jpg"')
+      expect(html).toContain('width="1920"')
+      expect(html).toContain('height="1080"')
+    })
   })
 })

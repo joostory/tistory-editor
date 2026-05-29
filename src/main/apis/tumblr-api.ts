@@ -28,6 +28,8 @@ function _tumblrPostToEditorPost(post: any) {
   let markdownContent = ''
   let contentHtml = ''
 
+  console.log(JSON.stringify(post))
+
   if (post.content && Array.isArray(post.content)) {
     // Neue Post Format (NPF)
     tiptapContent = NpfConverter.npfToTiptap(post.content, post.layout)
