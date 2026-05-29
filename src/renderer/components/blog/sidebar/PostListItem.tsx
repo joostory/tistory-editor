@@ -70,6 +70,7 @@ function PostIcon({ post }: HelperProps) {
 }
 
 interface PostListItemProps {
+  key?: any
   post: Post
   selected: boolean
   onSelect: (post: Post) => void

@@ -1,19 +1,19 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "commonjs",
+    "module": "esnext",
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "allowJs": false,
     "jsx": "react-jsx",
     "noEmit": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "strict": false,
     "skipLibCheck": true,
-    "baseUrl": ".",
+    "noUncheckedSideEffectImports": false,
     "paths": {
-      "*": ["node_modules/*", "src/*"]
+      "*": ["./node_modules/*", "./src/*"]
     }
   },
   "include": ["src/**/*"],

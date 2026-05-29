@@ -16,6 +16,7 @@ function ProfileAvatar({ blog }: ProfileAvatarProps) {
 }
 
 interface BlogListItemProps {
+  key?: any;
   blog: Blog;
   onSelect: () => void;
 }
