@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron'
-import * as AuthenticationManager from '../lib/AuthenticationManager'
-import * as ProviderApiManager from '../lib/ProviderApiManager'
+import * as AuthenticationManager from '#/main/lib/AuthenticationManager'
+import * as ProviderApiManager from '#/main/lib/ProviderApiManager'
 
 async function fetchAccount(auth: any): Promise<any> {
   const api = ProviderApiManager.getApi(auth.provider)

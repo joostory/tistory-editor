@@ -1,5 +1,5 @@
 import { atom } from 'jotai'
-import { Post } from '../types'
+import { Post } from '#/renderer/types'
 
 export const INITIAL_CURRENT_POST: Post | null = null
 

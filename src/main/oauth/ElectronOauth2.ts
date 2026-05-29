@@ -1,7 +1,7 @@
 import * as queryString from 'querystring'
 import axios from 'axios'
 import { BrowserWindow } from 'electron'
-import AuthUtils from '../lib/AuthUtils'
+import AuthUtils from '#/main/lib/AuthUtils'
 
 interface Oauth2Info {
   redirectUri?: string

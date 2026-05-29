@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react'
-import { pageview } from '../../../modules/AnalyticsHelper'
-import TextContentViewer from './TextContentViewer'
+import { pageview } from '#/renderer/modules/AnalyticsHelper'
+import TextContentViewer from '#/renderer/components/blog/content/TextContentViewer'
 import { useAtomValue } from 'jotai'
-import { currentBlogState } from '../../../state/currentBlog'
-import { currentPostState } from '../../../state/currentPost'
+import { currentBlogState } from '#/renderer/state/currentBlog'
+import { currentPostState } from '#/renderer/state/currentPost'
 
 
 interface TumblrContentViewerProps {

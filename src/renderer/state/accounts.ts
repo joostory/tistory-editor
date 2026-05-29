@@ -1,5 +1,5 @@
 import { atom } from 'jotai'
-import { Account } from '../types'
+import { Account } from '#/renderer/types'
 
 export const INITIAL_ACCOUNTS: Account[] = []
 

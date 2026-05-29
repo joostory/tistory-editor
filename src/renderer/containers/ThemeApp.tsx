@@ -2,11 +2,11 @@ import React, { useMemo, useState, useEffect } from 'react'
 import { ipcRenderer } from 'electron'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import { HashRouter } from 'react-router-dom'
-import * as AppTheme from '../constants/AppTheme'
-import App from './App'
+import * as AppTheme from '#/renderer/constants/AppTheme'
+import App from '#/renderer/containers/App'
 import { useAtomValue } from 'jotai'
-import { preferencesState } from '../state/preferences'
-import { Preferences } from '../types'
+import { preferencesState } from '#/renderer/state/preferences'
+import { Preferences } from '#/renderer/types'
 
 const CONTENT_PALETTE = {
   background: '#fff',

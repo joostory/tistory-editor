@@ -1,8 +1,8 @@
 import { app } from 'electron'
-import * as ipc from './ipc-event'
+import * as ipc from '#/main/ipc-event'
 import * as settings from 'electron-settings'
-import { initWindow, getWindow } from './window'
-import OAuthRequestManager from './oauth/OAuthRequestManager'
+import { initWindow, getWindow } from '#/main/window'
+import OAuthRequestManager from '#/main/oauth/OAuthRequestManager'
 
 const PROTOCOL = "tistory-editor"
 

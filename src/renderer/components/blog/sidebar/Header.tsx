@@ -4,9 +4,9 @@ import {
   Toolbar, Avatar, Typography, Badge, IconButton, SxProps, Theme
 } from '@mui/material'
 import { ArrowDropDown } from '@mui/icons-material'
-import Providers from '../../../constants/Providers'
-import { currentAuthState, currentBlogState } from '../../../state/currentBlog' 
-import { Blog } from '../../../types'
+import Providers from '#/renderer/constants/Providers'
+import { currentAuthState, currentBlogState } from '#/renderer/state/currentBlog' 
+import { Blog } from '#/renderer/types'
 
 const styles = {
   root: {

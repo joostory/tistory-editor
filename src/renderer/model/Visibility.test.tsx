@@ -1,4 +1,4 @@
-import Visibility from './Visibility'
+import Visibility from '#/renderer/model/Visibility'
 
 describe('Visibility', () => {
   it('Visibility.toString', () => {

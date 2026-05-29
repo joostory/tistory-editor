@@ -1,7 +1,7 @@
 import * as queryString from 'querystring'
 import axios from 'axios'
 import { shell } from 'electron'
-import AuthUtils from '../lib/AuthUtils'
+import AuthUtils from '#/main/lib/AuthUtils'
 
 export default class ExternalOAuth2 {
   private oauthInfo: any

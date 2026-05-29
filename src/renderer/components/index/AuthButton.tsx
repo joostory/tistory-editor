@@ -6,8 +6,8 @@ import {
   ListItemButton
 } from '@mui/material'
 import { Add } from '@mui/icons-material'
-import Providers from '../../constants/Providers'
-import { Provider } from '../../types'
+import Providers from '#/renderer/constants/Providers'
+import { Provider } from '#/renderer/types'
 
 const styles = {
   btnAdd: {

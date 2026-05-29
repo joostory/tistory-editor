@@ -2,14 +2,14 @@ import React, { useEffect } from 'react'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { Routes, Route, useNavigate, useLocation, useParams } from 'react-router-dom'
 
-import Loading from '../components/Loading'
-import Blog from '../components/blog/Blog'
-import Index from '../components/index/Index'
-import { initializedStatusState } from '../state/status'
-import { accountsState } from '../state/accounts'
-import { currentAuthState, currentBlogCategoriesState, currentBlogState, INITIAL_CATEGORIES } from '../state/currentBlog'
-import { INITIAL_POSTS, postsInitializedState, postsLockState, postsState } from '../state/posts'
-import { currentPostState, INITIAL_CURRENT_POST } from '../state/currentPost'
+import Loading from '#/renderer/components/Loading'
+import Blog from '#/renderer/components/blog/Blog'
+import Index from '#/renderer/components/index/Index'
+import { initializedStatusState } from '#/renderer/state/status'
+import { accountsState } from '#/renderer/state/accounts'
+import { currentAuthState, currentBlogCategoriesState, currentBlogState, INITIAL_CATEGORIES } from '#/renderer/state/currentBlog'
+import { INITIAL_POSTS, postsInitializedState, postsLockState, postsState } from '#/renderer/state/posts'
+import { currentPostState, INITIAL_CURRENT_POST } from '#/renderer/state/currentPost'
 
 function BlogRouteWrapper() {
   const { blogName } = useParams()

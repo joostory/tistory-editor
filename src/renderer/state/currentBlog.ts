@@ -1,5 +1,5 @@
 import { atom } from 'jotai'
-import { Auth, Blog } from '../types'
+import { Auth, Blog } from '#/renderer/types'
 
 export const INITIAL_CURRENT_AUTH: Auth | null = null
 export const INITIAL_CURRENT_BLOG: Blog | null = null

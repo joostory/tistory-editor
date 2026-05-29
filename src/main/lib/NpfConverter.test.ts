@@ -1,5 +1,5 @@
 import { marked } from 'marked'
-import * as NpfConverter from './NpfConverter'
+import * as NpfConverter from '#/main/lib/NpfConverter'
 
 jest.mock('marked', () => ({
   marked: {

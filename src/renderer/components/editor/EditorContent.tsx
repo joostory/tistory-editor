@@ -1,9 +1,9 @@
 import React from 'react'
-import TiptapEditor from './tiptap/TiptapEditor'
+import TiptapEditor from '#/renderer/components/editor/tiptap/TiptapEditor'
 import { Container, InputBase } from '@mui/material'
 import { useAtomValue } from 'jotai'
-import { currentAuthState } from '../../state/currentBlog'
-import { Auth } from '../../types'
+import { currentAuthState } from '#/renderer/state/currentBlog'
+import { Auth } from '#/renderer/types'
 
 const styles = {
   container: {

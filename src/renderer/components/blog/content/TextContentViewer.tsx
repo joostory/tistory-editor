@@ -5,10 +5,10 @@ import { Chip, IconButton, Box, Divider, Typography, Container, SxProps, Theme }
 import { OpenInBrowser, Edit } from '@mui/icons-material'
 import highlightjs from 'highlight.js'
 import 'highlight.js/styles/atom-one-dark.css'
-import * as ContentHelper from '../../../modules/ContentHelper'
-import { pageview } from '../../../modules/AnalyticsHelper'
-import { currentBlogState } from '../../../state/currentBlog'
-import { currentPostState } from '../../../state/currentPost'
+import * as ContentHelper from '#/renderer/modules/ContentHelper'
+import { pageview } from '#/renderer/modules/AnalyticsHelper'
+import { currentBlogState } from '#/renderer/state/currentBlog'
+import { currentPostState } from '#/renderer/state/currentPost'
 
 const styles = {
   root: {
