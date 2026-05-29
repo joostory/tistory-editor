@@ -5,8 +5,8 @@ import { v4 as uuidv4 } from 'uuid'
 import OauthInfoReader from '#/main/oauth/OauthInfoReader'
 import ExternalOAuth1 from '#/main/oauth/ExternalOAuth1'
 import OAuthRequestManager from '#/main/oauth/OAuthRequestManager'
+import * as NpfConverter from '#/main/lib/NpfConverter'
 
-const NpfConverter = require('../lib/NpfConverter')
 const tumblr = require("tumblr.js")
 
 const PROVIDER_ID = 'tumblr'

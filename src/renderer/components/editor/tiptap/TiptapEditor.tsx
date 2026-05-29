@@ -4,6 +4,7 @@ import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
 import ImageGroup from '#/renderer/components/editor/tiptap/ImageGroup'
 import LinkCard from '#/renderer/components/editor/tiptap/LinkCard'
+import Video from '#/renderer/components/editor/tiptap/Video'
 import { ipcRenderer } from 'electron'
 import { Box, ToggleButton, ToggleButtonGroup, Divider, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, CircularProgress, SxProps, Theme } from '@mui/material'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
@@ -16,7 +17,8 @@ import {
   Image as ImageIcon,
   GridView,
   LayersClear,
-  AddLink
+  AddLink,
+  OndemandVideo
 } from '@mui/icons-material'
 
 const lightTheme = createTheme({
@@ -81,9 +83,10 @@ interface MenuBarProps {
   editor: Editor | null
   onImageClick: () => void
   onAddLinkCard: () => void
+  onAddVideo: () => void
 }
 
-const MenuBar: React.FC<MenuBarProps> = ({ editor, onImageClick, onAddLinkCard }) => {
+const MenuBar: React.FC<MenuBarProps> = ({ editor, onImageClick, onAddLinkCard, onAddVideo }) => {
   if (!editor) {
     return null
   }
@@ -224,6 +227,14 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor, onImageClick, onAddLinkCard }
           <AddLink />
         </ToggleButton>
         <ToggleButton
+          value="video"
+          onClick={onAddVideo}
+          sx={styles.toolbarBtn}
+          title="비디오 추가"
+        >
+          <OndemandVideo />
+        </ToggleButton>
+        <ToggleButton
           value="groupImages"
           disabled={!canGroup()}
           onClick={() => editor.commands.groupImages()}
@@ -256,6 +267,10 @@ export default function TiptapEditor({ value, onChange }: TiptapEditorProps) {
   const [isLinkCardDialogOpen, setIsLinkCardDialogOpen] = useState<boolean>(false)
   const [linkCardUrl, setLinkCardUrl] = useState<string>('')
   const [isFetchingOg, setIsFetchingOg] = useState<boolean>(false)
+  
+  const [isVideoDialogOpen, setIsVideoDialogOpen] = useState<boolean>(false)
+  const [videoUrl, setVideoUrl] = useState<string>('')
+  const [videoPoster, setVideoPoster] = useState<string>('')
 
   const insertImages = (files: File[]) => {
     files.forEach(file => {
@@ -275,6 +290,7 @@ export default function TiptapEditor({ value, onChange }: TiptapEditorProps) {
       Image,
       ImageGroup,
       LinkCard,
+      Video,
     ],
     content: value,
     onUpdate: ({ editor }) => {
@@ -388,6 +404,37 @@ export default function TiptapEditor({ value, onChange }: TiptapEditorProps) {
     }
   }
 
+  const handleOpenVideoDialog = () => {
+    setVideoUrl('')
+    setVideoPoster('')
+    setIsVideoDialogOpen(true)
+  }
+
+  const handleCloseVideoDialog = () => {
+    setIsVideoDialogOpen(false)
+    setVideoUrl('')
+    setVideoPoster('')
+  }
+
+  const handleSubmitVideo = (e: React.FormEvent) => {
+    if (e) e.preventDefault()
+    if (!videoUrl || !videoUrl.trim()) return
+
+    if (editor) {
+      editor.chain().focus().insertContent({
+        type: 'video',
+        attrs: {
+          src: videoUrl.trim(),
+          poster: videoPoster.trim() || undefined,
+          provider: 'tumblr',
+          width: 1920,
+          height: 1080
+        }
+      }).run()
+    }
+    handleCloseVideoDialog()
+  }
+
   useEffect(() => {
     if (editor && value) {
       if (typeof value === 'object') {
@@ -410,6 +457,7 @@ export default function TiptapEditor({ value, onChange }: TiptapEditorProps) {
           editor={editor} 
           onImageClick={() => fileInputRef.current?.click()} 
           onAddLinkCard={handleOpenLinkCardDialog}
+          onAddVideo={handleOpenVideoDialog}
         />
         <Box sx={styles.editorContent}>
           <EditorContent
@@ -465,6 +513,62 @@ export default function TiptapEditor({ value, onChange }: TiptapEditorProps) {
                 startIcon={isFetchingOg ? <CircularProgress size={16} color="inherit" /> : null}
               >
                 {isFetchingOg ? '가져오는 중...' : '추가'}
+              </Button>
+            </DialogActions>
+          </form>
+        </Dialog>
+        
+        <Dialog 
+          open={isVideoDialogOpen} 
+          onClose={handleCloseVideoDialog}
+          fullWidth
+          maxWidth="xs"
+        >
+          <DialogTitle sx={{ pb: 1, fontSize: '1.1rem', fontWeight: 'bold' }}>
+            비디오 추가
+          </DialogTitle>
+          <form onSubmit={handleSubmitVideo}>
+            <DialogContent sx={{ py: 1 }}>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="video-url"
+                label="비디오 URL 주소"
+                type="url"
+                fullWidth
+                variant="outlined"
+                size="small"
+                value={videoUrl}
+                onChange={(e) => setVideoUrl(e.target.value)}
+                placeholder="https://example.com/video.mp4"
+                required
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                margin="dense"
+                id="video-poster"
+                label="포스터(썸네일) 이미지 URL"
+                type="url"
+                fullWidth
+                variant="outlined"
+                size="small"
+                value={videoPoster}
+                onChange={(e) => setVideoPoster(e.target.value)}
+                placeholder="https://example.com/poster.jpg (선택 사항)"
+              />
+            </DialogContent>
+            <DialogActions sx={{ px: 3, pb: 2 }}>
+              <Button onClick={handleCloseVideoDialog} size="small">
+                취소
+              </Button>
+              <Button 
+                type="submit" 
+                variant="contained" 
+                color="primary" 
+                disabled={!videoUrl.trim()} 
+                size="small"
+              >
+                추가
               </Button>
             </DialogActions>
           </form>

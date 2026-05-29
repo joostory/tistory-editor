@@ -194,6 +194,7 @@ describe('NpfConverter - NPF Layout & Tiptap imageGroup 명시적 연동 테스�
       expect(display[0].blocks).toEqual([0, 1, 2])
       expect(display[1].blocks).toEqual([3, 4])
     })
+
   })
 })
 
@@ -348,6 +349,58 @@ describe('NpfConverter - 리스트 및 링크 양방향 변환 검증 테스트'
 
       const backToHtml = NpfConverter.npfToHtml(npf, null)
       expect(backToHtml).toBe(html)
+    })
+    
+    test('비디오 블록 렌더링', () => {
+      const npf = [
+        {
+          type: 'video',
+          provider: 'tumblr',
+          url: 'https://va.media.tumblr.com/tumblr_sk4xj7CLM11qzwrx8_720.mp4',
+          media: {
+            url: 'https://va.media.tumblr.com/tumblr_sk4xj7CLM11qzwrx8_720.mp4',
+            type: 'video/mp4',
+            width: 1920,
+            height: 1080
+          },
+          poster: [
+            {
+              media_key: '991bb1a1c530c82f1ddeee54d6bb40d1:b4033b57af129a96-ef',
+              type: 'image/jpeg',
+              width: 540,
+              height: 304,
+              url: 'https://64.media.tumblr.com/991bb1a1c530c82f1ddeee54d6bb40d1/b4033b57af129a96-ef/s540x810/0fd1fc8eca5c93194791936cfaee77f5d7471b69.jpg'
+            }
+          ]
+        }
+      ]
+      
+      const html = NpfConverter.npfToHtml(npf, null)
+      expect(html).toContain('<video src="https://va.media.tumblr.com/tumblr_sk4xj7CLM11qzwrx8_720.mp4"')
+      expect(html).toContain('poster="https://64.media.tumblr.com/991bb1a1c530c82f1ddeee54d6bb40d1/b4033b57af129a96-ef/s540x810/0fd1fc8eca5c93194791936cfaee77f5d7471b69.jpg"')
+      expect(html).toContain('width="1920"')
+      expect(html).toContain('height="1080"')
+    })
+
+    test('YouTube 임베드 비디오 블록 렌더링', () => {
+      const npf = [
+        {
+          type: 'video',
+          provider: 'youtube',
+          url: 'https://www.youtube.com/watch?v=jpYdsQuO6PM',
+          embed_html: '<iframe width="356" height="200" id="youtube_iframe" src="https://www.youtube.com/embed/jpYdsQuO6PM?feature=oembed" frameborder="0" allowfullscreen></iframe>',
+          poster: [
+            {
+              url: 'https://64.media.tumblr.com/9ecf45ae9090dfb2e31cd1c95e201072/b2d86543872a9af5-0a/s500x750/6500142cba6241bf0e0e21fcebb6b63987c66c8a.jpg'
+            }
+          ]
+        }
+      ]
+
+      const html = NpfConverter.npfToHtml(npf, null)
+      expect(html).toContain('video-container')
+      expect(html).toContain('data-provider="youtube"')
+      expect(html).toContain('<iframe width="356" height="200" id="youtube_iframe" src="https://www.youtube.com/embed/jpYdsQuO6PM?feature=oembed" frameborder="0" allowfullscreen></iframe>')
     })
   })
 })

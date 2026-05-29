@@ -102,7 +102,7 @@ export default function initContentEvents(): void {
   })
   
   ipcMain.on("save-content", (evt, authUUID: string, blogName: string, post: any) => {
-    console.log('Main.receive: save-content', authUUID, blogName, post)
+    console.log('Main.receive: save-content', authUUID, blogName, JSON.stringify(post, null, 2))
     const auth = AuthenticationManager.findByUUID(authUUID)
     if (!auth) {
       evt.sender.send('finish-save-content')

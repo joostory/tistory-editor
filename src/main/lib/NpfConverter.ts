@@ -147,6 +147,29 @@ export function tiptapToNpf(tiptapJson: any): any[] {
           }
         }
       }
+    } else if (node.type === 'video') {
+      if (node.attrs && node.attrs.src) {
+        const provider = node.attrs.provider || 'tumblr'
+        
+        // Tumblr 직접 업로드 비디오만 NPF 비디오 블록으로 빌드하여 전송
+        if (provider === 'tumblr') {
+          const nextIdx = blocks.length
+          const posterMedia = node.attrs.poster ? [{ type: 'image/jpeg', url: node.attrs.poster }] : []
+          blocks.push({
+            type: 'video',
+            provider: 'tumblr',
+            url: node.attrs.src,
+            media: {
+              url: node.attrs.src,
+              type: 'video/mp4',
+              width: node.attrs.width || 1920,
+              height: node.attrs.height || 1080
+            },
+            poster: posterMedia
+          })
+          displayRows.push({ blocks: [nextIdx] })
+        }
+      }
     }
   }
   
@@ -376,6 +399,20 @@ function convertSingleBlockToTiptapNode(block: any): any {
         description: block.description || '',
         siteName: block.site_name || '',
         image: poster
+      }
+    }
+  } else if (block.type === 'video') {
+    const videoUrl = block.media && block.media.url ? block.media.url : (block.url || '')
+    const poster = block.poster && block.poster[0] ? block.poster[0].url : ''
+    return {
+      type: 'video',
+      attrs: {
+        src: videoUrl,
+        poster: poster,
+        provider: block.provider || '',
+        width: block.media && block.media.width ? block.media.width : undefined,
+        height: block.media && block.media.height ? block.media.height : undefined,
+        embedHtml: block.embed_html || ''
       }
     }
   }
@@ -712,6 +749,43 @@ function convertSingleBlockToHtml(block: any): string {
     const imageStyle = hasImage ? `background-image: url('${escapeHtml(poster)}')` : 'display: none'
     
     return `<div class="link-card" data-url="${escapeHtml(url)}" data-title="${escapeHtml(title)}" data-description="${escapeHtml(description)}" data-site-name="${escapeHtml(siteName)}" data-image="${escapeHtml(poster)}" style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; display: flex; margin: 16px 0; font-family: sans-serif; text-decoration: none; color: inherit; cursor: pointer;"><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" style="display: flex; width: 100%; text-decoration: none; color: inherit;"><div class="link-card-content" style="flex: 1; padding: 16px; display: flex; flex-direction: column; justify-content: center;"><div class="link-card-title" style="font-weight: bold; font-size: 16px; margin-bottom: 8px; color: #1a202c; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(title)}</div><div class="link-card-description" style="font-size: 14px; color: #4a5568; margin-bottom: 8px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${escapeHtml(description)}</div><div class="link-card-site" style="font-size: 12px; color: #718096;">${escapeHtml(siteName)}</div></div><div class="link-card-image" style="width: 150px; background-size: cover; background-position: center; ${imageStyle}"></div></a></div>`
+  } else if (block.type === 'video') {
+    const isYoutube = block.provider === 'youtube'
+    const embedHtml = block.embed_html || ''
+    
+    if (embedHtml) {
+      return `<div class="video-container" data-provider="${escapeHtml(block.provider || '')}" style="margin: 16px 0; max-width: 100%; display: flex; justify-content: center;">${embedHtml}</div>`
+    }
+    
+    const videoUrl = block.media && block.media.url ? block.media.url : (block.url || '')
+    
+    if (isYoutube) {
+      let iframeSrc = videoUrl
+      if (videoUrl && !videoUrl.includes('youtube.com/embed') && videoUrl.includes('youtube.com/watch')) {
+        const urlObj = new URL(videoUrl)
+        const v = urlObj.searchParams.get('v')
+        if (v) {
+          iframeSrc = `https://www.youtube.com/embed/${v}`
+        }
+      } else if (videoUrl && videoUrl.includes('youtu.be/')) {
+        const id = videoUrl.split('youtu.be/')[1]?.split('?')[0]
+        if (id) {
+          iframeSrc = `https://www.youtube.com/embed/${id}`
+        }
+      }
+      
+      const width = block.media && block.media.width ? block.media.width : 560
+      const height = block.media && block.media.height ? block.media.height : 315
+      
+      return `<div class="video-container" data-provider="youtube" style="margin: 16px 0; max-width: 100%; display: flex; justify-content: center;"><iframe src="${escapeHtml(iframeSrc)}" width="${width}" height="${height}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="border-radius: 8px;"></iframe></div>`
+    }
+    
+    const poster = block.poster && block.poster[0] ? block.poster[0].url : ''
+    const posterAttr = poster ? ` poster="${escapeHtml(poster)}"` : ''
+    const widthAttr = block.media && block.media.width ? ` width="${block.media.width}"` : ''
+    const heightAttr = block.media && block.media.height ? ` height="${block.media.height}"` : ''
+    
+    return `<div class="video-container" style="margin: 16px 0; max-width: 100%; display: flex; justify-content: center;"><video src="${escapeHtml(videoUrl)}"${posterAttr}${widthAttr}${heightAttr} controls style="max-width: 100%; height: auto; border-radius: 8px;"></video></div>`
   }
   return ''
 }
