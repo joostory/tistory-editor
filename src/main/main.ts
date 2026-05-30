@@ -11,69 +11,100 @@ settings.configure({
   fileName: 'Settings'
 })
 
-let deeplinkingUrl: string | undefined
+let pendingDeeplinkingUrl: string | undefined
+let isAppReady = false
+
 app.setAsDefaultProtocolClient(PROTOCOL)
 ;(app as any).showExitPrompt = false
 
-app.on('ready', () => {
-  initWindow()
-  ipc.init()
-})
-
-app.on('activate', () => {
-  initWindow()
-})
-
-app.on('window-all-closed', () => {
-  app.quit()
-})
-
-app.on("open-url", (e, urlString) => {
-  e.preventDefault()
-  
-  if (process.platform === 'darwin') {
-    execOAuthRequestHandler(urlString)
-  } else {
-    deeplinkingUrl = urlString
-  }
-})
-
-function execOAuthRequestHandler(deeplinkingUrlStr?: string) {
-  if (!deeplinkingUrlStr) return
-  console.log("OPEN-URL", deeplinkingUrlStr)
-  const url = new URL(deeplinkingUrlStr)
-  const requestHandler = OAuthRequestManager.loadRequestInfo("oauth")
-  if (requestHandler) {
-    requestHandler(url.searchParams)
+function execOAuthRequestHandler(urlStr?: string) {
+  if (!urlStr) return
+  console.log("Processing OAuth URL:", urlStr)
+  try {
+    const url = new URL(urlStr)
+    const requestHandler = OAuthRequestManager.loadRequestInfo("oauth")
+    if (requestHandler) {
+      requestHandler(url.searchParams)
+    } else {
+      console.warn("OAuth request handler not found yet.")
+    }
+  } catch (error) {
+    console.error("Failed to parse or handle deep link URL:", error)
   }
 }
 
 function restoreWindow() {
   const window = getWindow()
-  if (!window) {
-    return
-  }
+  if (!window) return
+  
   if (window.isMinimized()) {
     window.restore()
   }
-
-  window.focus();
+  window.focus()
 }
 
-const gotTheLock = app.requestSingleInstanceLock();
+const gotTheLock = app.requestSingleInstanceLock()
 console.log("DEBUG: gotTheLock", gotTheLock)
+
 if (!gotTheLock) {
   app.quit()
 } else {
   app.on('second-instance', (_e, argv) => {
     console.log("DEBUG: second-instance argv", argv)
-    if (process.platform !== 'darwin') {
-      deeplinkingUrl = argv.find((arg) => arg.startsWith('tistory-editor://'));
-    }
-
     restoreWindow()
-    if (deeplinkingUrl) {
-      execOAuthRequestHandler(deeplinkingUrl)
+    
+    if (process.platform !== 'darwin') {
+      const url = argv.find((arg) => arg.startsWith(`${PROTOCOL}://`))
+      if (url) {
+        if (isAppReady) {
+          execOAuthRequestHandler(url)
+        } else {
+          pendingDeeplinkingUrl = url
+        }
+      }
     }
   })
+
+  app.on("open-url", (e, urlString) => {
+    e.preventDefault()
+    if (isAppReady) {
+      execOAuthRequestHandler(urlString)
+    } else {
+      pendingDeeplinkingUrl = urlString
+    }
+  })
+
+  app.on('ready', () => {
+    isAppReady = true
+    initWindow()
+    ipc.init()
+
+    if (process.platform !== 'darwin') {
+      const url = process.argv.find((arg) => arg.startsWith(`${PROTOCOL}://`))
+      if (url) {
+        pendingDeeplinkingUrl = url
+      }
+    }
+
+    if (pendingDeeplinkingUrl) {
+      setTimeout(() => {
+        execOAuthRequestHandler(pendingDeeplinkingUrl)
+        pendingDeeplinkingUrl = undefined
+      }, 100)
+    }
+  })
+
+  app.on('activate', () => {
+    const window = getWindow()
+    if (!window) {
+      initWindow()
+    } else {
+      restoreWindow()
+    }
+  })
+
+  app.on('window-all-closed', () => {
+    app.quit()
+  })
 }
+
