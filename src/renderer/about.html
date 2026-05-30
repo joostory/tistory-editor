@@ -37,13 +37,16 @@
 		</div>
 
 		<script>
-      const appInfo = require('electron').remote.require('./appInfo')
-      const latestVersion = appInfo.latestVersion()
-      document.getElementById("version").innerHTML = appInfo.version
-      if (appInfo.version != latestVersion) {
-        document.getElementById("latestVersion").innerHTML = latestVersion
-        document.getElementById("needUpgrade").style.display = "block"
-      }
+      const { ipcRenderer } = require('electron')
+
+      ipcRenderer.invoke('get-app-info').then((appInfo) => {
+        const latestVersion = appInfo.latestVersion
+        document.getElementById("version").innerHTML = appInfo.version
+        if (appInfo.version != latestVersion) {
+          document.getElementById("latestVersion").innerHTML = latestVersion
+          document.getElementById("needUpgrade").style.display = "block"
+        }
+      })
 		</script>
   </body>
 
