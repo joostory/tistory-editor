@@ -272,6 +272,16 @@ export default function TiptapEditor({ value, onChange }: TiptapEditorProps) {
   const [videoUrl, setVideoUrl] = useState<string>('')
   const [videoPoster, setVideoPoster] = useState<string>('')
 
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
+
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current)
+      }
+    }
+  }, [])
+
   const insertImages = (files: File[]) => {
     files.forEach(file => {
       const reader = new FileReader()
@@ -294,6 +304,17 @@ export default function TiptapEditor({ value, onChange }: TiptapEditorProps) {
     ],
     content: value,
     onUpdate: ({ editor }) => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current)
+      }
+      debounceTimerRef.current = setTimeout(() => {
+        onChange(editor.getJSON())
+      }, 300)
+    },
+    onBlur: ({ editor }) => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current)
+      }
       onChange(editor.getJSON())
     },
     editorProps: {
@@ -436,16 +457,22 @@ export default function TiptapEditor({ value, onChange }: TiptapEditorProps) {
   }
 
   useEffect(() => {
-    if (editor && value) {
-      if (typeof value === 'object') {
-        const currentJson = editor.getJSON()
-        if (JSON.stringify(value) !== JSON.stringify(currentJson)) {
-          editor.commands.setContent(value)
-        }
-      } else {
-        if (value !== editor.getHTML()) {
-          editor.commands.setContent(value)
-        }
+    if (!editor || !value) return
+
+    // 사용자가 에디터 입력에 집중하고 있는 경우 (포커스된 상태),
+    // 외부 데이터가 에디터 콘텐츠를 리셋하지 않도록 방지하여 한글 조합(IME) 유실을 막습니다.
+    if (editor.isFocused) {
+      return
+    }
+
+    if (typeof value === 'object') {
+      const currentJson = editor.getJSON()
+      if (JSON.stringify(value) !== JSON.stringify(currentJson)) {
+        editor.commands.setContent(value)
+      }
+    } else {
+      if (value !== editor.getHTML()) {
+        editor.commands.setContent(value)
       }
     }
   }, [value, editor])

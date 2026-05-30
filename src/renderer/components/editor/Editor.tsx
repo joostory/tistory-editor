@@ -192,7 +192,7 @@ export default function Editor({ mode, onFinish }: EditorProps) {
 
       ipcRenderer.send("disable-exist-prompt")
     }
-  }, [postData])
+  }, [])
 
   return (
     <Box sx={styles.root}>
