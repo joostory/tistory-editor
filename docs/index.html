@@ -1,34 +1,496 @@
----
----
 <!doctype html>
-<html>
+<html lang="ko">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width">
-	<title>Editor</title>
-	<meta name="description" content="Editor for Tistory 는 Tistory의 API를 사용하여 티스토리에 글을 작성하고 작성한 글을 관리하는 목적으로 만들고 있습니다.">
+	<title>Editor for Tistory - 데스크탑 텍스트 에디터</title>
+	<meta name="description" content="데스크탑에서 오롯이 글쓰기에만 집중할 수 있는 깔끔한 텍스트 에디터입니다. 안전한 로컬 저장과 실시간 자동 백업으로 소중한 글을 안전하게 지키세요.">
 
+	<!-- SEO & OpenGraph -->
 	<meta property="og:type" content="website">
-	<meta property="og:site_name" content="Editor for Tistory">
-	<meta property="og:image" content="https://joostory.github.io/tistory-editor/image/icon.png">
-	<meta property="og:url" content="https://tistory-editor.tistory.com">
-  <meta property="fb:pages" content="249179408451592" />
-	<meta property="fb:app_id" content="1436306029941116" />
-	<meta property="og:title" content="Editor for Tistory">
-	<meta property="og:description" content="Editor for Tistory 는 Tistory의 API를 사용하여 티스토리에 글을 작성하고 작성한 글을 관리하는 목적으로 만들고 있습니다.">
+	<meta property="og:site_name" content="Editor">
+	<meta property="og:image" content="./image/screenshot.png">
+	<meta property="og:url" content="https://joostory.github.io/tistory-editor/">
+	<meta property="og:title" content="Editor for Tistory - 데스크탑 텍스트 에디터">
+	<meta property="og:description" content="글을 쓰고 관리하는 가장 안전하고 세련된 방법. 오롯이 생각에 몰입하는 미니멀리즘 데스크탑 에디터를 만나보세요.">
 
 	<meta name="twitter:card" content="summary_large_image">
-	<meta name="twitter:site" content="@JooStory">
-	<meta name="twitter:creator" content="@JooStory">
 	<meta name="twitter:title" content="Editor for Tistory">
-	<meta name="twitter:description" content="Editor for Tistory 는 Tistory의 API를 사용하여 티스토리에 글을 작성하고 작성한 글을 관리하는 목적으로 만들고 있습니다.">
-	<meta name="twitter:image" content="https://joostory.github.io/tistory-editor/image/icon.png">
+	<meta name="twitter:description" content="글을 쓰고 관리하는 가장 안전하고 세련된 방법. 오롯이 생각에 몰입하는 미니멀리즘 데스크탑 에디터.">
+	<meta name="twitter:image" content="./image/screenshot_mac.png">
 	
-	<link rel="canonical" href="https://tistory-editor.tistory.com">
-	<meta http-equiv="refresh" content="2; url=https://tistory-editor.tistory.com">
+	<link rel="canonical" href="https://joostory.github.io/tistory-editor/">
+
+	<!-- Google Fonts -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+
+	<style>
+		:root {
+			--bg-color: #0d0e15;
+			--card-bg: rgba(255, 255, 255, 0.03);
+			--card-border: rgba(255, 255, 255, 0.07);
+			--text-primary: #f3f4f6;
+			--text-secondary: #9ca3af;
+			--accent-start: #ff7e40;
+			--accent-end: #ff4b1f;
+			--accent-glow: rgba(255, 126, 64, 0.15);
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			background-color: var(--bg-color);
+			color: var(--text-primary);
+			font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+			line-height: 1.6;
+			overflow-x: hidden;
+			-webkit-font-smoothing: antialiased;
+		}
+
+		/* Background decoration */
+		.blur-bg {
+			position: absolute;
+			width: 600px;
+			height: 600px;
+			border-radius: 50%;
+			background: radial-gradient(circle, var(--accent-glow) 0%, rgba(13, 14, 21, 0) 70%);
+			top: -200px;
+			right: -100px;
+			z-index: -1;
+			pointer-events: none;
+		}
+
+		.blur-bg-left {
+			position: absolute;
+			width: 500px;
+			height: 500px;
+			border-radius: 50%;
+			background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, rgba(13, 14, 21, 0) 70%);
+			bottom: 10%;
+			left: -200px;
+			z-index: -1;
+			pointer-events: none;
+		}
+
+		/* Container */
+		.container {
+			max-width: 1100px;
+			margin: 0 auto;
+			padding: 0 24px;
+		}
+
+		/* Header */
+		header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 32px 0;
+		}
+
+		.logo {
+			font-family: 'Outfit', sans-serif;
+			font-size: 24px;
+			font-weight: 800;
+			letter-spacing: -0.5px;
+			background: linear-gradient(135deg, var(--text-primary) 30%, var(--text-secondary));
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.logo-dot {
+			width: 8px;
+			height: 8px;
+			border-radius: 50%;
+			background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+			box-shadow: 0 0 10px var(--accent-start);
+		}
+
+		.github-btn {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			padding: 10px 20px;
+			border-radius: 30px;
+			background: var(--card-bg);
+			border: 1px solid var(--card-border);
+			color: var(--text-primary);
+			text-decoration: none;
+			font-size: 14px;
+			font-weight: 500;
+			transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		}
+
+		.github-btn:hover {
+			background: rgba(255, 255, 255, 0.08);
+			border-color: rgba(255, 255, 255, 0.2);
+			transform: translateY(-2px);
+		}
+
+		/* Hero Section */
+		.hero {
+			text-align: center;
+			padding: 80px 0 60px 0;
+			position: relative;
+		}
+
+		.badge {
+			display: inline-block;
+			padding: 6px 16px;
+			border-radius: 20px;
+			background: rgba(255, 126, 64, 0.1);
+			border: 1px solid rgba(255, 126, 64, 0.2);
+			color: #ffa07a;
+			font-size: 13px;
+			font-weight: 600;
+			margin-bottom: 24px;
+			letter-spacing: 0.5px;
+			animation: fadeInDown 0.8s ease;
+		}
+
+		h1 {
+			font-family: 'Outfit', sans-serif;
+			font-size: clamp(36px, 6vw, 64px);
+			font-weight: 800;
+			line-height: 1.15;
+			letter-spacing: -1.5px;
+			margin-bottom: 24px;
+			background: linear-gradient(135deg, #ffffff 40%, #e2e8f0 70%, rgba(255, 255, 255, 0.7));
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			animation: fadeInUp 0.8s ease;
+		}
+
+		h1 span {
+			background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			position: relative;
+		}
+
+		.hero-desc {
+			font-size: clamp(16px, 2.5vw, 20px);
+			color: var(--text-secondary);
+			max-width: 680px;
+			margin: 0 auto 40px auto;
+			font-weight: 400;
+			animation: fadeInUp 1s ease;
+		}
+
+		.cta-group {
+			display: flex;
+			gap: 16px;
+			justify-content: center;
+			align-items: center;
+			flex-wrap: wrap;
+			margin-bottom: 60px;
+			animation: fadeInUp 1.2s ease;
+		}
+
+		.btn-primary {
+			padding: 16px 36px;
+			border-radius: 50px;
+			background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+			color: white;
+			text-decoration: none;
+			font-weight: 600;
+			font-size: 16px;
+			box-shadow: 0 10px 30px rgba(255, 75, 31, 0.3);
+			transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		}
+
+		.btn-primary:hover {
+			transform: translateY(-3px);
+			box-shadow: 0 15px 35px rgba(255, 75, 31, 0.45);
+		}
+
+		.btn-secondary {
+			padding: 16px 36px;
+			border-radius: 50px;
+			background: var(--card-bg);
+			border: 1px solid var(--card-border);
+			color: var(--text-primary);
+			text-decoration: none;
+			font-weight: 600;
+			font-size: 16px;
+			transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		}
+
+		.btn-secondary:hover {
+			background: rgba(255, 255, 255, 0.08);
+			border-color: rgba(255, 255, 255, 0.2);
+			transform: translateY(-3px);
+		}
+
+		/* Mockup Image */
+		.mockup-wrapper {
+			position: relative;
+			border-radius: 16px;
+			padding: 1px;
+			max-width: 900px;
+			margin: 0 auto 100px auto;
+			animation: scaleInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+		}
+
+		.mockup-img {
+			width: 100%;
+			height: auto;
+			display: block;
+			transition: transform 0.5s ease;
+		}
+
+		.mockup-wrapper:hover .mockup-img {
+			transform: scale(1.01);
+		}
+
+		/* Features Section */
+		.features {
+			padding: 40px 0 100px 0;
+		}
+
+		.section-title {
+			text-align: center;
+			font-family: 'Outfit', sans-serif;
+			font-size: 36px;
+			font-weight: 800;
+			margin-bottom: 60px;
+			background: linear-gradient(135deg, #fff, var(--text-secondary));
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+		}
+
+		.grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+			gap: 32px;
+		}
+
+		.card {
+			background: var(--card-bg);
+			border: 1px solid var(--card-border);
+			border-radius: 20px;
+			padding: 40px 32px;
+			backdrop-filter: blur(12px);
+			transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+		}
+
+		.card:hover {
+			transform: translateY(-8px);
+			background: rgba(255, 255, 255, 0.05);
+			border-color: rgba(255, 126, 64, 0.3);
+			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 126, 64, 0.03);
+		}
+
+		.card-icon {
+			width: 48px;
+			height: 48px;
+			border-radius: 12px;
+			background: linear-gradient(135deg, rgba(255, 126, 64, 0.15), rgba(255, 75, 31, 0.05));
+			border: 1px solid rgba(255, 126, 64, 0.25);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin-bottom: 24px;
+			color: var(--accent-start);
+			font-size: 20px;
+			font-weight: bold;
+		}
+
+		.card h3 {
+			font-family: 'Outfit', sans-serif;
+			font-size: 20px;
+			font-weight: 600;
+			margin-bottom: 12px;
+		}
+
+		.card p {
+			color: var(--text-secondary);
+			font-size: 15px;
+			line-height: 1.6;
+		}
+
+		/* CTA bottom */
+		.bottom-cta {
+			text-align: center;
+			background: radial-gradient(circle at center, rgba(255, 126, 64, 0.05) 0%, rgba(13, 14, 21, 0) 70%), var(--card-bg);
+			border: 1px solid var(--card-border);
+			border-radius: 24px;
+			padding: 80px 40px;
+			margin-bottom: 100px;
+			backdrop-filter: blur(12px);
+		}
+
+		.bottom-cta h2 {
+			font-family: 'Outfit', sans-serif;
+			font-size: 36px;
+			font-weight: 800;
+			margin-bottom: 16px;
+		}
+
+		.bottom-cta p {
+			color: var(--text-secondary);
+			font-size: 18px;
+			max-width: 500px;
+			margin: 0 auto 32px auto;
+		}
+
+		/* Footer */
+		footer {
+			border-top: 1px solid var(--card-border);
+			padding: 40px 0;
+			text-align: center;
+			color: #4b5563;
+			font-size: 14px;
+		}
+
+		footer a {
+			color: var(--text-secondary);
+			text-decoration: none;
+			margin-left: 16px;
+			transition: color 0.3s;
+		}
+
+		footer a:hover {
+			color: var(--accent-start);
+		}
+
+		/* Animations */
+		@keyframes fadeInUp {
+			from {
+				opacity: 0;
+				transform: translateY(20px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		@keyframes fadeInDown {
+			from {
+				opacity: 0;
+				transform: translateY(-10px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		@keyframes scaleInUp {
+			from {
+				opacity: 0;
+				transform: translateY(40px) scale(0.95);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0) scale(1);
+			}
+		}
+
+		@media (max-width: 768px) {
+			.hero {
+				padding: 40px 0 40px 0;
+			}
+			.cta-group {
+				flex-direction: column;
+				gap: 12px;
+			}
+			.btn-primary, .btn-secondary {
+				width: 100%;
+			}
+		}
+	</style>
 </head>
 <body>
-	<p>이 페이지를 티스토리로 이동합니다: <a href="https://tistory-editor.tistory.com">tistory-editor.tistory.com</a></p>
-	<p>2초 후에 연결됩니다.</p>
+
+	<div class="blur-bg"></div>
+	<div class="blur-bg-left"></div>
+
+	<div class="container">
+		<!-- Header -->
+		<header>
+			<div class="logo">
+				<span class="logo-dot"></span>
+				Editor
+			</div>
+			<a href="https://github.com/joostory/tistory-editor" target="_blank" class="github-btn" rel="noopener noreferrer">
+				GitHub
+			</a>
+		</header>
+
+		<!-- Hero Section -->
+		<section class="hero">
+			<h1>생각에 온전히 집중하는<br><span>미니멀 데스크탑 에디터</span></h1>
+			<p class="hero-desc">
+				복잡한 기능과 방해 요소를 배제한 최적의 로컬 저작 환경을 만나보세요. 직관적이고 차분한 UI 구성으로 쾌적한 글쓰기 경험을 제공합니다.
+			</p>
+			<div class="cta-group">
+				<a href="https://github.com/joostory/tistory-editor/releases" class="btn-primary" target="_blank" rel="noopener noreferrer">다운로드 (GitHub Releases)</a>
+				<a href="#features" class="btn-secondary">주요 특징 살펴보기</a>
+			</div>
+
+			<!-- Mockup Display (Using actual app screenshot) -->
+			<div class="mockup-wrapper">
+				<div class="mockup-inner">
+					<img src="./image/screenshot.png" alt="실제 데스크탑 에디터 앱 macOS 스크린샷" class="mockup-img">
+				</div>
+			</div>
+		</section>
+
+		<!-- Features Section -->
+		<section class="features" id="features">
+			<h2 class="section-title">글쓰기의 본질을 위한 강력한 설계</h2>
+			<div class="grid">
+				<div class="card">
+					<div class="card-icon">✨</div>
+					<h3>오롯이 글쓰기에만 집중</h3>
+					<p>방해받지 않는 레이아웃과 미니멀한 텍스트 캔버스를 제공합니다. 복잡한 설정 없이도 빠르게 글을 기록할 수 있는 깔끔한 타이핑 공간입니다.</p>
+				</div>
+				<div class="card">
+					<div class="card-icon">🌓</div>
+					<h3>눈의 피로를 낮추는 다크 테마</h3>
+					<p>장시간 타이핑에 최적화된 저자극 다크 테마가 기본 제공됩니다. 시각적 자극을 줄여 어두운 밤에도 몰입도 높은 집필 작업을 가능하게 합니다.</p>
+				</div>
+				<div class="card">
+					<div class="card-icon">💻</div>
+					<h3>Cross-Platform 데스크탑 앱</h3>
+					<p>Electron 프레임워크의 강력하고 유연한 성능을 바탕으로 macOS, Windows, Linux 데스크탑 어디서나 완벽하게 일치하는 일관된 퍼포먼스를 제공합니다.</p>
+				</div>
+				<div class="card">
+					<div class="card-icon">🚀</div>
+					<h3>텀블러(Tumblr) 간편 발행</h3>
+					<p>로컬에서 정성껏 작성한 소중한 글을 클릭 한 번으로 내 텀블러 블로그에 신속하게 업로드할 수 있습니다. 작성은 로컬에서 차분하게, 공유는 전 세계로 빠르게 처리해 보세요.</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Bottom CTA -->
+		<section class="bottom-cta">
+			<h2>생각을 오롯이 기록하세요.</h2>
+			<p>복잡한 웹 브라우저나 외부 연결에 신경 쓸 필요 없이, 오직 타이핑과 집필에만 전념할 수 있는 나만의 조용한 집필실을 만들어 드립니다.</p>
+			<a href="https://github.com/joostory/tistory-editor/releases" class="btn-primary" target="_blank" rel="noopener noreferrer">다운로드</a>
+		</section>
+	</div>
+
+	<!-- Footer -->
+	<footer>
+		<div class="container">
+			<p>&copy; 2026 JooStory.</p>
+			<p style="margin-top: 8px;">
+				<a href="https://github.com/joostory/tistory-editor" target="_blank" rel="noopener noreferrer">GitHub Project</a>
+				<a href="https://github.com/joostory/tistory-editor/issues" target="_blank" rel="noopener noreferrer">Report Bug</a>
+			</p>
+		</div>
+	</footer>
+
 </body>
 </html>
