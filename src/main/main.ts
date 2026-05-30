@@ -3,6 +3,7 @@ import * as ipc from '#/main/ipc-event'
 import * as settings from 'electron-settings'
 import { initWindow, getWindow } from '#/main/window'
 import OAuthRequestManager from '#/main/oauth/OAuthRequestManager'
+import { appState } from '#/main/appState'
 
 const PROTOCOL = "tistory-editor"
 
@@ -15,7 +16,7 @@ let pendingDeeplinkingUrl: string | undefined
 let isAppReady = false
 
 app.setAsDefaultProtocolClient(PROTOCOL)
-;(app as any).showExitPrompt = false
+appState.showExitPrompt = false
 
 function execOAuthRequestHandler(urlStr?: string) {
   if (!urlStr) return

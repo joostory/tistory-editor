@@ -1,5 +1,6 @@
 import { app, ipcMain } from 'electron'
 import * as settings from 'electron-settings'
+import { appState } from '#/main/appState'
 
 export default function initPreferenceEvents(): void {
   ipcMain.on("fetch-preferences", (evt) => {
@@ -19,11 +20,11 @@ export default function initPreferenceEvents(): void {
   
   ipcMain.on("enable-exist-prompt", () => {
     console.log('Main.receive: enable-exist-prompt')
-    ;(app as any).showExitPrompt = true
+    appState.showExitPrompt = true
   })
 
   ipcMain.on("disable-exist-prompt", () => {
     console.log('Main.receive: disable-exist-prompt')
-    ;(app as any).showExitPrompt = false
+    appState.showExitPrompt = false
   })
 }
