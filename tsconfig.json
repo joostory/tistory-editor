@@ -14,14 +14,13 @@
     "noUncheckedSideEffectImports": false,
     "paths": {
       "#/*": ["./src/*"]
-    }
+    },
+    "types": ["vitest/globals"]
   },
   "include": ["src/**/*"],
   "exclude": [
     "node_modules",
     "out",
-    "dist",
-    "**/*.test.ts",
-    "**/*.test.tsx"
+    "dist"
   ]
 }
