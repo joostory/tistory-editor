@@ -25,19 +25,16 @@ function _createTumblrClient(auth: any) {
 
 function _tumblrPostToEditorPost(post: any) {
   let tiptapContent = null
-  let markdownContent = ''
   let contentHtml = ''
 
   if (post.content && Array.isArray(post.content)) {
     // Neue Post Format (NPF)
     tiptapContent = NpfConverter.npfToTiptap(post.content, post.layout)
-    markdownContent = NpfConverter.npfToMarkdown(post.content)
     contentHtml = NpfConverter.npfToHtml(post.content, post.layout)
   } else {
     // Legacy Post (HTML in body)
     const npfBlocks = NpfConverter.htmlToNpf(post.body || '')
     tiptapContent = NpfConverter.npfToTiptap(npfBlocks, null)
-    markdownContent = NpfConverter.npfToMarkdown(npfBlocks)
     contentHtml = post.body || ''
   }
 
@@ -47,7 +44,6 @@ function _tumblrPostToEditorPost(post: any) {
     title: post.summary || post.title || '',
     content: contentHtml,
     contentJson: tiptapContent,
-    contentMarkdown: markdownContent,
     photos: post.photos,
     tags: post.tags,
     date: post.date,
@@ -112,9 +108,6 @@ function _editorPostToTumblrPost(editorPost: any) {
       }
     }
     npfBlocks = NpfConverter.tiptapToNpf(jsonContent)
-  } else {
-    // Markdown 형식
-    npfBlocks = NpfConverter.markdownToNpf(editorPost.content || '')
   }
 
   // map 연산 수행 시 layout 유실 방지 목적

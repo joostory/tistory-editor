@@ -2,24 +2,11 @@ import { ipcMain } from 'electron'
 import dayjs from 'dayjs'
 import * as AuthenticationManager from '#/main/lib/AuthenticationManager'
 import * as ProviderApiManager from '#/main/lib/ProviderApiManager'
-import * as NpfConverter from '#/main/lib/NpfConverter'
 
 // 'opengraph-fetcher'는 CJS 혹은 ESM 지원 여부가 불투명할 수 있으므로 safe require 사용
 const fetcher = require('opengraph-fetcher')
 
 export default function initContentEvents(): void {
-  ipcMain.handle("convert-content", async (_evt, { content, from, to }: { content: any; from: string; to: string }) => {
-    console.log('Main.handle: convert-content', { from, to })
-    if (from === 'json' && to === 'markdown') {
-      const npf = NpfConverter.tiptapToNpf(content)
-      return NpfConverter.npfToMarkdown(npf)
-    } else if (from === 'markdown' && to === 'json') {
-      const npf = NpfConverter.markdownToNpf(content)
-      return NpfConverter.npfToTiptap(npf, null)
-    }
-    return content
-  })
-
   ipcMain.handle("fetch-opengraph", async (_evt, url: string) => {
     console.log('Main.handle: fetch-opengraph', url)
     try {

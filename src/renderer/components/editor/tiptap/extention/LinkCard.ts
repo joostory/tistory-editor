@@ -64,19 +64,19 @@ export const LinkCard = Node.create({
         [
           'div',
           {
+            class: 'link-card-image',
+            style: `width: 150px; background-size: cover; background-position: center; ${imageStyle}`
+          }
+        ],
+        [
+          'div',
+          {
             class: 'link-card-content',
             style: 'flex: 1; padding: 16px; display: flex; flex-direction: column; justify-content: center;'
           },
           ['div', { class: 'link-card-title', style: 'font-weight: bold; font-size: 16px; margin-bottom: 8px; color: #1a202c; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' }, title || url],
           ['div', { class: 'link-card-description', style: 'font-size: 14px; color: #4a5568; margin-bottom: 8px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;' }, description || ''],
           ['div', { class: 'link-card-site', style: 'font-size: 12px; color: #718096;' }, siteName || '']
-        ],
-        [
-          'div',
-          {
-            class: 'link-card-image',
-            style: `width: 150px; background-size: cover; background-position: center; ${imageStyle}`
-          }
         ]
       ]
     ]

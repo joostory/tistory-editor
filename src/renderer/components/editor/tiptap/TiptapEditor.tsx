@@ -5,8 +5,9 @@ import Image from '@tiptap/extension-image'
 import ImageGroup from '#/renderer/components/editor/tiptap/extention/ImageGroup'
 import LinkCard from '#/renderer/components/editor/tiptap/extention/LinkCard'
 import Video from '#/renderer/components/editor/tiptap/extention/Video'
-import { Box } from '@mui/material'
+import { Box, IconButton } from '@mui/material'
 import { ThemeProvider } from '@mui/material/styles'
+import CloseIcon from '@mui/icons-material/Close'
 
 import { styles, lightTheme } from './styles'
 import MenuBar from './MenuBar'
@@ -20,8 +21,16 @@ interface TiptapEditorProps {
 
 export default function TiptapEditor({ value, onChange }: TiptapEditorProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const editorContainerRef = useRef<HTMLDivElement>(null)
   const [isLinkCardDialogOpen, setIsLinkCardDialogOpen] = useState<boolean>(false)
   const [isVideoDialogOpen, setIsVideoDialogOpen] = useState<boolean>(false)
+
+  // 플로팅 삭제 버튼 위치 및 타겟 노드 정보 저장
+  const [activeImage, setActiveImage] = useState<{
+    pos: number
+    top: number
+    left: number
+  } | null>(null)
 
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -71,6 +80,47 @@ export default function TiptapEditor({ value, onChange }: TiptapEditorProps) {
     editorProps: {
       attributes: {
         style: 'padding: 20px 0 40px; margin: 0;'
+      },
+      handleDOMEvents: {
+        // 에디터 내 마우스 무브 감지하여 이미지 호버 상태 캐치
+        mousemove: (view, event) => {
+          const target = event.target as HTMLElement
+          const img = target.closest('img') as HTMLImageElement | null
+
+          if (img) {
+            // LinkCard 내부의 썸네일 이미지는 무시
+            if (img.closest('.link-card')) {
+              setActiveImage(null)
+              return false
+            }
+
+            const rect = img.getBoundingClientRect()
+            const container = editorContainerRef.current
+            
+            if (container) {
+              const containerRect = container.getBoundingClientRect()
+              try {
+                const pos = view.posAtDOM(img, 0)
+                setActiveImage({
+                  pos,
+                  // 이미지 우측 상단(안쪽)으로 버튼 위치 지정
+                  top: rect.top - containerRect.top + 8,
+                  left: rect.right - containerRect.left - 32,
+                })
+              } catch (e) {
+                // posAtDOM 에러 예방
+              }
+            }
+          } else {
+            // 마우스가 이미지나 삭제 버튼 밖으로 벗어난 경우 닫기
+            const relatedTarget = event.relatedTarget as HTMLElement | null
+            const isOverDeleteBtn = relatedTarget?.closest('.image-delete-btn')
+            if (!isOverDeleteBtn) {
+              setActiveImage(null)
+            }
+          }
+          return false
+        }
       },
       handleDrop: (view, event, slice, moved) => {
         const dragEvent = event as DragEvent
@@ -123,8 +173,6 @@ export default function TiptapEditor({ value, onChange }: TiptapEditorProps) {
   useEffect(() => {
     if (!editor || !value) return
 
-    // 사용자가 에디터 입력에 집중하고 있는 경우 (포커스된 상태),
-    // 외부 데이터가 에디터 콘텐츠를 리셋하지 않도록 방지하여 한글 조합(IME) 유실을 막습니다.
     if (editor.isFocused) {
       return
     }
@@ -150,12 +198,46 @@ export default function TiptapEditor({ value, onChange }: TiptapEditorProps) {
           onAddLinkCard={() => setIsLinkCardDialogOpen(true)}
           onAddVideo={() => setIsVideoDialogOpen(true)}
         />
-        <Box sx={styles.editorContent}>
+        
+        {/* 마우스 포지션 계산의 기준이 되는 relative 컨테이너 */}
+        <Box 
+          ref={editorContainerRef} 
+          sx={{ ...styles.editorContent, position: 'relative' }}
+          onMouseLeave={() => setActiveImage(null)} // 에디터 영역 밖으로 나가면 버튼 즉시 제거
+        >
           <EditorContent
             className="content"
             editor={editor}
           />
+
+          {/* 이미지용 플로팅 삭제 버튼 */}
+          {activeImage && editor && (
+            <IconButton
+              className="image-delete-btn"
+              onClick={() => {
+                editor.commands.deleteRange({ from: activeImage.pos, to: activeImage.pos + 1 })
+                setActiveImage(null)
+              }}
+              size="small"
+              sx={{
+                position: 'absolute',
+                top: activeImage.top,
+                left: activeImage.left,
+                backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                color: '#ffffff',
+                zIndex: 100,
+                transition: 'background-color 0.2s ease, transform 0.2s ease',
+                '&:hover': {
+                  backgroundColor: 'rgba(239, 68, 68, 0.9)',
+                  transform: 'scale(1.1)',
+                },
+              }}
+            >
+              <CloseIcon sx={{ fontSize: 16 }} />
+            </IconButton>
+          )}
         </Box>
+
         <input
           type="file"
           ref={fileInputRef}

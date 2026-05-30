@@ -31,8 +31,8 @@ export default function LinkCardView({ node, getPos, editor }: NodeViewProps) {
           size="small"
           sx={{
             position: 'absolute',
-            top: -8,
-            right: -8,
+            top: 12,
+            right: 12,
             backgroundColor: 'rgba(0, 0, 0, 0.6)',
             color: '#ffffff',
             zIndex: 10,
@@ -67,7 +67,20 @@ export default function LinkCardView({ node, getPos, editor }: NodeViewProps) {
           boxShadow: isHovered && '0 4px 12px rgba(0, 0, 0, 0.2)',
         }}
       >
-        {/* 콘텐츠 정보 */}
+        {/* 이미지 영역 (가시성 및 가독성을 위해 왼쪽에 배치) */}
+        {hasImage && (
+          <Box
+            sx={{
+              width: '150px',
+              backgroundImage: `url('${image}')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              flexShrink: 0,
+            }}
+          />
+        )}
+
+        {/* 콘텐츠 정보 (오른쪽에 배치되어 X 버튼이 가려지지 않고 가독성이 좋아짐) */}
         <Box
           sx={{
             flex: 1,
@@ -116,19 +129,6 @@ export default function LinkCardView({ node, getPos, editor }: NodeViewProps) {
             {siteName || ''}
           </Box>
         </Box>
-
-        {/* 이미지 영역 */}
-        {hasImage && (
-          <Box
-            sx={{
-              width: '150px',
-              backgroundImage: `url('${image}')`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              flexShrink: 0,
-            }}
-          />
-        )}
       </Box>
     </NodeViewWrapper>
   )

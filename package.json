@@ -56,8 +56,6 @@
     "vite-plugin-electron-renderer": "^0.14.7"
   },
   "dependencies": {
-    "@codemirror/lang-markdown": "^6.5.0",
-    "@codemirror/language-data": "^6.5.2",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^9.0.1",

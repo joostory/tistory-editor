@@ -748,7 +748,7 @@ function convertSingleBlockToHtml(block: any): string {
     const hasImage = !!poster
     const imageStyle = hasImage ? `background-image: url('${escapeHtml(poster)}')` : 'display: none'
     
-    return `<div class="link-card" data-url="${escapeHtml(url)}" data-title="${escapeHtml(title)}" data-description="${escapeHtml(description)}" data-site-name="${escapeHtml(siteName)}" data-image="${escapeHtml(poster)}" style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; display: flex; margin: 16px 0; font-family: sans-serif; text-decoration: none; color: inherit; cursor: pointer;"><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" style="display: flex; width: 100%; text-decoration: none; color: inherit;"><div class="link-card-content" style="flex: 1; padding: 16px; display: flex; flex-direction: column; justify-content: center;"><div class="link-card-title" style="font-weight: bold; font-size: 16px; margin-bottom: 8px; color: #1a202c; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(title)}</div><div class="link-card-description" style="font-size: 14px; color: #4a5568; margin-bottom: 8px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${escapeHtml(description)}</div><div class="link-card-site" style="font-size: 12px; color: #718096;">${escapeHtml(siteName)}</div></div><div class="link-card-image" style="width: 150px; background-size: cover; background-position: center; ${imageStyle}"></div></a></div>`
+    return `<div class="link-card" data-url="${escapeHtml(url)}" data-title="${escapeHtml(title)}" data-description="${escapeHtml(description)}" data-site-name="${escapeHtml(siteName)}" data-image="${escapeHtml(poster)}" style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; display: flex; margin: 16px 0; font-family: sans-serif; text-decoration: none; color: inherit; cursor: pointer;"><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" style="display: flex; width: 100%; text-decoration: none; color: inherit;"><div class="link-card-image" style="width: 150px; background-size: cover; background-position: center; ${imageStyle}"></div><div class="link-card-content" style="flex: 1; padding: 16px; display: flex; flex-direction: column; justify-content: center;"><div class="link-card-title" style="font-weight: bold; font-size: 16px; margin-bottom: 8px; color: #1a202c; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(title)}</div><div class="link-card-description" style="font-size: 14px; color: #4a5568; margin-bottom: 8px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${escapeHtml(description)}</div><div class="link-card-site" style="font-size: 12px; color: #718096;">${escapeHtml(siteName)}</div></div></a></div>`
   } else if (block.type === 'video') {
     const isYoutube = block.provider === 'youtube'
     const embedHtml = block.embed_html || ''
@@ -797,21 +797,4 @@ function escapeHtml(text: string): string {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;")
-}
-
-// ==========================================
-// 3. Markdown <-> Tumblr NPF Blocks 변환
-// ==========================================
-
-export function markdownToNpf(markdownText: string): any[] {
-  if (!markdownText) return []
-  const html = marked.parse(markdownText) as string
-  const blocks: any = htmlToNpf(html)
-  blocks.layout = []
-  return blocks
-}
-
-export function npfToMarkdown(npfBlocks: any[]): string {
-  const html = npfToHtml(npfBlocks)
-  return turndownService.turndown(html)
 }
