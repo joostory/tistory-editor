@@ -1,13 +1,4 @@
 import * as cheerio from 'cheerio'
-import { marked } from 'marked'
-const TurndownService = require('turndown')
-const turndownPluginGfm = require('turndown-plugin-gfm')
-
-const turndownService = new TurndownService({
-  headingStyle: 'atx',
-  codeBlockStyle: 'fenced'
-})
-turndownService.use(turndownPluginGfm.gfm)
 
 // ==========================================
 // 1. Tiptap JSON <-> Tumblr NPF Blocks 변환
@@ -748,6 +739,7 @@ function convertSingleBlockToHtml(block: any): string {
     const hasImage = !!poster
     const imageStyle = hasImage ? `background-image: url('${escapeHtml(poster)}')` : 'display: none'
     
+    // 좌우 순서를 스왑하여 이미지가 먼저 렌더링되도록 수정 (X 버튼 영역 확보 및 에디터 렌더링 결과물 통일)
     return `<div class="link-card" data-url="${escapeHtml(url)}" data-title="${escapeHtml(title)}" data-description="${escapeHtml(description)}" data-site-name="${escapeHtml(siteName)}" data-image="${escapeHtml(poster)}" style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; display: flex; margin: 16px 0; font-family: sans-serif; text-decoration: none; color: inherit; cursor: pointer;"><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" style="display: flex; width: 100%; text-decoration: none; color: inherit;"><div class="link-card-image" style="width: 150px; background-size: cover; background-position: center; ${imageStyle}"></div><div class="link-card-content" style="flex: 1; padding: 16px; display: flex; flex-direction: column; justify-content: center;"><div class="link-card-title" style="font-weight: bold; font-size: 16px; margin-bottom: 8px; color: #1a202c; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(title)}</div><div class="link-card-description" style="font-size: 14px; color: #4a5568; margin-bottom: 8px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${escapeHtml(description)}</div><div class="link-card-site" style="font-size: 12px; color: #718096;">${escapeHtml(siteName)}</div></div></a></div>`
   } else if (block.type === 'video') {
     const isYoutube = block.provider === 'youtube'

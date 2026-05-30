@@ -79,7 +79,6 @@
     "immutability-helper": "^3.1.1",
     "isomorphic-fetch": "^3.0.0",
     "jotai": "^2.20.0",
-    "marked": "^18.0.4",
     "node-fetch": "^3.3.2",
     "oauth": "^0.10.2",
     "opengraph-fetcher": "^1.5.6",
@@ -91,15 +90,13 @@
     "react-dropzone": "^15.0.0",
     "react-router-dom": "^7.15.1",
     "tumblr.js": "^5.0.1",
-    "turndown": "^7.2.4",
-    "turndown-plugin-gfm": "^1.0.2",
     "url": "^0.11.4",
     "uuid": "^14.0.0"
   },
   "jest": {
     "testEnvironment": "node",
-    "transformIgnorePatterns": [
-      "/node_modules/(?!(marked)/)"
+    "roots": [
+      "<rootDir>/out/main"
     ],
     "globals": {
       "navigator": {

@@ -1,11 +1,4 @@
-import { marked } from 'marked'
 import * as NpfConverter from '#/main/lib/NpfConverter'
-
-jest.mock('marked', () => ({
-  marked: {
-    parse: (x: string) => x
-  }
-}))
 
 describe('NpfConverter - NPF Layout & Tiptap imageGroup 명시적 연동 테스트', () => {
   const sampleNpfContent = [
