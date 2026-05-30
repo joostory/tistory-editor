@@ -17,7 +17,8 @@
     "dist": "npm run build && electron-builder",
     "dist:mac": "npm run build && electron-builder --mac --x64 --arm64",
     "dist:all": "npm run build && electron-builder --mac --win --linux",
-    "test": "jest -u"
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "repository": {
     "type": "git",
@@ -53,7 +54,8 @@
     "sass": "^1.100.0",
     "typescript": "^6.0.3",
     "vite": "^7.3.3",
-    "vite-plugin-electron-renderer": "^0.14.7"
+    "vite-plugin-electron-renderer": "^0.14.7",
+    "vitest": "^3.0.7"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -92,16 +94,5 @@
     "tumblr.js": "^5.0.1",
     "url": "^0.11.4",
     "uuid": "^14.0.0"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "roots": [
-      "<rootDir>/out/main"
-    ],
-    "globals": {
-      "navigator": {
-        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36"
-      }
-    }
   }
 }
