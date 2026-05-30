@@ -64,9 +64,7 @@ export default function LinkCardView({ node, getPos, editor }: NodeViewProps) {
           color: 'inherit',
           cursor: 'pointer',
           transition: 'box-shadow 0.2s, transform 0.2s',
-          '&:hover': {
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
-          },
+          boxShadow: isHovered && '0 4px 12px rgba(0, 0, 0, 0.2)',
         }}
       >
         {/* 콘텐츠 정보 */}
