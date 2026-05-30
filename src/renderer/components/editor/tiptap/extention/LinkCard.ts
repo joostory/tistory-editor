@@ -1,4 +1,6 @@
 import { Node } from '@tiptap/core'
+import { ReactNodeViewRenderer } from '@tiptap/react'
+import LinkCardView from './LinkCardView'
 
 export const LinkCard = Node.create({
   name: 'linkCard',
@@ -78,6 +80,10 @@ export const LinkCard = Node.create({
         ]
       ]
     ]
+  },
+
+  addNodeView() {
+    return ReactNodeViewRenderer(LinkCardView)
   }
 })
 
