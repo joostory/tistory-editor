@@ -55,21 +55,21 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
-      # 1단계에서 빌드 완료한 정적 번들 다운로드
+
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
           name: built-app
           path: .
-      # 다운로드한 디렉토리에서 패키징 환경 설치 (electron-builder 네이티브 컴파일용)
+
       - name: Install packaging dependencies
         run: npm install
-      # 해당 OS 플랫폼 바이너리 패키징만 독자적으로 초고속 수행 (Webpack 컴파일 생략)
+
       - name: Packaging app
         run: npm run dist -- --publish never
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # 생성된 실행용 바이너리만 업로드
+
       - name: Upload packaging artifact
         uses: actions/upload-artifact@v4
         with:
