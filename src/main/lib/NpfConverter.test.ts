@@ -1,11 +1,4 @@
-import { marked } from 'marked'
 import * as NpfConverter from '#/main/lib/NpfConverter'
-
-jest.mock('marked', () => ({
-  marked: {
-    parse: (x: string) => x
-  }
-}))
 
 describe('NpfConverter - NPF Layout & Tiptap imageGroup 명시적 연동 테스트', () => {
   const sampleNpfContent = [
@@ -323,7 +316,7 @@ describe('NpfConverter - 리스트 및 링크 양방향 변환 검증 테스트'
     })
     
     test('단독 링크 파싱 및 렌더링', () => {
-      const html = '<div class="link-card" data-url="https://www.tumblr.com/docs/npf" data-title="API | Tumblr" data-description="Tumblr is a place to express yourself" data-site-name="tumblr.com" data-image="https://test.com/thumbnail.jpg" style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; display: flex; margin: 16px 0; font-family: sans-serif; text-decoration: none; color: inherit; cursor: pointer;"><a href="https://www.tumblr.com/docs/npf" target="_blank" rel="noopener noreferrer" style="display: flex; width: 100%; text-decoration: none; color: inherit;"><div class="link-card-content" style="flex: 1; padding: 16px; display: flex; flex-direction: column; justify-content: center;"><div class="link-card-title" style="font-weight: bold; font-size: 16px; margin-bottom: 8px; color: #1a202c; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">API | Tumblr</div><div class="link-card-description" style="font-size: 14px; color: #4a5568; margin-bottom: 8px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">Tumblr is a place to express yourself</div><div class="link-card-site" style="font-size: 12px; color: #718096;">tumblr.com</div></div><div class="link-card-image" style="width: 150px; background-size: cover; background-position: center; background-image: url(\'https://test.com/thumbnail.jpg\')"></div></a></div>'
+      const html = '<div class="link-card" data-url="https://www.tumblr.com/docs/npf" data-title="API | Tumblr" data-description="Tumblr is a place to express yourself" data-site-name="tumblr.com" data-image="https://test.com/thumbnail.jpg" style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; display: flex; margin: 16px 0; font-family: sans-serif; text-decoration: none; color: inherit; cursor: pointer;"><a href="https://www.tumblr.com/docs/npf" target="_blank" rel="noopener noreferrer" style="display: flex; width: 100%; text-decoration: none; color: inherit;"><div class="link-card-image" style="width: 150px; background-size: cover; background-position: center; background-image: url(\'https://test.com/thumbnail.jpg\')"></div><div class="link-card-content" style="flex: 1; padding: 16px; display: flex; flex-direction: column; justify-content: center;"><div class="link-card-title" style="font-weight: bold; font-size: 16px; margin-bottom: 8px; color: #1a202c; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">API | Tumblr</div><div class="link-card-description" style="font-size: 14px; color: #4a5568; margin-bottom: 8px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">Tumblr is a place to express yourself</div><div class="link-card-site" style="font-size: 12px; color: #718096;">tumblr.com</div></div></a></div>'
       const npf = [
         {
           type: 'link',
