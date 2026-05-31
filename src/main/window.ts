@@ -3,6 +3,7 @@ import * as settings from 'electron-settings'
 import * as path from 'path'
 import * as url from 'url'
 import * as appInfo from '#/main/appInfo'
+import { appState } from '#/main/appState'
 
 let mainWindow: BrowserWindow | null = null
 
@@ -10,7 +11,7 @@ function setWindowEvent() {
   if (!mainWindow) return
 
   mainWindow.on("close", (e) => {
-    if ((app as any).showExitPrompt) {
+    if (appState.showExitPrompt) {
       e.preventDefault()
       dialog.showMessageBox({
         type: 'question',
@@ -19,7 +20,7 @@ function setWindowEvent() {
         message: '지금 앱을 종료하면 저장하지 않는 내용이 사라집니다. 종료하시겠습니까?'
       }).then(result => {
         if (result.response === 0) {
-          (app as any).showExitPrompt = false
+          appState.showExitPrompt = false
           mainWindow?.close()
         }
       })

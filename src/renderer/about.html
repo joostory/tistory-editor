@@ -8,30 +8,120 @@
 		<title>Editor</title>
     <meta name="description" content="Editor for Tistory">
     <style>
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: #121214;
+        overflow: hidden;
+        user-select: none;
+        color: #f5f5f7;
+      }
       .container {
         position: absolute;
-        left:0; right:0; top:0; bottom:0;
-        display: flex; align-items: center; justify-content: center;
-        background: #444;
+        left: 0; right: 0; top: 0; bottom: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(circle at center, #1e1e24 0%, #121214 100%);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-sizing: border-box;
+        border-radius: 12px;
+        -webkit-app-region: drag;
       }
-      .ready {
-        color: #eee;
+      .close-btn {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 300;
+        transition: all 0.2s ease;
+        -webkit-app-region: no-drag;
+        z-index: 100;
+      }
+      .close-btn:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: #ffffff;
+        transform: scale(1.05);
+      }
+      .content {
         text-align: center;
+        animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        pointer-events: none; /* 하위 클릭 가능한 요소 외에는 클릭을 배경으로 흘려보내 드래그가 끊기지 않게 함 */
       }
-      .ready h1 {
-        font-size: 64px;
-        margin: 10px;
+      .content h1 {
+        font-size: 56px;
+        font-weight: 800;
+        margin: 0 0 12px 0;
+        letter-spacing: -2px;
+        background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      #version {
+        font-size: 14px;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.6);
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 6px 16px;
+        border-radius: 20px;
+        display: inline-block;
+        margin-bottom: 32px;
+      }
+      #needUpgrade {
+        margin-top: 10px;
+        padding: 16px 24px;
+        border-radius: 12px;
+        background: rgba(255, 126, 95, 0.1);
+        border: 1px solid rgba(255, 126, 95, 0.25);
+        font-size: 14px;
+        line-height: 1.6;
+        color: #ffe8e4;
+        animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        pointer-events: auto; /* 영역 전체가 마우스 드래그를 방해하지 않도록, 클릭 필요 영역만 복구 */
+      }
+      #needUpgrade a {
+        color: #ff9f43;
+        text-decoration: none;
+        font-weight: 600;
+        border-bottom: 1px dashed #ff9f43;
+        transition: all 0.2s ease;
+        -webkit-app-region: no-drag;
+      }
+      #needUpgrade a:hover {
+        color: #ffb770;
+        border-bottom-style: solid;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+      }
+      @keyframes slideUp {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: translateY(0); }
       }
     </style>
 	</head>
 
   <body>
 		<div class='container app'>
-			<div class='ready'>
+      <div class="close-btn" id="closeBtn" title="닫기">&times;</div>
+			<div class='content'>
 				<h1>Editor</h1>
 				<div><span id="version">latest</span></div>
-        <div id="needUpgrade" style="display:none; margin-top:10px; padding:15px; border-radius:5px; background-color:#f4f4f4">
-          새로운 버전 <a href="https://joostory.github.io/tumblr-editor" id="latestVersion"></a>이 준비되었습니다.
+        <div id="needUpgrade" style="display:none;">
+          새로운 버전 <a href="https://github.com/joostory/tistory-editor/releases" id="latestVersion"></a>이 준비되었습니다.
         </div>
 			</div>
 		</div>
@@ -39,13 +129,24 @@
 		<script>
       const { ipcRenderer } = require('electron')
 
-      ipcRenderer.invoke('get-app-info').then((appInfo) => {
-        const latestVersion = appInfo.latestVersion
-        document.getElementById("version").innerHTML = appInfo.version
-        if (appInfo.version != latestVersion) {
+      const updateVersionUI = (version, latestVersion) => {
+        document.getElementById("version").innerHTML = version
+        if (version != latestVersion) {
           document.getElementById("latestVersion").innerHTML = latestVersion
           document.getElementById("needUpgrade").style.display = "block"
         }
+      }
+
+      ipcRenderer.invoke('get-app-info').then((appInfo) => {
+        updateVersionUI(appInfo.version, appInfo.latestVersion)
+      })
+
+      ipcRenderer.on('latest-version-updated', (event, appInfo) => {
+        updateVersionUI(appInfo.version, appInfo.latestVersion)
+      })
+
+      document.getElementById('closeBtn').addEventListener('click', () => {
+        ipcRenderer.send('close-about-window')
       })
 		</script>
   </body>
