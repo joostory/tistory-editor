@@ -8,4 +8,8 @@ export default function initAboutEvents(): void {
       latestVersion: appInfo.latestVersion()
     }
   })
+
+  ipcMain.on("close-about-window", () => {
+    appInfo.closeWindow()
+  })
 }

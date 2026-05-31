@@ -3,7 +3,7 @@ import * as os from 'os'
 import * as path from 'path'
 import * as url from 'url'
 import * as electronLocalshortcut from 'electron-localshortcut'
-import fetch from 'isomorphic-fetch'
+import axios from 'axios'
 
 const APP_VERSION = `v${app.getVersion()}`
 
@@ -34,11 +34,15 @@ export const closeWindow = () => {
 }
 
 export const openWindow = () => {
+  if (infoWindow) {
+    infoWindow.focus()
+    return
+  }
+
   infoWindow = new BrowserWindow({
     width: 640,
     height: 480,
     frame: false,
-    titleBarStyle: 'hidden',
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false
@@ -46,20 +50,27 @@ export const openWindow = () => {
     alwaysOnTop: true
   })
 
-  infoWindow.loadURL(url.format({
-    pathname: path.join(__dirname, '../renderer/about.html'),
-    protocol: 'file:',
-    slashes: true
-  }))
+  if (process.env.NODE_ENV === 'development' && process.env['ELECTRON_RENDERER_URL']) {
+    infoWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/about.html`)
+  } else {
+    infoWindow.loadURL(url.format({
+      pathname: path.join(__dirname, '../renderer/about.html'),
+      protocol: 'file:',
+      slashes: true
+    }))
+  }
 
   electronLocalshortcut.register(infoWindow, 'Escape', closeWindow)
   electronLocalshortcut.register(infoWindow, 'CommandOrControl+W', closeWindow)
 
-  infoWindow.on("closed", () => {
+  infoWindow.on("close", () => {
     if (infoWindow) {
       electronLocalshortcut.unregister(infoWindow, 'Escape', closeWindow)
       electronLocalshortcut.unregister(infoWindow, 'CommandOrControl+W', closeWindow)
     }
+  })
+
+  infoWindow.on("closed", () => {
     infoWindow = null
   })
 
@@ -72,26 +83,38 @@ export const openWindow = () => {
   }
 
   infoWindow.webContents.on('will-navigate', handleRedirect)
-  // @ts-ignore
-  infoWindow.webContents.on('new-window', handleRedirect)
+  
+  infoWindow.webContents.setWindowOpenHandler(({ url: urlStr }) => {
+    shell.openExternal(urlStr)
+    closeWindow()
+    return { action: 'deny' }
+  })
+
+  // appInfo 창을 열었을 때 최신 버전을 비동기로 조회하도록 처리
+  if (process.env.NODE_ENV !== 'development') {
+    fetchLatestVersion()
+  }
 }
 
 export const fetchLatestVersion = () => {
-  fetch("https://api.github.com/repos/joostory/tumblr-editor/releases/latest")
+  axios.get("https://api.github.com/repos/joostory/tistory-editor/releases/latest", {
+    headers: {
+      'User-Agent': userAgent
+    }
+  })
     .then(res => {
-      if (!res.ok) {
-        throw res
+      const data = res.data
+      if (data && data.tag_name) {
+        latestVersionStr = data.tag_name
+        if (infoWindow && !infoWindow.isDestroyed()) {
+          infoWindow.webContents.send('latest-version-updated', {
+            version: APP_VERSION,
+            latestVersion: latestVersionStr
+          })
+        }
       }
-      return res
     })
-    .then(res => res.json())
-    .then(json => {
-      latestVersionStr = json.tag_name
-      if (version !== latestVersionStr) {
-        openWindow()
-      }
-    })
-    .catch(() => {
-      // ignore
+    .catch((err) => {
+      console.error("Failed to fetch latest version:", err)
     })
 }
