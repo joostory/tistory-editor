@@ -15,4 +15,29 @@ export default function initThemeEvents(): void {
       }
     })
   })
+
+  // 창 최소화, 최대화, 종료 IPC 제어 핸들러 추가
+  ipcMain.on('window-minimize', (event) => {
+    const webContents = event.sender
+    const win = BrowserWindow.fromWebContents(webContents)
+    if (win) win.minimize()
+  })
+
+  ipcMain.on('window-maximize', (event) => {
+    const webContents = event.sender
+    const win = BrowserWindow.fromWebContents(webContents)
+    if (win) {
+      if (win.isMaximized()) {
+        win.unmaximize()
+      } else {
+        win.maximize()
+      }
+    }
+  })
+
+  ipcMain.on('window-close', (event) => {
+    const webContents = event.sender
+    const win = BrowserWindow.fromWebContents(webContents)
+    if (win) win.close()
+  })
 }

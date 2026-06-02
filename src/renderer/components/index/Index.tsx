@@ -8,6 +8,7 @@ import AuthButton from '#/renderer/components/index/AuthButton'
 
 const styles = {
   root: {
+    paddingTop: '38px',
     marginTop: (theme: any) => theme.spacing(5),
     marginBottom: (theme: any) => theme.spacing(5)
   },

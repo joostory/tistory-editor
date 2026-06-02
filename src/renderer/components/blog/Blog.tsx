@@ -32,7 +32,7 @@ const styles = {
     position: 'fixed',
     left: 0,
     right: 0,
-    top: 0,
+    top: '38px',
     bottom: 0,
     zIndex: 1300,
     backgroundColor: (theme) => theme.palette.background.default,

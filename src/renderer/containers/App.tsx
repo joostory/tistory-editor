@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { ipcRenderer } from 'electron'
-import { Snackbar, CssBaseline } from '@mui/material'
+import { Snackbar, CssBaseline, Box } from '@mui/material'
 
 import Main from '#/renderer/containers/Main'
 import Preference from '#/renderer/components/Preference'
+import Titlebar from '#/renderer/components/Titlebar'
 
 export default function App() {
   const [message, setMessage] = useState<string>("")
@@ -23,8 +24,11 @@ export default function App() {
   return (
     <>
       <CssBaseline />
+      <Titlebar />
       
-      <Main />
+      <Box sx={{ pt: 0, height: '100vh', display: 'flex', flexDirection: 'column', boxSizing: 'border-box', overflowY: 'auto' }}>
+        <Main />
+      </Box>
 
       {message &&
         <Snackbar
