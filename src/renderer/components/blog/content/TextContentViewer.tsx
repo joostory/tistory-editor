@@ -44,9 +44,15 @@ const styles = {
     paddingBottom: (theme) => theme.spacing(5),
   } as SxProps<Theme>,
   tag: {
-    marginRight: (theme) => theme.spacing(1),
-    color: '#555',
-    borderColor: '#ddd'
+    color: '#666',
+    backgroundColor: '#f1f3f5',
+    border: 'none',
+    fontWeight: 500,
+    transition: 'all 0.2s ease',
+    '&:hover': {
+      backgroundColor: '#e9ecef',
+      color: '#333'
+    }
   } as SxProps<Theme>
 }
 
@@ -105,11 +111,13 @@ export default function TextContentViewer({ onRequestEditPost }: TextContentView
           dangerouslySetInnerHTML={{ __html: ContentHelper.makeUrlBase(post.content) }}
         />
 
-        <Box>
-          {tags.map((item, i) =>
-            <Chip key={i} variant='outlined' label={item} sx={styles.tag} />
-          )}
-        </Box>
+        {tags.length > 0 && (
+          <Box sx={{ mt: 5, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+            {tags.map((item, i) =>
+              <Chip key={i} size="small" label={`#${item}`} sx={styles.tag} />
+            )}
+          </Box>
+        )}
       </Container>
     </Box>
   )

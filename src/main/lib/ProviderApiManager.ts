@@ -1,4 +1,4 @@
-const tumblr = require('../apis/tumblr-api')
+import * as tumblr from '#/main/apis/tumblr-api'
 
 export function getApi(provider: string): any {
   switch (provider) {

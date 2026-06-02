@@ -114,7 +114,7 @@ export default function Editor({ mode, onFinish }: EditorProps) {
       content: postData.content,
       format: 'json',
       categoryId: postData.categoryId,
-      tags: postData.tags.join(","),
+      tags: postData.tags,
       state: state,
       visibility: isPublished(state) ? '20' : '0'
     }
