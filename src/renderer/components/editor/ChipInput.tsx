@@ -22,17 +22,30 @@ function ChipInputTextField({ label, placeholder, onAdd }: ChipInputTextFieldPro
     }
   }
 
-  // FocusEvent를 통해 blur 시 태그 추가 처리
   function handleInputBlur(e: React.FocusEvent<HTMLInputElement>) {
     handleAdd(e)
   }
 
   return (
     <TextField
-      label={label} placeholder={placeholder}
+      label={label} 
+      placeholder={placeholder}
       fullWidth
+      variant="outlined"
+      size="medium"
+      helperText="엔터(Enter), 쉼표(,), 혹은 입력 창 밖을 누르면 태그가 추가됩니다."
       onKeyDown={handleInputKeyDown}
       onBlur={handleInputBlur}
+      sx={{
+        '& .MuiOutlinedInput-root': {
+          borderRadius: 2.5,
+        },
+        '& .MuiFormHelperText-root': {
+          mt: 1,
+          color: 'text.secondary',
+          fontSize: '0.75rem'
+        }
+      }}
     />
   )
 }
@@ -48,7 +61,7 @@ export default function ChipInput({ label, placeholder, defaultValue, onChange }
   const [chips, setChips] = useState<string[]>(defaultValue || [])
 
   function handleAdd(value: string) {
-    if (value === '') {
+    if (value === '' || chips.includes(value)) {
       return
     }
 
@@ -71,23 +84,42 @@ export default function ChipInput({ label, placeholder, defaultValue, onChange }
   }, [chips])
 
   return (
-    <>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       <ChipInputTextField
-        label={label} placeholder={placeholder}
+        label={label} 
+        placeholder={placeholder}
         onAdd={handleAdd}
       />
 
-      <Box>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1 }}>
         {chips.map(value =>
           <Chip
             key={value}
-            label={value}
-            sx={{ margin: (theme: any) => theme.spacing(1/2) }}
+            label={`# ${value}`}
+            size="medium"
             onDelete={() => handleDelete(value)}
+            sx={{
+              backgroundColor: '#f1f3f5',
+              color: '#495057',
+              borderRadius: '8px',
+              fontWeight: 500,
+              fontSize: '0.85rem',
+              border: 'none',
+              '& .MuiChip-deleteIcon': {
+                color: '#adb5bd',
+                '&:hover': {
+                  color: '#868e96'
+                }
+              },
+              transition: 'all 0.2s ease',
+              '&:hover': {
+                backgroundColor: '#e9ecef',
+                transform: 'translateY(-1px)'
+              }
+            }}
           />
         )}
       </Box>
-      
-    </>
+    </Box>
   )
 }
