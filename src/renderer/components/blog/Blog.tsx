@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { ipcRenderer } from 'electron'
-import { useAtomValue } from 'jotai'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import {
-  Fab, Dialog, DialogTitle, DialogContent, Box, SxProps, Theme
+  Fab, Dialog, DialogTitle, DialogContent, Box, SxProps, Theme,
+  Tooltip
 } from '@mui/material'
 import { Add } from '@mui/icons-material'
 import Sidebar from '#/renderer/components/blog/sidebar/Sidebar'
@@ -13,6 +14,7 @@ import { pageview } from '#/renderer/modules/AnalyticsHelper'
 import BlogList from '#/renderer/components/index/BlogList'
 import AuthButton from '#/renderer/components/index/AuthButton'
 import { currentAuthState, currentBlogState } from '#/renderer/state/currentBlog'
+import { isEditorOpenState } from '#/renderer/state/editorStatus'
 
 const styles = {
   root: {
@@ -80,6 +82,7 @@ export default function Blog() {
   const currentBlog = useAtomValue(currentBlogState)
   const [contentMode, setContentMode] = useState<string>(ContentMode.VIEW)
   const [openEditor, setOpenEditor] = useState<boolean>(false)
+  const setGlobalEditorOpen = useSetAtom(isEditorOpenState)
   const [openBlogSelector, setOpenBlogSelector] = useState<boolean>(!currentBlog)
 
   useEffect(() => {
@@ -90,8 +93,10 @@ export default function Blog() {
   }, [currentAuth?.uuid, currentBlog?.name])
   
   useEffect(() => {
-    setOpenEditor(contentMode === ContentMode.EDIT || contentMode === ContentMode.ADD)
-  }, [contentMode])
+    const active = contentMode === ContentMode.EDIT || contentMode === ContentMode.ADD
+    setOpenEditor(active)
+    setGlobalEditorOpen(active)
+  }, [contentMode, setGlobalEditorOpen])
 
   if (!currentBlog || !currentAuth) {
     return null
@@ -103,9 +108,11 @@ export default function Blog() {
       <Content onRequestEditPost={() => setContentMode(ContentMode.EDIT)} />
       
       {currentBlog && !openEditor &&
-        <Fab color='primary' sx={styles.btnAdd} onClick={() => setContentMode(ContentMode.ADD)}>
-          <Add />
-        </Fab>
+        <Tooltip title="새 글쓰기" placement="left">
+          <Fab color='primary' sx={styles.btnAdd} onClick={() => setContentMode(ContentMode.ADD)}>
+            <Add />
+          </Fab>
+        </Tooltip>
       }
 
       <BlogListDialog

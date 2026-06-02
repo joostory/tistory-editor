@@ -3,12 +3,15 @@ import { useLocation } from 'react-router-dom'
 import { Box, IconButton, useTheme } from '@mui/material'
 import { Close, Minimize, CropSquare, ArrowBack } from '@mui/icons-material'
 import { ipcRenderer } from 'electron'
+import { useAtomValue } from 'jotai'
+import { isEditorOpenState } from '#/renderer/state/editorStatus'
 
 const TITLEBAR_HEIGHT = 38
 
 export default function Titlebar() {
   const location = useLocation()
   const theme = useTheme()
+  const isEditorOpen = useAtomValue(isEditorOpenState)
 
   const isBlog = location.pathname.startsWith('/blog')
   const isDarwin = process.platform === 'darwin'
@@ -55,7 +58,7 @@ export default function Titlebar() {
         overflow: 'hidden',
       }}
     >
-      {isBlog ? (
+      {isBlog && !isEditorOpen ? (
         <>
           {/* 블로그 뷰: 좌측 사이드바 영역의 타이틀바 디자인 (사이드바 헤더 경계선 유지) */}
           <Box

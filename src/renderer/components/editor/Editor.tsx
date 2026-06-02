@@ -23,8 +23,8 @@ import { Post, PostData, Auth, Blog, Preferences } from '#/renderer/types'
 
 const styles = {
   root: {
-    paddingTop: (theme: any) => theme.spacing(9),
-    paddingBottom: (theme: any) => theme.spacing(8)
+    paddingTop: (theme: any) => theme.spacing(6), // 툴바가 하단 플로팅으로 전환되었으므로, 타이틀바 아래에 자연스럽게 붙도록 조율
+    paddingBottom: (theme: any) => theme.spacing(12) // 하단 플로팅 버튼이 본문 글씨를 가리지 않도록 하단 여백 추가 확보
   }
 }
 
