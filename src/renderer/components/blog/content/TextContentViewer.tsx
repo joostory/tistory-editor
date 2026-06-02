@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { useAtomValue } from 'jotai'
 import dayjs from 'dayjs'
-import { Chip, IconButton, Box, Divider, Typography, Container, SxProps, Theme } from '@mui/material'
+import { Chip, IconButton, Box, Divider, Typography, Container, SxProps, Theme, Tooltip } from '@mui/material'
 import { OpenInBrowser, Edit } from '@mui/icons-material'
 import highlightjs from 'highlight.js'
 import 'highlight.js/styles/atom-one-dark.css'
@@ -94,12 +94,16 @@ export default function TextContentViewer({ onRequestEditPost }: TextContentView
         </Typography>
 
         <Box sx={{ display: 'flex', gap: 0.5 }}>
-          <IconButton sx={styles.btnPostInfo} href={post.url} title="브라우저에서 보기" size='small'>
-            <OpenInBrowser sx={styles.icoPostInfo} />
-          </IconButton>
-          <IconButton sx={styles.btnPostInfo} onClick={onRequestEditPost} title="수정하기" size='small'>
-            <Edit sx={styles.icoPostInfo} />
-          </IconButton>
+          <Tooltip title="브라우저에서 보기" placement="top">
+            <IconButton sx={styles.btnPostInfo} href={post.url} title="브라우저에서 보기" size='small'>
+              <OpenInBrowser sx={styles.icoPostInfo} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="수정하기" placement="top">
+            <IconButton sx={styles.btnPostInfo} onClick={onRequestEditPost} title="수정하기" size='small'>
+              <Edit sx={styles.icoPostInfo} />
+            </IconButton>
+          </Tooltip>
         </Box>
       </Box>
       <Divider sx={{ ...styles.divider } as SxProps<Theme>} />
