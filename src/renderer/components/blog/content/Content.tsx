@@ -12,13 +12,14 @@ const styles = {
     right: 0,
     top: 0,
     bottom: 0,
+    pt: '38px', // 콘텐츠의 내용물 시작은 타이틀바 아래에서 시작하되
     overflow: 'auto',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'start'
   } as SxProps<Theme>,
   emtpyMessage: {
-    height: '100vh',
+    height: 'calc(100vh - 38px)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'

@@ -10,6 +10,8 @@ const styles = {
       width: 300,
       boxSizing: 'border-box',
       overflow: 'hidden',
+      top: '38px',
+      height: 'calc(100vh - 38px)'
     }
   } as SxProps<Theme>,
   toolbar: {

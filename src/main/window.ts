@@ -117,6 +117,8 @@ function createWindow(config: any) {
     width: config.width,
     height: config.height,
     autoHideMenuBar: true,
+    titleBarStyle: 'hidden',
+    trafficLightPosition: { x: 12, y: 12 },
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false
