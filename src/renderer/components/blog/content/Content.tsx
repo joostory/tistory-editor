@@ -38,6 +38,8 @@ interface ContentProps {
   onRequestEditPost: () => void
 }
 
+import { isEditorOpenState } from '#/renderer/state/editorStatus'
+
 function ContentViewer({ onRequestEditPost }: ContentProps) {
   const post = useAtomValue(currentPostState)
   const currentAuth = useAtomValue(currentAuthState)
@@ -54,8 +56,13 @@ function ContentViewer({ onRequestEditPost }: ContentProps) {
 }
 
 export default function Content({ onRequestEditPost }: ContentProps) {
+  const isEditorOpen = useAtomValue(isEditorOpenState)
+
   return (
-    <Box sx={styles.container}>
+    <Box sx={{
+      ...styles.container,
+      overflow: isEditorOpen ? 'hidden' : 'auto' // 에디터가 열려있는 동안에는 본문 영역 스크롤바를 숨겨 뒤로 비쳐 보이는 문제를 완벽 예방
+    }}>
       <ContentViewer onRequestEditPost={onRequestEditPost} />
     </Box>
   )
