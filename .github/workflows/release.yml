@@ -5,23 +5,30 @@ on:
     types: [published]
 
 jobs:
-  # 1단계: 공통 정적 컴파일 및 에셋 패키지 빌드 (저렴하고 빠른 Linux 환경에서 단 1회 수행)
-  build:
-    runs-on: ubuntu-latest
+  # 각 플랫폼별 전용 독자 빌드 및 패키징 (Matrix 병렬 실행)
+  package:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
+
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 24
+
       - name: Decrypt secret
         run: ./.github/scripts/decrypt_secret.sh
+        shell: bash
         env:
           BUILD_KEY: ${{ secrets.BUILD_KEY }}
           BUILD_IV: ${{ secrets.BUILD_IV }}
           BUILD_PASS: ${{ secrets.BUILD_PASS }}
+
       # GitHub Release 태그명(예: v1.6.2)을 추출하여 package.json 버전에 실시간으로 자동 동기화 주입
       - name: Sync package.json version with Release Tag
         run: |
@@ -29,40 +36,9 @@ jobs:
           VERSION="${TAG_NAME#v}" # v1.6.2 -> 1.6.2 변환
           echo "Syncing app version to: $VERSION"
           npm version $VERSION --no-git-tag-version
-      - name: Install compilation dependencies
-        run: npm install
-      - name: Compile frontend (webpack build)
-        run: npm run build
-      # 빌드 완료된 에셋 및 패키징용 공통 디렉토리를 임시 아티팩트로 보관
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: built-app
-          path: |
-            .
-            !.git
-            !node_modules
+        shell: bash
 
-  # 2단계: 플랫폼별 전용 초고속 패키징 (Matrix 병렬 실행)
-  package:
-    needs: build
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
-    steps:
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: built-app
-          path: .
-
-      - name: Install packaging dependencies
+      - name: Install dependencies
         run: npm install
 
       - name: Packaging app
@@ -79,7 +55,7 @@ jobs:
             dist/TistoryEditor-*.exe
             dist/TistoryEditor-*.deb
 
-  # 3단계: 최종 아티팩트 취합 및 단일 릴리즈 등록 (1회만 안전하게 실행)
+  # 최종 아티팩트 취합 및 단일 릴리즈 등록
   release:
     needs: package
     runs-on: ubuntu-latest
@@ -91,7 +67,8 @@ jobs:
           path: dist
           pattern: dist-*
           merge-multiple: true
-      # 한 번에 전체 플랫폼 결과물을 안전하게 릴리즈 등록 (API 병렬 충돌 제로)
+
+      # 한 번에 전체 플랫폼 결과물을 안전하게 릴리즈 등록
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -103,4 +80,5 @@ jobs:
           fail_on_unmatched_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
