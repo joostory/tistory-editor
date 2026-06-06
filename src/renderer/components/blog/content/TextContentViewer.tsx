@@ -95,12 +95,12 @@ export default function TextContentViewer({ onRequestEditPost }: TextContentView
 
         <Box sx={{ display: 'flex', gap: 0.5 }}>
           <Tooltip title="브라우저에서 보기" placement="top">
-            <IconButton sx={styles.btnPostInfo} href={post.url} title="브라우저에서 보기" size='small'>
+            <IconButton sx={styles.btnPostInfo} href={post.url} size='small'>
               <OpenInBrowser sx={styles.icoPostInfo} />
             </IconButton>
           </Tooltip>
           <Tooltip title="수정하기" placement="top">
-            <IconButton sx={styles.btnPostInfo} onClick={onRequestEditPost} title="수정하기" size='small'>
+            <IconButton sx={styles.btnPostInfo} onClick={onRequestEditPost} size='small'>
               <Edit sx={styles.icoPostInfo} />
             </IconButton>
           </Tooltip>
