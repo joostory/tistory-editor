@@ -38,7 +38,6 @@ export interface Post {
   title: string;
   content: string;
   contentJson?: string;
-  categoryId: string;
   tags: string[];
   date?: string | number | Date;
   url?: string;
@@ -50,6 +49,5 @@ export interface Post {
 export interface PostData {
   title: string;
   content: any;
-  categoryId: string;
   tags: string[];
 }

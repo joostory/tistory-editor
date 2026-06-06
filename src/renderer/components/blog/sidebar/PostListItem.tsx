@@ -1,11 +1,8 @@
-import React, { useMemo } from 'react'
-import { useAtomValue } from 'jotai'
 import dayjs from 'dayjs'
 import { ListItem, ListItemButton, ListItemText, Typography, Box, SxProps, Theme } from '@mui/material'
 import { DraftsOutlined, PhotoOutlined, CommentOutlined } from '@mui/icons-material'
 import { Post } from '#/renderer/types'
 import { isPublished } from '#/renderer/constants/PostState'
-import { currentBlogCategoriesState } from '#/renderer/state/currentBlog'
 
 const styles = {
   info: {
@@ -30,26 +27,11 @@ function PostTitle({ post }: HelperProps) {
 }
 
 function PostInfo({ post }: HelperProps) {
-  const categories = useAtomValue(currentBlogCategoriesState)
-  
-  const category = useMemo(() => {
-    if (categories && post.categoryId) {
-      return categories.find((c: any) => c.id == post.categoryId)
-    }
-    return null
-  }, [categories, post])
-
   return (
     <>
       <Typography component='span' sx={styles.info}>
         {dayjs(post.date).format('YYYY-MM-DD HH:mm')}
       </Typography>
-
-      {category &&
-        <Typography component='span' sx={styles.info} color='secondary'>
-          {category.name}
-        </Typography>
-      }
     </>
   )
 }

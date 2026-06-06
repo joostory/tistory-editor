@@ -18,13 +18,12 @@ import { pageview } from '#/renderer/modules/AnalyticsHelper'
 import { isPublished, PUBLISHED } from '#/renderer/constants/PostState'
 import { currentPostState } from '#/renderer/state/currentPost'
 import { postsState } from '#/renderer/state/posts'
-import { preferencesState } from '#/renderer/state/preferences'
-import { Post, PostData, Auth, Blog, Preferences } from '#/renderer/types'
+import { Post, PostData, Auth, Blog } from '#/renderer/types'
 
 const styles = {
   root: {
-    paddingTop: (theme: any) => theme.spacing(6), // 툴바가 하단 플로팅으로 전환되었으므로, 타이틀바 아래에 자연스럽게 붙도록 조율
-    paddingBottom: (theme: any) => theme.spacing(12) // 하단 플로팅 버튼이 본문 글씨를 가리지 않도록 하단 여백 추가 확보
+    paddingTop: (theme: any) => theme.spacing(12),
+    paddingBottom: (theme: any) => theme.spacing(12)
   }
 }
 
@@ -38,7 +37,6 @@ export default function Editor({ mode, onFinish }: EditorProps) {
   const currentBlog = useAtomValue(currentBlogState) as Blog
   const [post, setPost] = useAtom(currentPostState) as [Post | null, any]
   const setPosts = useSetAtom(postsState)
-  const preferences = useAtomValue(preferencesState) as Preferences
 
   const [showInfoBox, setShowInfoBox] = useState<boolean>(false)
   const [showLoading, setShowLoading] = useState<boolean>(false)
@@ -71,14 +69,12 @@ export default function Editor({ mode, onFinish }: EditorProps) {
       return {
         title: post.title,
         content: content,
-        categoryId: post.categoryId,
         tags: post.tags
       }
     } else {
       return {
         title: "",
         content: "",
-        categoryId: '0',
         tags: []
       }
     }
@@ -92,14 +88,6 @@ export default function Editor({ mode, onFinish }: EditorProps) {
     }))
   }
   
-  function handleChangeCategory(e: React.ChangeEvent<HTMLInputElement>) {
-    setPostData(update(postData, {
-      categoryId: {
-        $set: e.target.value
-      }
-    }))
-  }
-
   function handleChangeTags(tags: string[]) {
     setPostData(update(postData, {
       tags: {
@@ -113,7 +101,6 @@ export default function Editor({ mode, onFinish }: EditorProps) {
       title: postData.title,
       content: postData.content,
       format: 'json',
-      categoryId: postData.categoryId,
       tags: postData.tags,
       state: state,
       visibility: isPublished(state) ? '20' : '0'

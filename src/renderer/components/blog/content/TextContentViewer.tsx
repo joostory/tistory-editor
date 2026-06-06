@@ -13,8 +13,7 @@ import { currentPostState } from '#/renderer/state/currentPost'
 const styles = {
   root: {
     margin: (theme) => theme.spacing(3),
-    marginTop: (theme) => theme.spacing(5),
-    marginBottom: (theme) => theme.spacing(5),
+    marginBottom: (theme) => theme.spacing(8),
     background: '#fff',
     width: (theme: any) => theme.palette.content?.maxWidth || '800px',
     boxShadow: (theme) => theme.shadows[1],
@@ -24,9 +23,9 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: (theme) => theme.spacing(2),
+    paddingTop: (theme) => theme.spacing(1),
     paddingBottom: (theme) => theme.spacing(1),
-    px: (theme) => theme.spacing(4),
+    px: (theme) => theme.spacing(2),
   } as SxProps<Theme>,
   btnPostInfo: {
     color: '#555'
@@ -38,7 +37,7 @@ const styles = {
     backgroundColor: '#eee'
   } as SxProps<Theme>,
   contentContainer: {
-    padding: (theme) => theme.spacing(2),
+    padding: (theme) => theme.spacing(3),
     paddingLeft: (theme) => theme.spacing(4),
     paddingRight: (theme) => theme.spacing(4),
     paddingBottom: (theme) => theme.spacing(5),
@@ -95,12 +94,12 @@ export default function TextContentViewer({ onRequestEditPost }: TextContentView
 
         <Box sx={{ display: 'flex', gap: 0.5 }}>
           <Tooltip title="브라우저에서 보기" placement="top">
-            <IconButton sx={styles.btnPostInfo} href={post.url} title="브라우저에서 보기" size='small'>
+            <IconButton sx={styles.btnPostInfo} href={post.url} size='small'>
               <OpenInBrowser sx={styles.icoPostInfo} />
             </IconButton>
           </Tooltip>
           <Tooltip title="수정하기" placement="top">
-            <IconButton sx={styles.btnPostInfo} onClick={onRequestEditPost} title="수정하기" size='small'>
+            <IconButton sx={styles.btnPostInfo} onClick={onRequestEditPost} size='small'>
               <Edit sx={styles.icoPostInfo} />
             </IconButton>
           </Tooltip>

@@ -8,7 +8,7 @@ import { Auth } from '#/renderer/types'
 const styles = {
   container: {
     width: 700,
-    paddingTop: (theme: any) => theme.spacing(2),
+    paddingTop: (theme: any) => theme.spacing(3),
     paddingLeft: (theme: any) => theme.spacing(4),
     paddingRight: (theme: any) => theme.spacing(4),
     paddingBottom: (theme: any) => theme.spacing(5),
