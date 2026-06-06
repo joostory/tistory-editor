@@ -17,11 +17,13 @@ export default function EditorInfoDialog({ onRequestClose, onRequestPublish, onT
       fullWidth={true}
       maxWidth='sm' 
       onClose={onRequestClose}
-      PaperProps={{
-        sx: {
-          borderRadius: 3,
-          padding: 1,
-          boxShadow: '0 12px 40px rgba(0, 0, 0, 0.12)'
+      slotProps={{
+        paper: {
+          sx: {
+            borderRadius: 3,
+            padding: 1,
+            boxShadow: '0 12px 40px rgba(0, 0, 0, 0.12)'
+          }
         }
       }}
     >

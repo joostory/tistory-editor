@@ -11,3 +11,5 @@ app/index.html
 .oauthInfo.json
 out
 scratch
+.antigravitycli/
+
