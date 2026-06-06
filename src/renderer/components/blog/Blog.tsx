@@ -34,7 +34,7 @@ const styles = {
     position: 'fixed',
     left: 0,
     right: 0,
-    top: '38px',
+    top: 0,
     bottom: 0,
     zIndex: 1300,
     backgroundColor: (theme) => theme.palette.background.default,
@@ -88,7 +88,6 @@ export default function Blog() {
   useEffect(() => {
     if (currentBlog && currentAuth) {
       pageview(`/blog/${currentBlog.name}`, `${currentBlog.title}`)
-      ipcRenderer.send('fetch-categories', currentAuth.uuid, currentBlog.name)
     }
   }, [currentAuth?.uuid, currentBlog?.name])
   

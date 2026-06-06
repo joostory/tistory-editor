@@ -15,7 +15,7 @@ export const styles = {
   } as SxProps<Theme>,
   toolbar: {
     position: 'fixed',
-    top: 15,
+    top: 38,
     width: 700,
     display: 'flex',
     alignItems: 'center',

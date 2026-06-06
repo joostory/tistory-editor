@@ -30,21 +30,6 @@ export default function initContentEvents(): void {
     }
   })
 
-  ipcMain.on("fetch-categories", (evt, authUUID: string, blogName: string) => {
-    console.log('Main.receive: fetch-categories', authUUID, blogName)
-    const auth = AuthenticationManager.findByUUID(authUUID)
-    if (!auth) return
-    const api = ProviderApiManager.getApi(auth.provider)
-    if (auth.provider !== 'tistory' || !api.validateAuthInfo(auth.authInfo)) {
-      return
-    }
-
-    api.fetchCategories(auth.authInfo, blogName)
-      .then((categories: any) => {
-        evt.sender.send('receive-categories', categories)
-      })
-  })
-
   ipcMain.on("fetch-posts", (evt, authUUID: string, blogName: string, options: any) => {
     console.log('Main.receive: fetch-posts', authUUID, blogName, options)
     const auth = AuthenticationManager.findByUUID(authUUID)

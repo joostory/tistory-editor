@@ -7,7 +7,7 @@ import Blog from '#/renderer/components/blog/Blog'
 import Index from '#/renderer/components/index/Index'
 import { initializedStatusState } from '#/renderer/state/status'
 import { accountsState } from '#/renderer/state/accounts'
-import { currentAuthState, currentBlogCategoriesState, currentBlogState, INITIAL_CATEGORIES } from '#/renderer/state/currentBlog'
+import { currentAuthState, currentBlogState } from '#/renderer/state/currentBlog'
 import { INITIAL_POSTS, postsInitializedState, postsLockState, postsState } from '#/renderer/state/posts'
 import { currentPostState, INITIAL_CURRENT_POST } from '#/renderer/state/currentPost'
 
@@ -20,7 +20,6 @@ function BlogRouteWrapper() {
   const setPosts = useSetAtom(postsState)
   const setPostsInitialized = useSetAtom(postsInitializedState)
   const setPostsLock = useSetAtom(postsLockState)
-  const setCurrentBlogCategories = useSetAtom(currentBlogCategoriesState)
   const setCurrentPost = useSetAtom(currentPostState)
   const navigate = useNavigate()
 
@@ -45,7 +44,6 @@ function BlogRouteWrapper() {
       if (!currentBlog || currentBlog.name !== foundBlog.name) {
         setCurrentAuth(foundAuth)
         setCurrentBlog(foundBlog)
-        setCurrentBlogCategories(INITIAL_CATEGORIES)
         setPosts(INITIAL_POSTS)
         setPostsInitialized(false)
         setPostsLock(false)
@@ -55,7 +53,7 @@ function BlogRouteWrapper() {
       // 매칭되는 블로그가 없으면 홈으로 리다이렉트
       navigate('/', { replace: true })
     }
-  }, [blogName, accounts, currentBlog, setCurrentAuth, setCurrentBlog, setCurrentBlogCategories, setPosts, setPostsInitialized, setPostsLock, setCurrentPost, navigate])
+  }, [blogName, accounts, currentBlog, setCurrentAuth, setCurrentBlog, setPosts, setPostsInitialized, setPostsLock, setCurrentPost, navigate])
 
   if (!accounts || accounts.length === 0 || !currentBlog || currentBlog.name !== decodeURIComponent(blogName) || !currentAuth) {
     return <Loading />
@@ -70,19 +68,17 @@ function IndexRouteWrapper() {
   const setPosts = useSetAtom(postsState)
   const setPostsInitialized = useSetAtom(postsInitializedState)
   const setPostsLock = useSetAtom(postsLockState)
-  const setCurrentBlogCategories = useSetAtom(currentBlogCategoriesState)
   const setCurrentPost = useSetAtom(currentPostState)
 
   useEffect(() => {
     // 홈 화면 진입 시 블로그 관련 상태들을 자연스럽게 정리
     setCurrentAuth(null)
     setCurrentBlog(null)
-    setCurrentBlogCategories(INITIAL_CATEGORIES)
     setPosts(INITIAL_POSTS)
     setPostsInitialized(false)
     setPostsLock(false)
     setCurrentPost(INITIAL_CURRENT_POST)
-  }, [setCurrentAuth, setCurrentBlog, setCurrentBlogCategories, setPosts, setPostsInitialized, setPostsLock, setCurrentPost])
+  }, [setCurrentAuth, setCurrentBlog, setPosts, setPostsInitialized, setPostsLock, setCurrentPost])
 
   return <Index />
 }

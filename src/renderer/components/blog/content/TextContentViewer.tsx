@@ -13,8 +13,7 @@ import { currentPostState } from '#/renderer/state/currentPost'
 const styles = {
   root: {
     margin: (theme) => theme.spacing(3),
-    marginTop: (theme) => theme.spacing(5),
-    marginBottom: (theme) => theme.spacing(5),
+    marginBottom: (theme) => theme.spacing(8),
     background: '#fff',
     width: (theme: any) => theme.palette.content?.maxWidth || '800px',
     boxShadow: (theme) => theme.shadows[1],
@@ -24,9 +23,9 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: (theme) => theme.spacing(2),
+    paddingTop: (theme) => theme.spacing(1),
     paddingBottom: (theme) => theme.spacing(1),
-    px: (theme) => theme.spacing(4),
+    px: (theme) => theme.spacing(2),
   } as SxProps<Theme>,
   btnPostInfo: {
     color: '#555'
@@ -38,7 +37,7 @@ const styles = {
     backgroundColor: '#eee'
   } as SxProps<Theme>,
   contentContainer: {
-    padding: (theme) => theme.spacing(2),
+    padding: (theme) => theme.spacing(3),
     paddingLeft: (theme) => theme.spacing(4),
     paddingRight: (theme) => theme.spacing(4),
     paddingBottom: (theme) => theme.spacing(5),

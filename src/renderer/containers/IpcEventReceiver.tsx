@@ -4,7 +4,6 @@ import { useSetAtom } from 'jotai'
 import { preferencesState } from '#/renderer/state/preferences'
 import { initializedStatusState } from '#/renderer/state/status'
 import { accountsState } from '#/renderer/state/accounts'
-import { currentBlogCategoriesState } from '#/renderer/state/currentBlog'
 import { postsInitializedState, postsLockState, postsState } from '#/renderer/state/posts'
 import { currentPostState } from '#/renderer/state/currentPost'
 import { Account, Post, Preferences } from '#/renderer/types'
@@ -13,7 +12,6 @@ export default function IpcEventReceiver() {
   const setPreferences = useSetAtom(preferencesState)
   const setAccounts = useSetAtom(accountsState)
   const setInitializedStatus = useSetAtom(initializedStatusState)
-  const setCurrentBlogCategories = useSetAtom(currentBlogCategoriesState)
   const setPosts = useSetAtom(postsState)
   const setPostsLock = useSetAtom(postsLockState)
   const setPostsInitialized = useSetAtom(postsInitializedState)
@@ -59,11 +57,6 @@ export default function IpcEventReceiver() {
     ipcRenderer.on("receive-account", (_e, data: Account) => {
       console.log('Renderer.receive: receive-account', data)
       handleAddAccount(data)
-    })
-
-    ipcRenderer.on("receive-categories", (_e, data: any[]) => {
-      console.log('Renderer.receive: receive-categories', data)
-      setCurrentBlogCategories(data)
     })
 
     ipcRenderer.on("complete-disconnect-auth", (_e, data: string) => {
