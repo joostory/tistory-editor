@@ -6,7 +6,6 @@ import {
   FormatItalic,
   FormatListBulleted,
   FormatListNumbered,
-  Code,
   Image as ImageIcon,
   GridView,
   LayersClear,
@@ -85,14 +84,6 @@ export default function MenuBar({ editor, onImageClick, onAddLink, onAddLinkCard
         >
           <FormatItalic />
         </ToggleButton>
-        <ToggleButton
-          value="code"
-          selected={editor.isActive('code')}
-          onClick={() => editor.chain().focus().toggleCode().run()}
-          sx={styles.toolbarBtn}
-        >
-          <Code />
-        </ToggleButton>
       </ToggleButtonGroup>
 
       <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
@@ -113,14 +104,6 @@ export default function MenuBar({ editor, onImageClick, onAddLink, onAddLinkCard
           sx={{ ...styles.toolbarBtn, fontWeight: 'bold', fontSize: '12px' } as SxProps<Theme>}
         >
           H2
-        </ToggleButton>
-        <ToggleButton
-          value="h3"
-          selected={editor.isActive('heading', { level: 3 })}
-          onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-          sx={{ ...styles.toolbarBtn, fontWeight: 'bold', fontSize: '11px' } as SxProps<Theme>}
-        >
-          H3
         </ToggleButton>
       </ToggleButtonGroup>
 
