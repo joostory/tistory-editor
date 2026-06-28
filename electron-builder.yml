@@ -17,6 +17,7 @@ files:
 mac:
   target: dmg
   category: public.app-category.utilities
+  identity: "-"
   hardenedRuntime: false
   gatekeeperAssess: false
 
