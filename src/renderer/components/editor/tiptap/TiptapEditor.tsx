@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
+import Link from '@tiptap/extension-link'
 import ImageGroup from '#/renderer/components/editor/tiptap/extention/ImageGroup'
 import LinkCard from '#/renderer/components/editor/tiptap/extention/LinkCard'
 import Video from '#/renderer/components/editor/tiptap/extention/Video'
@@ -12,6 +13,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import { styles, lightTheme } from './styles'
 import MenuBar from './MenuBar'
 import LinkCardDialog from './LinkCardDialog'
+import LinkDialog from './LinkDialog'
 import VideoDialog from './VideoDialog'
 
 interface TiptapEditorProps {
@@ -23,6 +25,7 @@ export default function TiptapEditor({ value, onChange }: TiptapEditorProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const editorContainerRef = useRef<HTMLDivElement>(null)
   const [isLinkCardDialogOpen, setIsLinkCardDialogOpen] = useState<boolean>(false)
+  const [isLinkDialogOpen, setIsLinkDialogOpen] = useState<boolean>(false)
   const [isVideoDialogOpen, setIsVideoDialogOpen] = useState<boolean>(false)
 
   // 플로팅 삭제 버튼 위치 및 타겟 노드 정보 저장
@@ -60,6 +63,13 @@ export default function TiptapEditor({ value, onChange }: TiptapEditorProps) {
       Image,
       ImageGroup,
       LinkCard,
+      Link.configure({
+        openOnClick: false,
+        HTMLAttributes: {
+          rel: 'noopener noreferrer',
+          target: '_blank',
+        },
+      }),
       Video,
     ],
     content: value,
@@ -195,6 +205,7 @@ export default function TiptapEditor({ value, onChange }: TiptapEditorProps) {
         <MenuBar 
           editor={editor} 
           onImageClick={() => fileInputRef.current?.click()} 
+          onAddLink={() => setIsLinkDialogOpen(true)}
           onAddLinkCard={() => setIsLinkCardDialogOpen(true)}
           onAddVideo={() => setIsVideoDialogOpen(true)}
         />
@@ -250,6 +261,12 @@ export default function TiptapEditor({ value, onChange }: TiptapEditorProps) {
         <LinkCardDialog
           open={isLinkCardDialogOpen}
           onClose={() => setIsLinkCardDialogOpen(false)}
+          editor={editor}
+        />
+        
+        <LinkDialog
+          open={isLinkDialogOpen}
+          onClose={() => setIsLinkDialogOpen(false)}
           editor={editor}
         />
         
