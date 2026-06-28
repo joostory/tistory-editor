@@ -208,6 +208,28 @@ export default function TiptapEditor({ value, onChange }: TiptapEditorProps) {
     }
   }, [value, editor])
 
+  // 에디터 컨테이너 내부의 모든 A 태그 클릭 이벤트를 캡처링 단계에서 가로채서 기본 동작(외부 브라우저 열기)을 취소함
+  useEffect(() => {
+    const container = editorContainerRef.current
+    if (!container) return
+
+    const handleLinkClick = (event: MouseEvent) => {
+      let target = event.target as Node | null
+      while (target && target !== container) {
+        if (target.nodeName === 'A') {
+          event.preventDefault()
+          break
+        }
+        target = target.parentNode
+      }
+    }
+
+    container.addEventListener('mousedown', handleLinkClick, true)
+    return () => {
+      container.removeEventListener('mousedown', handleLinkClick, true)
+    }
+  }, [editor])
+
   return (
     <ThemeProvider theme={lightTheme}>
       <Box sx={styles.root}>
