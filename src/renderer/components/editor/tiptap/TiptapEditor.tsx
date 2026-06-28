@@ -59,7 +59,16 @@ export default function TiptapEditor({ value, onChange }: TiptapEditorProps) {
 
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        heading: {
+          levels: [1, 2],
+        },
+        blockquote: false,
+        codeBlock: false,
+        horizontalRule: false,
+        strike: false,
+        code: false,
+      }),
       Image,
       ImageGroup,
       LinkCard,
