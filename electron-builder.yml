@@ -17,6 +17,8 @@ files:
 mac:
   target: dmg
   category: public.app-category.utilities
+  hardenedRuntime: false
+  gatekeeperAssess: false
 
 win:
   target: nsis
