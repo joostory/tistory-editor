@@ -23,7 +23,7 @@ jobs:
           node-version: 24
       - name: npm install
         run: |
-          npm install
+          npm install --legacy-peer-deps
       - name: npm build
         run: |
           npm run build

@@ -39,7 +39,7 @@ jobs:
         shell: bash
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       - name: Packaging app
         run: npm run dist -- --publish never
