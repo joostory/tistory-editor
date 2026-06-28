@@ -11,6 +11,7 @@ import {
   GridView,
   LayersClear,
   AddLink,
+  Link as LinkIcon,
   OndemandVideo
 } from '@mui/icons-material'
 import { styles } from './styles'
@@ -18,11 +19,12 @@ import { styles } from './styles'
 interface MenuBarProps {
   editor: Editor | null
   onImageClick: () => void
+  onAddLink: () => void
   onAddLinkCard: () => void
   onAddVideo: () => void
 }
 
-export default function MenuBar({ editor, onImageClick, onAddLinkCard, onAddVideo }: MenuBarProps) {
+export default function MenuBar({ editor, onImageClick, onAddLink, onAddLinkCard, onAddVideo }: MenuBarProps) {
   if (!editor) {
     return null
   }
@@ -153,6 +155,15 @@ export default function MenuBar({ editor, onImageClick, onAddLinkCard, onAddVide
           title="이미지 추가"
         >
           <ImageIcon />
+        </ToggleButton>
+        <ToggleButton
+          value="link"
+          selected={editor.isActive('link')}
+          onClick={onAddLink}
+          sx={styles.toolbarBtn}
+          title="링크 추가/수정"
+        >
+          <LinkIcon />
         </ToggleButton>
         <ToggleButton
           value="linkCard"
