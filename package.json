@@ -19,7 +19,7 @@
     "dist:all": "npm run build && electron-builder --mac --win --linux",
     "test": "vitest run",
     "test:watch": "vitest",
-    "postinstall": "electron install"
+    "postinstall": "node node_modules/electron/install.js"
   },
   "repository": {
     "type": "git",
