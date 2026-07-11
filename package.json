@@ -18,7 +18,8 @@
     "dist:mac": "npm run build && electron-builder --mac --x64 --arm64",
     "dist:all": "npm run build && electron-builder --mac --win --linux",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "postinstall": "electron install"
   },
   "repository": {
     "type": "git",
