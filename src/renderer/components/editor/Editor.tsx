@@ -48,6 +48,7 @@ export default function Editor({ mode, onFinish }: EditorProps) {
       ...prev,
       list: [postItem, ...prev.list]
     }))
+    setPost(postItem)
   }
 
   const handleModifyPost = (postItem: Post) => {
