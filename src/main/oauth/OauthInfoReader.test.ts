@@ -1,9 +1,9 @@
 import OauthInfoReader from '#/main/oauth/OauthInfoReader'
 
 describe('oauthInfo reader', () => {
-  it('read google oauthInfo', () => {
+  it('read oauthInfo', () => {
     const reader = new OauthInfoReader()
-    const target = reader.getGoogle()
+    const target = reader.getTumblr()
     expect(target).not.toBeUndefined()
   })
 })

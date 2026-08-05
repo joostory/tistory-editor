@@ -17,13 +17,6 @@ export default class OauthInfoReader {
     this.oauthInfo = JSON.parse(data)
   }
 
-  getGoogle(): any {
-    if (!this.oauthInfo.google) {
-      throw new Error('NO GOOGLE OAUTHINFO')
-    }
-    return this.oauthInfo.google
-  }
-
   getTumblr(): any {
     if (!this.oauthInfo.tumblr) {
       throw new Error('NO TUMBLR OAUTHINFO')
