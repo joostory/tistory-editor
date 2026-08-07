@@ -396,4 +396,36 @@ describe('NpfConverter - 리스트 및 링크 양방향 변환 검증 테스트'
       expect(html).toContain('<iframe width="356" height="200" id="youtube_iframe" src="https://www.youtube.com/embed/jpYdsQuO6PM?feature=oembed" frameborder="0" allowfullscreen></iframe>')
     })
   })
+
+  describe('Tumblr NPF Mention formatting', () => {
+    test('mention 포맷팅을 Tiptap 및 HTML 링크로 안전하게 변환해야 합니다.', () => {
+      const npfContent = [
+        {
+          type: 'text',
+          text: 'Tailwind CSS v4 지원: @utility 지시어',
+          formatting: [
+            {
+              type: 'mention',
+              start: 21,
+              end: 29,
+              blog: {
+                name: 'utility',
+                url: 'https://www.tumblr.com/blog/view/utility/'
+              }
+            }
+          ]
+        }
+      ]
+
+      const tiptap = NpfConverter.npfToTiptap(npfContent, null)
+      expect(tiptap.content[0].content[1].marks[0]).toEqual({
+        type: 'link',
+        attrs: { href: 'https://www.tumblr.com/blog/view/utility/' }
+      })
+
+      const html = NpfConverter.npfToHtml(npfContent, null)
+      expect(html).toContain('<a href="https://www.tumblr.com/blog/view/utility/">')
+    })
+  })
 })
+

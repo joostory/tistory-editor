@@ -39,7 +39,7 @@ function _tumblrPostToEditorPost(post: any) {
   }
 
   return {
-    id: post.id,
+    id: post.id_string || (post.id ? String(post.id) : ''),
     url: post.post_url,
     title: post.summary || post.title || '',
     content: contentHtml,
@@ -250,7 +250,7 @@ export async function fetchPost(auth: any, blogName: string, postId: any): Promi
   try {
     const draftsRes = await client.blogDrafts(blogName, { npf: true })
     if (draftsRes && draftsRes.posts && draftsRes.posts.length > 0) {
-      const match = draftsRes.posts.find((p: any) => p.id == postId)
+      const match = draftsRes.posts.find((p: any) => (p.id_string || p.id) == postId)
       if (match) {
         return { post: _tumblrPostToEditorPost(match) }
       }
@@ -267,10 +267,11 @@ export async function addPost(auth: any, blogName: string, post: any): Promise<a
   const tumblrPost = _editorPostToTumblrPost(post)
   try {
     const createRes = await client.createPost(blogName, tumblrPost)
+    const targetId = createRes.id_string || createRes.id
     if (post.state === 'draft' || tumblrPost.state === 'draft') {
       try {
         const draftsRes = await fetchDrafts(auth, blogName)
-        const createdPost = draftsRes.posts.find((p: any) => p.id == createRes.id) || draftsRes.posts[0]
+        const createdPost = draftsRes.posts.find((p: any) => (p.id || p.id_string) == targetId) || draftsRes.posts[0]
         if (createdPost) {
           return { post: createdPost }
         }
