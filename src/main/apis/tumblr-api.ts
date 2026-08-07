@@ -39,7 +39,7 @@ function _tumblrPostToEditorPost(post: any) {
   }
 
   return {
-    id: post.id,
+    id: post.id_string || (post.id ? String(post.id) : ''),
     url: post.post_url,
     title: post.summary || post.title || '',
     content: contentHtml,
@@ -147,6 +147,10 @@ function _editorPostToTumblrPost(editorPost: any) {
     tags: editorPost.tags
   }
 
+  if (editorPost.state) {
+    tumblrPost.state = editorPost.state
+  }
+
   if (editorPost.id) {
     tumblrPost.id = editorPost.id
   }
@@ -189,29 +193,92 @@ export function fetchUser(auth: any): Promise<any> {
   return client.userInfo()
 }
 
-export function fetchPosts(auth: any, blogName: string, options: any): Promise<any> {
+export function fetchDrafts(auth: any, blogName: string, options?: any): Promise<any> {
   const client = _createTumblrClient(auth)
   const queryOptions = { npf: true, ...options }
-  return client.blogPosts(blogName, queryOptions)
+  return client.blogDrafts(blogName, queryOptions)
     .then((res: any) => ({
-      posts: _tumblrPostsToEditorPosts(res.posts),
-      hasNext: res.blog.posts > ((options && options.offset) || 0) + res.posts.length
+      posts: _tumblrPostsToEditorPosts(res.posts)
     }))
+    .catch((err: any) => {
+      console.error("Failed to fetch drafts:", err)
+      return { posts: [] }
+    })
 }
 
-export function fetchPost(auth: any, blogName: string, postId: any): Promise<any> {
+export async function fetchPosts(auth: any, blogName: string, options: any): Promise<any> {
   const client = _createTumblrClient(auth)
-  return client.blogPosts(blogName, { id: postId, npf: true })
-    .then((res: any) => ({
-      post: _tumblrPostToEditorPost(res.posts[0])
-    }))
+  const queryOptions = { npf: true, ...options }
+  const isFirstPage = !options || !options.offset || options.offset === 0
+
+  if (isFirstPage) {
+    try {
+      const [publishedRes, draftsRes] = await Promise.all([
+        client.blogPosts(blogName, queryOptions),
+        client.blogDrafts(blogName, { npf: true })
+      ])
+      const draftPosts = _tumblrPostsToEditorPosts(draftsRes.posts || [])
+      const publishedPosts = _tumblrPostsToEditorPosts(publishedRes.posts || [])
+
+      return {
+        posts: [...draftPosts, ...publishedPosts],
+        hasNext: publishedRes.blog.posts > ((options && options.offset) || 0) + publishedRes.posts.length
+      }
+    } catch (e) {
+      console.error("Failed to fetch published and draft posts:", e)
+    }
+  }
+
+  const res = await client.blogPosts(blogName, queryOptions)
+  return {
+    posts: _tumblrPostsToEditorPosts(res.posts),
+    hasNext: res.blog.posts > ((options && options.offset) || 0) + res.posts.length
+  }
+}
+
+export async function fetchPost(auth: any, blogName: string, postId: any): Promise<any> {
+  const client = _createTumblrClient(auth)
+  try {
+    const res = await client.blogPosts(blogName, { id: postId, npf: true })
+    if (res && res.posts && res.posts.length > 0) {
+      return { post: _tumblrPostToEditorPost(res.posts[0]) }
+    }
+  } catch (e) {
+    // Ignore error and try fetching from drafts
+  }
+
+  try {
+    const draftsRes = await client.blogDrafts(blogName, { npf: true })
+    if (draftsRes && draftsRes.posts && draftsRes.posts.length > 0) {
+      const match = draftsRes.posts.find((p: any) => (p.id_string || p.id) == postId)
+      if (match) {
+        return { post: _tumblrPostToEditorPost(match) }
+      }
+    }
+  } catch (e) {
+    console.error("Failed to fetch draft post by id:", e)
+  }
+
+  throw new Error(`Post not found with id: ${postId}`)
 }
 
 export async function addPost(auth: any, blogName: string, post: any): Promise<any> {
   const client = _createTumblrClient(auth)
   const tumblrPost = _editorPostToTumblrPost(post)
   try {
-    await client.createPost(blogName, tumblrPost)
+    const createRes = await client.createPost(blogName, tumblrPost)
+    const targetId = createRes.id_string || createRes.id
+    if (post.state === 'draft' || tumblrPost.state === 'draft') {
+      try {
+        const draftsRes = await fetchDrafts(auth, blogName)
+        const createdPost = draftsRes.posts.find((p: any) => (p.id || p.id_string) == targetId) || draftsRes.posts[0]
+        if (createdPost) {
+          return { post: createdPost }
+        }
+      } catch (e) {
+        console.error("Failed to fetch created draft post:", e)
+      }
+    }
     const fetchRes = await fetchPosts(auth, blogName, { offset: 0, limit: 1 })
     return { post: fetchRes.posts[0] }
   } finally {
@@ -248,6 +315,11 @@ export async function savePost(auth: any, blogName: string, post: any): Promise<
       })
     }
   }
+}
+
+export function deletePost(auth: any, blogName: string, postId: any): Promise<any> {
+  const client = _createTumblrClient(auth)
+  return client.deletePost(blogName, postId)
 }
 
 export function validateAuthInfo(auth: any): boolean {

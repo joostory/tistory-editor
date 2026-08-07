@@ -181,12 +181,22 @@ function parseChildNodes(text: string, formatting: any[]): any[] {
   for (const format of formatting) {
     const start = Math.max(0, format.start)
     const end = Math.min(text.length, format.end)
-    for (let i = start; i < end; i++) {
-      const mark: any = { type: format.type }
-      if (format.type === 'link' && format.url) {
-        mark.attrs = { href: format.url }
+    let mark: any = null
+
+    if (format.type === 'bold') {
+      mark = { type: 'bold' }
+    } else if (format.type === 'italic') {
+      mark = { type: 'italic' }
+    } else if (format.type === 'link' && format.url) {
+      mark = { type: 'link', attrs: { href: format.url } }
+    } else if (format.type === 'mention' && format.blog && format.blog.url) {
+      mark = { type: 'link', attrs: { href: format.blog.url } }
+    }
+
+    if (mark) {
+      for (let i = start; i < end; i++) {
+        charMarks[i].push(mark)
       }
-      charMarks[i].push(mark)
     }
   }
   
@@ -613,6 +623,9 @@ function applyFormattingToHtml(text: string, formatting: any[]): string {
       tagsClose[end] = tagsClose[end] + '</em>'
     } else if (format.type === 'link' && format.url) {
       tagsOpen[start] = `<a href="${format.url}">` + tagsOpen[start]
+      tagsClose[end] = tagsClose[end] + '</a>'
+    } else if (format.type === 'mention' && format.blog && format.blog.url) {
+      tagsOpen[start] = `<a href="${format.blog.url}">` + tagsOpen[start]
       tagsClose[end] = tagsClose[end] + '</a>'
     }
   })
