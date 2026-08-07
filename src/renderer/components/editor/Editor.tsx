@@ -15,7 +15,7 @@ import EditorInfoDialog from '#/renderer/components/editor/EditorInfoDialog'
 import Loading from '#/renderer/components/Loading'
 
 import { pageview } from '#/renderer/modules/AnalyticsHelper'
-import { isPublished, PUBLISHED } from '#/renderer/constants/PostState'
+import { isPublished, PUBLISHED, DRAFT } from '#/renderer/constants/PostState'
 import { currentPostState } from '#/renderer/state/currentPost'
 import { postsState } from '#/renderer/state/posts'
 import { Post, PostData, Auth, Blog } from '#/renderer/types'
@@ -201,6 +201,7 @@ export default function Editor({ mode, onFinish }: EditorProps) {
         onTagsChange={handleChangeTags}
         onRequestClose={() => setShowInfoBox(false)}
         onRequestPublish={() => handlePublish(PUBLISHED)}
+        onRequestDraft={() => handlePublish(DRAFT)}
       />
 
       {showLoading && <Loading />}

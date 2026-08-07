@@ -1,14 +1,16 @@
 import React, { useEffect, useRef } from 'react'
-import { useAtomValue } from 'jotai'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import dayjs from 'dayjs'
+import { ipcRenderer } from 'electron'
 import { Chip, IconButton, Box, Divider, Typography, Container, SxProps, Theme, Tooltip } from '@mui/material'
-import { OpenInBrowser, Edit } from '@mui/icons-material'
+import { OpenInBrowser, Edit, Delete } from '@mui/icons-material'
 import highlightjs from 'highlight.js'
 import 'highlight.js/styles/atom-one-dark.css'
 import * as ContentHelper from '#/renderer/modules/ContentHelper'
 import { pageview } from '#/renderer/modules/AnalyticsHelper'
-import { currentBlogState } from '#/renderer/state/currentBlog'
+import { currentAuthState, currentBlogState } from '#/renderer/state/currentBlog'
 import { currentPostState } from '#/renderer/state/currentPost'
+import { postsState } from '#/renderer/state/posts'
 
 const styles = {
   root: {
@@ -60,9 +62,35 @@ interface TextContentViewerProps {
 }
 
 export default function TextContentViewer({ onRequestEditPost }: TextContentViewerProps) {
+  const currentAuth = useAtomValue(currentAuthState)
   const currentBlog = useAtomValue(currentBlogState)
-  const post = useAtomValue(currentPostState)
+  const [post, setPost] = useAtom(currentPostState)
+  const setPosts = useSetAtom(postsState)
   const viewerContent = useRef<HTMLDivElement>(null)
+
+  function handleDeletePost() {
+    if (!post || !currentAuth || !currentBlog) return
+    if (confirm("정말로 이 글을 삭제하시겠습니까?")) {
+      ipcRenderer.send("delete-content", currentAuth.uuid, currentBlog.name, post.id)
+    }
+  }
+
+  useEffect(() => {
+    function handleFinishDelete(_e: any, deletedPostId: string) {
+      if (deletedPostId) {
+        setPosts((prev: any) => ({
+          ...prev,
+          list: prev.list.filter((item: any) => item.id != deletedPostId)
+        }))
+        setPost(null)
+      }
+    }
+
+    ipcRenderer.on("finish-delete-content", handleFinishDelete)
+    return () => {
+      ipcRenderer.removeListener("finish-delete-content", handleFinishDelete)
+    }
+  }, [setPosts, setPost])
 
   useEffect(() => {
     if (post && currentBlog && viewerContent.current) {
@@ -101,6 +129,11 @@ export default function TextContentViewer({ onRequestEditPost }: TextContentView
           <Tooltip title="수정하기" placement="top">
             <IconButton sx={styles.btnPostInfo} onClick={onRequestEditPost} size='small'>
               <Edit sx={styles.icoPostInfo} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="삭제하기" placement="top">
+            <IconButton sx={styles.btnPostInfo} onClick={handleDeletePost} size='small'>
+              <Delete sx={styles.icoPostInfo} />
             </IconButton>
           </Tooltip>
         </Box>

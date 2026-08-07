@@ -130,4 +130,33 @@ export default function initContentEvents(): void {
         evt.sender.send('receive-message', messagePrefix + '글을 발행하지 못했습니다.')
       })
   })
+
+  ipcMain.on("delete-content", (evt, authUUID: string, blogName: string, postId: string) => {
+    console.log('Main.receive: delete-content', authUUID, blogName, postId)
+    const auth = AuthenticationManager.findByUUID(authUUID)
+    const messagePrefix = dayjs().format('HH:mm:ss : ')
+    if (!auth) {
+      evt.sender.send('finish-delete-content')
+      evt.sender.send('receive-message', messagePrefix + '글을 삭제하지 못했습니다.')
+      return
+    }
+    const api = ProviderApiManager.getApi(auth.provider)
+
+    if (!api.validateAuthInfo(auth.authInfo)) {
+      evt.sender.send('finish-delete-content')
+      evt.sender.send('receive-message', messagePrefix + '글을 삭제하지 못했습니다.')
+      return
+    }
+
+    api.deletePost(auth.authInfo, blogName, postId)
+      .then(() => {
+        evt.sender.send('finish-delete-content', postId)
+        evt.sender.send('receive-message', messagePrefix + '삭제 완료')
+      })
+      .catch((err: any) => {
+        console.error(err)
+        evt.sender.send('finish-delete-content')
+        evt.sender.send('receive-message', messagePrefix + '글을 삭제하지 못했습니다.')
+      })
+  })
 }

@@ -5,12 +5,13 @@ import ChipInput from '#/renderer/components/editor/ChipInput'
 interface EditorInfoDialogProps {
   onRequestClose: () => void;
   onRequestPublish: () => void;
+  onRequestDraft?: () => void;
   onTagsChange: (tags: string[]) => void;
   tags: string[];
   open: boolean;
 }
 
-export default function EditorInfoDialog({ onRequestClose, onRequestPublish, onTagsChange, tags, open }: EditorInfoDialogProps) {
+export default function EditorInfoDialog({ onRequestClose, onRequestPublish, onRequestDraft, onTagsChange, tags, open }: EditorInfoDialogProps) {
   return (
     <Dialog 
       open={open} 
@@ -28,12 +29,12 @@ export default function EditorInfoDialog({ onRequestClose, onRequestPublish, onT
       }}
     >
       <DialogTitle sx={{ fontWeight: 600, pb: 1 }}>
-        포스트 발행 설정
+        포스트 저장 및 발행 설정
       </DialogTitle>
       
       <DialogContent sx={{ py: 1 }}>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-          글을 발행하기 전에 검색과 분류를 돕는 태그를 등록할 수 있습니다.
+          글을 저장하거나 발행하기 전에 검색과 분류를 돕는 태그를 등록할 수 있습니다.
         </Typography>
         <ChipInput
           label="태그 입력" 
@@ -43,11 +44,22 @@ export default function EditorInfoDialog({ onRequestClose, onRequestPublish, onT
         />
       </DialogContent>
 
-      <DialogActions sx={{ px: 3, pb: 1.5, pt: 2 }}>
+      <DialogActions sx={{ px: 3, pb: 1.5, pt: 2, gap: 1 }}>
         <Button onClick={onRequestClose} sx={{ color: 'text.secondary', fontWeight: 500 }}>
           취소
         </Button>
         <div style={{ flexGrow: 1 }} />
+        {onRequestDraft && (
+          <Button 
+            variant="outlined" 
+            color="primary" 
+            disableElevation
+            onClick={onRequestDraft}
+            sx={{ borderRadius: 2, px: 2.5, fontWeight: 600 }}
+          >
+            임시저장
+          </Button>
+        )}
         <Button 
           variant="contained" 
           color='primary' 
