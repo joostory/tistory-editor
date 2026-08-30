@@ -12,4 +12,5 @@ app/index.html
 out
 scratch
 .antigravitycli/
-
+target/
+.DS_Store
